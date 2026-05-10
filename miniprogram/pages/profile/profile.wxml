@@ -1,0 +1,56 @@
+<!-- 我的页面 -->
+<view class="profile-page">
+
+  <!-- 用户信息 -->
+  <view class="profile-hero">
+    <image class="profile-avatar" src="{{avatarUrl}}" mode="aspectFill" />
+    <view class="profile-info">
+      <text class="profile-nickname">{{nickname}}</text>
+      <text class="profile-gender" bindtap="setGender">{{genderText}}</text>
+    </view>
+  </view>
+
+  <!-- 个性化设置 -->
+  <view class="profile-section">
+    <text class="profile-section-title">个性化设置</text>
+    <view class="profile-menu">
+      <view class="menu-item" bindtap="manageCategories">
+        <text class="menu-icon">🏷️</text>
+        <text class="menu-label">自定义分类</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="switchTheme">
+        <text class="menu-icon">🎨</text>
+        <text class="menu-label">主题</text>
+        <view class="menu-value-wrap">
+          <text class="menu-value">{{themeName}}</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据与隐私 -->
+  <view class="profile-section">
+    <text class="profile-section-title">数据与隐私</text>
+    <view class="profile-menu">
+      <view class="menu-item disabled">
+        <text class="menu-icon">📥</text>
+        <text class="menu-label">导出数据</text>
+        <text class="menu-badge">即将推出</text>
+      </view>
+      <view class="menu-item danger" bindtap="clearData">
+        <text class="menu-icon">🗑️</text>
+        <text class="menu-label danger-text">清除所有数据</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 版本 -->
+  <view class="profile-footer">
+    <text class="footer-version">版本 1.0.0</text>
+    <text class="footer-tagline">用 ❤️ 和很多面条 🍜 做成</text>
+  </view>
+
+</view>

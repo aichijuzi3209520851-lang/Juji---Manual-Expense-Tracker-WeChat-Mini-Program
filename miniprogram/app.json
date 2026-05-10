@@ -1,0 +1,59 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/guide/guide",
+    "pages/home/home",
+    "pages/stats/stats",
+    "pages/record/record",
+    "pages/budget/budget",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundColor": "#fffaf8",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fffaf8",
+    "navigationBarTitleText": "橘记",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#827473",
+    "selectedColor": "#785655",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "images/tabbar/home.png",
+        "selectedIconPath": "images/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/stats/stats",
+        "text": "统计",
+        "iconPath": "images/tabbar/stats.png",
+        "selectedIconPath": "images/tabbar/stats-active.png"
+      },
+      {
+        "pagePath": "pages/record/record",
+        "text": "记账",
+        "iconPath": "images/tabbar/record.png",
+        "selectedIconPath": "images/tabbar/record-active.png"
+      },
+      {
+        "pagePath": "pages/budget/budget",
+        "text": "预算",
+        "iconPath": "images/tabbar/budget.png",
+        "selectedIconPath": "images/tabbar/budget-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tabbar/profile.png",
+        "selectedIconPath": "images/tabbar/profile-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

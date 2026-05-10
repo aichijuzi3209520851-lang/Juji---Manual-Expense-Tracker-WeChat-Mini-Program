@@ -1,0 +1,40 @@
+.home-page { padding: 0 var(--space-md); padding-bottom: 60rpx; }
+.summary-card {
+  background: var(--color-surface); border-radius: var(--radius-xl);
+  box-shadow: 0 8rpx 32rpx rgba(120,86,85,0.06); padding: var(--space-lg); margin-top: 24rpx;
+}
+.summary-row { display: flex; align-items: center; }
+.summary-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
+.summary-label { font-size: 26rpx; color: var(--color-text-tertiary); }
+.summary-value { font-size: 44rpx; font-weight: 700; }
+.summary-value.expense { color: var(--color-text); }
+.summary-value.income { color: var(--color-income); }
+.summary-divider { width: 2rpx; height: 60rpx; background: var(--color-border); }
+.summary-progress { margin-top: 24rpx; display: flex; align-items: center; gap: 16rpx; }
+.progress-bar { flex: 1; height: 6rpx; background: var(--color-surface-high); border-radius: 3rpx; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--color-primary-container); border-radius: 3rpx; transition: width 0.3s; }
+.progress-text { font-size: 22rpx; color: var(--color-text-tertiary); }
+/* 快速记账 */
+.quick-record {
+  display: flex; align-items: center; justify-content: center; gap: 12rpx;
+  margin: 32rpx 0; padding: 24rpx; background: var(--color-primary);
+  color: white; border-radius: var(--radius-full); font-size: 32rpx; font-weight: 600;
+}
+.quick-icon { font-size: 40rpx; font-weight: 300; }
+/* 最近账单 */
+.recent-section { margin-top: 24rpx; }
+.section-title { font-size: 32rpx; font-weight: 600; color: var(--color-text); margin-bottom: 20rpx; }
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: 80rpx 0; }
+.empty-icon { font-size: 80rpx; margin-bottom: 16rpx; }
+.empty-text { font-size: 28rpx; color: var(--color-text-tertiary); }
+.bill-row {
+  display: flex; align-items: center; gap: 20rpx; padding: 24rpx 20rpx;
+  background: var(--color-surface); border-radius: var(--radius-md); margin-bottom: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(120,86,85,0.03);
+}
+.bill-icon { font-size: 40rpx; }
+.bill-info { flex: 1; }
+.bill-category { font-size: 30rpx; color: var(--color-text); font-weight: 500; display: block; }
+.bill-note { font-size: 24rpx; color: var(--color-text-tertiary); display: block; margin-top: 4rpx; }
+.bill-amount { font-size: 32rpx; font-weight: 600; color: var(--color-text); }
+.bill-amount.income { color: var(--color-income); }

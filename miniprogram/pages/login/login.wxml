@@ -1,0 +1,29 @@
+<view class="login-page">
+  <view class="login-glow login-glow-top"></view>
+  <view class="login-glow login-glow-bottom"></view>
+
+  <image class="float-icon float-bag drift-a" src="/images/login/bag.svg" mode="aspectFit" />
+  <image class="float-icon float-utensils drift-b" src="/images/login/utensils.svg" mode="aspectFit" />
+  <image class="float-icon float-plane drift-c" src="/images/login/plane.svg" mode="aspectFit" />
+  <image class="float-icon float-car drift-d" src="/images/login/car.svg" mode="aspectFit" />
+  <image class="float-icon float-mug drift-b" src="/images/login/mug.svg" mode="aspectFit" />
+  <image class="float-icon float-masks drift-a" src="/images/login/masks.svg" mode="aspectFit" />
+  <image class="float-icon float-cart drift-c" src="/images/login/cart.svg" mode="aspectFit" />
+  <image class="float-icon float-wheel drift-d" src="/images/login/wheel.svg" mode="aspectFit" />
+
+  <view class="login-main">
+    <view class="login-logo-frame">
+      <image class="login-logo" src="/images/juji.png" mode="aspectFill" />
+    </view>
+    <text class="login-title">橘记</text>
+    <text class="login-tagline">清晰记账，从容生活。</text>
+  </view>
+
+  <view class="login-action">
+    <button class="login-btn" bindtap="handleLogin" hover-class="login-btn-hover" loading="{{loading}}">
+      <text wx:if="{{!loading}}">微信一键登录</text>
+      <text wx:else>登录中...</text>
+    </button>
+    <text class="login-hint">我们不会存储您的密码。一键开启。</text>
+  </view>
+</view>

@@ -1,0 +1,38 @@
+<!-- 预算页 -->
+<view class="budget-page">
+
+  <!-- 预算概览卡片 -->
+  <view class="budget-hero">
+    <text class="budget-hero-title">本月概览</text>
+
+    <!-- 进度环 -->
+    <view class="budget-ring-wrap">
+      <canvas type="2d" id="budgetRing" class="budget-ring"></canvas>
+      <view class="budget-ring-center">
+        <text class="ring-label">已花</text>
+        <text class="ring-amount">¥{{spent}}</text>
+      </view>
+    </view>
+
+    <view class="budget-summary">
+      <text class="budget-total-label">预算</text>
+      <text class="budget-total-amount">¥{{budgetAmount}}</text>
+    </view>
+
+    <!-- 状态文案 -->
+    <view class="budget-status {{status}}">
+      <text>{{statusText}}</text>
+    </view>
+  </view>
+
+  <!-- 预算设置 -->
+  <view class="budget-setter">
+    <text class="setter-title">调整预算</text>
+    <view class="setter-input-row">
+      <text class="setter-currency">¥</text>
+      <input class="setter-input" value="{{budgetInput}}" type="digit" placeholder="2000" bindinput="onBudgetInput" />
+      <button class="setter-btn" bindtap="saveBudget">设置</button>
+    </view>
+  </view>
+
+</view>

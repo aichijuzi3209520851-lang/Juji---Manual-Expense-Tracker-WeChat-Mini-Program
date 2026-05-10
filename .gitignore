@@ -1,0 +1,48 @@
+.DS_Store
+Thumbs.db
+*.log
+
+# Dependency directories
+node_modules/
+miniprogram_npm/
+cloudfunctions/*/node_modules/
+
+# Local WeChat DevTools config
+project.private.config.json
+
+# Local AI / assistant workspace files
+.claude/
+CLAUDE.md
+ui-ux-pro-max-mini-SKILL.md
+
+# Design references and exports
+my_images/
+微信小程序/
+橘记/
+记账小程序-头脑风暴产物.md
+miniprogram-cloudbase-miniprogram-template/
+
+# Local helper script not suitable for open-source repo
+uploadCloudFunction.sh
+
+# Unused template/demo files from the CloudBase starter
+miniprogram/components/cloudTipModal/
+miniprogram/envList.js
+miniprogram/pages/example/
+miniprogram/pages/index/
+miniprogram/images/icons/
+miniprogram/images/ai_example1.png
+miniprogram/images/ai_example2.png
+miniprogram/images/arrow.svg
+miniprogram/images/avatar.png
+miniprogram/images/cloud_dev.png
+miniprogram/images/copy.svg
+miniprogram/images/create_cbr.png
+miniprogram/images/create_cbrf.png
+miniprogram/images/create_env.png
+miniprogram/images/database.png
+miniprogram/images/database_add.png
+miniprogram/images/default-goods-image.png
+miniprogram/images/env-select.png
+miniprogram/images/function_deploy.png
+miniprogram/images/scf-enter.png

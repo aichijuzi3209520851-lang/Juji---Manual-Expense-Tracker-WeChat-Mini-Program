@@ -1,0 +1,107 @@
+page {
+  --color-primary: #785655;
+  --color-primary-container: #f7cac9;
+  --color-primary-light: #eed7d4;
+  --color-on-primary: #ffffff;
+  --color-secondary: #6c5a59;
+  --color-secondary-container: #f4e3e0;
+  --color-tertiary: #4b6458;
+  --color-tertiary-container: #c0dbcc;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+
+  --color-bg: #fffaf8;
+  --color-surface: #ffffff;
+  --color-surface-low: #fdf5f3;
+  --color-surface-container: #f8efed;
+  --color-surface-high: #f3eae8;
+  --color-surface-highest: #ece2df;
+  --color-surface-dim: #e7ddda;
+
+  --color-text: #1e1b1a;
+  --color-text-secondary: #5b4d4a;
+  --color-text-tertiary: #938481;
+  --color-text-on-primary: #ffffff;
+
+  --color-border: #e4d5d3;
+  --color-outline: #938481;
+
+  --color-income: #4b6458;
+  --color-income-light: #c0dbcc;
+  --color-warning: #6c5a59;
+
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+  --radius-full: 9999rpx;
+
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 40rpx;
+
+  --font-hero: 700 96rpx/1.2 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-headline-lg: 700 48rpx/1.3 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-headline-md: 600 36rpx/1.3 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-body-lg: 400 32rpx/1.6 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-body-md: 400 28rpx/1.5 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-label: 600 24rpx/1.4 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10rpx 28rpx rgba(120, 86, 85, 0.045);
+  padding: var(--space-md);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: var(--radius-full);
+  font-size: 32rpx;
+  font-weight: 600;
+  padding: 24rpx 0;
+  text-align: center;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 2rpx solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: 28rpx;
+  padding: 16rpx 32rpx;
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+  color: var(--color-text-tertiary);
+}
+
+.card-elevated {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16rpx 40rpx rgba(120, 86, 85, 0.06);
+  padding: var(--space-md);
+}

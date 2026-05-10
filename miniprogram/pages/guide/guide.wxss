@@ -1,0 +1,16 @@
+.guide-swiper { height: 100vh; }
+.guide-page {
+  height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 120rpx 60rpx;
+}
+.guide-illustration { font-size: 160rpx; margin-bottom: 80rpx; }
+.guide-title { font-size: 44rpx; font-weight: 700; color: var(--color-text); margin-bottom: 24rpx; text-align: center; }
+.guide-desc { font-size: 30rpx; color: var(--color-text-secondary); text-align: center; line-height: 1.6; }
+.guide-btn {
+  margin-top: 80rpx; width: 400rpx; background: var(--color-primary);
+  color: white; border-radius: var(--radius-full); padding: 24rpx 0;
+  font-size: 32rpx; font-weight: 600; text-align: center; border: none;
+}
+.guide-btn::after { border: none; }
+.guide-privacy { margin-top: 32rpx; font-size: 24rpx; color: var(--color-text-tertiary); }

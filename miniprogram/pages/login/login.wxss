@@ -1,0 +1,165 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 62rpx;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(247, 202, 201, 0.26), rgba(247, 202, 201, 0) 28%),
+    radial-gradient(circle at 84% 88%, rgba(247, 202, 201, 0.16), rgba(247, 202, 201, 0) 24%),
+    linear-gradient(180deg, #fffaf8 0%, #fffdfc 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+.login-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90rpx);
+  pointer-events: none;
+}
+
+.login-glow-top {
+  width: 500rpx;
+  height: 500rpx;
+  top: -140rpx;
+  left: -120rpx;
+  background: rgba(247, 202, 201, 0.28);
+}
+
+.login-glow-bottom {
+  width: 430rpx;
+  height: 430rpx;
+  right: -90rpx;
+  bottom: 20rpx;
+  background: rgba(244, 224, 220, 0.2);
+}
+
+.float-icon {
+  position: absolute;
+  opacity: 0.68;
+  pointer-events: none;
+}
+
+.float-bag { width: 72rpx; height: 72rpx; top: 11%; left: 18%; }
+.float-utensils { width: 110rpx; height: 110rpx; top: 18%; right: 14%; }
+.float-plane { width: 88rpx; height: 88rpx; top: 39%; right: 8%; }
+.float-car { width: 68rpx; height: 68rpx; top: 50%; left: 10%; }
+.float-mug { width: 92rpx; height: 92rpx; top: 61%; left: 8%; }
+.float-masks { width: 66rpx; height: 66rpx; top: 65%; right: 12%; }
+.float-cart { width: 108rpx; height: 108rpx; left: 20%; bottom: 19%; }
+.float-wheel { width: 84rpx; height: 84rpx; right: 15%; bottom: 10%; }
+
+.drift-a { animation: driftA 9.8s ease-in-out infinite; }
+.drift-b { animation: driftB 11.5s ease-in-out infinite; }
+.drift-c { animation: driftC 10.2s ease-in-out infinite; }
+.drift-d { animation: driftD 12.4s ease-in-out infinite; }
+
+@keyframes driftA {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  30% { transform: translate3d(16rpx, -34rpx, 0) rotate(5deg); }
+  65% { transform: translate3d(-12rpx, 18rpx, 0) rotate(-4deg); }
+}
+
+@keyframes driftB {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  35% { transform: translate3d(-18rpx, -28rpx, 0) rotate(-6deg); }
+  70% { transform: translate3d(12rpx, 16rpx, 0) rotate(4deg); }
+}
+
+@keyframes driftC {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  40% { transform: translate3d(10rpx, -30rpx, 0) rotate(3deg); }
+  78% { transform: translate3d(-16rpx, 16rpx, 0) rotate(-5deg); }
+}
+
+@keyframes driftD {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25% { transform: translate3d(14rpx, -24rpx, 0) rotate(4deg); }
+  55% { transform: translate3d(-14rpx, 14rpx, 0) rotate(-3deg); }
+  85% { transform: translate3d(8rpx, -10rpx, 0) rotate(2deg); }
+}
+
+.login-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  padding-top: 294rpx;
+}
+
+.login-logo-frame {
+  width: 164rpx;
+  height: 164rpx;
+  margin-bottom: 34rpx;
+  border-radius: 40rpx;
+  overflow: hidden;
+  box-shadow: 0 16rpx 38rpx rgba(120, 86, 85, 0.08);
+  position: relative;
+}
+
+.login-logo {
+  width: 136%;
+  height: 100%;
+  position: absolute;
+  left: -18%;
+  top: 0;
+}
+
+.login-title {
+  font-size: 58rpx;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 14rpx;
+}
+
+.login-tagline {
+  font-size: 30rpx;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+.login-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  padding-bottom: 170rpx;
+  width: 100%;
+}
+
+.login-btn {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #f7caca 0%, #f4c0c0 100%);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: 34rpx;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 18rpx 34rpx rgba(247, 202, 201, 0.16);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.login-btn-hover {
+  opacity: 0.94;
+  transform: scale(0.985);
+}
+
+.login-btn:active {
+  transform: scale(0.97);
+}
+
+.login-hint {
+  margin-top: 28rpx;
+  font-size: 23rpx;
+  color: var(--color-text-tertiary);
+}

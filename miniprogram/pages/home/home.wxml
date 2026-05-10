@@ -1,0 +1,52 @@
+<!-- 首页 -->
+<view class="home-page">
+
+  <!-- 月度概览卡片 -->
+  <view class="summary-card">
+    <view class="summary-row">
+      <view class="summary-item">
+        <text class="summary-label">本月支出</text>
+        <text class="summary-value expense">-¥{{monthExpense}}</text>
+      </view>
+      <view class="summary-divider"></view>
+      <view class="summary-item">
+        <text class="summary-label">本月收入</text>
+        <text class="summary-value income">+¥{{monthIncome}}</text>
+      </view>
+    </view>
+    <view class="summary-progress">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{dayProgress}}%"></view>
+      </view>
+      <text class="progress-text">本月已过 {{dayProgress}}%</text>
+    </view>
+  </view>
+
+  <!-- 快速记账 -->
+  <navigator class="quick-record" url="/pages/record/record" open-type="switchTab">
+    <text class="quick-icon">+</text>
+    <text class="quick-text">记一笔</text>
+  </navigator>
+
+  <!-- 最近账单 -->
+  <view class="recent-section">
+    <text class="section-title">最近账单</text>
+
+    <view wx:if="{{bills.length === 0}}" class="empty-state">
+      <text class="empty-icon">📒</text>
+      <text class="empty-text">还没有账单，记一笔吧</text>
+    </view>
+
+    <view wx:for="{{bills}}" wx:key="_id" class="bill-row">
+      <view class="bill-icon">{{item.icon}}</view>
+      <view class="bill-info">
+        <text class="bill-category">{{item.category}}</text>
+        <text class="bill-note" wx:if="{{item.note}}">{{item.note}}</text>
+      </view>
+      <text class="bill-amount {{item.type === 'income' ? 'income' : ''}}">
+        {{item.type === 'income' ? '+' : '-'}}¥{{item.amount}}
+      </text>
+    </view>
+  </view>
+
+</view>
