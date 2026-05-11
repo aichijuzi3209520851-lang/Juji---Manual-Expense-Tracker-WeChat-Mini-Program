@@ -13,7 +13,7 @@
 
   <view class="login-main">
     <view class="login-logo-frame">
-      <image class="login-logo" src="/images/juji.png" mode="aspectFill" />
+      <image class="login-logo" src="/images/juji1.png" mode="aspectFill" />
     </view>
     <text class="login-title">橘记</text>
     <text class="login-tagline">清晰记账，从容生活。</text>
@@ -24,6 +24,6 @@
       <text wx:if="{{!loading}}">微信一键登录</text>
       <text wx:else>登录中...</text>
     </button>
-    <text class="login-hint">我们不会存储您的密码。一键开启。</text>
+    <text class="login-hint">无需输入密码，直接一键体验</text>
   </view>
 </view>

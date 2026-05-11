@@ -53,10 +53,8 @@ function validateBill(data) {
     return { valid: false, message: '备注不能超过200字' }
   }
 
-  // 照片 URL
-  if (data.photoUrl && !data.photoUrl.startsWith('cloud://')) {
-    return { valid: false, message: '照片格式错误' }
-  }
+  // 照片 URL（前端传本地路径或已上传的 cloud:// 均可）
+  // 不做前端校验，云函数端做最终检查
 
   return { valid: true, message: '' }
 }

@@ -1,8 +1,21 @@
-const PRESET_CATEGORIES = [
-  { name: '餐饮', icon: '🍜' }, { name: '交通', icon: '🚇' },
-  { name: '购物', icon: '🛍️' }, { name: '娱乐', icon: '🎮' },
-  { name: '学习', icon: '📚' }, { name: '日用', icon: '🏠' },
-  { name: '医疗', icon: '💊' }, { name: '其他', icon: '📌' }
+const EXPENSE_CATEGORIES = [
+  { name: '餐饮', iconPath: '/images/login/utensils.svg' },
+  { name: '交通', iconPath: '/images/login/car.svg' },
+  { name: '购物', iconPath: '/images/login/bag.svg' },
+  { name: '娱乐', iconPath: '/images/login/masks.svg' },
+  { name: '学习', iconPath: '/images/record/book.svg' },
+  { name: '日用', iconPath: '/images/login/mug.svg' },
+  { name: '医疗', iconPath: '/images/record/medical.svg' },
+  { name: '其他', iconPath: '/images/login/wheel.svg' }
+]
+
+const INCOME_CATEGORIES = [
+  { name: '工资', iconPath: '/images/record/wallet.svg' },
+  { name: '兼职', iconPath: '/images/record/briefcase.svg' },
+  { name: '理财', iconPath: '/images/record/chart.svg' },
+  { name: '红包', iconPath: '/images/record/gift.svg' },
+  { name: '退款', iconPath: '/images/record/refresh.svg' },
+  { name: '其他', iconPath: '/images/login/wheel.svg' }
 ]
 
 const { validateBill } = require('../../utils/validate')
@@ -14,12 +27,27 @@ Page({
     amount: '',
     displayDate: '今天',
     dateStr: '',
-    categories: PRESET_CATEGORIES,
+    categories: EXPENSE_CATEGORIES,
     selectedCategory: '餐饮',
     note: '',
     showNoteInput: false,
     photoUrl: '',
     photoCloudPath: ''
+  },
+
+  resetForm(nextType = 'expense') {
+    const preset = this.getPresetCategories(nextType)
+    this.setData({
+      type: nextType,
+      amount: '',
+      note: '',
+      showNoteInput: false,
+      photoUrl: '',
+      photoCloudPath: '',
+      categories: preset,
+      selectedCategory: preset[0]?.name || ''
+    })
+    this.loadCustomCategories(nextType)
   },
 
   onLoad() {
@@ -31,20 +59,52 @@ Page({
       dateStr: `${y}-${m}-${d}`,
       displayDate: `${m}月${d}日`
     })
-    this.loadCustomCategories()
+    this.loadCustomCategories('expense')
   },
 
-  onShow() { this.loadCustomCategories() },
+  onShow() {
+    this.updateCustomTabBar()
+    this.loadCustomCategories(this.data.type)
+  },
 
-  loadCustomCategories() {
-    const app = getApp()
-    if (app.globalData.userInfo && app.globalData.userInfo.customCategories) {
-      const custom = app.globalData.userInfo.customCategories
-      this.setData({ categories: [...PRESET_CATEGORIES, ...custom] })
+  updateCustomTabBar() {
+    if (typeof this.getTabBar !== 'function') return
+    const tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.updateSelected === 'function') {
+      tabBar.updateSelected()
     }
   },
 
-  switchType(e) { this.setData({ type: e.currentTarget.dataset.type }) },
+  getPresetCategories(type = 'expense') {
+    return type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES
+  },
+
+  loadCustomCategories(type = 'expense') {
+    const app = getApp()
+    const preset = this.getPresetCategories(type)
+    const presetNames = new Set(preset.map(item => item.name))
+    const selectedFallback = preset[0]?.name || ''
+    let categories = preset
+
+    if (app.globalData.userInfo && app.globalData.userInfo.customCategories) {
+      const custom = app.globalData.userInfo.customCategories.filter(item => !presetNames.has(item.name))
+      categories = [...preset, ...custom]
+    }
+
+    const stillExists = categories.some(item => item.name === this.data.selectedCategory)
+    this.setData({
+      categories,
+      selectedCategory: stillExists ? this.data.selectedCategory : selectedFallback
+    })
+  },
+
+  switchType(e) {
+    const type = e.currentTarget.dataset.type
+    this.setData({
+      type
+    })
+    this.loadCustomCategories(type)
+  },
   onAmountInput(e) { this.setData({ amount: e.detail.value }) },
   onNoteInput(e) { this.setData({ note: e.detail.value }) },
   onNoteFocus() { this.setData({ showNoteInput: true }) },
@@ -73,6 +133,7 @@ Page({
   pickImage(sourceType) {
     wx.chooseMedia({
       count: 1, mediaType: ['image'], sourceType: [sourceType],
+      sizeType: ['compressed'],
       success: res => { this.setData({ photoUrl: res.tempFiles[0].tempFilePath }) }
     })
   },
@@ -104,9 +165,13 @@ Page({
     try {
       let cloudPhotoUrl = ''
       if (photoUrl && !photoUrl.startsWith('cloud://')) {
-        const ext = photoUrl.split('.').pop() || 'jpg'
+        // 兼容各种图片格式：png/jpg/jpeg/gif/bmp/webp
+        const extMatch = photoUrl.match(/\.(\w+)(\?|$)/)
+        const ext = extMatch ? extMatch[1].toLowerCase() : 'jpg'
+        const allowed = ['png','jpg','jpeg','gif','bmp','webp']
+        const safeExt = allowed.includes(ext) ? ext : 'jpg'
         const uploadRes = await wx.cloud.uploadFile({
-          cloudPath: `bills/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`,
+          cloudPath: `bills/${Date.now()}-${Math.random().toString(36).slice(2)}.${safeExt}`,
           filePath: photoUrl
         })
         cloudPhotoUrl = uploadRes.fileID
@@ -124,10 +189,7 @@ Page({
       daily.increment()
       wx.hideLoading()
       wx.showToast({ title: '记账成功 ✅', icon: 'success' })
-      this.setData({
-        amount: '', note: '', photoUrl: '', photoCloudPath: '',
-        selectedCategory: '餐饮', type: 'expense'
-      })
+      this.resetForm(type)
     } catch (err) {
       wx.hideLoading()
       console.error('保存失败:', err)

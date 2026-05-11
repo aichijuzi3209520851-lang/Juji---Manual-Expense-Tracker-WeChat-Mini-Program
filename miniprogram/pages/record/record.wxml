@@ -1,5 +1,5 @@
 <!-- 记账页 — 橘记的核心 -->
-<view class="record-page">
+<view class="record-page {{type === 'income' ? 'is-income' : ''}}">
 
   <!-- 收/支切换 -->
   <view class="type-toggle">
@@ -12,54 +12,72 @@
 
   <!-- 金额输入区 -->
   <view class="amount-area">
+    <view class="amount-chip">{{type === 'expense' ? '本次支出' : '本次收入'}}</view>
     <view class="amount-row">
-      <text class="amount-symbol">¥</text>
-      <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{true}}" bindinput="onAmountInput" />
+      <view class="amount-field">
+        <text class="amount-symbol">¥</text>
+        <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{true}}" bindinput="onAmountInput" cursor-spacing="24" />
+      </view>
     </view>
     <view class="date-tag" bindtap="pickDate">
-      <text>📅 {{displayDate}}</text>
+      <text>{{displayDate}}</text>
+      <text class="date-tag__dot">·</text>
+      <text class="date-tag__hint">点按修改</text>
     </view>
   </view>
 
   <!-- 分类选择 -->
   <view class="category-section">
     <view class="section-label">分类</view>
-    <scroll-view class="category-scroll" scroll-x>
-      <view class="category-list">
-        <view wx:for="{{categories}}" wx:key="name" class="category-item {{selectedCategory === item.name ? 'selected' : ''}}" data-name="{{item.name}}" bindtap="selectCategory">
-          <view class="category-icon">{{item.icon}}</view>
+    <view class="category-grid">
+      <view wx:for="{{categories}}" wx:key="name" class="category-item {{selectedCategory === item.name ? 'selected' : ''}}" data-name="{{item.name}}" bindtap="selectCategory">
+        <view class="category-card">
+          <view class="category-icon">
+            <image wx:if="{{item.iconPath}}" class="category-image {{selectedCategory === item.name ? 'is-selected' : ''}}" src="{{item.iconPath}}" mode="aspectFit" />
+            <text wx:else class="category-emoji">{{item.icon}}</text>
+          </view>
           <text class="category-name">{{item.name}}</text>
         </view>
-        <view class="category-item add-category" bindtap="addCategory">
+      </view>
+      <view class="category-item add-category" bindtap="addCategory">
+        <view class="category-card">
           <view class="category-icon add-icon">+</view>
           <text class="category-name">自创</text>
         </view>
       </view>
-    </scroll-view>
+    </view>
   </view>
 
   <!-- 备注（可选） -->
   <view class="note-section">
-    <view class="note-row {{showNoteInput ? 'expanded' : ''}}">
-      <text class="note-icon">✏️</text>
+    <view class="note-card {{showNoteInput ? 'expanded' : ''}}">
+      <view class="note-card-head">
+        <text class="note-label">备注</text>
+      </view>
       <input class="note-input" value="{{note}}" placeholder="添加备注…" placeholder-class="note-placeholder" bindinput="onNoteInput" bindfocus="onNoteFocus" bindblur="onNoteBlur" maxlength="200" />
+      <view class="note-tools">
+        <view class="note-photo-trigger" bindtap="choosePhoto">
+          <image class="note-photo-icon" src="/images/record/camera.svg" mode="aspectFit" />
+          <text class="note-photo-text">{{photoUrl ? '更换照片' : '加照片'}}</text>
+        </view>
+      </view>
     </view>
-  </view>
 
-  <!-- 照片（可选） -->
-  <view class="photo-section" wx:if="{{photoUrl}}">
-    <image class="photo-preview" src="{{photoUrl}}" mode="aspectFill" bindtap="previewPhoto" />
-    <view class="photo-remove" bindtap="removePhoto">✕</view>
+    <view class="photo-inline" wx:if="{{photoUrl}}">
+      <image class="photo-inline-preview" src="{{photoUrl}}" mode="aspectFill" bindtap="previewPhoto" />
+      <view class="photo-inline-copy">
+        <text class="photo-inline-title">已添加照片</text>
+        <text class="photo-inline-subtitle">点击预览，或重新选择一张更合适的图片</text>
+      </view>
+      <view class="photo-inline-remove" bindtap="removePhoto">移除</view>
+    </view>
   </view>
 
   <!-- 操作按钮区 -->
   <view class="record-actions">
-    <view class="action-item" bindtap="choosePhoto">
-      <text class="action-icon">{{photoUrl ? '🔄' : '📷'}}</text>
-      <text class="action-label">{{photoUrl ? '换照片' : '加照片'}}</text>
+    <view class="record-actions-inner">
+      <button class="save-btn" bindtap="saveRecord">保存</button>
     </view>
-    <view class="action-divider"></view>
-    <button class="save-btn" bindtap="saveRecord">保存</button>
   </view>
 
 </view>
