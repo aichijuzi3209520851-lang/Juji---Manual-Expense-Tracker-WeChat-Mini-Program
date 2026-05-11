@@ -74,7 +74,24 @@
   "compileType": "miniprogram",
   "srcMiniprogramRoot": "miniprogram/",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "miniprogram/pages/example" },
+      { "type": "folder", "value": "miniprogram/components/cloudTipModal" },
+      { "type": "folder", "value": "橘记" },
+      { "type": "folder", "value": "微信小程序" },
+      { "type": "folder", "value": "miniprogram-cloudbase-miniprogram-template" },
+      { "type": "glob", "value": "miniprogram/images/ai_example*" },
+      { "type": "glob", "value": "miniprogram/images/create_*" },
+      { "type": "glob", "value": "miniprogram/images/database*" },
+      { "type": "glob", "value": "miniprogram/images/default-goods*" },
+      { "type": "glob", "value": "miniprogram/images/env-select*" },
+      { "type": "glob", "value": "miniprogram/images/cloud_dev*" },
+      { "type": "glob", "value": "miniprogram/images/function_deploy*" },
+      { "type": "glob", "value": "miniprogram/images/scf-enter*" },
+      { "type": "file", "value": "miniprogram/images/juji.png" },
+      { "type": "file", "value": "ui-ux-pro-max-mini-SKILL.md" },
+      { "type": "file", "value": "记账小程序-头脑风暴产物.md" }
+    ],
     "include": []
   },
   "editorSetting": {

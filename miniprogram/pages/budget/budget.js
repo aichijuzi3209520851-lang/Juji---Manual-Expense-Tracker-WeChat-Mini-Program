@@ -8,7 +8,18 @@ Page({
     statusText: ''
   },
 
-  onShow() { this.loadBudget() },
+  onShow() {
+    this.updateCustomTabBar()
+    this.loadBudget()
+  },
+
+  updateCustomTabBar() {
+    if (typeof this.getTabBar !== 'function') return
+    const tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.updateSelected === 'function') {
+      tabBar.updateSelected()
+    }
+  },
 
   async loadBudget() {
     const now = new Date()

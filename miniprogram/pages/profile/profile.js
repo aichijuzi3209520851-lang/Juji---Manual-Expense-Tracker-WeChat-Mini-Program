@@ -15,7 +15,18 @@ Page({
     themeName: '清新'
   },
 
-  onShow() { this.loadUserInfo() },
+  onShow() {
+    this.updateCustomTabBar()
+    this.loadUserInfo()
+  },
+
+  updateCustomTabBar() {
+    if (typeof this.getTabBar !== 'function') return
+    const tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.updateSelected === 'function') {
+      tabBar.updateSelected()
+    }
+  },
 
   async loadUserInfo() {
     const app = getApp()

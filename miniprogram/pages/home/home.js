@@ -1,6 +1,7 @@
 const ICON_MAP = {
   '餐饮': '🍜', '交通': '🚇', '购物': '🛍️', '娱乐': '🎮',
-  '学习': '📚', '日用': '🏠', '医疗': '💊', '其他': '📌'
+  '学习': '📚', '日用': '🏠', '医疗': '💊', '工资': '💼',
+  '兼职': '🧳', '理财': '💹', '红包': '🎁', '退款': '↩️', '其他': '📌'
 }
 
 Page({
@@ -12,8 +13,17 @@ Page({
   },
 
   onShow() {
+    this.updateCustomTabBar()
     this.loadSummary()
     this.loadRecentBills()
+  },
+
+  updateCustomTabBar() {
+    if (typeof this.getTabBar !== 'function') return
+    const tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.updateSelected === 'function') {
+      tabBar.updateSelected()
+    }
   },
 
   async loadSummary() {

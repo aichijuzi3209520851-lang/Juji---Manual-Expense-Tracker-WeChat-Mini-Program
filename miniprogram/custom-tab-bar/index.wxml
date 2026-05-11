@@ -1,0 +1,37 @@
+<view class="custom-tabbar">
+  <view class="custom-tabbar__shell">
+    <block wx:for="{{list}}" wx:key="pagePath">
+      <view
+        wx:if="{{item.primary}}"
+        class="custom-tabbar__primary {{selected === item.pagePath ? 'is-active' : ''}}"
+        bindtap="switchTab"
+        data-url="{{item.url}}"
+        hover-class="custom-tabbar__primary--hover"
+        hover-stay-time="90"
+      >
+        <view class="custom-tabbar__primary-button">
+          <text class="custom-tabbar__primary-plus">+</text>
+        </view>
+        <text class="custom-tabbar__label custom-tabbar__label--primary">{{item.text}}</text>
+      </view>
+
+      <view
+        wx:else
+        class="custom-tabbar__item {{selected === item.pagePath ? 'is-active' : ''}}"
+        bindtap="switchTab"
+        data-url="{{item.url}}"
+        hover-class="custom-tabbar__item--hover"
+        hover-stay-time="90"
+      >
+        <view class="custom-tabbar__icon-wrap">
+          <image
+            class="custom-tabbar__icon"
+            src="{{selected === item.pagePath ? item.selectedIconPath : item.iconPath}}"
+            mode="aspectFit"
+          />
+        </view>
+        <text class="custom-tabbar__label">{{item.text}}</text>
+      </view>
+    </block>
+  </view>
+</view>

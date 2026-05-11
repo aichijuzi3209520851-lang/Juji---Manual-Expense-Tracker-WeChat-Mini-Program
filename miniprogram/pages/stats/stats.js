@@ -17,12 +17,21 @@ Page({
   },
 
   onShow() {
+    this.updateCustomTabBar()
     const now = new Date()
     this.setData({
       currentMonth: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`,
       displayMonth: `${now.getFullYear()}年${now.getMonth() + 1}月`
     })
     this.loadStats()
+  },
+
+  updateCustomTabBar() {
+    if (typeof this.getTabBar !== 'function') return
+    const tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.updateSelected === 'function') {
+      tabBar.updateSelected()
+    }
   },
 
   prevMonth() {

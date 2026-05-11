@@ -1,4 +1,9 @@
-.home-page { padding: 0 var(--space-md); padding-bottom: 60rpx; }
+.home-page {
+  padding: 0 var(--space-md);
+  padding-bottom: 208rpx;
+  padding-bottom: calc(208rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(208rpx + env(safe-area-inset-bottom));
+}
 .summary-card {
   background: var(--color-surface); border-radius: var(--radius-xl);
   box-shadow: 0 8rpx 32rpx rgba(120,86,85,0.06); padding: var(--space-lg); margin-top: 24rpx;
