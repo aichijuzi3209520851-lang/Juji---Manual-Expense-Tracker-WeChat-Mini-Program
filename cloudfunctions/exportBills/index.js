@@ -10,6 +10,20 @@ exports.main = async (event) => {
   const { format = 'csv', startDate, endDate } = event
 
   try {
+    // 查用户信息（昵称 + 性别）用于 CSV 顶部 meta
+    let nickname = '橘记用户'
+    let genderText = '未设置'
+    try {
+      const { data: users } = await db.collection('users').where({ _openid: openid }).limit(1).get()
+      if (users && users.length > 0) {
+        nickname = users[0].nickname || '橘记用户'
+        const g = users[0].gender
+        genderText = g === 'male' ? '男' : g === 'female' ? '女' : '未设置'
+      }
+    } catch (e) {
+      // 读取失败不阻塞导出
+    }
+
     // 查询当前用户的所有账单
     const query = { _openid: openid }
     if (startDate) {
@@ -31,7 +45,7 @@ exports.main = async (event) => {
       return { success: false, message: '暂无账单数据可导出' }
     }
 
-    const csvContent = generateCSV(bills)
+    const csvContent = generateCSV(bills, { nickname, genderText })
 
     // 上传到云存储
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
@@ -54,9 +68,13 @@ exports.main = async (event) => {
 }
 
 // 生成 CSV
-function generateCSV(bills) {
+function generateCSV(bills, meta) {
   // BOM 保证 Excel 打开不乱码
   const BOM = '﻿'
+  const metaBlock =
+    escapeCSV('橘记账单导出') + '\n' +
+    escapeCSV(`用户：${meta.nickname}    性别：${meta.genderText}`) + '\n' +
+    escapeCSV(`共 ${bills.length} 条`) + '\n\n'
   const header = '日期,类型,分类,金额,备注\n'
 
   const rows = bills.map(b => {
@@ -68,7 +86,7 @@ function generateCSV(bills) {
     return `${date},${type},${category},${amount},${note}`
   }).join('\n')
 
-  return BOM + header + rows
+  return BOM + metaBlock + header + rows
 }
 
 // CSV 转义：包含逗号或引号的字段加双引号
