@@ -3,7 +3,10 @@
 
   <!-- 用户信息 -->
   <view class="profile-hero">
-    <image class="profile-avatar" src="{{avatarUrl}}" mode="aspectFill" bindtap="changeAvatar" hover-class="profile-avatar-hover" />
+    <view class="profile-avatar-wrap" bindtap="changeAvatar" hover-class="profile-avatar-hover">
+      <image wx:if="{{avatarUrl && !avatarError}}" class="profile-avatar" src="{{avatarUrl}}" mode="aspectFill" binderror="onAvatarError" />
+      <text wx:else class="profile-avatar-fallback">🍊</text>
+    </view>
     <view class="profile-info">
       <text class="profile-nickname" bindtap="editNickname" hover-class="profile-nickname-hover">{{nickname}}</text>
       <text class="profile-gender" bindtap="setGender">{{genderText}}</text>

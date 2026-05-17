@@ -9,6 +9,7 @@ const GENDERS = ['未设置', '男', '女']
 Page({
   data: {
     avatarUrl: '',
+    avatarError: false,
     nickname: '点击登录',
     genderText: '未设置',
     gender: '',
@@ -39,8 +40,10 @@ Page({
         app.globalData.userInfo = u
         const genderText = GENDERS[u.gender === 'male' ? 1 : u.gender === 'female' ? 2 : 0]
         const theme = THEMES.find(t => t.id === (u.theme || 'fresh')) || THEMES[0]
+        const avatarUrl = await this.resolveAvatarSrc(u.avatarUrl || '')
         this.setData({
-          avatarUrl: u.avatarUrl || '',
+          avatarUrl,
+          avatarError: false,
           nickname: u.nickname || '橘记用户',
           genderText,
           gender: u.gender || '',
@@ -56,12 +59,14 @@ Page({
       itemList: ['拍照', '从相册选择'],
       success: res => {
         const sourceType = res.tapIndex === 0 ? ['camera'] : ['album']
-        this.pickAndCropAvatar(sourceType)
+        this.pickAndUploadAvatar(sourceType)
       }
     })
   },
 
-  async pickAndCropAvatar(sourceType) {
+  async pickAndUploadAvatar(sourceType) {
+    // 1. 选图（compressed 让微信先做一次预压缩，省内存；头像场景画质足够）
+    let pickedFile
     try {
       const choose = await wx.chooseMedia({
         count: 1,
@@ -69,14 +74,53 @@ Page({
         sourceType,
         sizeType: ['compressed']
       })
-      const tempFile = choose.tempFiles[0].tempFilePath
-      const crop = await wx.cropImage({ src: tempFile, cropScale: '1:1' })
-      await this.uploadAvatar(crop.tempFilePath)
-    } catch (err) {
-      if (err && err.errMsg && !/cancel/i.test(err.errMsg)) {
-        console.warn('选图失败:', err.errMsg)
+      if (!choose || !choose.tempFiles || !choose.tempFiles[0]) {
+        throw new Error('未取到图片')
       }
+      pickedFile = choose.tempFiles[0].tempFilePath
+      console.log('[avatar] picked tempFile:', pickedFile)
+    } catch (err) {
+      if (err && err.errMsg && /cancel/i.test(err.errMsg)) return
+      console.warn('[avatar] pick failed:', err)
+      wx.showToast({ title: '选图失败', icon: 'none' })
+      return
     }
+
+    // 2. 编辑（裁剪/旋转）—— 用 wx.editImage 拉起微信内置编辑界面
+    //    用户主动取消 → 中断流程；API 不可用或失败 → 静默回退到原图继续，不打扰用户
+    let editedFile = pickedFile
+    if (typeof wx.editImage === 'function') {
+      try {
+        const edit = await wx.editImage({ src: pickedFile })
+        if (edit && edit.tempFilePath) {
+          editedFile = edit.tempFilePath
+          console.log('[avatar] edited:', editedFile)
+        }
+      } catch (err) {
+        if (err && err.errMsg && /cancel/i.test(err.errMsg)) {
+          console.log('[avatar] user cancelled edit, abort')
+          return
+        }
+        console.warn('[avatar] edit failed, falling back to original:', err && err.errMsg)
+      }
+    } else {
+      console.warn('[avatar] wx.editImage unavailable, skipping edit step')
+    }
+
+    // 3. 压缩（必走，quality 80）—— 头像不需要原图分辨率
+    let toUpload = editedFile
+    try {
+      const comp = await wx.compressImage({ src: editedFile, quality: 80 })
+      if (comp && comp.tempFilePath) {
+        toUpload = comp.tempFilePath
+        console.log('[avatar] compressed:', toUpload)
+      }
+    } catch (err) {
+      console.warn('[avatar] compress failed, uploading uncompressed:', err && err.errMsg)
+    }
+
+    // 4. 上传 + 落库 + 刷新（uploadAvatar 内部处理）
+    await this.uploadAvatar(toUpload)
   },
 
   async uploadAvatar(filePath) {
@@ -87,17 +131,70 @@ Page({
     }
     wx.showLoading({ title: '上传中…', mask: true })
     try {
-      const ext = (filePath.match(/\.([a-zA-Z0-9]+)$/) || [, 'jpg'])[1]
+      // 扩展名白名单：兼容常见图片格式，未知或缺失兜底 jpg
+      const SUPPORTED = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+      const m = filePath.toLowerCase().match(/\.([a-z0-9]+)(?:\?|$)/)
+      let ext = m && m[1]
+      if (!ext || !SUPPORTED.includes(ext)) ext = 'jpg'
+
       const cloudPath = `avatars/${app.globalData.openid}_${Date.now()}.${ext}`
+      console.log('[avatar] upload start:', { cloudPath, filePath })
+
       const up = await wx.cloud.uploadFile({ cloudPath, filePath })
-      await this.updateUserField('avatarUrl', up.fileID)
-      this.setData({ avatarUrl: up.fileID })
+      console.log('[avatar] uploaded fileID:', up && up.fileID)
+      if (!up || !up.fileID) throw new Error('上传返回为空')
+
+      // 直接 db 操作以便捕获错误（updateUserField 内部 swallow 错误，无法暴露落库失败）
+      const db = wx.cloud.database()
+      const updateRes = await db.collection('users')
+        .where({ _openid: app.globalData.openid })
+        .update({ data: { avatarUrl: up.fileID } })
+      console.log('[avatar] db update result:', updateRes && updateRes.stats)
+      if (updateRes && updateRes.stats && updateRes.stats.updated === 0) {
+        throw new Error('未找到用户记录')
+      }
+
+      this.setData({ avatarUrl: up.fileID, avatarError: false })
+      // 立刻把 fileID 换成 https tempFileURL 再 setData 一次，确保 image 一定能渲染
+      // （image 直接渲染 cloud:// 在部分基础库下不稳，这是官方推荐的"上传后立即展示"路径）
+      const tempUrl = await this.resolveAvatarSrc(up.fileID)
+      console.log('[avatar] setData display url:', tempUrl)
+      this.setData({ avatarUrl: tempUrl || up.fileID, avatarError: false })
       wx.hideLoading()
       wx.showToast({ title: '头像已更新', icon: 'success' })
     } catch (err) {
       wx.hideLoading()
-      console.error('头像上传失败:', err)
-      wx.showToast({ title: '上传失败', icon: 'none' })
+      console.error('[avatar] upload chain failed:', err)
+      const raw = (err && (err.errMsg || err.message)) || '上传失败'
+      const msg = raw.length > 14 ? raw.slice(0, 14) + '…' : raw
+      wx.showToast({ title: msg, icon: 'none', duration: 2500 })
+    }
+  },
+
+  // 头像加载失败回退到占位
+  onAvatarError(e) {
+    const errMsg = e && e.detail && e.detail.errMsg
+    console.warn('[avatar] image load failed:', errMsg, 'src:', this.data.avatarUrl)
+    this.setData({ avatarError: true })
+  },
+
+  // 把 cloud:// fileID 解析成可直接渲染的 https tempFileURL
+  // 空 / 已是 http(s) / 本地路径都原样返回；cloud 协议才走 getTempFileURL
+  async resolveAvatarSrc(fileID) {
+    if (!fileID) return ''
+    if (!/^cloud:\/\//.test(fileID)) return fileID
+    try {
+      const res = await wx.cloud.getTempFileURL({ fileList: [fileID] })
+      const item = res && res.fileList && res.fileList[0]
+      const url = item && item.tempFileURL
+      console.log('[avatar] resolved tempFileURL:', url, 'from:', fileID)
+      if (item && item.status !== 0) {
+        console.warn('[avatar] getTempFileURL non-zero status:', item.status, item.errMsg)
+      }
+      return url || ''
+    } catch (err) {
+      console.warn('[avatar] getTempFileURL failed:', err && err.errMsg)
+      return ''
     }
   },
 
