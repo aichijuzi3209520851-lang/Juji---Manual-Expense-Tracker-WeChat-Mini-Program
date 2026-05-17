@@ -50,6 +50,80 @@ Page({
     } catch (err) { console.error(err) }
   },
 
+  // 头像修改
+  changeAvatar() {
+    wx.showActionSheet({
+      itemList: ['拍照', '从相册选择'],
+      success: res => {
+        const sourceType = res.tapIndex === 0 ? ['camera'] : ['album']
+        this.pickAndCropAvatar(sourceType)
+      }
+    })
+  },
+
+  async pickAndCropAvatar(sourceType) {
+    try {
+      const choose = await wx.chooseMedia({
+        count: 1,
+        mediaType: ['image'],
+        sourceType,
+        sizeType: ['compressed']
+      })
+      const tempFile = choose.tempFiles[0].tempFilePath
+      const crop = await wx.cropImage({ src: tempFile, cropScale: '1:1' })
+      await this.uploadAvatar(crop.tempFilePath)
+    } catch (err) {
+      if (err && err.errMsg && !/cancel/i.test(err.errMsg)) {
+        console.warn('选图失败:', err.errMsg)
+      }
+    }
+  },
+
+  async uploadAvatar(filePath) {
+    const app = getApp()
+    if (!app.globalData.openid) {
+      wx.showToast({ title: '未登录', icon: 'none' })
+      return
+    }
+    wx.showLoading({ title: '上传中…', mask: true })
+    try {
+      const ext = (filePath.match(/\.([a-zA-Z0-9]+)$/) || [, 'jpg'])[1]
+      const cloudPath = `avatars/${app.globalData.openid}_${Date.now()}.${ext}`
+      const up = await wx.cloud.uploadFile({ cloudPath, filePath })
+      await this.updateUserField('avatarUrl', up.fileID)
+      this.setData({ avatarUrl: up.fileID })
+      wx.hideLoading()
+      wx.showToast({ title: '头像已更新', icon: 'success' })
+    } catch (err) {
+      wx.hideLoading()
+      console.error('头像上传失败:', err)
+      wx.showToast({ title: '上传失败', icon: 'none' })
+    }
+  },
+
+  // 昵称修改
+  editNickname() {
+    const current = this.data.nickname
+    const prefill = (current === '橘记用户' || current === '点击登录') ? '' : current
+    wx.showModal({
+      title: '修改昵称',
+      editable: true,
+      placeholderText: '1-20 字，留空恢复默认',
+      content: prefill,
+      success: async res => {
+        if (!res.confirm) return
+        const value = (res.content || '').trim()
+        if (value.length > 20) {
+          wx.showToast({ title: '昵称最长 20 字', icon: 'none' })
+          return
+        }
+        await this.updateUserField('nickname', value)
+        this.setData({ nickname: value || '橘记用户' })
+        wx.showToast({ title: '昵称已更新', icon: 'success' })
+      }
+    })
+  },
+
   // 性别设置
   setGender() {
     wx.showActionSheet({

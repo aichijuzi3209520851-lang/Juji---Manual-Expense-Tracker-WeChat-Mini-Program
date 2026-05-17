@@ -3,9 +3,9 @@
 
   <!-- 用户信息 -->
   <view class="profile-hero">
-    <image class="profile-avatar" src="{{avatarUrl}}" mode="aspectFill" />
+    <image class="profile-avatar" src="{{avatarUrl}}" mode="aspectFill" bindtap="changeAvatar" hover-class="profile-avatar-hover" />
     <view class="profile-info">
-      <text class="profile-nickname">{{nickname}}</text>
+      <text class="profile-nickname" bindtap="editNickname" hover-class="profile-nickname-hover">{{nickname}}</text>
       <text class="profile-gender" bindtap="setGender">{{genderText}}</text>
     </view>
   </view>
