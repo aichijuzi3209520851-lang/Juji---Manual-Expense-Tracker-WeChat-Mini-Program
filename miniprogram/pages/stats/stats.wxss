@@ -35,11 +35,101 @@
 .legend-name { flex: 1; font-size: 26rpx; color: var(--color-text); }
 .legend-pct { font-size: 26rpx; font-weight: 600; color: var(--color-text-secondary); }
 .legend-empty { grid-column: 1/-1; text-align: center; color: var(--color-text-tertiary); padding: 40rpx 0; }
-/* 评论卡片 */
-.comment-card {
-  background: var(--color-primary-container); border-radius: var(--radius-lg);
-  padding: 24rpx 28rpx; display: flex; align-items: center; gap: 16rpx;
-  margin-top: 24rpx; box-shadow: 0 4rpx 12rpx rgba(120,86,85,0.08);
+/* 小橘的便签 — AI 评论区（Dusty Rose） */
+.ai-section {
+  margin-top: 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
-.comment-emoji { font-size: 44rpx; }
-.comment-text { flex: 1; font-size: 28rpx; color: var(--color-text); line-height: 1.5; font-weight: 500; }
+.ai-section-title {
+  font-size: 24rpx;
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: 0 8rpx;
+  letter-spacing: 2rpx;
+  opacity: 0.7;
+}
+
+.ai-card {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 36rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 2rpx 8rpx rgba(168, 119, 117, 0.06),
+    0 12rpx 32rpx rgba(168, 119, 117, 0.08);
+}
+.ai-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 16rpx;
+  bottom: 16rpx;
+  width: 3rpx;
+  border-radius: 3rpx;
+  background: var(--color-primary);
+  opacity: 0.45;
+}
+
+.ai-card-stamp {
+  width: fit-content;
+  padding: 12rpx 16rpx;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14rpx;
+}
+.ai-card-stamp--daily   { background: rgba(232, 188, 186, 0.35); }
+.ai-card-stamp--weekly  { background: rgba(245, 221, 220, 0.55); }
+.ai-card-stamp--monthly { background: rgba(216, 193, 192, 0.45); }
+.ai-card-emoji {
+  font-size: 36rpx;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.ai-card-label {
+  font-size: 24rpx;
+  color: var(--color-primary);
+  font-weight: 500;
+  letter-spacing: 1rpx;
+  opacity: 0.7;
+  margin-bottom: 16rpx;
+}
+
+.ai-card-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.75;
+  letter-spacing: 0.5rpx;
+  margin-bottom: 24rpx;
+}
+.ai-card-text.is-loading {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-text-tertiary);
+  animation: juji-breathe 2.4s ease-in-out infinite alternate;
+}
+@keyframes juji-breathe {
+  from { opacity: 0.5; }
+  to   { opacity: 1; }
+}
+
+.ai-card-divider {
+  margin: 0 8rpx 18rpx;
+  height: 0;
+  border-top: 2rpx dashed rgba(212, 195, 194, 0.5);
+}
+.ai-card-disclaimer {
+  font-size: 20rpx;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
