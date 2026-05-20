@@ -13,7 +13,13 @@ project.private.config.json
 # Local AI / assistant workspace files
 .claude/
 CLAUDE.md
+AGENTS.md
+.agents/
+.codebuddy/
 ui-ux-pro-max-mini-SKILL.md
+
+# Editor / tooling backups
+*.bak
 
 # Design references and exports
 my_images/

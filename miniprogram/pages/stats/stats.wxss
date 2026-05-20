@@ -133,3 +133,25 @@
   color: var(--color-text-tertiary);
   line-height: 1.5;
 }
+
+.ai-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.ai-refresh-btn {
+  background: #f5dddc;
+  color: #785655;
+  border: none;
+  border-radius: 999rpx;
+  line-height: 1.5;
+  padding: 0 20rpx;
+  font-size: 22rpx;
+}
+.ai-debug-text {
+  font-size: 22rpx;
+  color: #7e6a69;
+  padding: 0 8rpx;
+  line-height: 1.4;
+}

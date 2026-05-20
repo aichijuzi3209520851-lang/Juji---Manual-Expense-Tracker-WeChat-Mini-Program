@@ -1,6 +1,5 @@
-const COLORS = ['#e8bcba', '#f5dddc', '#ffdad8', '#cee9da', '#d8c1c0', '#f7cac8', '#b2cdbe', '#e9e1df']
+﻿const COLORS = ['#e8bcba', '#f5dddc', '#ffdad8', '#cee9da', '#d8c1c0', '#f7cac8', '#b2cdbe', '#e9e1df']
 
-// ===== 日期工具 =====
 const pad = n => String(n).padStart(2, '0')
 const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 
@@ -11,7 +10,7 @@ function yesterdayStr() {
 
 function lastWeekRange() {
   const today = new Date()
-  const day = today.getDay() || 7  // Sun(0) → 7，让周一为 1
+  const day = today.getDay() || 7
   const thisMon = new Date(today)
   thisMon.setDate(today.getDate() - (day - 1))
   thisMon.setHours(0, 0, 0, 0)
@@ -32,7 +31,6 @@ function lastMonthRange() {
   }
 }
 
-// ===== 账单汇总 =====
 function summarize(bills) {
   if (!bills || !bills.length) return { empty: true }
   const byCategory = {}
@@ -52,57 +50,36 @@ function summarize(bills) {
   return { empty: false, total: total.toFixed(2), count: bills.length, top }
 }
 
-// ===== Prompts =====
 const SYSTEM_PROMPT = `你是"橘记"记账小程序的俏皮评论助手。根据用户的消费数据，写一句生动幽默的评论。
-
 【风格要求】
-- 调侃消费行为本身（餐饮多→大馋丫头/大馋小子；娱乐多→快乐源泉；穿搭多→精致打工人；交通多→职场007 等）
-- 偶尔可用网络热梗，但要自然不刻意
-- 像朋友间的随意吐槽，亲切又有温度
-- 1-2 句话，控制在 50 字以内
-
-【严禁】
-- 不能建议减肥、省钱、克制消费
-- 不评判用户的生活方式
-- 不给任何忠告或建议
-- 不出现"建议"、"应该"、"少花点"、"克制"、"注意"等词
-
-直接输出评论本身，不要任何前后缀，不要引号包裹。`
+- 调侃消费行为本身，像朋友间的随意吐槽，亲切但有分寸
+- 1-2 句话，控制在 50 字内
+【严格限制】
+- 不要给建议，不要说“应该/注意/少花点”
+- 不评价用户人格或生活方式
+直接输出评论文本，不要加前后缀。`
 
 function buildUserPrompt(scope, summary, periodLabel) {
   if (summary.empty) {
-    if (scope === 'daily') {
-      return `用户昨天（${periodLabel}）一笔消费都没有。请温暖地调侃他，担心他是不是为了省钱没好好吃饭。
-可参考但不要照抄："昨天没有消费，不知道你是不是为了省钱又偷偷瞒着家人吃泡面了，对自己好点，一日三餐不能落下~"
-换一种说法，体现关心但不教导。1-2 句话 50 字内。`
-    }
-    if (scope === 'weekly') {
-      return `用户上周（${periodLabel}）整整一周都没有任何消费记录。请用调侃但温暖的口吻写一句评论，
-可怀疑他是不是把自己饿着了 / 在闭关 / 钱包冬眠，但绝不教导建议。1-2 句话 50 字内。`
-    }
-    return `用户上月（${periodLabel}）整整一个月都没有任何消费记录。请用俏皮调侃的口吻写一句评论，
-可调侃他是不是修仙去了 / 在偷偷攒钱搞大事 / 把消费欲望关进笼子，调侃但不评判。1-2 句话 50 字内。`
+    if (scope === 'daily') return `用户在 ${periodLabel} 没有消费记录。请生成 1-2 句温暖俏皮的评论，不给建议。`
+    if (scope === 'weekly') return `用户在 ${periodLabel} 没有消费记录。请生成 1-2 句俏皮评论，不给建议。`
+    return `用户在 ${periodLabel} 没有消费记录。请生成 1-2 句俏皮评论，不给建议。`
   }
   const topStr = summary.top.map(t => `${t.name} ${t.percent}%（${t.amount}元）`).join('、')
-  const periodHead = scope === 'daily' ? '昨天' : scope === 'weekly' ? '上周' : '上月'
-  return `针对用户【${periodHead}】（${periodLabel}）的消费写一句俏皮评论。
-
-数据：
-- 总支出 ${summary.total} 元
-- 共 ${summary.count} 笔
-- 类目占比：${topStr}
-
+  const periodHead = scope === 'daily' ? '昨日' : scope === 'weekly' ? '上周' : '上月'
+  return `针对用户【${periodHead}】（${periodLabel}）消费写一句俏皮评论。
+数据：总支出 ${summary.total} 元，共 ${summary.count} 笔；类目占比：${topStr}。
 直接输出评论。`
 }
 
-// ===== Storage =====
 const STORAGE_KEYS = {
   daily: 'juji_ai_daily',
   weekly: 'juji_ai_weekly',
   monthly: 'juji_ai_monthly'
 }
-const PLACEHOLDER = '小橘正在琢磨…'
-const FAIL_FALLBACK = '小橘暂时没词儿了，刷新试试 ✨'
+const PLACEHOLDER = '小橘正在琢磨...'
+const FAIL_FALLBACK = '小橘暂时没词儿了，刷新试试'
+const AI_MODEL = 'hy3-preview'
 
 Page({
   data: {
@@ -110,13 +87,13 @@ Page({
     currentMonth: '',
     totalExpense: '0.00',
     legendData: [],
-    // 三条 AI 评论
     dailyComment: '',
     weeklyComment: '',
     monthlyComment: '',
     dailyLoading: true,
     weeklyLoading: true,
-    monthlyLoading: true
+    monthlyLoading: true,
+    aiDebugText: ''
   },
 
   onShow() {
@@ -127,7 +104,7 @@ Page({
       displayMonth: `${now.getFullYear()}年${now.getMonth() + 1}月`
     })
     this.loadStats()
-    this.loadAIComments()
+    this.loadAIComments({ force: false })
   },
 
   updateCustomTabBar() {
@@ -141,9 +118,8 @@ Page({
   prevMonth() {
     const [y, m] = this.data.currentMonth.split('-').map(Number)
     const d = new Date(y, m - 2, 1)
-    const month = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
     this.setData({
-      currentMonth: month,
+      currentMonth: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
       displayMonth: `${d.getFullYear()}年${d.getMonth() + 1}月`
     })
     this.loadStats()
@@ -152,9 +128,8 @@ Page({
   nextMonth() {
     const [y, m] = this.data.currentMonth.split('-').map(Number)
     const d = new Date(y, m, 1)
-    const month = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
     this.setData({
-      currentMonth: month,
+      currentMonth: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
       displayMonth: `${d.getFullYear()}年${d.getMonth() + 1}月`
     })
     this.loadStats()
@@ -184,68 +159,88 @@ Page({
           name,
           amount: amount.toFixed(2),
           percent: total ? Math.round((amount / total) * 100) : 0,
-          color: COLORS[i]
+          color: COLORS[i % COLORS.length]
         }))
 
-      this.setData({
-        totalExpense: total.toFixed(2),
-        legendData
-      })
+      this.setData({ totalExpense: total.toFixed(2), legendData })
     } catch (err) {
       console.error('加载统计失败:', err)
     }
   },
 
-  // ============ AI 评论 ============
-
-  loadAIComments() {
-    this.loadOneAIComment('daily')
-    this.loadOneAIComment('weekly')
-    this.loadOneAIComment('monthly')
+  async loadAIComments({ force = false } = {}) {
+    // 串行调用，避免并发触发 429 限流
+    const scopes = ['daily', 'weekly', 'monthly']
+    for (const scope of scopes) {
+      await this.loadOneAIComment(scope, { force })
+      // 每次请求间隔 1 秒，给限流窗口留余量
+      if (scope !== scopes[scopes.length - 1]) {
+        await new Promise(r => setTimeout(r, 1000))
+      }
+    }
   },
 
-  async loadOneAIComment(scope) {
+  async loadOneAIComment(scope, { force = false } = {}) {
     const info = this.getPeriodInfo(scope)
 
-    // 1. 查缓存
     const cached = wx.getStorageSync(STORAGE_KEYS[scope])
-    if (cached && cached.periodKey === info.periodKey && cached.text) {
+    if (!force && cached && cached.periodKey === info.periodKey && cached.text) {
       console.log(`[ai-${scope}] cache hit:`, cached.periodKey)
-      this.setData({
-        [`${scope}Comment`]: cached.text,
-        [`${scope}Loading`]: false
-      })
+      this.setData({ [`${scope}Comment`]: cached.text, [`${scope}Loading`]: false })
       return
     }
 
-    // 2. 拉账单 + 调 AI
     try {
       const bills = await this.fetchBills(info.start, info.end)
       const summary = summarize(bills)
-      console.log(`[ai-${scope}] summary:`, summary)
-
       const userPrompt = buildUserPrompt(scope, summary, info.label)
+
       const raw = await this.callAI(userPrompt)
       const cleaned = this.cleanText(raw)
-      console.log(`[ai-${scope}] generated:`, cleaned)
+      if (!cleaned) throw new Error('AI返回为空')
 
-      if (!cleaned) throw new Error('AI 返回为空')
-
-      wx.setStorageSync(STORAGE_KEYS[scope], {
-        periodKey: info.periodKey,
-        text: cleaned
-      })
+      wx.setStorageSync(STORAGE_KEYS[scope], { periodKey: info.periodKey, text: cleaned })
       this.setData({
         [`${scope}Comment`]: cleaned,
-        [`${scope}Loading`]: false
+        [`${scope}Loading`]: false,
+        aiDebugText: `AI调用成功：${scope} ${info.periodKey}，模型 ${AI_MODEL}`
       })
     } catch (err) {
-      console.warn(`[ai-${scope}] failed:`, (err && (err.errMsg || err.message)) || err)
+      const reason = this.getErrText(err)
+      console.warn(`[ai-${scope}] failed:`, reason)
       this.setData({
         [`${scope}Comment`]: FAIL_FALLBACK,
-        [`${scope}Loading`]: false
+        [`${scope}Loading`]: false,
+        aiDebugText: `AI调用失败：${scope} ${reason}`
       })
+      wx.showToast({ title: 'AI请求失败', icon: 'none' })
     }
+  },
+
+  async refreshAIComments() {
+    this.clearAICache()
+    this.setData({
+      dailyLoading: true,
+      weeklyLoading: true,
+      monthlyLoading: true,
+      dailyComment: PLACEHOLDER,
+      weeklyComment: PLACEHOLDER,
+      monthlyComment: PLACEHOLDER,
+      aiDebugText: '已清理本地缓存，正在强制请求AI...'
+    })
+    this.loadAIComments({ force: true })
+  },
+
+  clearAICache() {
+    wx.removeStorageSync(STORAGE_KEYS.daily)
+    wx.removeStorageSync(STORAGE_KEYS.weekly)
+    wx.removeStorageSync(STORAGE_KEYS.monthly)
+  },
+
+  getErrText(err) {
+    if (!err) return '未知错误'
+    if (typeof err === 'string') return err
+    return err.errMsg || err.message || JSON.stringify(err)
   },
 
   getPeriodInfo(scope) {
@@ -270,52 +265,82 @@ Page({
     return data
   },
 
-  async callAI(userPrompt) {
-    if (!wx.cloud || !wx.cloud.extend || !wx.cloud.extend.AI) {
-      throw new Error('CloudBase AI 未启用，请在云开发控制台开通')
-    }
-    const model = wx.cloud.extend.AI.createModel('cloudbase')
-    // 按 CloudBase 官方调用方式：streamText + eventStream + delta 累加
-    // 参考：https://docs.cloudbase.net/ai/model/miniprogram-access
-    const res = await model.streamText({
-      data: {
-        model: 'hy3-preview',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: userPrompt }
-        ]
-      }
-    })
+  async callAI(userPrompt, retryCount = 0) {
+    const MAX_RETRIES = 2
+    const RETRY_DELAYS = [3000, 6000] // 重试等待：3s, 6s
 
-    let acc = ''
-    if (!res || !res.eventStream) {
-      console.warn('[ai] streamText returned no eventStream:', res)
-      return ''
+    if (!wx.cloud?.extend?.AI) {
+      throw new Error('CloudBase AI 未启用，请确认：1) 已报名小程序成长计划 2) 云开发控制台已开通AI 3) 基础库 ≥ 3.7.1')
     }
-    for await (const event of res.eventStream) {
-      if (!event || event.data == null) continue
-      if (event.data === '[DONE]') break
-      try {
-        const chunk = JSON.parse(event.data)
-        const delta = chunk && chunk.choices && chunk.choices[0] && chunk.choices[0].delta
-        if (delta && typeof delta.content === 'string') {
-          acc += delta.content
+    if (typeof wx.cloud.extend.AI.createModel !== 'function') {
+      throw new Error('createModel 不可用，基础库版本需 ≥ 3.7.1')
+    }
+
+    const model = wx.cloud.extend.AI.createModel('hunyuan-v3')
+    console.log('[ai-debug] calling streamText, model:', AI_MODEL, retryCount > 0 ? `(retry ${retryCount})` : '')
+
+    try {
+      const res = await model.streamText({
+        data: {
+          model: AI_MODEL,
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: userPrompt }
+          ]
         }
-      } catch (e) {
-        // 单 chunk parse 失败不影响整体流
-        console.warn('[ai] chunk parse failed:', event.data, e && e.message)
+      })
+
+      // 优先使用 textStream
+      if (res && res.textStream) {
+        let acc = ''
+        for await (const text of res.textStream) {
+          acc += text
+        }
+        console.log('[ai-debug] textStream done, length:', acc.length)
+        return acc
       }
+
+      // 回退到 eventStream 解析
+      if (res && res.eventStream) {
+        let acc = ''
+        for await (const event of res.eventStream) {
+          if (!event || event.data == null) continue
+          if (event.data === '[DONE]') break
+          try {
+            const chunk = JSON.parse(event.data)
+            const delta = chunk?.choices?.[0]?.delta
+            if (delta && typeof delta.content === 'string') acc += delta.content
+          } catch (e) {
+            console.warn('[ai-debug] chunk parse failed:', event.data, e?.message)
+          }
+        }
+        console.log('[ai-debug] eventStream done, length:', acc.length)
+        return acc
+      }
+
+      console.warn('[ai-debug] streamText returned no stream:', res)
+      return ''
+    } catch (err) {
+      const errMsg = err?.errMsg || err?.message || String(err)
+      const is429 = errMsg.includes('429') || errMsg.includes('Too Many Requests') || errMsg.includes('CONCURRENT')
+
+      if (is429 && retryCount < MAX_RETRIES) {
+        const delay = RETRY_DELAYS[retryCount]
+        console.warn(`[ai-debug] 429 限流，${delay / 1000}s 后重试 (${retryCount + 1}/${MAX_RETRIES})`)
+        await new Promise(r => setTimeout(r, delay))
+        return this.callAI(userPrompt, retryCount + 1)
+      }
+
+      throw err
     }
-    console.log('[ai] stream done, length:', acc.length)
-    return acc
   },
 
   cleanText(s) {
     if (!s) return ''
     return String(s)
       .trim()
-      .replace(/^["「""'`]+/, '')
-      .replace(/["」""'`]+$/, '')
+      .replace(/^["“”'`]+/, '')
+      .replace(/["“”'`]+$/, '')
       .trim()
   }
 })

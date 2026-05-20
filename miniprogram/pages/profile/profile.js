@@ -318,10 +318,22 @@ Page({
       wx.shareFileMessage({
         filePath: dl.tempFilePath,
         fileName: this.exportFileName,
-        success: () => wx.showToast({ title: '已发送' })
+        success: () => wx.showToast({ title: '已发送' }),
+        fail: err => {
+          console.error('[share] wx.shareFileMessage failed:', err)
+          const msg = (err && err.errMsg) || '分享失败'
+          // 部分机型/基础库不支持文件转发，降级为提示用户手动操作
+          wx.showModal({
+            title: '无法直接分享',
+            content: '当前环境暂不支持文件转发，请选择「打开文件」后通过右上角菜单手动发送。',
+            confirmText: '打开文件',
+            success: res => { if (res.confirm) this.openExportFile() }
+          })
+        }
       })
     } catch (err) {
       wx.hideLoading()
+      console.error('[share] download failed:', err)
       wx.showToast({ title: '分享失败', icon: 'none' })
     }
   },
