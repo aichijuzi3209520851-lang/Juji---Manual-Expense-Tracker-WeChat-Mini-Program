@@ -19,11 +19,13 @@
         <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{true}}" bindinput="onAmountInput" cursor-spacing="24" />
       </view>
     </view>
-    <view class="date-tag" bindtap="pickDate">
-      <text>{{displayDate}}</text>
-      <text class="date-tag__dot">·</text>
-      <text class="date-tag__hint">点按修改</text>
-    </view>
+    <picker mode="date" value="{{dateStr}}" start="2020-01-01" fields="day" bindchange="onDateChange">
+      <view class="date-tag" hover-class="date-tag--hover">
+        <text>{{displayDate}}</text>
+        <text class="date-tag__dot">·</text>
+        <text class="date-tag__hint">点击修改</text>
+      </view>
+    </picker>
   </view>
 
   <!-- 分类选择 -->
@@ -39,7 +41,7 @@
           <text class="category-name">{{item.name}}</text>
         </view>
       </view>
-      <view class="category-item add-category" bindtap="addCategory">
+      <view class="category-item add-category" bindtap="openAddDialog">
         <view class="category-card">
           <view class="category-icon add-icon">+</view>
           <text class="category-name">自创</text>
@@ -56,9 +58,8 @@
       </view>
       <input class="note-input" value="{{note}}" placeholder="添加备注…" placeholder-class="note-placeholder" bindinput="onNoteInput" bindfocus="onNoteFocus" bindblur="onNoteBlur" maxlength="200" />
       <view class="note-tools">
-        <view class="note-photo-trigger" bindtap="choosePhoto">
+        <view class="note-photo-trigger {{photoUrl ? 'has-photo' : ''}}" bindtap="choosePhoto" hover-class="note-photo-trigger--hover">
           <image class="note-photo-icon" src="/images/record/camera.svg" mode="aspectFit" />
-          <text class="note-photo-text">{{photoUrl ? '更换照片' : '加照片'}}</text>
         </view>
       </view>
     </view>
@@ -77,6 +78,27 @@
   <view class="record-actions">
     <view class="record-actions-inner">
       <button class="save-btn" bindtap="saveRecord">保存</button>
+    </view>
+  </view>
+
+  <!-- 自创分类弹窗 -->
+  <view wx:if="{{showAddDialog}}" class="add-dialog-mask" bindtap="closeAddDialog"></view>
+  <view wx:if="{{showAddDialog}}" class="add-dialog">
+    <text class="add-dialog-title">新建自创分类</text>
+    <view class="add-dialog-field">
+      <text class="add-dialog-label">分类名称</text>
+      <input class="add-dialog-input" value="{{addCategoryName}}" placeholder="如：奶茶、约会…" bindinput="onAddName" maxlength="10" />
+      <text wx:if="{{addCategoryError}}" class="add-dialog-error">{{addCategoryError}}</text>
+    </view>
+    <view class="add-dialog-field">
+      <text class="add-dialog-label">选择图标</text>
+      <view class="add-dialog-emoji-grid">
+        <view wx:for="{{emojiPool}}" wx:key="*this" class="add-dialog-emoji {{addCategoryEmoji === item ? 'is-selected' : ''}}" data-emoji="{{item}}" bindtap="pickAddEmoji">{{item}}</view>
+      </view>
+    </view>
+    <view class="add-dialog-actions">
+      <button class="add-dialog-cancel" bindtap="closeAddDialog">取消</button>
+      <button class="add-dialog-confirm" bindtap="saveAddCategory">创建并使用</button>
     </view>
   </view>
 

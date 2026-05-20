@@ -127,7 +127,9 @@
   align-items: center;
   gap: 10rpx;
   border: 1rpx solid rgba(120, 86, 85, 0.06);
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
+.date-tag--hover { opacity: 0.7; transform: scale(0.97); }
 .date-tag__dot {
   opacity: 0.4;
 }
@@ -247,28 +249,25 @@
   justify-content: flex-start;
 }
 .note-photo-trigger {
-  min-height: 66rpx;
-  padding: 0 22rpx 0 18rpx;
-  border-radius: var(--radius-full);
+  width: 72rpx; height: 72rpx; border-radius: 50%;
   background: linear-gradient(180deg, #fff8f6 0%, #f8ece9 100%);
   border: 1rpx solid rgba(120, 86, 85, 0.06);
-  display: inline-flex;
-  align-items: center;
-  gap: 10rpx;
+  display: inline-flex; align-items: center; justify-content: center;
+  position: relative;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.note-photo-trigger--hover { opacity: 0.7; transform: scale(0.95); }
+.note-photo-trigger.has-photo::after {
+  content: ''; position: absolute; top: 8rpx; right: 8rpx;
+  width: 14rpx; height: 14rpx; border-radius: 50%;
+  background: var(--color-income);
+  border: 2rpx solid white;
 }
 .record-page.is-income .note-photo-trigger {
   background: linear-gradient(180deg, #f5faf6 0%, #eaf3ed 100%);
   border-color: rgba(75, 100, 88, 0.08);
 }
-.note-photo-icon { width: 26rpx; height: 26rpx; }
-.note-photo-text {
-  font-size: 22rpx;
-  color: var(--color-primary);
-  font-weight: 600;
-}
-.record-page.is-income .note-photo-text {
-  color: var(--color-income);
-}
+.note-photo-icon { width: 30rpx; height: 30rpx; }
 .note-input {
   width: 100%;
   min-height: 54rpx;
@@ -305,9 +304,9 @@
 .record-actions {
   display: flex;
   justify-content: center;
-  padding: 12rpx 0 172rpx;
-  padding-bottom: calc(172rpx + constant(safe-area-inset-bottom));
-  padding-bottom: calc(172rpx + env(safe-area-inset-bottom));
+  padding: 12rpx 0 230rpx;
+  padding-bottom: calc(230rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(230rpx + env(safe-area-inset-bottom));
   margin-top: auto;
 }
 .record-actions-inner {
@@ -332,3 +331,62 @@
   box-shadow: 0 14rpx 28rpx rgba(75, 100, 88, 0.16);
 }
 .save-btn::after { border: none; }
+
+/* 自创分类弹窗 */
+.add-dialog-mask {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(30, 27, 26, 0.4);
+}
+.add-dialog {
+  position: fixed; left: 48rpx; right: 48rpx; top: 50%; z-index: 101;
+  transform: translateY(-50%);
+  background: var(--color-surface); border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  box-shadow: 0 20rpx 60rpx rgba(120, 86, 85, 0.14);
+}
+.add-dialog-title {
+  font-size: 34rpx; font-weight: 700; color: var(--color-text);
+  display: block; margin-bottom: 28rpx;
+}
+.add-dialog-field { margin-bottom: 22rpx; }
+.add-dialog-label {
+  font-size: 24rpx; color: var(--color-text-secondary); font-weight: 500;
+  display: block; margin-bottom: 10rpx;
+}
+.add-dialog-input {
+  font-size: 30rpx; color: var(--color-text);
+  border-bottom: 2rpx solid var(--color-surface-high); padding: 8rpx 0;
+}
+.add-dialog-error {
+  font-size: 22rpx; color: var(--color-error); margin-top: 6rpx; display: block;
+}
+.add-dialog-emoji-grid {
+  display: flex; flex-wrap: wrap; gap: 10rpx;
+  max-height: 240rpx; overflow-y: auto;
+}
+.add-dialog-emoji {
+  width: 68rpx; height: 68rpx; font-size: 34rpx;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-low);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.add-dialog-emoji.is-selected {
+  background: var(--color-primary-container);
+  transform: scale(1.14);
+}
+.add-dialog-actions {
+  display: flex; gap: 16rpx; margin-top: 28rpx;
+}
+.add-dialog-cancel {
+  flex: 1; background: var(--color-surface-low); color: var(--color-text-secondary);
+  border-radius: var(--radius-full); font-size: 28rpx; font-weight: 500; border: none;
+  padding: 20rpx 0;
+}
+.add-dialog-cancel::after { border: none; }
+.add-dialog-confirm {
+  flex: 1; background: var(--color-primary); color: white;
+  border-radius: var(--radius-full); font-size: 28rpx; font-weight: 600; border: none;
+  padding: 20rpx 0;
+}
+.add-dialog-confirm::after { border: none; }

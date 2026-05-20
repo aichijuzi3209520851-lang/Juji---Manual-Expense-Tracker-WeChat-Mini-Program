@@ -21,6 +21,8 @@ const INCOME_CATEGORIES = [
 const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 
+const EMOJI_POOL = '🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨'.split('')
+
 Page({
   data: {
     type: 'expense',
@@ -32,7 +34,12 @@ Page({
     note: '',
     showNoteInput: false,
     photoUrl: '',
-    photoCloudPath: ''
+    photoCloudPath: '',
+    showAddDialog: false,
+    addCategoryName: '',
+    addCategoryEmoji: '🍜',
+    addCategoryError: '',
+    emojiPool: EMOJI_POOL
   },
 
   resetForm(nextType = 'expense') {
@@ -110,8 +117,29 @@ Page({
   onNoteFocus() { this.setData({ showNoteInput: true }) },
   onNoteBlur() { if (!this.data.note) this.setData({ showNoteInput: false }) },
   selectCategory(e) { this.setData({ selectedCategory: e.currentTarget.dataset.name }) },
-  addCategory() { wx.navigateTo({ url: '/pages/profile/profile?action=addCategory' }) },
-  pickDate() { wx.showToast({ title: '选择日期', icon: 'none' }) },
+
+  onDateChange(e) {
+    const dateStr = e.detail.value
+    const today = new Date()
+    const y = today.getFullYear()
+    const m = String(today.getMonth() + 1).padStart(2, '0')
+    const d = String(today.getDate()).padStart(2, '0')
+    const todayStr = `${y}-${m}-${d}`
+    const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1)
+    const yd = yesterday.getFullYear()
+    const ym = String(yesterday.getMonth() + 1).padStart(2, '0')
+    const yday = String(yesterday.getDate()).padStart(2, '0')
+    const yestStr = `${yd}-${ym}-${yday}`
+
+    let displayDate
+    if (dateStr === todayStr) displayDate = '今天'
+    else if (dateStr === yestStr) displayDate = '昨天'
+    else {
+      const [sy, sm, sd] = dateStr.split('-')
+      displayDate = `${parseInt(sm)}月${parseInt(sd)}日`
+    }
+    this.setData({ dateStr, displayDate })
+  },
 
   choosePhoto() {
     if (this.data.photoUrl) {
@@ -139,6 +167,44 @@ Page({
   },
 
   removePhoto() { this.setData({ photoUrl: '', photoCloudPath: '' }) },
+
+  // ===== 自创分类 =====
+  openAddDialog() {
+    this.setData({ showAddDialog: true, addCategoryName: '', addCategoryEmoji: '🍜', addCategoryError: '' })
+  },
+  closeAddDialog() { this.setData({ showAddDialog: false, addCategoryError: '' }) },
+  onAddName(e) { this.setData({ addCategoryName: e.detail.value, addCategoryError: '' }) },
+  pickAddEmoji(e) { this.setData({ addCategoryEmoji: e.currentTarget.dataset.emoji }) },
+
+  async saveAddCategory() {
+    const name = this.data.addCategoryName.trim()
+    if (!name || name.length > 10) {
+      this.setData({ addCategoryError: '名称需要 1-10 字' }); return
+    }
+    if (name === '自创') {
+      this.setData({ addCategoryError: '不能使用这个名称' }); return
+    }
+    const presetNames = new Set([...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES].map(c => c.name))
+    const existingCustom = (getApp().globalData.userInfo?.customCategories || []).map(c => c.name)
+    if (presetNames.has(name) || existingCustom.includes(name)) {
+      this.setData({ addCategoryError: '该分类已存在' }); return
+    }
+
+    const app = getApp()
+    const custom = [...(app.globalData.userInfo?.customCategories || []), { name, icon: this.data.addCategoryEmoji }]
+    try {
+      await wx.cloud.database().collection('users')
+        .where({ _openid: app.globalData.openid })
+        .update({ data: { customCategories: custom } })
+      app.globalData.userInfo.customCategories = custom
+      this.setData({ showAddDialog: false, selectedCategory: name })
+      this.loadCustomCategories(this.data.type)
+      wx.showToast({ title: `已创建「${name}」`, icon: 'success' })
+    } catch (err) {
+      console.error('创建分类失败:', err)
+      wx.showToast({ title: '创建失败', icon: 'none' })
+    }
+  },
   previewPhoto() { wx.previewImage({ urls: [this.data.photoUrl] }) },
 
   // ===== 保存记账 =====
