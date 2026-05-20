@@ -61,7 +61,7 @@
         <text class="day-header-net" wx:if="{{item.netStr}}">{{item.netStr}}</text>
       </view>
       <view wx:for="{{item.items}}" wx:for-item="bill" wx:key="_id" class="bill-row"
-            data-id="{{bill._id}}" bindlongpress="deleteBill">
+            hover-class="bill-row--hover" data-id="{{bill._id}}" bindlongpress="deleteBill">
         <view class="bill-icon">{{bill.icon}}</view>
         <view class="bill-info">
           <text class="bill-category">{{bill.category}}</text>
@@ -73,5 +73,7 @@
       </view>
     </view>
   </view>
+
+  <view wx:if="{{overviewFailed}}" class="retry-banner" bindtap="onShow">加载失败，点击重试</view>
 
 </view>

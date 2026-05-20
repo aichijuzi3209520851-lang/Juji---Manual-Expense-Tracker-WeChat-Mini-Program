@@ -1,16 +1,82 @@
-.guide-swiper { height: 100vh; }
+.guide-wrap {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(247, 202, 201, 0.14), rgba(247, 202, 201, 0) 28%),
+    radial-gradient(circle at 84% 88%, rgba(247, 202, 201, 0.10), rgba(247, 202, 201, 0) 24%),
+    linear-gradient(180deg, #fffaf8 0%, #fffdfc 100%);
+}
+
+.guide-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90rpx);
+  pointer-events: none;
+}
+.guide-glow-top {
+  width: 400rpx; height: 400rpx;
+  top: -100rpx; left: -80rpx;
+  background: rgba(247, 202, 201, 0.18);
+}
+.guide-glow-bottom {
+  width: 340rpx; height: 340rpx;
+  right: -60rpx; bottom: 40rpx;
+  background: rgba(244, 224, 220, 0.14);
+}
+
+.guide-swiper { height: calc(100vh - 120rpx); }
+
 .guide-page {
   height: 100%;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 120rpx 60rpx;
+  padding: 80rpx 60rpx;
 }
-.guide-illustration { font-size: 160rpx; margin-bottom: 80rpx; }
+.guide-illustration {
+  font-size: 160rpx; margin-bottom: 80rpx;
+  opacity: 0; transform: translateY(20rpx);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.guide-illustration.is-visible { opacity: 1; transform: translateY(0); }
+
+.guide-logo {
+  width: 140rpx; height: 140rpx;
+  border-radius: 36rpx;
+  margin-bottom: 60rpx;
+  box-shadow: 0 16rpx 38rpx rgba(120, 86, 85, 0.1);
+  opacity: 0; transform: translateY(20rpx);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.guide-logo.is-visible { opacity: 1; transform: translateY(0); }
+
 .guide-title { font-size: 44rpx; font-weight: 700; color: var(--color-text); margin-bottom: 24rpx; text-align: center; }
 .guide-desc { font-size: 30rpx; color: var(--color-text-secondary); text-align: center; line-height: 1.6; }
+
 .guide-btn {
-  margin-top: 80rpx; width: 400rpx; background: var(--color-primary);
-  color: white; border-radius: var(--radius-full); padding: 24rpx 0;
+  margin-top: 80rpx; width: 400rpx;
+  background: linear-gradient(135deg, #f7caca 0%, #f4c0c0 100%);
+  color: var(--color-primary);
+  border-radius: var(--radius-full); padding: 24rpx 0;
   font-size: 32rpx; font-weight: 600; text-align: center; border: none;
+  box-shadow: 0 18rpx 34rpx rgba(247, 202, 201, 0.16);
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 .guide-btn::after { border: none; }
+.guide-btn:active { transform: scale(0.97); opacity: 0.94; }
 .guide-privacy { margin-top: 32rpx; font-size: 24rpx; color: var(--color-text-tertiary); }
+
+/* 自定义圆点 */
+.guide-dots {
+  display: flex; align-items: center; justify-content: center; gap: 14rpx;
+  padding: 20rpx 0 40rpx;
+}
+.guide-dot {
+  width: 12rpx; height: 12rpx;
+  border-radius: 6rpx;
+  background: rgba(120, 86, 85, 0.18);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+.guide-dot.is-active {
+  width: 28rpx;
+  background: var(--color-primary);
+}

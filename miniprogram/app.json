@@ -6,7 +6,9 @@
     "pages/stats/stats",
     "pages/record/record",
     "pages/budget/budget",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/categories/categories",
+    "pages/themes/themes"
   ],
   "window": {
     "backgroundColor": "#fffaf8",

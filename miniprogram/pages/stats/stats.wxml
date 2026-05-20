@@ -20,7 +20,7 @@
     </view>
 
     <view class="legend">
-      <view wx:for="{{legendData}}" wx:key="name" class="legend-item">
+      <view wx:for="{{legendData}}" wx:key="name" class="legend-item" hover-class="legend-item--hover">
         <view class="legend-dot" style="background: {{item.color}}"></view>
         <text class="legend-name">{{item.name}}</text>
         <text class="legend-pct">{{item.percent}}%</text>
@@ -75,4 +75,6 @@
       <text class="ai-card-disclaimer">以上内容由腾讯混元AI生成，仅供娱乐参考</text>
     </view>
   </view>
+
+  <view wx:if="{{statsFailed}}" class="retry-banner" bindtap="onShow">加载失败，点击重试</view>
 </view>

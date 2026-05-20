@@ -95,7 +95,8 @@ Page({
     dailyLoading: true,
     weeklyLoading: true,
     monthlyLoading: true,
-    aiDebugText: ''
+    aiDebugText: '',
+    statsFailed: false
   },
 
   onShow() {
@@ -170,6 +171,7 @@ Page({
       this.setData({ totalAmount: total.toFixed(2), legendData })
     } catch (err) {
       console.error('加载统计失败:', err)
+      this.setData({ statsFailed: true })
     }
   },
 
@@ -224,6 +226,7 @@ Page({
       this.setData({ trendData })
     } catch (err) {
       console.error('加载趋势失败:', err)
+      this.setData({ statsFailed: true })
     }
   },
 

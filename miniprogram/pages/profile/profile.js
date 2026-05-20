@@ -6,6 +6,11 @@ const THEMES = [
 ]
 const GENDERS = ['未设置', '男', '女']
 
+const CATEGORY_EMOJI = {
+  '餐饮':'🍜','交通':'🚇','购物':'🛍️','娱乐':'🎮','学习':'📚','日用':'🏠','医疗':'💊',
+  '工资':'💼','兼职':'🧳','理财':'💹','红包':'🎁','退款':'↩️','其他':'📌'
+}
+
 Page({
   data: {
     avatarUrl: '',
@@ -13,12 +18,14 @@ Page({
     nickname: '点击登录',
     genderText: '未设置',
     gender: '',
-    themeName: '清新'
+    themeName: '清新',
+    footprint: null
   },
 
   onShow() {
     this.updateCustomTabBar()
     this.loadUserInfo()
+    this.loadFootprint()
   },
 
   updateCustomTabBar() {
@@ -235,23 +242,12 @@ Page({
 
   // 主题切换
   switchTheme() {
-    wx.showActionSheet({
-      itemList: THEMES.map(t => t.name),
-      success: async res => {
-        const theme = THEMES[res.tapIndex]
-        await this.updateUserField('theme', theme.id)
-        wx.setStorageSync('theme', theme.id)
-        this.setData({ themeName: theme.name })
-        wx.showToast({ title: `已切换为 ${theme.name}`, icon: 'success' })
-      }
-    })
+    wx.navigateTo({ url: '/pages/themes/themes' })
   },
 
   // 自定义分类管理
   manageCategories() {
-    wx.navigateTo({ url: '/pages/profile/profile?action=manageCategories' })
-    // TODO: 跳转到分类管理子页面
-    wx.showToast({ title: '分类管理（即将开放）', icon: 'none' })
+    wx.navigateTo({ url: '/pages/categories/categories' })
   },
 
   // 导出数据
@@ -369,5 +365,35 @@ Page({
         data: { [field]: value }
       })
     } catch (err) { console.error(err) }
+  },
+
+  async loadFootprint() {
+    const app = getApp()
+    if (!app.globalData.openid) return
+    try {
+      const db = wx.cloud.database()
+      const { data } = await db.collection('bills').where({ _openid: app.globalData.openid }).get()
+      if (!data || data.length === 0) return
+
+      const dates = new Set(data.map(b => b.date)).size
+      const byCategory = {}
+      data.forEach(b => { byCategory[b.category] = (byCategory[b.category] || 0) + 1 })
+      const top = Object.entries(byCategory).sort((a, b) => b[1] - a[1])[0]
+
+      this.setData({
+        footprint: {
+          days: dates,
+          count: data.length,
+          topCategory: {
+            name: top[0],
+            emoji: CATEGORY_EMOJI[top[0]] || '📌'
+          }
+        }
+      })
+    } catch (err) { console.error('加载记账足迹失败:', err) }
+  },
+
+  goRecord() {
+    wx.switchTab({ url: '/pages/record/record' })
   }
 })

@@ -5,7 +5,7 @@
   padding-bottom: calc(208rpx + env(safe-area-inset-bottom));
 }
 .profile-hero {
-  display: flex; align-items: center; gap: 24rpx; padding: 48rpx 0 32rpx;
+  display: flex; align-items: center; gap: 24rpx; padding: 28rpx 0 20rpx;
 }
 .profile-avatar-wrap {
   width: 120rpx; height: 120rpx; border-radius: 50%;
@@ -22,7 +22,7 @@
 .profile-gender { font-size: 24rpx; color: var(--color-primary); background: var(--color-surface-low); padding: 4rpx 20rpx; border-radius: var(--radius-sm); display: inline-block; width: fit-content; }
 /* 菜单区 */
 .profile-section { margin-top: 32rpx; }
-.profile-section-title { font-size: 24rpx; color: var(--color-primary); font-weight: 600; padding: 0 8rpx 12rpx; display: block; }
+.profile-section-title { font-size: 24rpx; color: var(--color-primary); font-weight: 600; padding: 0 8rpx 12rpx; display: block; letter-spacing: 2rpx; opacity: 0.7; }
 .profile-menu { background: var(--color-surface); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 2rpx 8rpx rgba(120,86,85,0.03); }
 .menu-item {
   display: flex; align-items: center; gap: 20rpx; padding: 28rpx 24rpx;
@@ -37,6 +37,17 @@
 .menu-value { font-size: 26rpx; color: var(--color-text-secondary); }
 .menu-badge { font-size: 22rpx; color: var(--color-text-tertiary); background: var(--color-surface-high); padding: 4rpx 16rpx; border-radius: var(--radius-sm); }
 .menu-item.disabled { opacity: 0.6; }
+/* 记账足迹 */
+.footprint-card {
+  background: var(--color-surface); border-radius: var(--radius-xl);
+  box-shadow: 0 4rpx 16rpx rgba(120,86,85,0.04); padding: var(--space-lg);
+  margin-top: 24rpx; display: flex; align-items: center;
+}
+.footprint-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
+.footprint-value { font-size: 40rpx; font-weight: 700; color: var(--color-text); }
+.footprint-label { font-size: 22rpx; color: var(--color-text-tertiary); }
+.footprint-emoji { font-size: 40rpx; line-height: 1; }
+.footprint-divider { width: 2rpx; height: 48rpx; background: var(--color-border); }
 /* 页脚 */
 .profile-footer { display: flex; flex-direction: column; align-items: center; gap: 8rpx; padding: 60rpx 0; }
 .footer-version { font-size: 22rpx; color: var(--color-text-tertiary); }

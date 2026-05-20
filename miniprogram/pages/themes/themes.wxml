@@ -1,0 +1,20 @@
+<!-- 主题预览 -->
+<view class="themes-page">
+  <view class="themes-header">
+    <text class="themes-title">选择主题</text>
+    <text class="themes-hint">选一套配色，换个心情</text>
+  </view>
+
+  <view wx:for="{{themes}}" wx:key="id" class="theme-card {{currentTheme === item.id ? 'is-current' : ''}}" bindtap="selectTheme" data-id="{{item.id}}">
+    <view class="theme-colors">
+      <view class="theme-swatch" wx:for="{{item.colors}}" wx:key="name" wx:for-item="c" style="background: {{c.value}}"></view>
+    </view>
+    <view class="theme-info">
+      <text class="theme-name">{{item.name}}</text>
+      <text class="theme-desc">{{item.desc}}</text>
+    </view>
+    <view class="theme-checkmark" wx:if="{{currentTheme === item.id}}">
+      <text>✓</text>
+    </view>
+  </view>
+</view>

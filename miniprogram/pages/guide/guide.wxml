@@ -1,41 +1,45 @@
 <!-- 新手引导 - 4 页 swiper -->
-<swiper class="guide-swiper" indicator-dots="{{true}}" indicator-color="rgba(120,86,85,0.2)" indicator-active-color="#785655">
+<view class="guide-wrap">
+  <view class="guide-glow guide-glow-top"></view>
+  <view class="guide-glow guide-glow-bottom"></view>
 
-  <!-- 第 1 页：随手记账 -->
-  <swiper-item>
-    <view class="guide-page">
-      <view class="guide-illustration">📝</view>
-      <text class="guide-title">随手记账</text>
-      <text class="guide-desc">打开橘记，输入金额，选个分类就完事。无负担，不啰嗦。</text>
-    </view>
-  </swiper-item>
+  <swiper class="guide-swiper" bindchange="onSwiperChange" current="{{currentIndex}}">
+    <swiper-item>
+      <view class="guide-page">
+        <view class="guide-illustration {{0 === currentIndex ? 'is-visible' : ''}}">📝</view>
+        <text class="guide-title">随手记账</text>
+        <text class="guide-desc">打开橘记，输入金额，选个分类就完事。无负担，不啰嗦。</text>
+      </view>
+    </swiper-item>
 
-  <!-- 第 2 页：自定义分类 -->
-  <swiper-item>
-    <view class="guide-page">
-      <view class="guide-illustration">🏷️</view>
-      <text class="guide-title">你的分类你做主</text>
-      <text class="guide-desc">预设不够用？自创「奶茶」「宠物」「约会」……挑个 emoji 图标，想怎么分就怎么分。</text>
-    </view>
-  </swiper-item>
+    <swiper-item>
+      <view class="guide-page">
+        <view class="guide-illustration {{1 === currentIndex ? 'is-visible' : ''}}">🏷️</view>
+        <text class="guide-title">你的分类你做主</text>
+        <text class="guide-desc">预设不够用？自创「奶茶」「宠物」「约会」……挑个 emoji 图标，想怎么分就怎么分。</text>
+      </view>
+    </swiper-item>
 
-  <!-- 第 3 页：数据回顾 + 俏皮评论 -->
-  <swiper-item>
-    <view class="guide-page">
-      <view class="guide-illustration">📊</view>
-      <text class="guide-title">看得清楚，心里有数</text>
-      <text class="guide-desc">每周、每月看看钱花在哪儿了。配上俏皮的点评，安心回顾不焦虑。</text>
-    </view>
-  </swiper-item>
+    <swiper-item>
+      <view class="guide-page">
+        <view class="guide-illustration {{2 === currentIndex ? 'is-visible' : ''}}">📊</view>
+        <text class="guide-title">看得清楚，心里有数</text>
+        <text class="guide-desc">每周、每月看看钱花在哪儿了。配上俏皮的点评，安心回顾不焦虑。</text>
+      </view>
+    </swiper-item>
 
-  <!-- 第 4 页：主题切换 + 开始 -->
-  <swiper-item>
-    <view class="guide-page">
-      <view class="guide-illustration">🎨</view>
-      <text class="guide-title">换套主题，换个心情</text>
-      <text class="guide-desc">清新、深夜、暖阳、薄荷……换一套颜色就像换了一个新本子。</text>
-      <button class="guide-btn" bindtap="finishGuide">开始使用</button>
-      <text class="guide-privacy">你的数据只属于你，永远私密。</text>
-    </view>
-  </swiper-item>
-</swiper>
+    <swiper-item>
+      <view class="guide-page">
+        <image class="guide-logo {{3 === currentIndex ? 'is-visible' : ''}}" src="/images/juji2.jpg" mode="aspectFill" />
+        <text class="guide-title">换套主题，换个心情</text>
+        <text class="guide-desc">清新、深夜、暖阳、薄荷……换一套颜色就像换了一个新本子。</text>
+        <button class="guide-btn" bindtap="finishGuide">开始使用</button>
+        <text class="guide-privacy">你的数据只属于你，永远私密。</text>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <view class="guide-dots">
+    <view wx:for="{{[0,1,2,3]}}" wx:key="*this" class="guide-dot {{item === currentIndex ? 'is-active' : ''}}"></view>
+  </view>
+</view>

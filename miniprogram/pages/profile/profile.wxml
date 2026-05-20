@@ -13,6 +13,24 @@
     </view>
   </view>
 
+  <!-- 记账足迹 -->
+  <view class="footprint-card" wx:if="{{footprint}}" bindtap="goRecord">
+    <view class="footprint-item">
+      <text class="footprint-value">{{footprint.days}}</text>
+      <text class="footprint-label">记账天数</text>
+    </view>
+    <view class="footprint-divider"></view>
+    <view class="footprint-item">
+      <text class="footprint-value">{{footprint.count}}</text>
+      <text class="footprint-label">累计笔数</text>
+    </view>
+    <view class="footprint-divider"></view>
+    <view class="footprint-item">
+      <text class="footprint-emoji">{{footprint.topCategory.emoji}}</text>
+      <text class="footprint-label">最爱{{footprint.topCategory.name}}</text>
+    </view>
+  </view>
+
   <!-- 个性化设置 -->
   <view class="profile-section">
     <text class="profile-section-title">个性化设置</text>

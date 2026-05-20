@@ -29,7 +29,8 @@ Page({
     todayExpense: '0.00',
     yesterdayExpense: '0.00',
     budget: { status: 'unset' },
-    groupedBills: []
+    groupedBills: [],
+    overviewFailed: false
   },
 
   onShow() {
@@ -89,6 +90,7 @@ Page({
       })
     } catch (err) {
       console.error('加载概览失败:', err)
+      this.setData({ overviewFailed: true })
     }
   },
 
@@ -120,6 +122,7 @@ Page({
       this.setData({ groupedBills })
     } catch (err) {
       console.error('加载账单失败:', err)
+      this.setData({ overviewFailed: true })
     }
   },
 

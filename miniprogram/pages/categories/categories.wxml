@@ -1,0 +1,78 @@
+<!-- 自定义分类管理 -->
+<view class="categories-page">
+
+  <view class="cat-header">
+    <text class="cat-title">分类管理</text>
+    <text class="cat-hint">预设分类不可删除，自创分类长按可编辑或删除</text>
+  </view>
+
+  <!-- 分类列表 -->
+  <view class="cat-section">
+    <text class="cat-section-title">支出分类</text>
+    <view wx:for="{{expenseCategories}}" wx:key="name" class="cat-row"
+          data-name="{{item.name}}" data-preset="{{item.preset}}"
+          bindtap="{{item.preset ? '' : 'editCategory'}}"
+          bindlongpress="{{item.preset ? '' : 'deleteCategory'}}">
+      <view class="cat-row-left">
+        <text class="cat-emoji">{{item.icon}}</text>
+        <text class="cat-name">{{item.name}}</text>
+      </view>
+      <view class="cat-row-right">
+        <text wx:if="{{item.preset}}" class="cat-tag">预设</text>
+        <text wx:else class="cat-hint-link">编辑 ›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="cat-section">
+    <text class="cat-section-title">收入分类</text>
+    <view wx:for="{{incomeCategories}}" wx:key="name" class="cat-row"
+          data-name="{{item.name}}" data-preset="{{item.preset}}"
+          bindtap="{{item.preset ? '' : 'editCategory'}}"
+          bindlongpress="{{item.preset ? '' : 'deleteCategory'}}">
+      <view class="cat-row-left">
+        <text class="cat-emoji">{{item.icon}}</text>
+        <text class="cat-name">{{item.name}}</text>
+      </view>
+      <view class="cat-row-right">
+        <text wx:if="{{item.preset}}" class="cat-tag">预设</text>
+        <text wx:else class="cat-hint-link">编辑 ›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新增按钮 -->
+  <button class="cat-add-btn" bindtap="openAddDialog">+ 新建分类</button>
+
+  <!-- 新增 / 编辑弹窗 -->
+  <view wx:if="{{showDialog}}" class="cat-dialog-mask" bindtap="closeDialog"></view>
+  <view wx:if="{{showDialog}}" class="cat-dialog">
+    <text class="dialog-title">{{editingCategory ? '编辑分类' : '新建分类'}}</text>
+
+    <view class="dialog-field">
+      <text class="dialog-label">分类名称</text>
+      <input class="dialog-input" value="{{dialogName}}" placeholder="如：奶茶、约会…" bindinput="onDialogName" maxlength="10" />
+    </view>
+
+    <view class="dialog-field">
+      <text class="dialog-label">选择图标</text>
+      <view class="dialog-emoji-grid">
+        <view wx:for="{{emojiPool}}" wx:key="*this" class="dialog-emoji-item {{dialogEmoji === item ? 'is-selected' : ''}}" data-emoji="{{item}}" bindtap="pickEmoji">{{item}}</view>
+      </view>
+    </view>
+
+    <view class="dialog-field">
+      <text class="dialog-label">类型</text>
+      <view class="dialog-type-row">
+        <view class="dialog-type {{dialogType === 'expense' ? 'is-active' : ''}}" data-type="expense" bindtap="pickType">支出</view>
+        <view class="dialog-type {{dialogType === 'income' ? 'is-active' : ''}}" data-type="income" bindtap="pickType">收入</view>
+      </view>
+    </view>
+
+    <view class="dialog-actions">
+      <button class="dialog-cancel" bindtap="closeDialog">取消</button>
+      <button class="dialog-confirm" bindtap="saveCategory">保存</button>
+    </view>
+  </view>
+
+</view>

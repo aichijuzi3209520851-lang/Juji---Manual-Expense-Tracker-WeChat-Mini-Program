@@ -1,16 +1,22 @@
+const pad = n => String(n).padStart(2, '0')
+
 Page({
   data: {
-    budgetAmount: 2000,
-    spent: 0,
+    budgetAmount: 0,
+    spent: '0.00',
     budgetInput: '2000',
     percent: 0,
     status: 'safe',
-    statusText: ''
+    statusText: '',
+    ringReady: false,
+    showEditor: false,
+    historyData: []
   },
 
   onShow() {
     this.updateCustomTabBar()
     this.loadBudget()
+    this.loadHistory()
   },
 
   updateCustomTabBar() {
@@ -23,37 +29,82 @@ Page({
 
   async loadBudget() {
     const now = new Date()
-    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    const month = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
     const db = wx.cloud.database()
     const _ = db.command
 
     try {
-      // 获取预算
       const budgetRes = await db.collection('budgets')
-        .where({ month })
-        .orderBy('createdAt', 'desc').limit(1).get()
+        .where({ month }).orderBy('createdAt', 'desc').limit(1).get()
 
-      let budgetAmount = 2000
-      if (budgetRes.data.length > 0) {
-        budgetAmount = budgetRes.data[0].amount
-      }
+      let budgetAmount = 0
+      if (budgetRes.data.length > 0) budgetAmount = budgetRes.data[0].amount
 
-      // 获取本月支出
       const billRes = await db.collection('bills')
         .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(`${month}-31`)) }).get()
 
       let spent = 0
       billRes.data.forEach(b => { spent += b.amount })
 
-      const percent = budgetAmount ? Math.round((spent / budgetAmount) * 100) : 0
+      const percent = budgetAmount ? Math.min(Math.round((spent / budgetAmount) * 100), 100) : 0
       let status = 'safe', statusText = ''
-      if (percent >= 100) { status = 'over'; statusText = '超预算了！不过没关系，下个月注意就好 😋' }
+      if (budgetAmount === 0) { status = 'safe'; statusText = '' }
+      else if (percent >= 100) { status = 'over'; statusText = '超预算了！不过没关系，下个月注意就好 😋' }
       else if (percent >= 90) { status = 'warn'; statusText = `快了快了，只剩 ¥${(budgetAmount - spent).toFixed(0)} 到月底 💡` }
       else { status = 'safe'; statusText = `表现不错！还剩 ¥${(budgetAmount - spent).toFixed(0)} ✨` }
 
-      this.setData({ budgetAmount, spent: spent.toFixed(2), budgetInput: String(budgetAmount), percent, status, statusText })
+      this.setData({
+        budgetAmount, spent: spent.toFixed(2),
+        budgetInput: budgetAmount ? String(budgetAmount) : '2000',
+        percent, status, statusText, ringReady: true
+      })
     } catch (err) {
       console.error('加载预算失败:', err)
+    }
+  },
+
+  async loadHistory() {
+    const db = wx.cloud.database()
+    const _ = db.command
+    const now = new Date()
+
+    const months = []
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      months.push({
+        key: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
+        label: `${d.getMonth() + 1}月`
+      })
+    }
+
+    try {
+      const { data: budgets } = await db.collection('budgets')
+        .where({ month: _.in(months.map(m => m.key)) }).get()
+
+      const { data: bills } = await db.collection('bills')
+        .where({ type: 'expense', date: _.gte(`${months[0].key}-01`).and(_.lte(`${months[5].key}-31`)) }).get()
+
+      const byMonth = {}
+      bills.forEach(b => { const k = b.date.slice(0,7); byMonth[k] = (byMonth[k] || 0) + b.amount })
+
+      const historyData = months.map(m => {
+        const bgt = budgets.find(b => b.month === m.key)
+        const amount = bgt ? bgt.amount : 0
+        const spent = byMonth[m.key] || 0
+        const percent = amount ? Math.round((spent / amount) * 100) : 0
+        return {
+          month: m.key,
+          monthLabel: m.label,
+          percent,
+          barPercent: Math.min(percent, 100),
+          over: percent >= 100 && amount > 0,
+          hasData: amount > 0
+        }
+      }).filter(h => h.hasData)
+
+      this.setData({ historyData })
+    } catch (err) {
+      console.error('加载预算历史失败:', err)
     }
   },
 
@@ -65,7 +116,7 @@ Page({
       wx.showToast({ title: '请输入合理金额', icon: 'none' }); return
     }
     const now = new Date()
-    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    const month = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
 
     try {
       const db = wx.cloud.database()
@@ -73,9 +124,19 @@ Page({
         data: { month, amount: val, createdAt: new Date() }
       })
       wx.showToast({ title: '预算已更新', icon: 'success' })
+      this.setData({ showEditor: false, ringReady: false })
       this.loadBudget()
+      this.loadHistory()
     } catch (err) {
       wx.showToast({ title: '设置失败', icon: 'none' })
     }
+  },
+
+  openBudgetEditor() {
+    this.setData({ showEditor: true })
+  },
+
+  closeBudgetEditor() {
+    this.setData({ showEditor: false })
   }
 })

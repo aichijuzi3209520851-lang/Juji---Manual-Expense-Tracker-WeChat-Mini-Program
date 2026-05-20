@@ -1,38 +1,65 @@
 <!-- 预算页 -->
 <view class="budget-page">
 
-  <!-- 预算概览卡片 -->
-  <view class="budget-hero">
-    <text class="budget-hero-title">本月概览</text>
-
-    <!-- 进度环 -->
-    <view class="budget-ring-wrap">
-      <canvas type="2d" id="budgetRing" class="budget-ring"></canvas>
-      <view class="budget-ring-center">
-        <text class="ring-label">已花</text>
-        <text class="ring-amount">¥{{spent}}</text>
-      </view>
-    </view>
-
-    <view class="budget-summary">
-      <text class="budget-total-label">预算</text>
-      <text class="budget-total-amount">¥{{budgetAmount}}</text>
-    </view>
-
-    <!-- 状态文案 -->
-    <view class="budget-status {{status}}">
-      <text>{{statusText}}</text>
-    </view>
+  <!-- 空态：未设预算 -->
+  <view wx:if="{{budgetAmount === 0}}" class="budget-empty">
+    <text class="budget-empty-emoji">🎯</text>
+    <text class="budget-empty-title">还没设定本月预算</text>
+    <text class="budget-empty-desc">设定一个金额，看看自己能不能守住</text>
+    <button class="budget-empty-btn" bindtap="openBudgetEditor">去设定 ›</button>
   </view>
 
-  <!-- 预算设置 -->
-  <view class="budget-setter">
-    <text class="setter-title">调整预算</text>
-    <view class="setter-input-row">
-      <text class="setter-currency">¥</text>
-      <input class="setter-input" value="{{budgetInput}}" type="digit" placeholder="2000" bindinput="onBudgetInput" />
-      <button class="setter-btn" bindtap="saveBudget">设置</button>
+  <!-- 正常态 -->
+  <block wx:else>
+    <view class="budget-hero">
+      <text class="budget-hero-title">本月预算</text>
+
+      <view class="budget-ring-wrap {{ringReady ? 'is-ready' : ''}}">
+        <view class="budget-ring" style="background: conic-gradient(var(--color-primary) 0% {{percent}}%, var(--color-surface-low) {{percent}}% 100%)"></view>
+        <view class="budget-ring-center">
+          <text class="ring-label">已花</text>
+          <text class="ring-amount">¥{{spent}}</text>
+          <text class="ring-rate">{{percent}}%</text>
+        </view>
+      </view>
+
+      <view class="budget-summary">
+        <text class="budget-total-label">预算 ¥{{budgetAmount}}</text>
+      </view>
+
+      <view class="budget-status {{status}}">
+        <text>{{statusText}}</text>
+      </view>
+
+      <text class="budget-edit-link" bindtap="openBudgetEditor">调整预算 ›</text>
     </view>
+
+    <!-- 历史达成率 -->
+    <view class="budget-history" wx:if="{{historyData.length > 0}}">
+      <text class="history-title">过去 6 个月预算达成</text>
+      <view wx:for="{{historyData}}" wx:key="month" class="history-row">
+        <text class="history-month">{{item.monthLabel}}</text>
+        <view class="history-bar-wrap">
+          <view class="history-bar {{item.over ? 'is-over' : ''}}">
+            <view class="history-fill {{item.over ? 'is-over' : ''}}" style="width: {{item.barPercent}}%"></view>
+          </view>
+        </view>
+        <text class="history-pct {{item.over ? 'is-over' : ''}}">{{item.percent}}%</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 调整预算面板（bottom-sheet） -->
+  <view class="budget-mask {{showEditor ? 'is-open' : ''}}" bindtap="closeBudgetEditor"></view>
+  <view class="budget-sheet {{showEditor ? 'is-open' : ''}}">
+    <view class="sheet-handle"></view>
+    <text class="sheet-title">调整预算</text>
+    <text class="sheet-hint">设定本月你想控制的支出上限</text>
+    <view class="sheet-input-row">
+      <text class="sheet-currency">¥</text>
+      <input class="sheet-input" value="{{budgetInput}}" type="digit" placeholder="2000" bindinput="onBudgetInput" />
+    </view>
+    <button class="sheet-save" bindtap="saveBudget">保存</button>
   </view>
 
 </view>
