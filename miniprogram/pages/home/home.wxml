@@ -1,9 +1,9 @@
 <!-- 首页 -->
 <view class="home-page">
 
-  <!-- 天气 -->
-  <view wx:if="{{weather}}" class="weather-bar">
-    <text class="weather-text">{{weather.icon}} {{weather.temp}}°C</text>
+  <!-- 季节 -->
+  <view class="season-bar">
+    <text class="season-text">{{season}}</text>
   </view>
 
   <!-- 今日 / 昨日 -->

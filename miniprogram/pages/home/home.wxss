@@ -5,11 +5,11 @@
   padding-bottom: calc(208rpx + env(safe-area-inset-bottom));
 }
 
-/* 天气 */
-.weather-bar {
+/* 季节 */
+.season-bar {
   text-align: center; padding: 12rpx 0 4rpx;
 }
-.weather-text {
+.season-text {
   font-size: 22rpx; color: var(--color-text-tertiary);
 }
 
