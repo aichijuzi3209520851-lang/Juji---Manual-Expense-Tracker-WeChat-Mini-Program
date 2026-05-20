@@ -1,9 +1,12 @@
+const { initAppTheme, applyTheme } = require('./utils/theme')
+
 // 橘记 - app.js
 App({
   globalData: {
     openid: '',
     userInfo: null,
-    hasSeenGuide: false
+    hasSeenGuide: false,
+    currentTheme: 'fresh'
   },
 
   onLaunch() {
@@ -16,6 +19,9 @@ App({
       env: 'lajiaoyou-d4g78yts61f1a841d',
       traceUser: true,
     })
+
+    // 初始化主题（从 Storage 读取用户选择的主题并注入全局数据）
+    initAppTheme(this)
 
     // 检查是否看过引导页
     const guideFlag = wx.getStorageSync('has_seen_guide')

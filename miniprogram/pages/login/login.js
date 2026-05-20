@@ -1,5 +1,12 @@
+const { applyTheme } = require('../../utils/theme')
+
 Page({
   data: { loading: false },
+
+  onShow() {
+    // 每次显示登录页时同步最新主题（确保重启/切回时状态正确）
+    applyTheme()
+  },
 
   async handleLogin() {
     this.setData({ loading: true })

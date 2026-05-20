@@ -1,3 +1,5 @@
+const { applyTheme, getCurrentThemeId } = require('../../utils/theme')
+
 const THEMES = [
   {
     id: 'fresh', name: '清新', desc: '暖白底 + 柔和玫瑰色',
@@ -64,9 +66,26 @@ Page({
       title: '切换主题',
       content: '切换后会重新加载小程序',
       confirmText: '切换',
-      success: res => {
+      success: async res => {
         if (!res.confirm) return
+
+        // 1. 写入本地 Storage
         wx.setStorageSync('theme', id)
+
+        // 2. 同步到数据库（跨设备持久化）
+        try {
+          const app = getApp()
+          if (app.globalData.openid) {
+            const db = wx.cloud.database()
+            await db.collection('users')
+              .where({ _openid: app.globalData.openid })
+              .update({ data: { theme: id } })
+          }
+        } catch (err) {
+          console.warn('主题同步到数据库失败（非致命）:', err)
+        }
+
+        // 3. 重启小程序以全局应用新主题
         wx.reLaunch({ url: '/pages/home/home' })
       }
     })

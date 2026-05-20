@@ -1,3 +1,5 @@
+/* ==================== 登录页 — 使用 CSS 变量，支持多主题切换 ==================== */
+
 .login-page {
   min-height: 100vh;
   display: flex;
@@ -6,9 +8,9 @@
   justify-content: space-between;
   padding: 0 62rpx;
   background:
-    radial-gradient(circle at 18% 16%, rgba(247, 202, 201, 0.26), rgba(247, 202, 201, 0) 28%),
-    radial-gradient(circle at 84% 88%, rgba(247, 202, 201, 0.16), rgba(247, 202, 201, 0) 24%),
-    linear-gradient(180deg, #fffaf8 0%, #fffdfc 100%);
+    radial-gradient(circle at 18% 16%, var(--color-primary-container, rgba(247,202,201,0.26)), transparent 28%),
+    radial-gradient(circle at 84% 88%, var(--color-primary-container, rgba(247,202,201,0.16)), transparent 24%),
+    linear-gradient(180deg, var(--color-bg, #fffaf8) %, var(--color-surface-low, #fffdfc) 100%);
   overflow: hidden;
   position: relative;
 }
@@ -25,7 +27,7 @@
   height: 500rpx;
   top: -140rpx;
   left: -120rpx;
-  background: rgba(247, 202, 201, 0.28);
+  background: var(--color-primary-container, rgba(247,202,201,0.28));
 }
 
 .login-glow-bottom {
@@ -33,7 +35,7 @@
   height: 430rpx;
   right: -90rpx;
   bottom: 20rpx;
-  background: rgba(244, 224, 220, 0.2);
+  background: var(--color-primary-light, rgba(244,224,220,0.2));
 }
 
 .float-icon {
@@ -95,7 +97,7 @@
   margin-bottom: 34rpx;
   border-radius: 40rpx;
   overflow: hidden;
-  box-shadow: 0 16rpx 38rpx rgba(120, 86, 85, 0.08);
+  box-shadow: 0 16rpx 38rpx var(--shadow-login-logo, rgba(120,86,85,0.08));
   position: relative;
 }
 
@@ -132,7 +134,7 @@
 .login-btn {
   width: 100%;
   height: 96rpx;
-  background: linear-gradient(135deg, #f7caca 0%, #f4c0c0 100%);
+  background: linear-gradient(135deg, var(--color-primary-container, #f7caca) 0%, var(--color-primary-light, #f4c0c0) 100%);
   color: var(--color-primary);
   border-radius: var(--radius-full);
   font-size: 34rpx;
@@ -141,7 +143,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 18rpx 34rpx rgba(247, 202, 201, 0.16);
+  box-shadow: 0 18rpx 34rpx var(--shadow-btn-primary, rgba(247,202,201,0.16));
   transition: transform 0.15s ease, opacity 0.15s ease;
 }
 

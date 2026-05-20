@@ -1,4 +1,5 @@
 const pad = n => String(n).padStart(2, '0')
+const { applyTheme } = require('../../utils/theme')
 
 Page({
   data: {
@@ -14,6 +15,7 @@ Page({
   },
 
   onShow() {
+    applyTheme()
     this.updateCustomTabBar()
     this.loadBudget()
     this.loadHistory()

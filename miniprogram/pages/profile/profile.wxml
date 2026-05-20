@@ -14,20 +14,49 @@
   </view>
 
   <!-- 记账足迹 -->
-  <view class="footprint-card" wx:if="{{footprint}}" bindtap="goRecord">
-    <view class="footprint-item">
+  <view class="footprint-card" wx:if="{{footprint}}">
+    <view class="footprint-item" bindtap="onTapDays" hover-class="footprint-hover">
       <text class="footprint-value">{{footprint.days}}</text>
       <text class="footprint-label">记账天数</text>
     </view>
     <view class="footprint-divider"></view>
-    <view class="footprint-item">
+    <view class="footprint-item" bindtap="onTapCount" hover-class="footprint-hover">
       <text class="footprint-value">{{footprint.count}}</text>
       <text class="footprint-label">累计笔数</text>
     </view>
     <view class="footprint-divider"></view>
-    <view class="footprint-item">
+    <view class="footprint-item" bindtap="onTapTopCategory" hover-class="footprint-hover">
       <text class="footprint-emoji">{{footprint.topCategory.emoji}}</text>
       <text class="footprint-label">最爱{{footprint.topCategory.name}}</text>
+    </view>
+  </view>
+
+  <!-- AI 图片弹窗 -->
+  <view class="ai-poster-modal" wx:if="{{showPoster}}" catchtap="closePoster">
+    <view class="ai-poster-content" catchtap="">
+      <!-- 加载态 -->
+      <view class="ai-poster-loading" wx:if="{{posterLoading}}">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">{{loadingTip}}</text>
+        <text class="loading-sub" wx:if="{{posterRemaining >= 0}}">今日剩余 {{posterRemaining}}/{{posterTotalLimit}} 次</text>
+      </view>
+      <!-- 图片展示 -->
+      <view wx:if="{{!posterLoading && posterUrl}}" class="poster-img-wrap">
+        <image
+          class="ai-poster-img"
+          src="{{posterUrl}}"
+          mode="widthFix"
+          show-menu-by-longpress
+        />
+        <text class="poster-ai-disclaimer">🎨 该图片由混元AI生成，仅供娱乐</text>
+      </view>
+      <!-- 错误态 -->
+      <view class="ai-poster-error" wx:if="{{!posterLoading && !posterUrl}}">
+        <text class="error-icon">😢</text>
+        <text class="error-text">{{posterError || '生成失败，请重试'}}</text>
+      </view>
+      <!-- 关闭按钮 -->
+      <view class="poster-close-btn" bindtap="closePoster">✕</view>
     </view>
   </view>
 
