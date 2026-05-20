@@ -74,6 +74,18 @@
     </view>
   </view>
 
+  <!-- 心情（可选） -->
+  <view class="mood-section">
+    <text class="mood-label">心情（可选）</text>
+    <view class="mood-row">
+      <view wx:for="{{presetMoods}}" wx:key="*this" class="mood-chip {{mood === item ? 'is-active' : ''}}" data-emoji="{{item}}" bindtap="selectMood">{{item}}</view>
+      <view class="mood-chip mood-custom {{isCustomMood ? 'is-active' : ''}}" bindtap="pickCustomMood">
+        <text wx:if="{{!isCustomMood}}">+</text>
+        <text wx:else>{{mood}}</text>
+      </view>
+    </view>
+  </view>
+
   <!-- 操作按钮区 -->
   <view class="record-actions">
     <view class="record-actions-inner">

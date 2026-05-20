@@ -1,0 +1,55 @@
+<!-- 账单详情 — 手账便签风格 -->
+<view class="detail-page">
+  <block wx:if="{{bill}}">
+
+    <!-- 照片（若有） -->
+    <view class="detail-photo" wx:if="{{bill.photoUrl}}" bindtap="previewPhoto">
+      <image class="detail-photo-img" src="{{photoSrc}}" mode="aspectFill" />
+      <view class="detail-photo-border"></view>
+    </view>
+
+    <!-- 金额 -->
+    <view class="detail-amount-row">
+      <text class="detail-amount {{bill.type === 'income' ? 'is-income' : ''}}">{{bill.type === 'income' ? '+' : '-'}}¥{{bill.amountStr}}</text>
+    </view>
+
+    <!-- 心情印章 -->
+    <view class="detail-mood">
+      <view class="detail-mood-stamp {{bill.mood ? 'has-mood' : ''}}">
+        <text wx:if="{{bill.mood}}">{{bill.mood}}</text>
+        <text wx:else class="detail-mood-empty">未记录心情</text>
+      </view>
+    </view>
+
+    <!-- 分类 -->
+    <view class="detail-category">
+      <text class="detail-cat-icon">{{bill.categoryIcon}}</text>
+      <text class="detail-cat-name">{{bill.category}}</text>
+    </view>
+
+    <!-- 日期 -->
+    <view class="detail-date">
+      <text class="detail-date-text">📅 {{bill.dateLabel}}</text>
+    </view>
+
+    <!-- 备注纸片 -->
+    <view class="detail-note">
+      <view class="detail-note-paper">
+        <view class="detail-note-lines"></view>
+        <text class="detail-note-text" wx:if="{{bill.note}}">{{bill.note}}</text>
+        <text class="detail-note-placeholder" wx:else>暂无备注</text>
+      </view>
+    </view>
+
+    <!-- 操作 -->
+    <view class="detail-actions">
+      <button class="detail-delete-btn" bindtap="deleteBill">删除此账单</button>
+    </view>
+
+  </block>
+
+  <!-- 加载态 -->
+  <view wx:else class="detail-loading">
+    <text class="detail-loading-text">加载中…</text>
+  </view>
+</view>

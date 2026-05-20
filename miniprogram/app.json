@@ -8,7 +8,8 @@
     "pages/budget/budget",
     "pages/profile/profile",
     "pages/categories/categories",
-    "pages/themes/themes"
+    "pages/themes/themes",
+    "pages/detail/detail"
   ],
   "window": {
     "backgroundColor": "#fffaf8",

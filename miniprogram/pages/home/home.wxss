@@ -5,6 +5,14 @@
   padding-bottom: calc(208rpx + env(safe-area-inset-bottom));
 }
 
+/* 天气 */
+.weather-bar {
+  text-align: center; padding: 12rpx 0 4rpx;
+}
+.weather-text {
+  font-size: 22rpx; color: var(--color-text-tertiary);
+}
+
 /* 今日 / 昨日 */
 .day-card {
   display: flex;

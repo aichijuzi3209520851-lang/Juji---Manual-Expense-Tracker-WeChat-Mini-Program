@@ -21,7 +21,7 @@ const INCOME_CATEGORIES = [
 const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 
-const EMOJI_POOL = '🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨'.split('')
+const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
 
 Page({
   data: {
@@ -35,6 +35,9 @@ Page({
     showNoteInput: false,
     photoUrl: '',
     photoCloudPath: '',
+    mood: '',
+    presetMoods: [...'😊😄😢😤😴🤔🥳😱'],
+    isCustomMood: false,
     showAddDialog: false,
     addCategoryName: '',
     addCategoryEmoji: '🍜',
@@ -168,6 +171,27 @@ Page({
 
   removePhoto() { this.setData({ photoUrl: '', photoCloudPath: '' }) },
 
+  // ===== 心情 =====
+  selectMood(e) {
+    const emoji = e.currentTarget.dataset.emoji
+    if (this.data.mood === emoji) { this.setData({ mood: '', isCustomMood: false }); return }
+    this.setData({ mood: emoji, isCustomMood: false })
+  },
+  pickCustomMood() {
+    wx.showModal({
+      title: '输入心情 emoji',
+      editable: true,
+      placeholderText: '如：😋',
+      content: this.data.isCustomMood ? this.data.mood : '',
+      success: res => {
+        if (!res.confirm) return
+        const v = (res.content || '').trim()
+        if (!v) { this.setData({ mood: '', isCustomMood: false }); return }
+        this.setData({ mood: v, isCustomMood: true })
+      }
+    })
+  },
+
   // ===== 自创分类 =====
   openAddDialog() {
     this.setData({ showAddDialog: true, addCategoryName: '', addCategoryEmoji: '🍜', addCategoryError: '' })
@@ -219,7 +243,7 @@ Page({
       wx.showToast({ title: '今日已达上限', icon: 'none' }); return
     }
 
-    const { type, amount, selectedCategory, dateStr, note, photoUrl } = this.data
+    const { type, amount, selectedCategory, dateStr, note, photoUrl, mood } = this.data
 
     // 输入校验
     const v = validateBill({ type, amount, category: selectedCategory, date: dateStr, note, photoUrl })
@@ -248,7 +272,7 @@ Page({
         data: {
           type, amount: parseFloat(amount), category: selectedCategory,
           date: dateStr, note: note || '', photoUrl: cloudPhotoUrl,
-          createdAt: new Date()
+          mood: mood || '', createdAt: new Date()
         }
       })
 

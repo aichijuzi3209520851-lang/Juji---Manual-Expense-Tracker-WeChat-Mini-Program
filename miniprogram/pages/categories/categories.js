@@ -8,7 +8,7 @@ const PRESET_INCOME = [
   { name: '红包', icon: '🎁' }, { name: '退款', icon: '↩️' }, { name: '其他', icon: '📌' }
 ]
 
-const EMOJI_POOL = '🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺'.split('')
+const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺']
 
 Page({
   data: {

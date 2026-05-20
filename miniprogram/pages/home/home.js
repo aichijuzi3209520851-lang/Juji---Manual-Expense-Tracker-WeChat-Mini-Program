@@ -4,6 +4,8 @@ const ICON_MAP = {
   '兼职': '🧳', '理财': '💹', '红包': '🎁', '退款': '↩️', '其他': '📌'
 }
 
+const QWEATHER_KEY = 'YOUR_KEY_HERE' // 去 https://dev.qweather.com/ 注册获取免费 KEY 后替换
+
 const pad = n => String(n).padStart(2, '0')
 const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 
@@ -30,13 +32,15 @@ Page({
     yesterdayExpense: '0.00',
     budget: { status: 'unset' },
     groupedBills: [],
-    overviewFailed: false
+    overviewFailed: false,
+    weather: null
   },
 
   onShow() {
     this.updateCustomTabBar()
     this.loadOverview()
     this.loadRecentBills()
+    this.loadWeather()
   },
 
   updateCustomTabBar() {
@@ -136,6 +140,44 @@ Page({
 
   goBudget() {
     wx.switchTab({ url: '/pages/budget/budget' })
+  },
+
+  openDetail(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    wx.navigateTo({ url: '/pages/detail/detail?id=' + id })
+  },
+
+  async loadWeather() {
+    if (QWEATHER_KEY === 'YOUR_KEY_HERE') return
+    const cache = wx.getStorageSync('juji_weather_cache')
+    if (cache && cache.expires > Date.now()) {
+      this.setData({ weather: { icon: cache.icon, temp: cache.temp } }); return
+    }
+    try {
+      const loc = await new Promise((resolve, reject) => {
+        wx.getLocation({ type: 'wgs84', success: resolve, fail: reject })
+      })
+      const res = await new Promise((resolve, reject) => {
+        wx.request({
+          url: `https://devapi.qweather.com/v7/weather/now?location=${loc.longitude},${loc.latitude}&key=${QWEATHER_KEY}`,
+          success: resolve, fail: reject
+        })
+      })
+      const now = res.data.now
+      if (now) {
+        const weather = { icon: this.weatherIcon(now.icon), temp: now.temp }
+        wx.setStorageSync('juji_weather_cache', { ...weather, expires: Date.now() + 7200000 })
+        this.setData({ weather })
+      }
+    } catch (err) { /* 定位/网络失败静默 */ }
+  },
+
+  weatherIcon(code) {
+    const m = { '100':'☀️','101':'🌤️','102':'⛅','103':'☁️','104':'☁️',
+      '300':'🌦️','301':'🌧️','302':'⛈️','303':'🌩️','304':'🌨️','305':'🌦️',
+      '306':'🌧️','307':'🌧️','400':'❄️','401':'🌨️','402':'🌨️','500':'🌫️' }
+    return m[code] || '🌡️'
   },
 
   deleteBill(e) {

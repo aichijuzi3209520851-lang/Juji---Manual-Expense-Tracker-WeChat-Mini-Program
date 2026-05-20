@@ -1,6 +1,11 @@
 <!-- 首页 -->
 <view class="home-page">
 
+  <!-- 天气 -->
+  <view wx:if="{{weather}}" class="weather-bar">
+    <text class="weather-text">{{weather.icon}} {{weather.temp}}°C</text>
+  </view>
+
   <!-- 今日 / 昨日 -->
   <view class="day-card">
     <view class="day-item">
@@ -61,7 +66,7 @@
         <text class="day-header-net" wx:if="{{item.netStr}}">{{item.netStr}}</text>
       </view>
       <view wx:for="{{item.items}}" wx:for-item="bill" wx:key="_id" class="bill-row"
-            hover-class="bill-row--hover" data-id="{{bill._id}}" bindlongpress="deleteBill">
+            hover-class="bill-row--hover" data-id="{{bill._id}}" bindtap="openDetail" bindlongpress="deleteBill">
         <view class="bill-icon">{{bill.icon}}</view>
         <view class="bill-info">
           <text class="bill-category">{{bill.category}}</text>
