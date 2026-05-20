@@ -85,8 +85,10 @@ Page({
   data: {
     displayMonth: '',
     currentMonth: '',
-    totalExpense: '0.00',
+    statsType: 'expense',
+    totalAmount: '0.00',
     legendData: [],
+    trendData: [],
     dailyComment: '',
     weeklyComment: '',
     monthlyComment: '',
@@ -104,6 +106,7 @@ Page({
       displayMonth: `${now.getFullYear()}年${now.getMonth() + 1}月`
     })
     this.loadStats()
+    this.loadTrend()
     this.loadAIComments({ force: false })
   },
 
@@ -123,6 +126,7 @@ Page({
       displayMonth: `${d.getFullYear()}年${d.getMonth() + 1}月`
     })
     this.loadStats()
+    this.loadTrend()
   },
 
   nextMonth() {
@@ -133,6 +137,7 @@ Page({
       displayMonth: `${d.getFullYear()}年${d.getMonth() + 1}月`
     })
     this.loadStats()
+    this.loadTrend()
   },
 
   async loadStats() {
@@ -142,7 +147,7 @@ Page({
 
     try {
       const res = await db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${m}-01`).and(_.lte(`${m}-31`)) })
+        .where({ type: this.data.statsType, date: _.gte(`${m}-01`).and(_.lte(`${m}-31`)) })
         .get()
 
       const byCategory = {}
@@ -162,9 +167,63 @@ Page({
           color: COLORS[i % COLORS.length]
         }))
 
-      this.setData({ totalExpense: total.toFixed(2), legendData })
+      this.setData({ totalAmount: total.toFixed(2), legendData })
     } catch (err) {
       console.error('加载统计失败:', err)
+    }
+  },
+
+  switchType(e) {
+    const type = e.currentTarget.dataset.type
+    if (type === this.data.statsType) return
+    this.setData({ statsType: type })
+    this.loadStats()
+    this.loadTrend()
+  },
+
+  async loadTrend() {
+    const db = wx.cloud.database()
+    const _ = db.command
+    const [y, m] = this.data.currentMonth.split('-').map(Number)
+
+    const months = []
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(y, m - 1 - i, 1)
+      months.push({
+        key: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
+        label: `${d.getMonth() + 1}月`
+      })
+    }
+
+    try {
+      const { data } = await db.collection('bills')
+        .where({
+          type: this.data.statsType,
+          date: _.gte(`${months[0].key}-01`).and(_.lte(`${months[5].key}-31`))
+        })
+        .get()
+
+      const byMonth = {}
+      data.forEach(b => {
+        const k = b.date.slice(0, 7)
+        byMonth[k] = (byMonth[k] || 0) + b.amount
+      })
+
+      const amounts = months.map(mo => byMonth[mo.key] || 0)
+      const max = Math.max(...amounts, 1)
+
+      const trendData = months.map((mo, i) => ({
+        monthKey: mo.key,
+        monthLabel: mo.label,
+        amount: amounts[i].toFixed(2),
+        percent: Math.round((amounts[i] / max) * 100),
+        isSelected: mo.key === this.data.currentMonth,
+        hasData: amounts[i] > 0
+      }))
+
+      this.setData({ trendData })
+    } catch (err) {
+      console.error('加载趋势失败:', err)
     }
   },
 

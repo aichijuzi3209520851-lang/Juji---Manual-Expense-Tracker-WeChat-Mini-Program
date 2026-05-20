@@ -6,11 +6,16 @@
     <view class="month-arrow" bindtap="nextMonth">›</view>
   </view>
 
+  <view class="seg-toggle">
+    <view class="seg-item {{statsType === 'expense' ? 'is-active' : ''}}" data-type="expense" bindtap="switchType">支出</view>
+    <view class="seg-item {{statsType === 'income' ? 'is-active' : ''}}" data-type="income" bindtap="switchType">收入</view>
+  </view>
+
   <view class="donut-card">
     <view class="donut">
       <view class="donut-center">
-        <text class="donut-label">总支出</text>
-        <text class="donut-total">¥{{totalExpense}}</text>
+        <text class="donut-label">{{statsType === 'expense' ? '总支出' : '总收入'}}</text>
+        <text class="donut-total">¥{{totalAmount}}</text>
       </view>
     </view>
 
@@ -21,6 +26,21 @@
         <text class="legend-pct">{{item.percent}}%</text>
       </view>
       <view wx:if="{{legendData.length === 0}}" class="legend-empty">暂无数据</view>
+    </view>
+  </view>
+
+  <view class="trend-card">
+    <view class="trend-header">
+      <text class="trend-title">近 6 个月{{statsType === 'expense' ? '支出' : '收入'}}</text>
+    </view>
+    <view class="trend-bars">
+      <view wx:for="{{trendData}}" wx:key="monthKey" class="trend-col">
+        <view class="trend-amount {{item.hasData ? '' : 'is-muted'}}">{{item.hasData ? '¥' + item.amount : ''}}</view>
+        <view class="trend-bar-wrap">
+          <view class="trend-bar {{item.isSelected ? 'is-selected' : ''}} {{item.hasData ? '' : 'is-empty'}}" style="height: {{item.hasData ? item.percent : 4}}%"></view>
+        </view>
+        <view class="trend-month {{item.isSelected ? 'is-selected' : ''}}">{{item.monthLabel}}</view>
+      </view>
     </view>
   </view>
 

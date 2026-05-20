@@ -1,51 +1,76 @@
 <!-- 首页 -->
 <view class="home-page">
 
-  <!-- 月度概览卡片 -->
-  <view class="summary-card">
-    <view class="summary-row">
-      <view class="summary-item">
-        <text class="summary-label">本月支出</text>
-        <text class="summary-value expense">-¥{{monthExpense}}</text>
-      </view>
-      <view class="summary-divider"></view>
-      <view class="summary-item">
-        <text class="summary-label">本月收入</text>
-        <text class="summary-value income">+¥{{monthIncome}}</text>
-      </view>
+  <!-- 今日 / 昨日 -->
+  <view class="day-card">
+    <view class="day-item">
+      <text class="day-label">今天</text>
+      <text class="day-value">-¥{{todayExpense}}</text>
     </view>
-    <view class="summary-progress">
-      <view class="progress-bar">
-        <view class="progress-fill" style="width: {{dayProgress}}%"></view>
-      </view>
-      <text class="progress-text">本月已过 {{dayProgress}}%</text>
+    <view class="day-divider"></view>
+    <view class="day-item">
+      <text class="day-label">昨天</text>
+      <text class="day-value muted">-¥{{yesterdayExpense}}</text>
     </view>
   </view>
 
-  <!-- 快速记账 -->
-  <navigator class="quick-record" url="/pages/record/record" open-type="switchTab">
-    <text class="quick-icon">+</text>
-    <text class="quick-text">记一笔</text>
-  </navigator>
+  <!-- 预算 -->
+  <view class="budget-card budget-{{budget.status}}" bindtap="goBudget">
+    <block wx:if="{{budget.status === 'unset'}}">
+      <view class="budget-row">
+        <text class="budget-label">还没设本月预算</text>
+        <text class="budget-cta">去设定 ›</text>
+      </view>
+    </block>
+    <block wx:elif="{{budget.status === 'normal'}}">
+      <view class="budget-row">
+        <text class="budget-label">本月预算</text>
+        <text class="budget-remain">剩 ¥{{budget.remain}}</text>
+      </view>
+      <view class="budget-bar"><view class="budget-fill" style="width: {{budget.percent}}%"></view></view>
+      <view class="budget-row sub">
+        <text class="budget-sub">已花 ¥{{budget.spent}}</text>
+        <text class="budget-sub">/ ¥{{budget.amount}}</text>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="budget-row">
+        <text class="budget-label">本月已超支</text>
+        <text class="budget-over">¥{{budget.over}}</text>
+      </view>
+      <view class="budget-bar over"><view class="budget-fill" style="width: 100%"></view></view>
+      <view class="budget-row sub">
+        <text class="budget-sub">已花 ¥{{budget.spent}}</text>
+        <text class="budget-sub">/ ¥{{budget.amount}}</text>
+      </view>
+    </block>
+  </view>
 
-  <!-- 最近账单 -->
+  <!-- 账单（按日分组） -->
   <view class="recent-section">
-    <text class="section-title">最近账单</text>
+    <text class="section-title">账单流水</text>
 
-    <view wx:if="{{bills.length === 0}}" class="empty-state">
+    <view wx:if="{{groupedBills.length === 0}}" class="empty-state">
       <text class="empty-icon">📒</text>
       <text class="empty-text">还没有账单，记一笔吧</text>
     </view>
 
-    <view wx:for="{{bills}}" wx:key="_id" class="bill-row">
-      <view class="bill-icon">{{item.icon}}</view>
-      <view class="bill-info">
-        <text class="bill-category">{{item.category}}</text>
-        <text class="bill-note" wx:if="{{item.note}}">{{item.note}}</text>
+    <view wx:for="{{groupedBills}}" wx:key="date" class="day-group">
+      <view class="day-header">
+        <text class="day-header-label">{{item.label}}</text>
+        <text class="day-header-net" wx:if="{{item.netStr}}">{{item.netStr}}</text>
       </view>
-      <text class="bill-amount {{item.type === 'income' ? 'income' : ''}}">
-        {{item.type === 'income' ? '+' : '-'}}¥{{item.amount}}
-      </text>
+      <view wx:for="{{item.items}}" wx:for-item="bill" wx:key="_id" class="bill-row"
+            data-id="{{bill._id}}" bindlongpress="deleteBill">
+        <view class="bill-icon">{{bill.icon}}</view>
+        <view class="bill-info">
+          <text class="bill-category">{{bill.category}}</text>
+          <text class="bill-note" wx:if="{{bill.note}}">{{bill.note}}</text>
+        </view>
+        <text class="bill-amount {{bill.type === 'income' ? 'income' : ''}}">
+          {{bill.type === 'income' ? '+' : '-'}}¥{{bill.amount}}
+        </text>
+      </view>
     </view>
   </view>
 
