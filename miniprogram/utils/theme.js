@@ -139,6 +139,40 @@ const THEME_VARIABLES = {
     '--color-income': '#5a8a6a',
     '--color-income-light': '#c8e4d2',
     '--color-warning': '#c4784a'
+  },
+
+  // ==================== 翠绿 (mintGreen) — #4ADE80 主色 ====================
+  mintGreen: {
+    '--color-primary': '#4ade80',
+    '--color-primary-container': '#d4f7e2',
+    '--color-primary-light': '#a6eec6',
+    '--color-on-primary': '#0a2818',
+    '--color-secondary': '#329a6a',
+    '--color-secondary-container': '#c5eeda',
+    '--color-tertiary': '#5c8c5a',
+    '--color-tertiary-container': '#d4edce',
+    '--color-error': '#ba1a1a',
+    '--color-error-container': '#ffdad6',
+
+    '--color-bg': '#f4fdf7',
+    '--color-surface': '#ffffff',
+    '--color-surface-low': '#f7fef9',
+    '--color-surface-container': '#f1fcf5',
+    '--color-surface-high': '#edf9f1',
+    '--color-surface-highest': '#e6f5ea',
+    '--color-surface-dim': '#dfefe5',
+
+    '--color-text': '#132118',
+    '--color-text-secondary': '#3a4d44',
+    '--color-text-tertiary': '#6e8277',
+    '--color-text-on-primary': '#ffffff',
+
+    '--color-border': '#cde5d4',
+    '--color-outline': '#7a8f82',
+
+    '--color-income': '#4ade80',
+    '--color-income-light': '#d4f7e2',
+    '--color-warning': '#b0880a'
   }
 }
 

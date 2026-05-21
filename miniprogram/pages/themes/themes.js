@@ -44,6 +44,17 @@ const THEMES = [
       { name: 'income', value: '#5a8a6a' },
       { name: 'error', value: '#c62828' }
     ]
+  },
+  {
+    id: 'mintGreen', name: '翠绿', desc: '清新薄荷绿，明亮舒适',
+    colors: [
+      { name: 'primary', value: '#4ade80' },
+      { name: 'bg', value: '#f4fdf7' },
+      { name: 'surface', value: '#ffffff' },
+      { name: 'text', value: '#132118' },
+      { name: 'income', value: '#4ade80' },
+      { name: 'error', value: '#ba1a1a' }
+    ]
   }
 ]
 
