@@ -1,4 +1,4 @@
-const { applyTheme, getThemeStyleString } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString, getCurrentThemeId } = require('../../utils/theme')
 
 const THEMES = [
   { id: 'mint', name: '清爽薄荷（默认）', desc: '清新绿底，护眼舒适' },
@@ -52,6 +52,19 @@ Page({
     this.loadFootprint()
   },
 
+  onLoad() {
+    this._themeHandler = (id) => {
+      applyTheme(id)
+      const t = THEMES.find(t2 => t2.id === id) || THEMES[0]
+      this.setData({ themeStyle: getThemeStyleString(id), themeName: t.name })
+    }
+    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+  },
+
+  onUnload() {
+    if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+  },
+
   updateCustomTabBar() {
     if (typeof this.getTabBar !== 'function') return
     const tabBar = this.getTabBar()
@@ -70,7 +83,8 @@ Page({
         const u = data[0]
         app.globalData.userInfo = u
         const genderText = GENDERS[u.gender === 'male' ? 1 : u.gender === 'female' ? 2 : 0]
-        const theme = THEMES.find(t => t.id === (u.theme || 'mint')) || THEMES[0]
+        const currentThemeId = getCurrentThemeId()
+        const theme = THEMES.find(t => t.id === currentThemeId) || THEMES[0]
         const avatarUrl = await this.resolveAvatarSrc(u.avatarUrl || '')
         this.setData({
           avatarUrl,

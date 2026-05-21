@@ -39,6 +39,25 @@ Page({
     themeStyle: getThemeStyleString()
   },
 
+  onLoad() {
+    // 订阅主题变更事件 — 实现热切换
+    this._themeHandler = (id) => { this._applyNewTheme(id) }
+    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+  },
+
+  onUnload() {
+    // 移除事件监听防止内存泄漏
+    if (this._themeHandler) {
+      getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    }
+  },
+
+  /** 内部方法：应用新主题到当前页面 */
+  _applyNewTheme(id) {
+    applyTheme(id)
+    this.setData({ themeStyle: getThemeStyleString(id) })
+  },
+
   onShow() {
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })

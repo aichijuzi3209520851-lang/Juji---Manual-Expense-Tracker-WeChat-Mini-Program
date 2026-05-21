@@ -12,6 +12,18 @@ Page({
       return
     }
     this.setData({ themeStyle: getThemeStyleString() })
+
+    // 订阅主题变更事件
+    this._themeHandler = () => {
+      this.setData({ themeStyle: getThemeStyleString() })
+    }
+    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+  },
+
+  onUnload() {
+    if (this._themeHandler) {
+      getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    }
   },
 
   onSwiperChange(e) {

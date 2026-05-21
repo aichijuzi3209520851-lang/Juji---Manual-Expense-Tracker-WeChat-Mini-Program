@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>橘记引导页 — B+C 混合方案（最终版）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    background: #f0eceb;
+    color: #333;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 4px;
+    color: #785655;
+  }
+  .subtitle {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+  .row {
+    display: flex;
+    gap: 18px;
+    max-width: 980px;
+    margin: 0 auto 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .phone-frame {
+    background: #fffaf8;
+    border-radius: 36px;
+    overflow: hidden;
+    border: 2px solid #e8d5d3;
+    width: 220px;
+    min-height: 420px;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(120,86,85,0.10);
+    flex-shrink: 0;
+  }
+  .page-label {
+    text-align: center;
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* ===== 第 1 页：C 大图冲击 — 品牌 Slogan ===== */
+  .p1 {
+    background:
+      radial-gradient(circle at 50% 35%, rgba(247,202,201,0.20), transparent 45%),
+      linear-gradient(180deg, #fffaf8 0%, #fdf6f5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 56px;
+    text-align: center;
+    height: 100%;
+  }
+  .p1 .brand-emoji { font-size: 80px; line-height: 1; margin-bottom: 18px; animation: float 3s ease-in-out infinite; }
+  .p1 .brand-title { font-size: 26px; font-weight: 800; color: #1e1b1a; margin-bottom: 6px; letter-spacing: 2px; }
+  .p1 .brand-sub { font-size: 14px; color: #938481; margin-bottom: 4px; }
+  .p1 .brand-line {
+    width: 32px; height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, #f7caca, #f4a0a0);
+    margin: 18px 0;
+  }
+  .p1 .brand-desc { font-size: 12.5px; color: #b5a5a2; line-height: 1.8; max-width: 200px; }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* ===== 第 2 页：C→B 过渡 — 核心卖点（快速记账） ===== */
+  .p2 {
+    background:
+      radial-gradient(circle at 70% 20%, rgba(237,247,241,0.25), transparent 40%),
+      linear-gradient(180deg, #fffaf8 0%, #f5faf7 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 44px;
+    text-align: center;
+    height: 100%;
+  }
+  .p2 .big-icon { font-size: 64px; margin-bottom: 16px; }
+  .p2 .title2 { font-size: 21px; font-weight: 700; color: #1e1b1a; margin-bottom: 8px; }
+  .p2 .desc2 { font-size: 13px; color: #888; line-height: 1.7; max-width: 190px; margin-bottom: 20px; }
+  .p2 .mini-cards { width: 100%; padding: 0 20px; }
+  .p2 .mini-card {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; border-radius: 12px; padding: 12px 14px;
+    margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    text-align: left;
+  }
+  .p2 .mc-icon { font-size: 18px; width: 32px; height: 32px; border-radius: 8px; display:flex;align-items:center;justify-content:center; flex-shrink:0; }
+  .p2 .mc-icon.g1 { background: #edf7f1; }
+  .p2 .mc-icon.g2 { background: #fef0ef; }
+  .p2 .mc-icon.g3 { background: #eff6fd; }
+  .p2 .mc-text { font-size: 12px; color: #555; font-weight: 500; }
+
+  /* ===== 第 3 页：B 卡片式 — 更多亮点 ===== */
+  .p3 {
+    background:
+      radial-gradient(circle at 20% 70%, rgba(239,246,253,0.20), transparent 38%),
+      #fffaf8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 18px;
+    height: 100%;
+  }
+  .p3 .section-title { font-size: 17px; font-weight: 700; color: #333; margin-bottom: 14px; }
+  .p3 .card {
+    width: 100%; background: #fff; border-radius: 14px; padding: 14px;
+    margin-bottom: 10px; box-shadow: 0 2px 8px rgba(120,86,85,0.05);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .p3 .c-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; flex-shrink: 0;
+  }
+  .p3 .c-icon.c-pink { background: #fef0ef; }
+  .p3 .c-icon.c-green { background: #edf7f1; }
+  .p3 .c-icon.c-blue { background: #eff6fd; }
+  .p3 .c-icon.c-orange { background: #fdf4ec; }
+  .p3 .c-icon.c-purple { background: #f5eeff; }
+  .p3 .c-body h4 { font-size: 13.5px; color: #1e1b1a; margin-bottom: 2px; }
+  .p3 .c-body p { font-size: 11.5px; color: #999; line-height: 1.5; }
+
+  /* ===== 第 4 页：C 收尾 + 行动按钮 ===== */
+  .p4 {
+    background:
+      radial-gradient(circle at 50% 60%, rgba(247,202,201,0.18), transparent 50%),
+      linear-gradient(180deg, #fffaf8 0%, #fdf6f5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px 24px;
+    height: 100%;
+  }
+  .p4 .end-emoji { font-size: 52px; margin-bottom: 14px; }
+  .p4 .end-title { font-size: 20px; font-weight: 700; color: #1e1b1a; margin-bottom: 8px; }
+  .p4 .end-desc { font-size: 12.5px; color: #aaa; line-height: 1.7; margin-bottom: 24px; max-width: 200px; }
+  .p4 .btn-go {
+    padding: 13px 42px;
+    background: linear-gradient(135deg, #785655, #9a7472);
+    color: #fff;
+    border-radius: 26px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 6px 20px rgba(120,86,85,0.30);
+  }
+
+  /* 底部圆点（通用） */
+  .dots {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 7px;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 3px;
+    background: rgba(120,86,85,0.15);
+  }
+  .dot.active { width: 16px; background: #785655; }
+
+  /* 说明区 */
+  .notes {
+    max-width: 720px; margin: 20px auto 0; background: #fff;
+    border-radius: 14px; padding: 20px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .notes h3 { font-size: 15px; color: #785655; margin-bottom: 12px; }
+  .notes table { width: 100%; font-size: 12.5px; border-collapse: collapse; color: #666; }
+  .notes tr { border-bottom: 1px solid #f5f0ef; }
+  .notes td { padding: 9px 6px; vertical-align: top; }
+  .notes td:first-child { font-weight: 600; color: #444; white-space: nowrap; width: 80px; }
+  .feature-check {
+    display: inline-block;
+    background: #edf7f1;
+    color: #4a8c5e;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<h1>橘记引导页 — B+C 混合方案（基于已实现功能）</h1>
+<p class="subtitle">所有文案严格对应小程序实际功能 · 无虚构内容</p>
+
+<div class="row">
+
+  <!-- ========== 第 1 页：品牌印象 ========== -->
+  <div>
+    <div class="phone-frame p1">
+      <div class="brand-emoji">🍊</div>
+      <div class="brand-title">橘记</div>
+      <div class="brand-sub">Juji · 你的记账小助手</div>
+      <div class="brand-line"></div>
+      <div class="brand-desc">
+        一颗橘子，陪你理清每一笔开销<br>
+        简单、温暖、不啰嗦
+      </div>
+      <div style="flex:1"></div>
+      <div class="dots">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="page-label">第 1 页 · C 品牌印象</div>
+  </div>
+
+  <!-- ========== 第 2 页：核心卖点 — 快速记账 ========== -->
+  <div>
+    <div class="phone-frame p2">
+      <div class="big-icon">⚡</div>
+      <div class="title2">记账，快到飞起</div>
+      <div class="desc2">打开就记，三步搞定<br>不打断你的生活节奏</div>
+      <div class="mini-cards">
+        <div class="mini-card">
+          <div class="mc-icon g1">①</div>
+          <div class="mc-text">输入金额（数字键盘）</div>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon g2">②</div>
+          <div class="mc-text">挑个分类（或自创一个）</div>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon g3">③</div>
+          <div class="mc-text">点保存，还能加心情和照片 ✦</div>
+        </div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="page-label">第 2 页 · C→B 核心卖点</div>
+  </div>
+
+  <!-- ========== 第 3 页：功能卡片 ========== -->
+  <div>
+    <div class="phone-frame p3">
+      <div class="section-title">✦ 还有这些好用的</div>
+      <div class="card">
+        <div class="c-icon c-pink">🏷️</div>
+        <div class="c-body">
+          <h4>分类随你定</h4>
+          <p>奶茶、猫粮、约会…自创分类 + emoji 图标</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="c-icon c-blue">📊</div>
+        <div class="c-body">
+          <h4>统计一目了然</h4>
+          <p>环形图看分类占比 · 趋势图看 6 个月变化</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="c-icon c-orange">🤖</div>
+        <div class="c-body">
+          <h4>小橘 AI 点评</h4>
+          <p>每日 / 每周 / 每月智能消费回顾</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="c-icon c-purple">💰</div>
+        <div class="c-body">
+          <h4>预算管住手</h4>
+          <p>设月预算 · 进度提醒 · 超支预警</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="c-icon c-green">🎨</div>
+        <div class="c-body">
+          <h4>4 套主题随心换</h4>
+          <p>清新薄荷 · 温馨玫瑰 · 夜猫子 · 蓝天白云</p>
+        </div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="page-label">第 3 页 · B 功能卡片</div>
+  </div>
+
+  <!-- ========== 第 4 页：行动召唤 ========== -->
+  <div>
+    <div class="phone-frame p4">
+      <div class="end-emoji">🧡</div>
+      <div class="end-title">准备好了吗？</div>
+      <div class="end-desc">
+        从今天开始<br>
+        让每一笔账都清清楚楚
+      </div>
+      <button class="btn-go">开始使用</button>
+      <div class="dots" style="position:relative;bottom:auto;left:auto;transform:none;margin-top:24px;">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+      </div>
+    </div>
+    <div class="page-label">第 4 页 · C 行动召唤</div>
+  </div>
+
+</div>
+
+<!-- 文案与功能的严格对照 -->
+<div class="notes">
+  <h3>文案 ↔ 实际功能 对照表</h3>
+  <table>
+    <tr>
+      <td>第 1 页</td>
+      <td>"橘记 · 记账小助手"<span class="feature-check">✅ app.js 已定义</span></td>
+    </tr>
+    <tr>
+      <td rowspan="3">第 2 页</td>
+      <td>"数字键盘输入金额"<span class="feature-check">✅ record.wxml 键盘组件</span></td>
+    </tr>
+    <tr>
+      <td>"挑个分类或自创"<span class="feature-check">✅ categories.js 自创分类</span></td>
+    </tr>
+    <tr>
+      <td>"心情和照片"<span class="feature-check">✅ record.js 心情emoji+图片上传</span></td>
+    </tr>
+    <tr>
+      <td rowspan="5">第 3 页</td>
+      <td>"自创分类 + emoji图标"<span class="feature-check">✅ categories 页完整实现</span></td>
+    </tr>
+    <tr>
+      <td>"环形图 + 趋势图"<span class="feature-check">✅ stats.wxml donut+bar chart</span></td>
+    </tr>
+    <tr>
+      <td>"小橘 AI 点评 三维度回顾"<span class="feature-check">✅ stats.js loadAIComments()</span></td>
+    </tr>
+    <tr>
+      <td>"月预算 · 超支预警"<span class="feature-check">✅ budget.js 三档状态</span></td>
+    </tr>
+    <tr>
+      <td>"4套主题"<span class="feature-check">✅ theme.js mint/rose/dark/sky</span></td>
+    </tr>
+    <tr>
+      <td>第 4 页</td>
+      <td>"开始使用" → 进入首页<span class="feature-check">✅ guide.js wx.switchTab</span></td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

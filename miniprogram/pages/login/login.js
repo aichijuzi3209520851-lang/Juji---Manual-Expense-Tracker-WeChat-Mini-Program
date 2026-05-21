@@ -3,6 +3,15 @@ const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 Page({
   data: { loading: false, themeStyle: '' },
 
+  onLoad() {
+    this._themeHandler = (id) => { applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) }) }
+    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+  },
+
+  onUnload() {
+    if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+  },
+
   onShow() {
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })

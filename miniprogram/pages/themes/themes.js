@@ -86,7 +86,12 @@ Page({
           console.warn('主题同步到数据库失败（非致命）:', err)
         }
 
-        // 3. 重启小程序以全局应用新主题
+        // 3. 即时广播事件 — 让已打开的页面立即切换样式
+        const app2 = getApp()
+        app2.globalData.currentTheme = id
+        app2.globalData.eventBus.emit('themeChanged', id)
+
+        // 4. 兜底：reLaunch 确保新打开的页面也能获取最新主题
         wx.reLaunch({ url: '/pages/home/home' })
       }
     })

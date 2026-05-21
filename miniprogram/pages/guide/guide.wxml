@@ -1,44 +1,134 @@
-<!-- 新手引导 - 4 页 swiper -->
+<!-- 新手引导 - B+C 混合方案 4 页 swiper -->
 <view class="guide-wrap" style="{{themeStyle}}">
-  <view class="guide-glow guide-glow-top"></view>
-  <view class="guide-glow guide-glow-bottom"></view>
 
   <swiper class="guide-swiper" bindchange="onSwiperChange" current="{{currentIndex}}">
+
+    <!-- ===== 第 1 页：C 品牌印象 ===== -->
     <swiper-item>
-      <view class="guide-page">
-        <view class="guide-illustration {{0 === currentIndex ? 'is-visible' : ''}}">📝</view>
-        <text class="guide-title">随手记账</text>
-        <text class="guide-desc">打开橘记，输入金额，选个分类就完事。无负担，不啰嗦。</text>
+      <view class="guide-page guide-page-brand">
+        <view class="brand-emoji {{0 === currentIndex ? 'float-in' : ''}}">🍊</view>
+        <text class="brand-title">橘记</text>
+        <text class="brand-sub">Juji · 你的记账小助手</text>
+        <view class="brand-line"></view>
+        <text class="brand-desc">一颗橘子，陪你理清每一笔开销<br/>简单、温暖、不啰嗦</text>
       </view>
     </swiper-item>
 
+    <!-- ===== 第 2 页：C→B 核心卖点 — 快速记账 ===== -->
     <swiper-item>
-      <view class="guide-page">
-        <view class="guide-illustration {{1 === currentIndex ? 'is-visible' : ''}}">🏷️</view>
-        <text class="guide-title">你的分类你做主</text>
-        <text class="guide-desc">预设不够用？自创「奶茶」「宠物」「约会」……挑个 emoji 图标，想怎么分就怎么分。</text>
+      <view class="guide-page guide-page-feature">
+        <view class="feature-big-icon {{1 === currentIndex ? 'slide-up' : ''}}">⚡</view>
+        <text class="feature-title">记账，快到飞起</text>
+        <text class="feature-desc">打开就记，三步搞定<br/>不打断你的生活节奏</text>
+        <view class="step-cards">
+          <view class="step-card">
+            <view class="step-icon step-1">①</view>
+            <text class="step-text">输入金额（数字键盘）</text>
+          </view>
+          <view class="step-card">
+            <view class="step-icon step-2">②</view>
+            <text class="step-text">挑个分类（或自创一个）</text>
+          </view>
+          <view class="step-card">
+            <view class="step-icon step-3">③</view>
+            <text class="step-text">点保存，还能加心情和照片 ✦</text>
+          </view>
+        </view>
       </view>
     </swiper-item>
 
+    <!-- ===== 第 3 页：B 功能卡片列表 ===== -->
     <swiper-item>
-      <view class="guide-page">
-        <view class="guide-illustration {{2 === currentIndex ? 'is-visible' : ''}}">📊</view>
-        <text class="guide-title">看得清楚，心里有数</text>
-        <text class="guide-desc">每周、每月看看钱花在哪儿了。配上俏皮的点评，安心回顾不焦虑。</text>
+      <scroll-view class="guide-page guide-page-cards scroll-y" scroll-y enhanced show-scrollbar="{{false}}">
+        <text class="cards-section-title">✦ 还有这些好用的</text>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-pink">🏷️</view>
+          <view class="feat-body">
+            <text class="feat-name">分类随你定</text>
+            <text class="feat-info">奶茶、猫粮、约会…自创分类 + emoji 图标</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-blue">📊</view>
+          <view class="feat-body">
+            <text class="feat-name">统计一目了然</text>
+            <text class="feat-info">环形图看分类占比 · 趋势图看 6 个月变化</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-orange">🤖</view>
+          <view class="feat-body">
+            <text class="feat-name">小橘 AI 点评</text>
+            <text class="feat-info">每日 / 每周 / 每月智能消费回顾</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-purple">💰</view>
+          <view class="feat-body">
+            <text class="feat-name">预算管住手</text>
+            <text class="feat-info">设月预算 · 进度提醒 · 超支预警</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-green">🎨</view>
+          <view class="feat-body">
+            <text class="feat-name">4 套主题随心换</text>
+            <text class="feat-info">清新薄荷 · 温馨玫瑰 · 夜猫子 · 蓝天白云</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-gold">🖼️</view>
+          <view class="feat-body">
+            <text class="feat-name">AI 纪念海报</text>
+            <text class="feat-info">记账天数 / 最爱分类，一键生成分享</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-teal">📤</view>
+          <view class="feat-body">
+            <text class="feat-name">数据随时导出</text>
+            <text class="feat-info">一键导出 CSV 账单明细</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-rose">😊</view>
+          <view class="feat-body">
+            <text class="feat-name">记账心情</text>
+            <text class="feat-info">8 种预设 emoji + 自定义，记录每笔账当时的心情</text>
+          </view>
+        </view>
+
+        <view class="feat-card">
+          <view class="feat-icon feat-sky">📷</view>
+          <view class="feat-body">
+            <text class="feat-name">照片留档</text>
+            <text class="feat-info">记账时拍照或选相册，小票 / 菜单随时翻看</text>
+          </view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- ===== 第 4 页：C 行动召唤 ===== -->
+    <swiper-item>
+      <view class="guide-page guide-page-action">
+        <view class="action-emoji {{3 === currentIndex ? 'pop-in' : ''}}">🧡</view>
+        <text class="action-title">准备好了吗？</text>
+        <text class="action-desc">从今天开始<br/>让每一笔账都清清楚楚</text>
+        <button class="guide-btn-go" bindtap="finishGuide">开始使用</button>
       </view>
     </swiper-item>
 
-    <swiper-item>
-      <view class="guide-page">
-        <image class="guide-logo {{3 === currentIndex ? 'is-visible' : ''}}" src="/images/juji2.jpg" mode="aspectFill" />
-        <text class="guide-title">换套主题，换个心情</text>
-        <text class="guide-desc">清新、深夜、暖阳、薄荷……换一套颜色就像换了一个新本子。</text>
-        <button class="guide-btn" bindtap="finishGuide">开始使用</button>
-        <text class="guide-privacy">你的数据只属于你，永远私密。</text>
-      </view>
-    </swiper-item>
   </swiper>
 
+  <!-- 底部圆点 -->
   <view class="guide-dots">
     <view wx:for="{{[0,1,2,3]}}" wx:key="*this" class="guide-dot {{item === currentIndex ? 'is-active' : ''}}"></view>
   </view>

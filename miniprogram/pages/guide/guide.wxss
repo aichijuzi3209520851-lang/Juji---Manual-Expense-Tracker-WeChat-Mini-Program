@@ -1,82 +1,255 @@
+/* ========== 容器 & 背景 ========== */
 .guide-wrap {
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background:
-    radial-gradient(circle at 18% 16%, rgba(247, 202, 201, 0.14), rgba(247, 202, 201, 0) 28%),
-    radial-gradient(circle at 84% 88%, rgba(247, 202, 201, 0.10), rgba(247, 202, 201, 0) 24%),
-    linear-gradient(180deg, #fffaf8 0%, #fffdfc 100%);
-}
-
-.guide-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90rpx);
-  pointer-events: none;
-}
-.guide-glow-top {
-  width: 400rpx; height: 400rpx;
-  top: -100rpx; left: -80rpx;
-  background: rgba(247, 202, 201, 0.18);
-}
-.guide-glow-bottom {
-  width: 340rpx; height: 340rpx;
-  right: -60rpx; bottom: 40rpx;
-  background: rgba(244, 224, 220, 0.14);
+  background: #fffaf8;
 }
 
 .guide-swiper { height: calc(100vh - 120rpx); }
 
+/* ========== 通用页面 ========== */
 .guide-page {
   height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 80rpx 60rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.guide-illustration {
-  font-size: 160rpx; margin-bottom: 80rpx;
-  opacity: 0; transform: translateY(20rpx);
+
+/* ========== 第 1 页：C 品牌印象 ========== */
+.guide-page-brand {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(247,202,201,0.20), transparent 45%),
+    linear-gradient(180deg, #fffaf8 0%, #fdf6f5 100%);
+  justify-content: center;
+  padding: 120rpx 60rpx 80rpx;
+}
+.brand-emoji {
+  font-size: 160rpx;
+  line-height: 1;
+  margin-bottom: 36rpx;
+  opacity: 0;
+  transform: translateY(30rpx);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.brand-emoji.float-in { animation: brandFloat 3s ease-in-out infinite; opacity: 1; transform: translateY(0); }
+@keyframes brandFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-16rpx); }
+}
+.brand-title {
+  font-size: 52rpx;
+  font-weight: 800;
+  color: var(--color-text, #1e1b1a);
+  letter-spacing: 6rpx;
+  margin-bottom: 10rpx;
+}
+.brand-sub {
+  font-size: 28rpx;
+  color: var(--color-text-secondary, #938481);
+  margin-bottom: 8rpx;
+}
+.brand-line {
+  width: 64rpx; height: 6rpx; border-radius: 3rpx;
+  background: linear-gradient(90deg, #f7caca, #f4a0a0);
+  margin: 32rpx 0;
+}
+.brand-desc {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary, #b5a5a2);
+  line-height: 1.8;
+  text-align: center;
+  max-width: 420rpx;
+}
+
+/* ========== 第 2 页：C→B 核心卖点 ========== */
+.guide-page-feature {
+  background:
+    radial-gradient(circle at 70% 15%, rgba(237,247,241,0.26), transparent 40%),
+    linear-gradient(180deg, #fffaf8 0%, #f5faf7 100%);
+  justify-content: center;
+  padding: 80rpx 44rpx 60rpx;
+}
+.feature-big-icon {
+  font-size: 128rpx;
+  margin-bottom: 28rpx;
+  opacity: 0;
+  transform: translateY(30rpx);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.guide-illustration.is-visible { opacity: 1; transform: translateY(0); }
-
-.guide-logo {
-  width: 140rpx; height: 140rpx;
-  border-radius: 36rpx;
-  margin-bottom: 60rpx;
-  box-shadow: 0 16rpx 38rpx rgba(120, 86, 85, 0.1);
-  opacity: 0; transform: translateY(20rpx);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+.feature-big-icon.slide-up { opacity: 1; transform: translateY(0); }
+.feature-title {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: var(--color-text, #1e1b1a);
+  margin-bottom: 14rpx;
 }
-.guide-logo.is-visible { opacity: 1; transform: translateY(0); }
-
-.guide-title { font-size: 44rpx; font-weight: 700; color: var(--color-text); margin-bottom: 24rpx; text-align: center; }
-.guide-desc { font-size: 30rpx; color: var(--color-text-secondary); text-align: center; line-height: 1.6; }
-
-.guide-btn {
-  margin-top: 80rpx; width: 400rpx;
-  background: linear-gradient(135deg, #f7caca 0%, #f4c0c0 100%);
-  color: var(--color-primary);
-  border-radius: var(--radius-full); padding: 24rpx 0;
-  font-size: 32rpx; font-weight: 600; text-align: center; border: none;
-  box-shadow: 0 18rpx 34rpx rgba(247, 202, 201, 0.16);
-  transition: transform 0.15s ease, opacity 0.15s ease;
+.feature-desc {
+  font-size: 27rpx;
+  color: var(--color-text-secondary, #888);
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 36rpx;
+  max-width: 380rpx;
 }
-.guide-btn::after { border: none; }
-.guide-btn:active { transform: scale(0.97); opacity: 0.94; }
-.guide-privacy { margin-top: 32rpx; font-size: 24rpx; color: var(--color-text-tertiary); }
+.step-cards {
+  width: 100%;
+  padding: 0 44rpx;
+}
+.step-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+.step-icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.step-1 { background: #edf7f1; }
+.step-2 { background: #fef0ef; }
+.step-3 { background: #eff6fd; }
+.step-text {
+  font-size: 25rpx;
+  color: var(--color-text, #555);
+  font-weight: 500;
+}
 
-/* 自定义圆点 */
+/* ========== 第 3 页：B 功能卡片 ========== */
+.guide-page-cards {
+  background:
+    radial-gradient(circle at 20% 70%, rgba(239,246,253,0.18), transparent 38%)
+    #fffaf8;
+  justify-content: center;
+  padding: 180rpx 36rpx 120rpx;
+}
+.cards-section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--color-text, #333);
+  margin-bottom: 24rpx;
+  align-self: flex-start;
+}
+.feat-card {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  background: #fff;
+  border-radius: 22rpx;
+  padding: 20rpx 24rpx;
+  margin-bottom: 14rpx;
+  box-shadow: 0 2rpx 12rpx rgba(120,86,85,0.05);
+}
+.feat-icon {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34rpx;
+  flex-shrink: 0;
+}
+.feat-pink { background: #fef0ef; }
+.feat-green { background: #edf7f1; }
+.feat-blue { background: #eff6fd; }
+.feat-orange { background: #fdf4ec; }
+.feat-purple { background: #f5eeff; }
+.feat-gold { background: #fef9e8; }
+.feat-teal { background: #e8f5f0; }
+.feat-rose { background: #fef2f0; }
+.feat-sky { background: #eef5ff; }
+.feat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.feat-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-text, #1e1b1a);
+}
+.feat-info {
+  font-size: 24rpx;
+  color: var(--color-text-tertiary, #999);
+  line-height: 1.5;
+}
+
+/* ========== 第 4 页：C 行动召唤 ========== */
+.guide-page-action {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(247,202,201,0.18), transparent 50%),
+    linear-gradient(180deg, #fffaf8 0%, #fdf6f5 100%);
+  justify-content: center;
+  padding: 80rpx 48rpx 100rpx;
+}
+.action-emoji {
+  font-size: 104rpx;
+  margin-bottom: 28rpx;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.action-emoji.pop-in { opacity: 1; transform: scale(1); }
+.action-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--color-text, #1e1b1a);
+  margin-bottom: 16rpx;
+}
+.action-desc {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary, #aaa);
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 48rpx;
+  max-width: 400rpx;
+}
+
+/* ========== 开始使用按钮 ========== */
+.guide-btn-go {
+  padding: 26rpx 84rpx;
+  background: linear-gradient(135deg, #785655, #9a7472);
+  color: #fff;
+  border-radius: 52rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 12rpx 40rpx rgba(120,86,85,0.30);
+}
+.guide-btn-go::after { border: none; }
+.guide-btn-go:active { transform: scale(0.96); opacity: 0.92; }
+
+/* ========== 底部圆点 ========== */
 .guide-dots {
-  display: flex; align-items: center; justify-content: center; gap: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14rpx;
   padding: 20rpx 0 40rpx;
+  position: relative;
+  z-index: 10;
 }
 .guide-dot {
-  width: 12rpx; height: 12rpx;
+  width: 12rpx;
+  height: 12rpx;
   border-radius: 6rpx;
-  background: rgba(120, 86, 85, 0.18);
+  background: rgba(120,86,85,0.15);
   transition: width 0.3s ease, background 0.3s ease;
 }
 .guide-dot.is-active {
-  width: 28rpx;
-  background: var(--color-primary);
+  width: 32rpx;
+  background: var(--color-primary, #785655);
 }

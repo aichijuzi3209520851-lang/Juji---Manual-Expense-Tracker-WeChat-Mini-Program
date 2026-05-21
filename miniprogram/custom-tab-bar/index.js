@@ -46,6 +46,17 @@ Component({
     attached() {
       this.setData({ themeStyle: getThemeStyleString() })
       this.updateSelected()
+      // 订阅主题变更事件 — 确保 TabBar 与页面实时同步
+      this._themeHandler = (id) => {
+        this.setData({ themeStyle: getThemeStyleString(id) })
+      }
+      getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+    },
+
+    detached() {
+      if (this._themeHandler) {
+        getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+      }
     }
   },
 

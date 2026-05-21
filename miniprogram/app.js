@@ -1,4 +1,5 @@
 const { initAppTheme, applyTheme } = require('./utils/theme')
+const EventBus = require('./utils/eventBus')
 
 // 橘记 - app.js
 App({
@@ -6,7 +7,8 @@ App({
     openid: '',
     userInfo: null,
     hasSeenGuide: false,
-    currentTheme: 'mint'
+    currentTheme: 'mint',
+    eventBus: new EventBus()
   },
 
   onLaunch() {

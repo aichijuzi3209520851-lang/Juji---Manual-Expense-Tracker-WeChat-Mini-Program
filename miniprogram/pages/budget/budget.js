@@ -32,6 +32,15 @@ Page({
     this.loadSuggestion()
   },
 
+  onLoad() {
+    this._themeHandler = (id) => { applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) }) }
+    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+  },
+
+  onUnload() {
+    if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+  },
+
   updateCustomTabBar() {
     if (typeof this.getTabBar !== 'function') return
     const tabBar = this.getTabBar()
