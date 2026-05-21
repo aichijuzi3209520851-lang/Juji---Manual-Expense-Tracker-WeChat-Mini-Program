@@ -100,7 +100,7 @@
   <!-- 版本 -->
   <view class="profile-footer">
     <text class="footer-version">版本 1.0.0</text>
-    <text class="footer-tagline">用 ❤️ 和很多面条 🍜 做成</text>
+    <text class="footer-tagline">一颗橘子，陪你记账 📒</text>
   </view>
 
 </view>
