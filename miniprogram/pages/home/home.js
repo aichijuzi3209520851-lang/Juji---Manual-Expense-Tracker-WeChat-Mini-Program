@@ -36,7 +36,7 @@ Page({
     groupedBills: [],
     overviewFailed: false,
     season: SEASONS[new Date().getMonth()],
-    themeStyle: ''
+    themeStyle: getThemeStyleString()
   },
 
   onShow() {

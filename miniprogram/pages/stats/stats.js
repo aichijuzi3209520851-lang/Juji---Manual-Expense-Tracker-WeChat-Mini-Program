@@ -98,7 +98,7 @@ Page({
     monthlyLoading: true,
     aiDebugText: '',
     statsFailed: false,
-    themeStyle: ''
+    themeStyle: getThemeStyleString()
   },
 
   onShow() {

@@ -103,9 +103,10 @@
       <text wx:if="{{addCategoryError}}" class="add-dialog-error">{{addCategoryError}}</text>
     </view>
     <view class="add-dialog-field">
-      <text class="add-dialog-label">选择图标</text>
-      <view class="add-dialog-emoji-grid">
-        <view wx:for="{{emojiPool}}" wx:key="*this" class="add-dialog-emoji {{addCategoryEmoji === item ? 'is-selected' : ''}}" data-emoji="{{item}}" bindtap="pickAddEmoji">{{item}}</view>
+      <text class="add-dialog-label">分类图标</text>
+      <view class="add-dialog-icon-row" bindtap="pickAddEmoji">
+        <text class="add-dialog-icon-preview">{{addCategoryEmoji || '📌'}}</text>
+        <text class="add-dialog-icon-hint">点击选择 → 从输入法选取 emoji</text>
       </view>
     </view>
     <view class="add-dialog-actions">

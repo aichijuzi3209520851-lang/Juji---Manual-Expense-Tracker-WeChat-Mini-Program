@@ -55,9 +55,10 @@
     </view>
 
     <view class="dialog-field">
-      <text class="dialog-label">选择图标</text>
-      <view class="dialog-emoji-grid">
-        <view wx:for="{{emojiPool}}" wx:key="*this" class="dialog-emoji-item {{dialogEmoji === item ? 'is-selected' : ''}}" data-emoji="{{item}}" bindtap="pickEmoji">{{item}}</view>
+      <text class="dialog-label">分类图标</text>
+      <view class="dialog-icon-row" bindtap="pickEmoji">
+        <text class="dialog-icon-preview">{{dialogEmoji || '📌'}}</text>
+        <text class="dialog-icon-hint">点击选择 → 从输入法选取 emoji</text>
       </view>
     </view>
 

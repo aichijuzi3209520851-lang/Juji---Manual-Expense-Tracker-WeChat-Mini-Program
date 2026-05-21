@@ -21,6 +21,7 @@ Page({
     genderText: '未设置',
     gender: '',
     themeName: '清新',
+    themeStyle: getThemeStyleString(),
     footprint: null,
     // AI 海报弹窗
     showPoster: false,

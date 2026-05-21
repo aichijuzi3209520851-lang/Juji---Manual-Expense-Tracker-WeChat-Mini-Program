@@ -85,7 +85,19 @@ Page({
   },
 
   onDialogName(e) { this.setData({ dialogName: e.detail.value }) },
-  pickEmoji(e) { this.setData({ dialogEmoji: e.currentTarget.dataset.emoji }) },
+  pickEmoji() {
+    wx.showModal({
+      title: '选择图标',
+      content: '在下方输入框中粘贴或输入一个 emoji 表情',
+      editable: true,
+      placeholderText: '如：🍵 🎵 🐾',
+      success: res => {
+        if (!res.confirm) return
+        const v = (res.content || '').trim()
+        if (v) this.setData({ dialogEmoji: v })
+      }
+    })
+  },
   pickType(e) { this.setData({ dialogType: e.currentTarget.dataset.type }) },
   closeDialog() { this.setData({ showDialog: false }) },
 

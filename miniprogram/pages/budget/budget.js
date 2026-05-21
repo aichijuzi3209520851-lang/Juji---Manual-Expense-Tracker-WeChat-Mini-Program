@@ -20,7 +20,7 @@ Page({
     pace: null,
     topCategories: [],
     suggestion: null,
-    themeStyle: ''
+    themeStyle: getThemeStyleString()
   },
 
   async onShow() {

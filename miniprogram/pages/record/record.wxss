@@ -382,20 +382,16 @@
 .add-dialog-error {
   font-size: 22rpx; color: var(--color-error); margin-top: 6rpx; display: block;
 }
-.add-dialog-emoji-grid {
-  display: flex; flex-wrap: wrap; gap: 10rpx;
-  max-height: 240rpx; overflow-y: auto;
+.add-dialog-icon-row {
+  display: flex; align-items: center; gap: 16rpx;
+  background: var(--color-surface-low); border-radius: var(--radius-md);
+  padding: 16rpx 20rpx;
 }
-.add-dialog-emoji {
-  width: 68rpx; height: 68rpx; font-size: 34rpx;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: var(--radius-md);
-  background: var(--color-surface-low);
-  transition: background 0.15s ease, transform 0.15s ease;
+.add-dialog-icon-preview {
+  font-size: 44rpx; line-height: 1; flex-shrink: 0;
 }
-.add-dialog-emoji.is-selected {
-  background: var(--color-primary-container);
-  transform: scale(1.14);
+.add-dialog-icon-hint {
+  font-size: 24rpx; color: var(--color-text-tertiary); line-height: 1.4;
 }
 .add-dialog-actions {
   display: flex; gap: 16rpx; margin-top: 28rpx;

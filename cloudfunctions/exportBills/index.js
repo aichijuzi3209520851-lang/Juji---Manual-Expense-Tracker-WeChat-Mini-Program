@@ -75,7 +75,7 @@ function generateCSV(bills, meta) {
     escapeCSV('橘记账单导出') + '\n' +
     escapeCSV(`用户：${meta.nickname}    性别：${meta.genderText}`) + '\n' +
     escapeCSV(`共 ${bills.length} 条`) + '\n\n'
-  const header = '日期,类型,分类,金额,备注\n'
+  const header = '日期,类型,分类,金额,备注,心情\n'
 
   const rows = bills.map(b => {
     const type = b.type === 'income' ? '收入' : '支出'
@@ -83,7 +83,8 @@ function generateCSV(bills, meta) {
     const category = escapeCSV(b.category || '')
     const amount = b.amount || 0
     const note = escapeCSV(b.note || '')
-    return `${date},${type},${category},${amount},${note}`
+    const mood = escapeCSV(b.mood || '')
+    return `${date},${type},${category},${amount},${note},${mood}`
   }).join('\n')
 
   return BOM + metaBlock + header + rows

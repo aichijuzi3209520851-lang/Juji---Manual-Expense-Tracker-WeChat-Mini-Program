@@ -39,11 +39,11 @@ Page({
     mood: '',
     presetMoods: [...'😊😄😢😤😴🤔🥳😱'],
     isCustomMood: false,
+    themeStyle: getThemeStyleString(),
     showAddDialog: false,
     addCategoryName: '',
-    addCategoryEmoji: '🍜',
-    addCategoryError: '',
-    emojiPool: EMOJI_POOL
+    addCategoryEmoji: '📌',
+    addCategoryError: ''
   },
 
   resetForm(nextType = 'expense') {
@@ -202,7 +202,19 @@ Page({
   },
   closeAddDialog() { this.setData({ showAddDialog: false, addCategoryError: '' }) },
   onAddName(e) { this.setData({ addCategoryName: e.detail.value, addCategoryError: '' }) },
-  pickAddEmoji(e) { this.setData({ addCategoryEmoji: e.currentTarget.dataset.emoji }) },
+  pickAddEmoji() {
+    wx.showModal({
+      title: '选择图标',
+      content: '在下方输入框中粘贴或输入一个 emoji 表情',
+      editable: true,
+      placeholderText: '如：🍵 🎵 🐾',
+      success: res => {
+        if (!res.confirm) return
+        const v = (res.content || '').trim()
+        if (v) this.setData({ addCategoryEmoji: v })
+      }
+    })
+  },
 
   async saveAddCategory() {
     const name = this.data.addCategoryName.trim()

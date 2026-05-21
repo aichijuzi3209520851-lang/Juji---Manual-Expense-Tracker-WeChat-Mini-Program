@@ -78,21 +78,13 @@
   font-size: 30rpx; color: var(--color-text);
   border-bottom: 2rpx solid var(--color-surface-high); padding: 8rpx 0;
 }
-.dialog-emoji-grid {
-  display: flex; flex-wrap: wrap; gap: 12rpx;
-  max-height: 320rpx; overflow-y: auto;
+.dialog-icon-row {
+  display: flex; align-items: center; gap: 16rpx;
+  background: var(--color-surface-low); border-radius: var(--radius-md);
+  padding: 16rpx 20rpx;
 }
-.dialog-emoji-item {
-  width: 72rpx; height: 72rpx; font-size: 36rpx;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: var(--radius-md);
-  background: var(--color-surface-low);
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-.dialog-emoji-item.is-selected {
-  background: var(--color-primary-container);
-  transform: scale(1.12);
-}
+.dialog-icon-preview { font-size: 44rpx; line-height: 1; flex-shrink: 0; }
+.dialog-icon-hint { font-size: 24rpx; color: var(--color-text-tertiary); line-height: 1.4; }
 .dialog-type-row {
   display: flex; gap: 16rpx;
 }
