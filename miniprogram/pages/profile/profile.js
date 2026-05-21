@@ -1,10 +1,10 @@
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const THEMES = [
-  { id: 'fresh', name: '清新', desc: '暖白底 + 柔和玫瑰色' },
-  { id: 'dark', name: '深夜', desc: '深色背景，护眼模式' },
-  { id: 'warm', name: '暖阳', desc: '温暖橙调配色' },
-  { id: 'mint', name: '薄荷', desc: '清爽薄荷绿调' }
+  { id: 'mint', name: '清爽薄荷（默认）', desc: '清新绿底，护眼舒适' },
+  { id: 'fresh', name: '暖暖阳光', desc: '暖白底 + 柔和玫瑰色' },
+  { id: 'dark', name: '夜猫子', desc: '深色背景，护眼夜间模式' },
+  { id: 'skyBlue', name: '蓝天白云', desc: '天蓝底 + 清透蓝色' }
 ]
 const GENDERS = ['未设置', '男', '女']
 
@@ -69,7 +69,7 @@ Page({
         const u = data[0]
         app.globalData.userInfo = u
         const genderText = GENDERS[u.gender === 'male' ? 1 : u.gender === 'female' ? 2 : 0]
-        const theme = THEMES.find(t => t.id === (u.theme || 'fresh')) || THEMES[0]
+        const theme = THEMES.find(t => t.id === (u.theme || 'mint')) || THEMES[0]
         const avatarUrl = await this.resolveAvatarSrc(u.avatarUrl || '')
         this.setData({
           avatarUrl,

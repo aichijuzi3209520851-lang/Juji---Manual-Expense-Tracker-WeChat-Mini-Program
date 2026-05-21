@@ -107,81 +107,47 @@ const THEME_VARIABLES = {
     '--color-warning': '#6b8f70'
   },
 
-  // ==================== 暖阳 (warm) ====================
-  warm: {
-    '--color-primary': '#d4865a',
-    '--color-primary-container': '#ffdbc8',
-    '--color-primary-light': '#f5c4a8',
-    '--color-on-primary': '#ffffff',
-    '--color-secondary': '#c4784a',
-    '--color-secondary-container': '#ffd8c2',
-    '--color-tertiary': '#5a8a6a',
-    '--color-tertiary-container': '#c8e4d2',
-    '--color-error': '#c62828',
-    '--color-error-container': '#ffdad6',
-
-    '--color-bg': '#fffdf7',
-    '--color-surface': '#ffffff',
-    '--color-surface-low': '#fdfbf5',
-    '--color-surface-container': '#f9f5ed',
-    '--color-surface-high': '#f4efe3',
-    '--color-surface-highest': '#ebe4d6',
-    '--color-surface-dim': '#e2dac9',
-
-    '--color-text': '#211d18',
-    '--color-text-secondary': '#5c5044',
-    '--color-text-tertiary': '#8e8278',
-    '--color-text-on-primary': '#ffffff',
-
-    '--color-border': '#e0d4c2',
-    '--color-outline': '#9a8e82',
-
-    '--color-income': '#5a8a6a',
-    '--color-income-light': '#c8e4d2',
-    '--color-warning': '#c4784a'
-  },
-
-  // ==================== 翠绿 (mintGreen) — #4ADE80 主色 ====================
-  mintGreen: {
-    '--color-primary': '#4ade80',
-    '--color-primary-container': '#d4f7e2',
-    '--color-primary-light': '#a6eec6',
-    '--color-on-primary': '#0a2818',
-    '--color-secondary': '#329a6a',
-    '--color-secondary-container': '#c5eeda',
-    '--color-tertiary': '#5c8c5a',
-    '--color-tertiary-container': '#d4edce',
+  // ==================== 蓝天白云 (skyBlue) — #38BDF8 主色 ====================
+  skyBlue: {
+    '--color-primary': '#38bdf8',
+    '--color-primary-container': '#cceeff',
+    '--color-primary-light': '#a8dff7',
+    '--color-on-primary': '#022c45',
+    '--color-secondary': '#0ea5e9',
+    '--color-secondary-container': '#bae6fd',
+    '--color-tertiary': '#6366f1',
+    '--color-tertiary-container': '#e0e7ff',
     '--color-error': '#ba1a1a',
     '--color-error-container': '#ffdad6',
 
-    '--color-bg': '#f4fdf7',
-    '--color-surface': '#ffffff',
-    '--color-surface-low': '#f7fef9',
-    '--color-surface-container': '#f1fcf5',
-    '--color-surface-high': '#edf9f1',
-    '--color-surface-highest': '#e6f5ea',
-    '--color-surface-dim': '#dfefe5',
+    '--color-bg': '#f0f9ff',
+    '--color-surface': '#fafeff',
+    '--color-surface-low': '#f5fcff',
+    '--color-surface-container': '#edf8ff',
+    '--color-surface-high': '#e3f4fd',
+    '--color-surface-highest': '#d6eef9',
+    '--color-surface-dim': '#c8e7f5',
 
-    '--color-text': '#132118',
-    '--color-text-secondary': '#3a4d44',
-    '--color-text-tertiary': '#6e8277',
+    '--color-text': '#0c2233',
+    '--color-text-secondary': '#2e4a5c',
+    '--color-text-tertiary': '#5e7d8e',
     '--color-text-on-primary': '#ffffff',
 
-    '--color-border': '#cde5d4',
-    '--color-outline': '#7a8f82',
+    '--color-border': '#bfdfef',
+    '--color-outline': '#7aadc4',
 
-    '--color-income': '#4ade80',
-    '--color-income-light': '#d4f7e2',
-    '--color-warning': '#b0880a'
+    '--color-income': '#22c55e',
+    '--color-income-light': '#bbf7d0',
+    '--color-warning': '#d97706'
   }
 }
 
 /**
  * 获取当前存储的主题 ID
- * @returns {string} 主题 ID，默认 'fresh'
+ * @returns {string} 主题 ID，默认 'mint'
  */
 function getCurrentThemeId() {
-  return wx.getStorageSync('theme') || 'fresh'
+  return wx.getStorageSync('theme') || 'mint'
 }
 
 /**

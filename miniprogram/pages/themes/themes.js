@@ -2,29 +2,7 @@ const { applyTheme, getCurrentThemeId, getThemeStyleString } = require('../../ut
 
 const THEMES = [
   {
-    id: 'fresh', name: '清新', desc: '暖白底 + 柔和玫瑰色',
-    colors: [
-      { name: 'primary', value: '#785655' },
-      { name: 'bg', value: '#fffaf8' },
-      { name: 'surface', value: '#ffffff' },
-      { name: 'text', value: '#1e1b1a' },
-      { name: 'income', value: '#4b6458' },
-      { name: 'error', value: '#ba1a1a' }
-    ]
-  },
-  {
-    id: 'dark', name: '深夜', desc: '深色背景 + 暖金主色，护眼模式',
-    colors: [
-      { name: 'primary', value: '#d4a574' },
-      { name: 'bg', value: '#1a1a1f' },
-      { name: 'surface', value: '#242429' },
-      { name: 'text', value: '#e8e6e3' },
-      { name: 'income', value: '#7db892' },
-      { name: 'error', value: '#ffb4ab' }
-    ]
-  },
-  {
-    id: 'mint', name: '薄荷', desc: '浅绿底 + 翠绿主色，清爽舒适',
+    id: 'mint', name: '清爽薄荷（默认）', desc: '清新绿底，护眼舒适',
     colors: [
       { name: 'primary', value: '#3d7a5c' },
       { name: 'bg', value: '#f6faf7' },
@@ -35,24 +13,35 @@ const THEMES = [
     ]
   },
   {
-    id: 'warm', name: '暖阳', desc: '奶黄底 + 暖橙主色，温暖明媚',
+    id: 'fresh', name: '暖暖阳光', desc: '暖白底 + 柔和玫瑰色，温暖亲切',
     colors: [
-      { name: 'primary', value: '#d4865a' },
-      { name: 'bg', value: '#fffdf7' },
+      { name: 'primary', value: '#785655' },
+      { name: 'bg', value: '#fffaf8' },
       { name: 'surface', value: '#ffffff' },
-      { name: 'text', value: '#211d18' },
-      { name: 'income', value: '#5a8a6a' },
-      { name: 'error', value: '#c62828' }
+      { name: 'text', value: '#1e1b1a' },
+      { name: 'income', value: '#4b6458' },
+      { name: 'error', value: '#ba1a1a' }
     ]
   },
   {
-    id: 'mintGreen', name: '翠绿', desc: '清新薄荷绿，明亮舒适',
+    id: 'dark', name: '夜猫子', desc: '深色背景 + 暖金主色，护眼夜间模式',
     colors: [
-      { name: 'primary', value: '#4ade80' },
-      { name: 'bg', value: '#f4fdf7' },
-      { name: 'surface', value: '#ffffff' },
-      { name: 'text', value: '#132118' },
-      { name: 'income', value: '#4ade80' },
+      { name: 'primary', value: '#d4a574' },
+      { name: 'bg', value: '#1a1a1f' },
+      { name: 'surface', value: '#242429' },
+      { name: 'text', value: '#e8e6e3' },
+      { name: 'income', value: '#7db892' },
+      { name: 'error', value: '#ffb4ab' }
+    ]
+  },
+  {
+    id: 'skyBlue', name: '蓝天白云', desc: '天蓝底 + 清透蓝色，明亮开阔',
+    colors: [
+      { name: 'primary', value: '#38bdf8' },
+      { name: 'bg', value: '#f0f9ff' },
+      { name: 'surface', value: '#fafeff' },
+      { name: 'text', value: '#0c2233' },
+      { name: 'income', value: '#22c55e' },
       { name: 'error', value: '#ba1a1a' }
     ]
   }
@@ -66,7 +55,7 @@ Page({
   },
 
   onLoad() {
-    const stored = wx.getStorageSync('theme') || 'fresh'
+    const stored = wx.getStorageSync('theme') || 'mint'
     this.setData({ currentTheme: stored, themeStyle: getThemeStyleString(stored) })
   },
 
