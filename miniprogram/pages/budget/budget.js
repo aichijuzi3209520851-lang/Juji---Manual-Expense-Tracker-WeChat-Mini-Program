@@ -22,10 +22,10 @@ Page({
     suggestion: null
   },
 
-  onShow() {
+  async onShow() {
     applyTheme()
     this.updateCustomTabBar()
-    this.loadBudget()
+    await this.loadBudget()
     this.loadHistory()
     this.loadSuggestion()
   },
@@ -197,7 +197,7 @@ Page({
         if (data.length > 0) { total += data.reduce((s, b) => s + b.amount, 0); months++ }
       } catch (err) { /* skip */ }
     }
-    if (months < 2) return
+    if (months < 1) return
     const avg = Math.round(total / months * 0.9)
     this.setData({ suggestion: { avg: (total / months).toFixed(0), suggest: avg } })
   }
