@@ -6,7 +6,7 @@ App({
     openid: '',
     userInfo: null,
     hasSeenGuide: false,
-    currentTheme: 'fresh'
+    currentTheme: 'mint'
   },
 
   onLaunch() {
@@ -64,7 +64,7 @@ App({
             avatarUrl: '',
             gender: '',
             customCategories: [],
-            theme: 'fresh',
+            theme: 'mint',
             budgetDefault: 2000,
             createdAt: new Date(),
             lastLoginAt: new Date()
