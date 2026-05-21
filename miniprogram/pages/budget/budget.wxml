@@ -34,6 +34,39 @@
       <text class="budget-edit-link" bindtap="openBudgetEditor">调整预算 ›</text>
     </view>
 
+    <!-- 消费节奏 -->
+    <view class="budget-pace" wx:if="{{pace}}">
+      <text class="pace-title">消费节奏</text>
+      <view class="pace-row">
+        <view class="pace-item">
+          <text class="pace-value">¥{{pace.todaySpent}}</text>
+          <text class="pace-label">今日已花</text>
+        </view>
+        <view class="pace-divider"></view>
+        <view class="pace-item">
+          <text class="pace-value">¥{{pace.dailyBudget}}</text>
+          <text class="pace-label">日均预算</text>
+        </view>
+      </view>
+      <view class="pace-footer">
+        <text>本月剩 {{pace.daysLeft}} 天 · 日均可用 ¥{{pace.remainDaily}}</text>
+      </view>
+    </view>
+
+    <!-- 钱去哪了 -->
+    <view class="budget-categories" wx:if="{{topCategories.length > 0}}">
+      <text class="cat-title">钱去哪了</text>
+      <view wx:for="{{topCategories}}" wx:key="name" class="cat-row">
+        <text class="cat-emoji">{{item.emoji}}</text>
+        <text class="cat-name">{{item.name}}</text>
+        <view class="cat-bar-wrap">
+          <view class="cat-fill" style="width: {{item.pct}}%"></view>
+        </view>
+        <text class="cat-amount">¥{{item.amount}}</text>
+        <text class="cat-pct">{{item.pct}}%</text>
+      </view>
+    </view>
+
     <!-- 历史达成率 -->
     <view class="budget-history" wx:if="{{historyData.length > 0}}">
       <text class="history-title">过去 6 个月预算达成</text>
@@ -48,6 +81,11 @@
       </view>
     </view>
   </block>
+
+  <!-- 灵犀建议 -->
+  <view class="budget-suggestion" wx:if="{{suggestion && status === 'safe'}}">
+    <text class="suggestion-text">💡 近 3 月月均 ¥{{suggestion.avg}}，建议预算 ¥{{suggestion.suggest}}</text>
+  </view>
 
   <!-- 调整预算面板（bottom-sheet） -->
   <view class="budget-mask {{showEditor ? 'is-open' : ''}}" bindtap="closeBudgetEditor"></view>

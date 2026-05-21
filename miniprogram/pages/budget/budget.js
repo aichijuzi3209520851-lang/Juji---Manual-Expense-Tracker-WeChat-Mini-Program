@@ -1,6 +1,11 @@
 const pad = n => String(n).padStart(2, '0')
 const { applyTheme } = require('../../utils/theme')
 
+const CATEGORY_EMOJI = {
+  '餐饮':'🍜','交通':'🚇','购物':'🛍️','娱乐':'🎮','学习':'📚','日用':'🏠','医疗':'💊',
+  '工资':'💼','兼职':'🧳','理财':'💹','红包':'🎁','退款':'↩️','其他':'📌'
+}
+
 Page({
   data: {
     budgetAmount: 0,
@@ -11,7 +16,10 @@ Page({
     statusText: '',
     ringReady: false,
     showEditor: false,
-    historyData: []
+    historyData: [],
+    pace: null,
+    topCategories: [],
+    suggestion: null
   },
 
   onShow() {
@@ -19,6 +27,7 @@ Page({
     this.updateCustomTabBar()
     this.loadBudget()
     this.loadHistory()
+    this.loadSuggestion()
   },
 
   updateCustomTabBar() {
@@ -55,10 +64,41 @@ Page({
       else if (percent >= 90) { status = 'warn'; statusText = `快了快了，只剩 ¥${(budgetAmount - spent).toFixed(0)} 到月底 💡` }
       else { status = 'safe'; statusText = `表现不错！还剩 ¥${(budgetAmount - spent).toFixed(0)} ✨` }
 
+      // 消费节奏
+      let pace = null
+      if (budgetAmount > 0) {
+        const dayOfMonth = now.getDate()
+        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+        const dailyBudget = budgetAmount / daysInMonth
+        const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(dayOfMonth)}`
+        const todaySpent = billRes.data.filter(b => b.date === todayStr).reduce((s, b) => s + b.amount, 0)
+        const daysLeft = daysInMonth - dayOfMonth + 1
+        const remaining = budgetAmount - spent
+        const remainDaily = daysLeft > 0 ? remaining / daysLeft : 0
+        pace = {
+          todaySpent: todaySpent.toFixed(2),
+          dailyBudget: dailyBudget.toFixed(2),
+          daysLeft,
+          remainDaily: remainDaily.toFixed(2)
+        }
+      }
+
+      // 类目排行 Top 3
+      const byCate = {}
+      billRes.data.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
+      const topCategories = Object.entries(byCate)
+        .sort((a, b) => b[1] - a[1]).slice(0, 3)
+        .map(([name, amt]) => ({
+          name, emoji: CATEGORY_EMOJI[name] || '📌',
+          amount: amt.toFixed(2),
+          pct: spent ? Math.round(amt / spent * 100) : 0
+        }))
+
       this.setData({
         budgetAmount, spent: spent.toFixed(2),
         budgetInput: budgetAmount ? String(budgetAmount) : '2000',
-        percent, status, statusText, ringReady: true
+        percent, status, statusText, ringReady: true,
+        pace, topCategories
       })
     } catch (err) {
       console.error('加载预算失败:', err)
@@ -140,5 +180,25 @@ Page({
 
   closeBudgetEditor() {
     this.setData({ showEditor: false })
+  },
+
+  async loadSuggestion() {
+    if (this.data.status === 'over') return
+    const db = wx.cloud.database()
+    const _ = db.command
+    const now = new Date()
+    let total = 0, months = 0
+    for (let i = 1; i <= 3; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      const key = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
+      try {
+        const { data } = await db.collection('bills')
+          .where({ type: 'expense', date: _.gte(`${key}-01`).and(_.lte(`${key}-31`)) }).get()
+        if (data.length > 0) { total += data.reduce((s, b) => s + b.amount, 0); months++ }
+      } catch (err) { /* skip */ }
+    }
+    if (months < 2) return
+    const avg = Math.round(total / months * 0.9)
+    this.setData({ suggestion: { avg: (total / months).toFixed(0), suggest: avg } })
   }
 })

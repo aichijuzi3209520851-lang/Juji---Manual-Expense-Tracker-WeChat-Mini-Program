@@ -87,6 +87,42 @@
 .history-pct { font-size: 22rpx; color: var(--color-text-secondary); width: 56rpx; font-weight: 500; }
 .history-pct.is-over { color: var(--color-error); }
 
+/* 消费节奏 */
+.budget-pace {
+  background: var(--color-surface); border-radius: var(--radius-xl);
+  box-shadow: 0 4rpx 16rpx rgba(120,86,85,0.04); padding: var(--space-lg);
+  margin-top: 24rpx;
+}
+.pace-title { font-size: 28rpx; font-weight: 600; color: var(--color-text); margin-bottom: 20rpx; display: block; }
+.pace-row { display: flex; align-items: center; }
+.pace-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
+.pace-value { font-size: 40rpx; font-weight: 700; color: var(--color-text); font-variant-numeric: tabular-nums; }
+.pace-label { font-size: 22rpx; color: var(--color-text-tertiary); }
+.pace-divider { width: 2rpx; height: 56rpx; background: var(--color-border); }
+.pace-footer { margin-top: 20rpx; text-align: center; font-size: 24rpx; color: var(--color-text-secondary); }
+
+/* 钱去哪了 */
+.budget-categories {
+  background: var(--color-surface); border-radius: var(--radius-xl);
+  box-shadow: 0 4rpx 16rpx rgba(120,86,85,0.04); padding: var(--space-lg);
+  margin-top: 24rpx;
+}
+.cat-title { font-size: 28rpx; font-weight: 600; color: var(--color-text); margin-bottom: 16rpx; display: block; }
+.cat-row { display: flex; align-items: center; gap: 12rpx; padding: 14rpx 0; }
+.cat-emoji { font-size: 36rpx; width: 44rpx; text-align: center; }
+.cat-name { font-size: 26rpx; color: var(--color-text); width: 80rpx; font-weight: 500; }
+.cat-bar-wrap { flex: 1; height: 10rpx; background: var(--color-surface-low); border-radius: 5rpx; overflow: hidden; }
+.cat-fill { height: 100%; background: var(--color-primary); border-radius: 5rpx; min-width: 4rpx; }
+.cat-amount { font-size: 26rpx; color: var(--color-text-secondary); font-weight: 500; font-variant-numeric: tabular-nums; }
+.cat-pct { font-size: 22rpx; color: var(--color-text-tertiary); width: 48rpx; text-align: right; }
+
+/* 灵犀建议 */
+.budget-suggestion {
+  background: var(--color-surface-low); border-radius: var(--radius-lg);
+  padding: var(--space-md); margin-top: 24rpx; text-align: center;
+}
+.suggestion-text { font-size: 24rpx; color: var(--color-text-tertiary); }
+
 /* Bottom-sheet 编辑面板 */
 .budget-mask {
   position: fixed; inset: 0; z-index: 998;
