@@ -1,5 +1,5 @@
 <!-- 我的页面 -->
-<view class="profile-page">
+<view class="profile-page" style="{{themeStyle}}">
 
   <!-- 用户信息 -->
   <view class="profile-hero">

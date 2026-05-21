@@ -1,5 +1,5 @@
 ﻿<!-- 统计页 -->
-<view class="stats-page">
+<view class="stats-page" style="{{themeStyle}}">
   <view class="month-picker">
     <view class="month-arrow" bindtap="prevMonth">‹</view>
     <text class="month-text">{{displayMonth}}</text>

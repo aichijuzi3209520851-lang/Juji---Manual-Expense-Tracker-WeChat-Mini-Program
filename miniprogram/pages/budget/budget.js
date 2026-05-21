@@ -1,5 +1,5 @@
 const pad = n => String(n).padStart(2, '0')
-const { applyTheme } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const CATEGORY_EMOJI = {
   '餐饮':'🍜','交通':'🚇','购物':'🛍️','娱乐':'🎮','学习':'📚','日用':'🏠','医疗':'💊',
@@ -19,11 +19,13 @@ Page({
     historyData: [],
     pace: null,
     topCategories: [],
-    suggestion: null
+    suggestion: null,
+    themeStyle: ''
   },
 
   async onShow() {
     applyTheme()
+    this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
     await this.loadBudget()
     this.loadHistory()

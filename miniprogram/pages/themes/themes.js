@@ -1,4 +1,4 @@
-const { applyTheme, getCurrentThemeId } = require('../../utils/theme')
+const { applyTheme, getCurrentThemeId, getThemeStyleString } = require('../../utils/theme')
 
 const THEMES = [
   {
@@ -61,12 +61,13 @@ const THEMES = [
 Page({
   data: {
     themes: THEMES,
-    currentTheme: 'fresh'
+    currentTheme: 'fresh',
+    themeStyle: ''
   },
 
   onLoad() {
     const stored = wx.getStorageSync('theme') || 'fresh'
-    this.setData({ currentTheme: stored })
+    this.setData({ currentTheme: stored, themeStyle: getThemeStyleString(stored) })
   },
 
   selectTheme(e) {

@@ -1,5 +1,5 @@
 <!-- 记账页 — 橘记的核心 -->
-<view class="record-page {{type === 'income' ? 'is-income' : ''}}">
+<view class="record-page {{type === 'income' ? 'is-income' : ''}}" style="{{themeStyle}}">
 
   <!-- 收/支切换 -->
   <view class="type-toggle">

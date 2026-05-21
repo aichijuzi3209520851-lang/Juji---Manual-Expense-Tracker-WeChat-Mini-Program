@@ -1,5 +1,5 @@
 <!-- 账单详情 — 手账便签风格 -->
-<view class="detail-page">
+<view class="detail-page" style="{{themeStyle}}">
   <block wx:if="{{bill}}">
 
     <!-- 照片（若有） -->

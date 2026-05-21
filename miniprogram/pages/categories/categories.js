@@ -1,3 +1,5 @@
+const { getThemeStyleString } = require('../../utils/theme')
+
 const PRESET_EXPENSE = [
   { name: '餐饮', icon: '🍜' }, { name: '交通', icon: '🚇' }, { name: '购物', icon: '🛍️' },
   { name: '娱乐', icon: '🎮' }, { name: '学习', icon: '📚' }, { name: '日用', icon: '🏠' },
@@ -19,10 +21,12 @@ Page({
     dialogName: '',
     dialogEmoji: '🍜',
     dialogType: 'expense',
-    emojiPool: EMOJI_POOL
+    emojiPool: EMOJI_POOL,
+    themeStyle: ''
   },
 
   onLoad() {
+    this.setData({ themeStyle: getThemeStyleString() })
     this.buildCategories()
   },
 

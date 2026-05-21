@@ -1,5 +1,5 @@
 <!-- 自定义分类管理 -->
-<view class="categories-page">
+<view class="categories-page" style="{{themeStyle}}">
 
   <view class="cat-header">
     <text class="cat-title">分类管理</text>

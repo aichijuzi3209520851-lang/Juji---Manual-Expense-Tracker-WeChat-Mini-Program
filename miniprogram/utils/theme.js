@@ -185,24 +185,28 @@ function getCurrentThemeId() {
 }
 
 /**
- * 将指定主题的 CSS 变量注入当前页面
- * 核心方法：调用 wx.setPageStyle() 动态修改页面级 CSS 变量
+ * 把指定主题的 CSS 变量拼成 inline-style 字符串。
+ * 用法：每个页面 onShow 调此函数，setData 到 themeStyle，
+ * wxml 最外层 view 写 style="{{themeStyle}}"，CSS 变量将作用于整个子树。
+ *
+ * 注：小程序不支持 wx.setPageStyle 注入 CSS 变量（该 API 只接受
+ * backgroundColor 系列），所以必须用 inline-style 方案。
  *
  * @param {string} [themeId] - 主题 ID，不传则从 Storage 读取
- * @returns {string} 实际应用的主题 ID
+ * @returns {string} 形如 `--color-primary:#785655;--color-bg:#fffaf8;...`
  */
-function applyTheme(themeId) {
+function getThemeStyleString(themeId) {
   const id = themeId || getCurrentThemeId()
   const vars = THEME_VARIABLES[id] || THEME_VARIABLES.fresh
+  return Object.keys(vars).map(k => `${k}:${vars[k]}`).join(';')
+}
 
-  try {
-    wx.setPageStyle({ style: vars })
-  } catch (e) {
-    // 低版本基础库可能不支持 wx.setPageStyle，静默降级
-    console.warn('⚠️ wx.setPageStyle 不支持, 主题切换降级:', e)
-  }
-
-  return id
+/**
+ * @deprecated wx.setPageStyle 不支持 CSS 变量。请改用 getThemeStyleString()
+ * 配合 wxml 最外层 view 的 style 绑定。保留此函数仅为兼容旧调用，noop。
+ */
+function applyTheme(themeId) {
+  return themeId || getCurrentThemeId()
 }
 
 /**
@@ -218,6 +222,7 @@ function initAppTheme(appInstance) {
 module.exports = {
   THEMES_CONFIG: THEME_VARIABLES,
   getCurrentThemeId,
+  getThemeStyleString,
   applyTheme,
   initAppTheme
 }

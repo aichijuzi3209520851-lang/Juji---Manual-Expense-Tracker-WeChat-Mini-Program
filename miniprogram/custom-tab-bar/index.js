@@ -1,6 +1,9 @@
+const { getThemeStyleString } = require('../utils/theme')
+
 Component({
   data: {
     selected: 'pages/home/home',
+    themeStyle: '',
     list: [
       {
         pagePath: 'pages/home/home',
@@ -41,12 +44,14 @@ Component({
 
   lifetimes: {
     attached() {
+      this.setData({ themeStyle: getThemeStyleString() })
       this.updateSelected()
     }
   },
 
   pageLifetimes: {
     show() {
+      this.setData({ themeStyle: getThemeStyleString() })
       this.updateSelected()
     }
   },

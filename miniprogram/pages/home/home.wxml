@@ -1,5 +1,5 @@
 <!-- 首页 -->
-<view class="home-page">
+<view class="home-page" style="{{themeStyle}}">
 
   <!-- 季节 -->
   <view class="season-bar">

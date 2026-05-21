@@ -20,7 +20,7 @@ const INCOME_CATEGORIES = [
 
 const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
-const { applyTheme } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
 
@@ -75,6 +75,7 @@ Page({
 
   onShow() {
     applyTheme()
+    this.setData({ themeStyle: getThemeStyleString() })
     // ... existing code after this
     this.updateCustomTabBar()
     this.loadCustomCategories(this.data.type)

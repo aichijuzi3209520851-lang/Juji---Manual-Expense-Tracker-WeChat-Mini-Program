@@ -1,4 +1,4 @@
-const { applyTheme } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const ICON_MAP = {
   '餐饮': '🍜', '交通': '🚇', '购物': '🛍️', '娱乐': '🎮',
@@ -35,11 +35,13 @@ Page({
     budget: { status: 'unset' },
     groupedBills: [],
     overviewFailed: false,
-    season: SEASONS[new Date().getMonth()]
+    season: SEASONS[new Date().getMonth()],
+    themeStyle: ''
   },
 
   onShow() {
     applyTheme()
+    this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
     this.loadOverview()
     this.loadRecentBills()

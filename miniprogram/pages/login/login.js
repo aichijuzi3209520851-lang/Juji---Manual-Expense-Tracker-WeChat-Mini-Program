@@ -1,11 +1,11 @@
-const { applyTheme } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 Page({
-  data: { loading: false },
+  data: { loading: false, themeStyle: '' },
 
   onShow() {
-    // 每次显示登录页时同步最新主题（确保重启/切回时状态正确）
     applyTheme()
+    this.setData({ themeStyle: getThemeStyleString() })
   },
 
   async handleLogin() {

@@ -1,5 +1,5 @@
 <!-- 主题预览 -->
-<view class="themes-page">
+<view class="themes-page" style="{{themeStyle}}">
   <view class="themes-header">
     <text class="themes-title">选择主题</text>
     <text class="themes-hint">选一套配色，换个心情</text>

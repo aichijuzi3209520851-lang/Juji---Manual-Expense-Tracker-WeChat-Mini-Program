@@ -1,4 +1,4 @@
-const { applyTheme } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const THEMES = [
   { id: 'fresh', name: '清新', desc: '暖白底 + 柔和玫瑰色' },
@@ -45,6 +45,7 @@ Page({
 
   onShow() {
     applyTheme()
+    this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
     this.loadUserInfo()
     this.loadFootprint()

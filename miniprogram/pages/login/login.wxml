@@ -1,4 +1,4 @@
-<view class="login-page">
+<view class="login-page" style="{{themeStyle}}">
   <view class="login-glow login-glow-top"></view>
   <view class="login-glow login-glow-bottom"></view>
 

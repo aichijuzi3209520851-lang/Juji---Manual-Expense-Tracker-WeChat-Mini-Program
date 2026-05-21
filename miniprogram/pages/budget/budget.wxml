@@ -1,5 +1,5 @@
 <!-- 预算页 -->
-<view class="budget-page">
+<view class="budget-page" style="{{themeStyle}}">
 
   <!-- 空态：未设预算 -->
   <view wx:if="{{budgetAmount === 0}}" class="budget-empty">

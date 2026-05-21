@@ -1,5 +1,5 @@
 ﻿const COLORS = ['#e8bcba', '#f5dddc', '#ffdad8', '#cee9da', '#d8c1c0', '#f7cac8', '#b2cdbe', '#e9e1df']
-const { applyTheme } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const pad = n => String(n).padStart(2, '0')
 const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
@@ -97,11 +97,13 @@ Page({
     weeklyLoading: true,
     monthlyLoading: true,
     aiDebugText: '',
-    statsFailed: false
+    statsFailed: false,
+    themeStyle: ''
   },
 
   onShow() {
     applyTheme()
+    this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
     const now = new Date()
     this.setData({

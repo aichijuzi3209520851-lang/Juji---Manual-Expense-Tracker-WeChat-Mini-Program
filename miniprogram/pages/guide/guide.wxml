@@ -1,5 +1,5 @@
 <!-- 新手引导 - 4 页 swiper -->
-<view class="guide-wrap">
+<view class="guide-wrap" style="{{themeStyle}}">
   <view class="guide-glow guide-glow-top"></view>
   <view class="guide-glow guide-glow-bottom"></view>
 
