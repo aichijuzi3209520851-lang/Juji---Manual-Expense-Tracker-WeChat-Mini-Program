@@ -1,4 +1,6 @@
 .stats-page {
+  background-color: var(--color-bg);
+  min-height: 100vh;
   padding: 0 var(--space-md);
   padding-bottom: 208rpx;
   padding-bottom: calc(208rpx + constant(safe-area-inset-bottom));

@@ -8,7 +8,7 @@
       <view class="guide-page">
         <view class="guide-illustration {{0 === currentIndex ? 'is-visible' : ''}}">📝</view>
         <text class="guide-title">随手记账</text>
-        <text class="guide-desc">打开橘记JUJI，输入金额，选个分类就完事。无负担，不啰嗦。</text>
+        <text class="guide-desc">打开橘记，输入金额，选个分类就完事。无负担，不啰嗦。</text>
       </view>
     </swiper-item>
 
