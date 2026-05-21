@@ -65,8 +65,9 @@ Page({
 
     wx.showModal({
       title: '切换主题',
-      content: '切换后会重新加载小程序',
-      confirmText: '切换',
+      content: '主题将在你下次进入小程序时生效，切换后将退出小程序。',
+      confirmText: '确认切换',
+      cancelText: '取消',
       success: async res => {
         if (!res.confirm) return
 
@@ -86,8 +87,8 @@ Page({
           console.warn('主题同步到数据库失败（非致命）:', err)
         }
 
-        // 3. 重启小程序以全局应用新主题
-        wx.reLaunch({ url: '/pages/home/home' })
+        // 3. 退出小程序，让用户手动重新进入（主题在下次 onLaunch 时生效）
+        wx.exitMiniProgram()
       }
     })
   }
