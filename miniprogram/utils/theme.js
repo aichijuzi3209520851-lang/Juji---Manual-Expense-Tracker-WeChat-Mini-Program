@@ -202,11 +202,21 @@ function getThemeStyleString(themeId) {
 }
 
 /**
- * @deprecated wx.setPageStyle 不支持 CSS 变量。请改用 getThemeStyleString()
- * 配合 wxml 最外层 view 的 style 绑定。保留此函数仅为兼容旧调用，noop。
+ * 同步 page 级背景色到 wx.setPageStyle（该 API 只支持 backgroundColor）。
+ * inline-style 变量只作用在 view 子树上，page 自身的 var(--color-bg) 仍解析为默认值，
+ * 所以需要单独刷一下 page 的背景使其与主题一致。
+ *
+ * @param {string} [themeId] - 主题 ID，不传则从 Storage 读取
  */
 function applyTheme(themeId) {
-  return themeId || getCurrentThemeId()
+  const id = themeId || getCurrentThemeId()
+  const vars = THEME_VARIABLES[id] || THEME_VARIABLES.fresh
+  try {
+    wx.setPageStyle({ style: { backgroundColor: vars['--color-bg'] } })
+  } catch (e) {
+    // 静默降级
+  }
+  return id
 }
 
 /**
