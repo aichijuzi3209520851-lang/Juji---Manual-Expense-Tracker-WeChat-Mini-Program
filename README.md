@@ -124,7 +124,7 @@ cloudfunctions/             # 云函数
 
 ## 开始
 
-1. 微信开发者工具导入项目（AppID: `wx5c263d2b6496fe2d`）
+1. 微信开发者工具导入项目（需填入你自己的 AppID）
 2. 部署所有云函数：右键每个文件夹 →「上传并部署：云端安装依赖」
 3. 创建数据库集合 `bills`、`budgets`、`users`（权限：「仅创建者可读写」）
 4. 在微信公众平台 → 行业能力 → 小程序成长计划 报名，获取 AI Token
@@ -136,8 +136,8 @@ cloudfunctions/             # 云函数
 
 | 项目 | 值 |
 |------|------|
-| 环境 ID | `lajiaoyou-d4g78yts61f1a841d` |
-| 区域 | ap-shanghai |
+| 环境 ID | 见 `miniprogram/app.js` 中 `wx.cloud.init({ env: '...' })` |
+| 区域 | 按创建时选择 |
 | 套餐 | 个人版 |
 
 ### 云函数
@@ -171,7 +171,7 @@ cloudfunctions/             # 云函数
 
 | 项目 | 值 |
 |------|------|
-| 域名 | `lajiaoyou-d4g78yts61f1a841d-1430379499.tcloudbaseapp.com` |
+| 域名 | （CloudBase 控制台 → 静态托管查看） |
 
 ## License
 

@@ -13,7 +13,7 @@ const THEMES = [
     ]
   },
   {
-    id: 'fresh', name: '暖暖阳光', desc: '暖白底 + 柔和玫瑰色，温暖亲切',
+    id: 'fresh', name: '温馨玫瑰', desc: '暖白底 + 柔和玫瑰色，温暖亲切',
     colors: [
       { name: 'primary', value: '#785655' },
       { name: 'bg', value: '#fffaf8' },
