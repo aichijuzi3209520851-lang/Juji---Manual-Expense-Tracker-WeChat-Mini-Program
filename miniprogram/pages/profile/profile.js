@@ -73,7 +73,7 @@ Page({
         this.setData({
           avatarUrl,
           avatarError: false,
-          nickname: u.nickname || '橘记用户',
+          nickname: u.nickname || '橘记JUJI用户',
           genderText,
           gender: u.gender || '',
           themeName: theme.name
@@ -230,7 +230,7 @@ Page({
   // 昵称修改
   editNickname() {
     const current = this.data.nickname
-    const prefill = (current === '橘记用户' || current === '点击登录') ? '' : current
+    const prefill = (current === '橘记JUJI用户' || current === '点击登录') ? '' : current
     wx.showModal({
       title: '修改昵称',
       editable: true,
@@ -244,7 +244,7 @@ Page({
           return
         }
         await this.updateUserField('nickname', value)
-        this.setData({ nickname: value || '橘记用户' })
+        this.setData({ nickname: value || '橘记JUJI用户' })
         wx.showToast({ title: '昵称已更新', icon: 'success' })
       }
     })

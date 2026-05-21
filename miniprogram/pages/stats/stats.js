@@ -51,7 +51,7 @@ function summarize(bills) {
   return { empty: false, total: total.toFixed(2), count: bills.length, top }
 }
 
-const SYSTEM_PROMPT = `你是"橘记"记账小程序的俏皮评论助手。根据用户的消费数据，写一句生动幽默的评论。
+const SYSTEM_PROMPT = `你是"橘记JUJI"记账小程序的俏皮评论助手。根据用户的消费数据，写一句生动幽默的评论。
 【风格要求】
 - 调侃消费行为本身，像朋友间的随意吐槽，亲切但有分寸
 - 1-2 句话，控制在 50 字内
