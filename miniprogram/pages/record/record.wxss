@@ -1,9 +1,9 @@
 .record-page {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 12% 16%, rgba(247, 202, 201, 0.22), rgba(247, 202, 201, 0) 24%),
-    radial-gradient(circle at 86% 18%, rgba(244, 224, 220, 0.16), rgba(244, 224, 220, 0) 20%),
-    linear-gradient(180deg, #fffaf8 0%, #fffdfc 100%);
+    radial-gradient(circle at 12% 16%, var(--color-primary-container), transparent 24%),
+    radial-gradient(circle at 86% 18%, var(--color-primary-light), transparent 20%),
+    var(--color-bg);
   display: flex;
   flex-direction: column;
   padding: 0 var(--space-md);
@@ -11,9 +11,9 @@
 
 .record-page.is-income {
   background:
-    radial-gradient(circle at 12% 16%, rgba(192, 219, 204, 0.22), rgba(192, 219, 204, 0) 24%),
-    radial-gradient(circle at 86% 18%, rgba(230, 241, 233, 0.18), rgba(230, 241, 233, 0) 20%),
-    linear-gradient(180deg, #fbfdfa 0%, #ffffff 100%);
+    radial-gradient(circle at 12% 16%, var(--color-tertiary-container), transparent 24%),
+    radial-gradient(circle at 86% 18%, var(--color-tertiary-container), transparent 20%),
+    var(--color-bg);
 }
 /* 类型切换 */
 .type-toggle { padding: 40rpx 0; display: flex; justify-content: center; }

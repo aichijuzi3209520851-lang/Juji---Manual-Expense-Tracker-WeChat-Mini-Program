@@ -176,12 +176,17 @@ function getThemeStyleString(themeId) {
  */
 function applyTheme(themeId) {
   const id = themeId || getCurrentThemeId()
-  const vars = THEME_VARIABLES[id] || THEME_VARIABLES.fresh
+  const vars = THEME_VARIABLES[id] || THEME_VARIABLES.mint
   try {
     wx.setPageStyle({ style: { backgroundColor: vars['--color-bg'] } })
-  } catch (e) {
-    // 静默降级
-  }
+  } catch (e) {}
+  try {
+    wx.setNavigationBarColor({
+      frontColor: id === 'dark' ? '#ffffff' : '#000000',
+      backgroundColor: vars['--color-bg'],
+      animation: { duration: 200, timingFunc: 'easeIn' }
+    })
+  } catch (e) {}
   return id
 }
 

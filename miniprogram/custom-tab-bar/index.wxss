@@ -19,9 +19,9 @@
   min-height: 152rpx;
   padding: 18rpx 18rpx 16rpx;
   border-radius: 36rpx;
-  background: rgba(255, 255, 255, 0.84);
-  border: 1rpx solid rgba(120, 86, 85, 0.1);
-  box-shadow: 0 24rpx 46rpx rgba(120, 86, 85, 0.13);
+  background: var(--color-surface, rgba(255, 255, 255, 0.84));
+  border: 1rpx solid var(--color-border, rgba(120, 86, 85, 0.1));
+  box-shadow: 0 24rpx 46rpx rgba(0, 0, 0, 0.10);
   backdrop-filter: blur(24rpx);
   pointer-events: auto;
 }
