@@ -90,5 +90,12 @@ Page({
         }
       }
     })
+  },
+
+  editBill() {
+    const id = this.data.bill._id
+    // record 是 tabBar 页面，不能用 navigateTo，通过全局变量传参
+    getApp().globalData._editBillId = id
+    wx.switchTab({ url: '/pages/record/record' })
   }
 })

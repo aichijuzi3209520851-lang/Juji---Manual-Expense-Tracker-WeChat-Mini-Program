@@ -89,7 +89,10 @@
   <!-- 操作按钮区 -->
   <view class="record-actions">
     <view class="record-actions-inner">
-      <button class="save-btn" bindtap="saveRecord">保存</button>
+      <block wx:if="{{editMode}}">
+        <button class="cancel-btn" bindtap="cancelEdit">取消</button>
+      </block>
+      <button class="save-btn {{editMode ? 'edit-save' : ''}}" bindtap="saveRecord">{{editMode ? '保存修改' : '保存'}}</button>
     </view>
   </view>
 

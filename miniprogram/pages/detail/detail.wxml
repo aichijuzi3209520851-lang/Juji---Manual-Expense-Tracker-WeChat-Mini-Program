@@ -43,6 +43,7 @@
 
     <!-- 操作 -->
     <view class="detail-actions">
+      <button class="detail-edit-btn" bindtap="editBill">✏️ 编辑此账单</button>
       <button class="detail-delete-btn" bindtap="deleteBill">删除此账单</button>
     </view>
 

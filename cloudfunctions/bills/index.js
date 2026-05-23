@@ -65,6 +65,34 @@ exports.main = async (event, context) => {
       }
     }
 
+    case 'update': {
+      const err = validate(data)
+      if (err) return { success: false, message: err }
+      if (!data.billId) return { success: false, message: '缺少账单ID' }
+
+      try {
+        // 所有权校验
+        const bill = await db.collection('bills').doc(data.billId).get()
+        if (!bill.data || bill.data._openid !== wxContext.OPENID) {
+          return { success: false, message: '无权修改此账单' }
+        }
+        await db.collection('bills').doc(data.billId).update({
+          data: {
+            type: data.type,
+            amount: parseFloat(data.amount),
+            category: data.category.trim(),
+            date: data.date,
+            note: (data.note || '').slice(0, MAX_NOTE_LEN),
+            photoUrl: data.photoUrl || '',
+            mood: data.mood || ''
+          }
+        })
+        return { success: true }
+      } catch (e) {
+        return { success: false, message: e.message }
+      }
+    }
+
     default:
       return { success: false, message: '未知操作' }
   }

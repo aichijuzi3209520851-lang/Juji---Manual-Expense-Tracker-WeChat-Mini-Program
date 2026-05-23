@@ -335,9 +335,10 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  gap: 20rpx;
 }
 .save-btn {
-  width: 84%;
+  flex: 1;
   background: linear-gradient(180deg, #f6c9c8 0%, #efb9b8 100%);
   color: white;
   border-radius: var(--radius-full);
@@ -353,6 +354,18 @@
   box-shadow: 0 14rpx 28rpx rgba(75, 100, 88, 0.16);
 }
 .save-btn::after { border: none; }
+.cancel-btn {
+  width: 160rpx;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  padding: 24rpx 0;
+  font-size: 30rpx;
+  font-weight: 500;
+  text-align: center;
+  border: 1rpx solid var(--color-outline);
+}
+.cancel-btn::after { border: none; }
 
 /* 自创分类弹窗 */
 .add-dialog-mask {
