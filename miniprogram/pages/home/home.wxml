@@ -6,16 +6,18 @@
     <text class="season-text">{{season}}</text>
   </view>
 
-  <!-- 今日 / 昨日 -->
+  <!-- 昨日 / 今日 -->
   <view class="day-card">
-    <view class="day-item">
-      <text class="day-label">今天</text>
-      <text class="day-value">-¥{{todayExpense}}</text>
-    </view>
-    <view class="day-divider"></view>
     <view class="day-item">
       <text class="day-label">昨天</text>
       <text class="day-value muted">-¥{{yesterdayExpense}}</text>
+      <text class="day-income">+¥{{yesterdayIncome}}</text>
+    </view>
+    <view class="day-divider"></view>
+    <view class="day-item">
+      <text class="day-label">今天</text>
+      <text class="day-value">-¥{{todayExpense}}</text>
+      <text class="day-income">+¥{{todayIncome}}</text>
     </view>
   </view>
 

@@ -32,6 +32,8 @@ Page({
   data: {
     todayExpense: '0.00',
     yesterdayExpense: '0.00',
+    todayIncome: '0.00',
+    yesterdayIncome: '0.00',
     budget: { status: 'unset' },
     groupedBills: [],
     overviewFailed: false,
@@ -88,11 +90,21 @@ Page({
         .where({ type: 'expense', date: _.gte(queryStart).and(_.lte(today)) })
         .get()
 
+      const incRes = await db.collection('bills')
+        .where({ type: 'income', date: _.gte(queryStart).and(_.lte(today)) })
+        .get()
+
       let todayExp = 0, yestExp = 0, monthSpent = 0
       expRes.data.forEach(b => {
         if (b.date === today) todayExp += b.amount
         if (b.date === yesterday) yestExp += b.amount
         if (b.date >= monthStart) monthSpent += b.amount
+      })
+
+      let todayInc = 0, yestInc = 0
+      incRes.data.forEach(b => {
+        if (b.date === today) todayInc += b.amount
+        if (b.date === yesterday) yestInc += b.amount
       })
 
       const budgetRes = await db.collection('budgets').where({ month }).get()
@@ -113,6 +125,8 @@ Page({
       this.setData({
         todayExpense: todayExp.toFixed(2),
         yesterdayExpense: yestExp.toFixed(2),
+        todayIncome: todayInc.toFixed(2),
+        yesterdayIncome: yestInc.toFixed(2),
         budget
       })
     } catch (err) {
@@ -180,7 +194,13 @@ Page({
       success: async res => {
         if (!res.confirm) return
         try {
-          await wx.cloud.database().collection('bills').doc(id).remove()
+          const delRes = await wx.cloud.callFunction({
+            name: 'bills',
+            data: { action: 'delete', data: { billId: id } }
+          })
+          if (!delRes.result || !delRes.result.success) {
+            throw new Error((delRes.result && delRes.result.message) || '删除失败')
+          }
           wx.showToast({ title: '已删除', icon: 'success' })
           this.loadOverview()
           this.loadRecentBills()

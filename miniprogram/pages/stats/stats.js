@@ -3,6 +3,7 @@ const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const pad = n => String(n).padStart(2, '0')
 const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+const monthEnd = (y, m) => `${y}-${pad(m)}-${new Date(y, m, 0).getDate()}`
 
 function yesterdayStr() {
   const d = new Date(); d.setDate(d.getDate() - 1)
@@ -161,7 +162,7 @@ Page({
 
     try {
       const res = await db.collection('bills')
-        .where({ type: this.data.statsType, date: _.gte(`${m}-01`).and(_.lte(`${m}-31`)) })
+        .where({ type: this.data.statsType, date: _.gte(`${m}-01`).and(_.lte(monthEnd(parseInt(m.slice(0,4)), parseInt(m.slice(5,7))))) })
         .get()
 
       const byCategory = {}
@@ -214,7 +215,7 @@ Page({
       const { data } = await db.collection('bills')
         .where({
           type: this.data.statsType,
-          date: _.gte(`${months[0].key}-01`).and(_.lte(`${months[5].key}-31`))
+          date: _.gte(`${months[0].key}-01`).and(_.lte(monthEnd(parseInt(months[5].key.slice(0,4)), parseInt(months[5].key.slice(5,7)))))
         })
         .get()
 

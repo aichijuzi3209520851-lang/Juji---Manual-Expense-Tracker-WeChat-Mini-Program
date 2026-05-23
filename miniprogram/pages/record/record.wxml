@@ -19,7 +19,7 @@
         <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{true}}" bindinput="onAmountInput" cursor-spacing="24" />
       </view>
     </view>
-    <picker mode="date" value="{{dateStr}}" start="2020-01-01" fields="day" bindchange="onDateChange">
+    <picker mode="date" value="{{dateStr}}" start="2020-01-01" end="2027-12-31" fields="day" bindchange="onDateChange">
       <view class="date-tag" hover-class="date-tag--hover">
         <text>{{displayDate}}</text>
         <text class="date-tag__dot">·</text>

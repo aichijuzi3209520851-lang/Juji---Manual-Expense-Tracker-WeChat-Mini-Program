@@ -1,4 +1,5 @@
 const pad = n => String(n).padStart(2, '0')
+const monthEnd = (y, m) => `${y}-${pad(m)}-${new Date(y, m, 0).getDate()}`
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const CATEGORY_EMOJI = {
@@ -63,7 +64,7 @@ Page({
       if (budgetRes.data.length > 0) budgetAmount = budgetRes.data[0].amount
 
       const billRes = await db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(`${month}-31`)) }).get()
+        .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }).get()
 
       let spent = 0
       billRes.data.forEach(b => { spent += b.amount })
@@ -135,7 +136,7 @@ Page({
         .where({ month: _.in(months.map(m => m.key)) }).get()
 
       const { data: bills } = await db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${months[0].key}-01`).and(_.lte(`${months[5].key}-31`)) }).get()
+        .where({ type: 'expense', date: _.gte(`${months[0].key}-01`).and(_.lte(monthEnd(parseInt(months[5].key.slice(0,4)), parseInt(months[5].key.slice(5,7))))) }).get()
 
       const byMonth = {}
       bills.forEach(b => { const k = b.date.slice(0,7); byMonth[k] = (byMonth[k] || 0) + b.amount })
@@ -164,8 +165,9 @@ Page({
   onBudgetInput(e) { this.setData({ budgetInput: e.detail.value }) },
 
   async saveBudget() {
-    const val = parseFloat(this.data.budgetInput)
-    if (!val || val <= 0 || val > 999999) {
+    const raw = (this.data.budgetInput || '').trim()
+    const val = raw === '' ? 0 : parseFloat(raw)
+    if (isNaN(val) || val < 0 || val > 999999) {
       wx.showToast({ title: '请输入合理金额', icon: 'none' }); return
     }
     const now = new Date()
@@ -173,9 +175,12 @@ Page({
 
     try {
       const db = wx.cloud.database()
-      await db.collection('budgets').add({
-        data: { month, amount: val, createdAt: new Date() }
-      })
+      const existing = await db.collection('budgets').where({ month }).get()
+      if (existing.data.length > 0) {
+        await db.collection('budgets').doc(existing.data[0]._id).update({ data: { amount: val } })
+      } else {
+        await db.collection('budgets').add({ data: { month, amount: val, createdAt: new Date() } })
+      }
       wx.showToast({ title: '预算已更新', icon: 'success' })
       this.setData({ showEditor: false, ringReady: false })
       this.loadBudget()
@@ -204,7 +209,7 @@ Page({
       const key = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
       try {
         const { data } = await db.collection('bills')
-          .where({ type: 'expense', date: _.gte(`${key}-01`).and(_.lte(`${key}-31`)) }).get()
+          .where({ type: 'expense', date: _.gte(`${key}-01`).and(_.lte(monthEnd(parseInt(key.slice(0,4)), parseInt(key.slice(5,7))))) }).get()
         if (data.length > 0) { total += data.reduce((s, b) => s + b.amount, 0); months++ }
       } catch (err) { /* skip */ }
     }

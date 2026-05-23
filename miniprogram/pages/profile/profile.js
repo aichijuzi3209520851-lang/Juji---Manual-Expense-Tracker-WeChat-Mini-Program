@@ -386,6 +386,7 @@ Page({
           for (const b of bills.data) {
             await db.collection('bills').doc(b._id).remove()
           }
+          this.setData({ footprint: null })
           wx.showToast({ title: '已清除', icon: 'success' })
         } catch (err) {
           wx.showToast({ title: '清除失败', icon: 'none' })
@@ -487,13 +488,11 @@ Page({
   // --- AI 图片生成 ---
 
   async generateDaysPoster(days) {
-    wx.showLoading({ title: '小橘正在画画…', mask: true })
     try {
       const res = await wx.cloud.callFunction({
         name: 'aiPoster',
         data: { type: 'days', payload: { days } }
       })
-      wx.hideLoading()
 
       if (res.result && res.result.success) {
         if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
@@ -510,7 +509,6 @@ Page({
         throw new Error((res.result && res.result.message) || '生成失败')
       }
     } catch (err) {
-      wx.hideLoading()
       if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
       console.error('[daysPoster] 失败:', err)
       this.setData({ posterLoading: false, posterUrl: '', posterError: err.message || '生成失败，请稍后重试' })
@@ -518,13 +516,11 @@ Page({
   },
 
   async generateCategoryPoster(category, emoji) {
-    wx.showLoading({ title: '小橘正在画画…', mask: true })
     try {
       const res = await wx.cloud.callFunction({
         name: 'aiPoster',
         data: { type: 'category', payload: { category, emoji } }
       })
-      wx.hideLoading()
 
       if (res.result && res.result.success) {
         if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
@@ -541,7 +537,6 @@ Page({
         throw new Error((res.result && res.result.message) || '生成失败')
       }
     } catch (err) {
-      wx.hideLoading()
       if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
       console.error('[categoryPoster] 失败:', err)
       this.setData({ posterLoading: false, posterUrl: '', posterError: err.message || '生成失败，请稍后重试' })

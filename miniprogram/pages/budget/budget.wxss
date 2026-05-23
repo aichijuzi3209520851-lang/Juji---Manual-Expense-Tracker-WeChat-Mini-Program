@@ -153,12 +153,13 @@
 
 .sheet-handle { display: none; }
 .sheet-title { font-size: 36rpx; font-weight: 700; color: var(--color-text); display: block; margin-bottom: 8rpx; text-align: center; }
-.sheet-hint { font-size: 24rpx; color: var(--color-text-tertiary); display: block; margin-bottom: 32rpx; text-align: center; }
-.sheet-input-row { display: flex; align-items: center; justify-content: center; gap: 12rpx; margin-bottom: 36rpx; }
+.sheet-hint { font-size: 24rpx; color: var(--color-text-tertiary); display: block; margin-bottom: 40rpx; text-align: center; }
+.sheet-input-row { display: flex; align-items: center; justify-content: center; gap: 12rpx; margin-bottom: 36rpx; overflow: visible; }
 .sheet-currency { font-size: 44rpx; font-weight: 700; color: var(--color-primary); }
 .sheet-input {
   flex: 1; font-size: 48rpx; font-weight: 700; color: var(--color-text);
-  border-bottom: 2rpx solid var(--color-surface-high); padding: 8rpx 0;
+  border-bottom: 2rpx solid var(--color-surface-high); padding: 12rpx 0;
+  min-height: 72rpx;
 }
 .sheet-save {
   width: 100%; background: linear-gradient(135deg, #f7caca 0%, #f4c0c0 100%);

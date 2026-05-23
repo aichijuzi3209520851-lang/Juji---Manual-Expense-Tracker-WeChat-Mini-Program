@@ -36,16 +36,14 @@ function validateBill(data) {
     return { valid: false, message: '分类名不能超过20字' }
   }
 
-  // 日期：YYYY-MM-DD，不能是未来
+  // 日期：YYYY-MM-DD
   const datePattern = /^\d{4}-\d{2}-\d{2}$/
   if (!datePattern.test(data.date)) {
     return { valid: false, message: '日期格式错误' }
   }
   const dateObj = new Date(data.date + 'T00:00:00')
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  if (isNaN(dateObj.getTime()) || dateObj > today) {
-    return { valid: false, message: '日期不能是未来' }
+  if (isNaN(dateObj.getTime())) {
+    return { valid: false, message: '日期格式错误' }
   }
 
   // 备注

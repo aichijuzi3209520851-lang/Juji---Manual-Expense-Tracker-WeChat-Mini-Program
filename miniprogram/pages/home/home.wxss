@@ -46,6 +46,9 @@
   font-size: 40rpx;
   font-weight: 600;
 }
+.day-income {
+  font-size: 28rpx; font-weight: 600; color: var(--color-income);
+}
 .day-divider {
   width: 2rpx;
   height: 72rpx;

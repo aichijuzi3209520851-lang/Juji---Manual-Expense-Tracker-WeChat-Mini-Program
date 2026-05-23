@@ -82,7 +82,13 @@ Page({
       success: async res => {
         if (!res.confirm) return
         try {
-          await wx.cloud.database().collection('bills').doc(this.data.bill._id).remove()
+          const res = await wx.cloud.callFunction({
+            name: 'bills',
+            data: { action: 'delete', data: { billId: this.data.bill._id } }
+          })
+          if (!res.result || !res.result.success) {
+            throw new Error((res.result && res.result.message) || '删除失败')
+          }
           wx.showToast({ title: '已删除', icon: 'success' })
           setTimeout(() => wx.navigateBack(), 800)
         } catch (err) {

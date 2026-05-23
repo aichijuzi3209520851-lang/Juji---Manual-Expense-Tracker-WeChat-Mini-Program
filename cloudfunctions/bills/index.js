@@ -17,7 +17,7 @@ function validate(data) {
   const dateObj = new Date(data.date + 'T00:00:00')
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  if (isNaN(dateObj.getTime()) || dateObj > today) return '日期不能是未来'
+  if (isNaN(dateObj.getTime())) return '日期格式错误'
   if (data.note && data.note.length > MAX_NOTE_LEN) return '备注过长'
   if (data.photoUrl && !data.photoUrl.startsWith('cloud://')) return '照片格式错误'
   return null
@@ -42,6 +42,7 @@ exports.main = async (event, context) => {
             date: data.date,
             note: (data.note || '').slice(0, MAX_NOTE_LEN),
             photoUrl: data.photoUrl || '',
+            mood: data.mood || '',
             createdAt: new Date()
           }
         })

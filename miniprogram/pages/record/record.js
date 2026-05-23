@@ -58,8 +58,11 @@ Page({
       showNoteInput: false,
       photoUrl: '',
       photoCloudPath: '',
+      mood: '',
       categories: preset,
-      selectedCategory: preset[0]?.name || ''
+      selectedCategory: preset[0]?.name || '',
+      editMode: false,
+      editBillId: ''
     })
     this.loadCustomCategories(nextType)
   },
@@ -383,20 +386,26 @@ Page({
         wx.showToast({ title: '修改成功 ✅', icon: 'success' })
         setTimeout(() => { wx.navigateBack() }, 800)
       } else {
-        // 新增模式：日上限检查 + 直接写库
+        // 新增模式：日上限检查 + 走云函数服务端校验
         const daily = checkDailyLimit('bills', 500)
         if (daily.exceeded) {
           wx.hideLoading()
           wx.showToast({ title: '今日已达上限', icon: 'none' }); return
         }
-        const db = wx.cloud.database()
-        await db.collection('bills').add({
+        const res = await wx.cloud.callFunction({
+          name: 'bills',
           data: {
-            type, amount: parseFloat(amount), category: selectedCategory,
-            date: dateStr, note: note || '', photoUrl: finalPhotoUrl || '',
-            mood: mood || '', createdAt: new Date()
+            action: 'create',
+            data: {
+              type, amount: parseFloat(amount), category: selectedCategory,
+              date: dateStr, note: note || '', photoUrl: finalPhotoUrl || '',
+              mood: mood || ''
+            }
           }
         })
+        if (!res.result || !res.result.success) {
+          throw new Error((res.result && res.result.message) || '保存失败')
+        }
         daily.increment()
         wx.hideLoading()
         wx.showToast({ title: '记账成功 ✅', icon: 'success' })
