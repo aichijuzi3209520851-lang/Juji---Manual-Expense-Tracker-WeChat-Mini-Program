@@ -1,12 +1,12 @@
 const EXPENSE_CATEGORIES = [
-  { name: '餐饮', iconPath: '/images/login/utensils.svg' },
-  { name: '交通', iconPath: '/images/login/car.svg' },
-  { name: '购物', iconPath: '/images/login/bag.svg' },
-  { name: '娱乐', iconPath: '/images/login/masks.svg' },
+  { name: '餐饮', iconPath: '/images/record/utensils.svg' },
+  { name: '交通', iconPath: '/images/record/car.svg' },
+  { name: '购物', iconPath: '/images/record/bag.svg' },
+  { name: '娱乐', iconPath: '/images/record/masks.svg' },
   { name: '学习', iconPath: '/images/record/book.svg' },
-  { name: '日用', iconPath: '/images/login/mug.svg' },
+  { name: '日用', iconPath: '/images/record/mug.svg' },
   { name: '医疗', iconPath: '/images/record/medical.svg' },
-  { name: '其他', iconPath: '/images/login/wheel.svg' }
+  { name: '其他', iconPath: '/images/record/wheel.svg' }
 ]
 
 const INCOME_CATEGORIES = [
@@ -15,7 +15,7 @@ const INCOME_CATEGORIES = [
   { name: '理财', iconPath: '/images/record/chart.svg' },
   { name: '红包', iconPath: '/images/record/gift.svg' },
   { name: '退款', iconPath: '/images/record/refresh.svg' },
-  { name: '其他', iconPath: '/images/login/wheel.svg' }
+  { name: '其他', iconPath: '/images/record/wheel.svg' }
 ]
 
 const { validateBill } = require('../../utils/validate')

@@ -1,17 +1,17 @@
 <!-- 记账页 — 橘记的核心 -->
 <view class="record-page {{type === 'income' ? 'is-income' : ''}}" style="{{themeStyle}}">
 
-  <!-- 收/支切换 -->
-  <view class="type-toggle">
-    <view class="type-bg">
-      <view class="type-slider {{type === 'income' ? 'right' : ''}}"></view>
-      <view class="type-option {{type === 'expense' ? 'active' : ''}}" data-type="expense" bindtap="switchType">支出</view>
-      <view class="type-option {{type === 'income' ? 'active' : ''}}" data-type="income" bindtap="switchType">收入</view>
+  <!-- 金额 hero 卡（含 收/支 切换 + 金额 + 日期） -->
+  <view class="amount-hero {{type === 'income' ? 'is-income' : ''}}">
+    <!-- 收/支切换 -->
+    <view class="type-toggle">
+      <view class="type-bg">
+        <view class="type-slider {{type === 'income' ? 'right' : ''}}"></view>
+        <view class="type-option {{type === 'expense' ? 'active' : ''}}" data-type="expense" bindtap="switchType">支出</view>
+        <view class="type-option {{type === 'income' ? 'active' : ''}}" data-type="income" bindtap="switchType">收入</view>
+      </view>
     </view>
-  </view>
 
-  <!-- 金额输入区 -->
-  <view class="amount-area">
     <view class="amount-chip">{{type === 'expense' ? '本次支出' : '本次收入'}}</view>
     <view class="amount-row">
       <view class="amount-field">

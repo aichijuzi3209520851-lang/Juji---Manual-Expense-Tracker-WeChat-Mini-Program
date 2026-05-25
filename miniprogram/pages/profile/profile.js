@@ -1,4 +1,4 @@
-const { applyTheme, getThemeStyleString, getCurrentThemeId } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString, getCurrentThemeId, getUserThemeById } = require('../../utils/theme')
 
 const THEMES = [
   { id: 'mint', name: '清爽薄荷（默认）', desc: '清新绿底，护眼舒适' },
@@ -6,6 +6,15 @@ const THEMES = [
   { id: 'dark', name: '夜猫子', desc: '深色背景，护眼夜间模式' },
   { id: 'skyBlue', name: '蓝天白云', desc: '天蓝底 + 清透蓝色' }
 ]
+
+function resolveThemeName(id) {
+  if (id && id.indexOf('user_') === 0) {
+    const t = getUserThemeById(id)
+    if (t) return t.name
+  }
+  const preset = THEMES.find(t => t.id === id)
+  return preset ? preset.name : THEMES[0].name
+}
 const GENDERS = ['未设置', '男', '女']
 
 const CATEGORY_EMOJI = {
@@ -46,7 +55,10 @@ Page({
 
   onShow() {
     applyTheme()
-    this.setData({ themeStyle: getThemeStyleString() })
+    this.setData({
+      themeStyle: getThemeStyleString(),
+      themeName: resolveThemeName(getCurrentThemeId())
+    })
     this.updateCustomTabBar()
     this.loadUserInfo()
     this.loadFootprint()
@@ -55,8 +67,7 @@ Page({
   onLoad() {
     this._themeHandler = (id) => {
       applyTheme(id)
-      const t = THEMES.find(t2 => t2.id === id) || THEMES[0]
-      this.setData({ themeStyle: getThemeStyleString(id), themeName: t.name })
+      this.setData({ themeStyle: getThemeStyleString(id), themeName: resolveThemeName(id) })
     }
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
   },
@@ -83,8 +94,7 @@ Page({
         const u = data[0]
         app.globalData.userInfo = u
         const genderText = GENDERS[u.gender === 'male' ? 1 : u.gender === 'female' ? 2 : 0]
-        const currentThemeId = getCurrentThemeId()
-        const theme = THEMES.find(t => t.id === currentThemeId) || THEMES[0]
+        const themeName = resolveThemeName(getCurrentThemeId())
         const avatarUrl = await this.resolveAvatarSrc(u.avatarUrl || '')
         this.setData({
           avatarUrl,
@@ -92,7 +102,7 @@ Page({
           nickname: u.nickname || '橘记JUJI用户',
           genderText,
           gender: u.gender || '',
-          themeName: theme.name
+          themeName
         })
       }
     } catch (err) { console.error(err) }

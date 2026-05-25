@@ -15,7 +15,7 @@
       <text class="budget-hero-title">本月预算</text>
 
       <view class="budget-ring-wrap {{ringReady ? 'is-ready' : ''}}">
-        <view class="budget-ring" style="background: conic-gradient(var(--color-primary) 0% {{percent}}%, var(--color-surface-low) {{percent}}% 100%)"></view>
+        <view class="budget-ring" style="background: conic-gradient(#ffffff 0% {{percent}}%, rgba(255,255,255,0.28) {{percent}}% 100%)"></view>
         <view class="budget-ring-center">
           <text class="ring-label">已花</text>
           <text class="ring-amount">¥{{spent}}</text>

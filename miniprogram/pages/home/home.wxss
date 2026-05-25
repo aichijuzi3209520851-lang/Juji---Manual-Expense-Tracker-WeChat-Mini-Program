@@ -9,21 +9,42 @@
 
 /* 季节 */
 .season-bar {
-  text-align: center; padding: 12rpx 0 4rpx;
+  text-align: center; padding: 16rpx 0 0;
 }
 .season-text {
   font-size: 22rpx; color: var(--color-text-tertiary);
+  letter-spacing: 2rpx;
 }
 
-/* 今日 / 昨日 */
+/* 今日 / 昨日 — gradient hero */
 .day-card {
   display: flex;
   align-items: center;
-  background: var(--color-surface);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 8rpx 32rpx rgba(120, 86, 85, 0.06);
-  padding: var(--space-lg);
-  margin-top: 24rpx;
+  background: var(--gradient-hero);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-hero);
+  padding: 40rpx var(--space-lg);
+  margin-top: 20rpx;
+  position: relative;
+  overflow: hidden;
+}
+.day-card::before {
+  content: '';
+  position: absolute;
+  top: -60rpx; right: -60rpx;
+  width: 220rpx; height: 220rpx;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.day-card::after {
+  content: '';
+  position: absolute;
+  bottom: -80rpx; left: -40rpx;
+  width: 180rpx; height: 180rpx;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  pointer-events: none;
 }
 .day-item {
   flex: 1;
@@ -31,40 +52,50 @@
   flex-direction: column;
   align-items: center;
   gap: 10rpx;
+  position: relative;
+  z-index: 1;
 }
 .day-label {
-  font-size: 26rpx;
-  color: var(--color-text-tertiary);
+  font-size: 24rpx;
+  color: var(--color-on-primary);
+  opacity: 0.78;
+  letter-spacing: 2rpx;
 }
 .day-value {
-  font-size: 48rpx;
+  font-size: 52rpx;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-on-primary);
+  font-variant-numeric: tabular-nums;
 }
 .day-value.muted {
-  color: var(--color-text-secondary);
-  font-size: 40rpx;
+  font-size: 38rpx;
   font-weight: 600;
+  opacity: 0.72;
 }
 .day-income {
-  font-size: 28rpx; font-weight: 600; color: var(--color-income);
+  font-size: 26rpx; font-weight: 600;
+  color: var(--color-on-primary);
+  opacity: 0.85;
 }
 .day-divider {
   width: 2rpx;
-  height: 72rpx;
-  background: var(--color-border);
+  height: 88rpx;
+  background: rgba(255,255,255,0.25);
+  position: relative;
+  z-index: 1;
 }
 
 /* 预算 */
 .budget-card {
   background: var(--color-surface);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 8rpx 32rpx rgba(120, 86, 85, 0.06);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card);
   padding: var(--space-lg);
   margin-top: 24rpx;
 }
 .budget-card.budget-unset {
-  background: var(--color-primary-container);
+  background: var(--gradient-hero-soft);
+  box-shadow: var(--shadow-soft);
 }
 .budget-row {
   display: flex;
@@ -85,12 +116,12 @@
   font-weight: 600;
 }
 .budget-remain {
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: 700;
   color: var(--color-primary);
 }
 .budget-over {
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: 700;
   color: var(--color-error);
 }
@@ -100,15 +131,15 @@
 }
 .budget-bar {
   margin-top: 18rpx;
-  height: 12rpx;
-  background: var(--color-surface-low);
-  border-radius: 6rpx;
+  height: 14rpx;
+  background: var(--color-primary-container);
+  border-radius: 7rpx;
   overflow: hidden;
 }
 .budget-fill {
   height: 100%;
-  background: var(--color-primary);
-  border-radius: 6rpx;
+  background: var(--gradient-hero);
+  border-radius: 7rpx;
   transition: width 0.3s ease;
 }
 .budget-bar.over .budget-fill {
@@ -120,11 +151,12 @@
   margin-top: 32rpx;
 }
 .section-title {
-  font-size: 32rpx;
-  font-weight: 600;
+  font-size: 30rpx;
+  font-weight: 700;
   color: var(--color-text);
   margin-bottom: 16rpx;
   padding-left: 8rpx;
+  letter-spacing: 1rpx;
 }
 .empty-state {
   display: flex;
@@ -142,19 +174,25 @@
 }
 
 .day-group {
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  padding: 8rpx 0;
+  overflow: hidden;
 }
 .day-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16rpx 12rpx 10rpx;
+  padding: 20rpx 24rpx 12rpx;
 }
 .day-header-label {
   font-size: 24rpx;
-  color: var(--color-text-secondary);
+  color: var(--color-primary);
   font-weight: 600;
-  letter-spacing: 0.5rpx;
+  letter-spacing: 1rpx;
+  opacity: 0.85;
 }
 .day-header-net {
   font-size: 22rpx;
@@ -164,14 +202,22 @@
   display: flex;
   align-items: center;
   gap: 20rpx;
-  padding: 24rpx 20rpx;
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  margin-bottom: 8rpx;
-  box-shadow: 0 2rpx 8rpx rgba(120, 86, 85, 0.03);
+  padding: 22rpx 24rpx;
+  background: transparent;
+  border-radius: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+  border-top: 1rpx solid var(--color-border);
+}
+.day-header + .bill-row {
+  border-top: none;
 }
 .bill-icon {
   font-size: 40rpx;
+  width: 72rpx; height: 72rpx;
+  background: var(--color-primary-container);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
 }
 .bill-info {
   flex: 1;
@@ -179,7 +225,7 @@
 .bill-category {
   font-size: 30rpx;
   color: var(--color-text);
-  font-weight: 500;
+  font-weight: 600;
   display: block;
 }
 .bill-note {
@@ -190,16 +236,17 @@
 }
 .bill-amount {
   font-size: 32rpx;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
+  font-variant-numeric: tabular-nums;
 }
 .bill-amount.income {
   color: var(--color-income);
 }
-.bill-row--hover { opacity: 0.7; }
+.bill-row--hover { background: var(--color-surface-low); }
 
 .retry-banner {
   text-align: center; padding: 24rpx; margin-top: 16rpx;
   font-size: 26rpx; color: var(--color-text-tertiary);
-  border-top: 2rpx dashed rgba(212,195,194,0.5);
+  border-top: 2rpx dashed var(--color-border);
 }

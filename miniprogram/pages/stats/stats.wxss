@@ -8,16 +8,26 @@
 }
 .month-picker {
   display: flex; align-items: center; justify-content: center; gap: 32rpx;
-  padding: 32rpx 0; background: var(--color-surface);
-  border-radius: var(--radius-lg); margin-top: 24rpx;
-  box-shadow: 0 2rpx 8rpx rgba(120,86,85,0.03);
+  padding: 36rpx 0; background: var(--gradient-hero);
+  border-radius: var(--radius-2xl); margin-top: 24rpx;
+  box-shadow: var(--shadow-hero);
+  position: relative; overflow: hidden;
 }
-.month-arrow { font-size: 36rpx; color: var(--color-text-secondary); padding: 8rpx; }
-.month-text { font-size: 34rpx; font-weight: 600; color: var(--color-text); }
+.month-picker::before {
+  content: '';
+  position: absolute;
+  top: -40rpx; right: -40rpx;
+  width: 160rpx; height: 160rpx;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.month-arrow { font-size: 40rpx; color: var(--color-on-primary); padding: 8rpx; opacity: 0.85; position: relative; z-index: 1; }
+.month-text { font-size: 36rpx; font-weight: 700; color: var(--color-on-primary); position: relative; z-index: 1; letter-spacing: 2rpx; }
 /* 环形图占位 */
 .donut-card {
-  background: var(--color-surface); border-radius: var(--radius-xl);
-  box-shadow: 0 8rpx 32rpx rgba(120,86,85,0.06); padding: var(--space-lg); margin-top: 24rpx;
+  background: var(--color-surface); border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card); padding: var(--space-lg); margin-top: 24rpx;
   display: flex; flex-direction: column; align-items: center;
 }
 .donut {
@@ -41,32 +51,35 @@
 /* 收入/支出 segment toggle */
 .seg-toggle {
   display: flex;
-  margin-top: 16rpx;
+  margin-top: 20rpx;
   padding: 6rpx;
-  background: var(--color-surface-low);
+  background: var(--color-primary-container);
   border-radius: var(--radius-full);
+  box-shadow: var(--shadow-soft);
 }
 .seg-item {
   flex: 1;
   text-align: center;
-  padding: 14rpx 0;
+  padding: 16rpx 0;
   font-size: 26rpx;
-  color: var(--color-text-secondary);
+  color: var(--color-primary);
   border-radius: var(--radius-full);
-  transition: background 0.18s ease, color 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  opacity: 0.7;
 }
 .seg-item.is-active {
   background: var(--color-surface);
   color: var(--color-primary);
-  font-weight: 600;
-  box-shadow: 0 2rpx 8rpx rgba(120, 86, 85, 0.08);
+  font-weight: 700;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  opacity: 1;
 }
 
 /* 6 个月趋势 */
 .trend-card {
   background: var(--color-surface);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 8rpx 32rpx rgba(120, 86, 85, 0.06);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card);
   padding: var(--space-lg) var(--space-md);
   margin-top: 24rpx;
 }
@@ -111,11 +124,11 @@
   width: 70%;
   min-height: 4rpx;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  background: var(--color-primary-light, #f5dddc);
+  background: var(--color-primary-container);
   transition: height 0.3s ease;
 }
 .trend-bar.is-selected {
-  background: var(--color-primary);
+  background: var(--gradient-hero);
 }
 .trend-bar.is-empty {
   background: var(--color-surface-low);
@@ -151,38 +164,36 @@
 .ai-card {
   position: relative;
   background: var(--color-surface);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-2xl);
   padding: 36rpx 32rpx;
   display: flex;
   flex-direction: column;
-  box-shadow:
-    0 2rpx 8rpx rgba(168, 119, 117, 0.06),
-    0 12rpx 32rpx rgba(168, 119, 117, 0.08);
+  box-shadow: var(--shadow-card);
 }
 .ai-card::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 16rpx;
-  bottom: 16rpx;
-  width: 3rpx;
-  border-radius: 3rpx;
-  background: var(--color-primary);
-  opacity: 0.45;
+  top: 24rpx;
+  bottom: 24rpx;
+  width: 6rpx;
+  border-radius: 0 6rpx 6rpx 0;
+  background: var(--gradient-hero);
 }
 
 .ai-card-stamp {
   width: fit-content;
-  padding: 12rpx 16rpx;
-  border-radius: var(--radius-sm);
+  padding: 12rpx 18rpx;
+  border-radius: var(--radius-md);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 14rpx;
+  background: var(--color-primary-container);
 }
-.ai-card-stamp--daily   { background: rgba(232, 188, 186, 0.35); }
-.ai-card-stamp--weekly  { background: rgba(245, 221, 220, 0.55); }
-.ai-card-stamp--monthly { background: rgba(216, 193, 192, 0.45); }
+.ai-card-stamp--daily   { background: var(--color-primary-container); }
+.ai-card-stamp--weekly  { background: var(--color-secondary-container); }
+.ai-card-stamp--monthly { background: var(--color-tertiary-container); }
 .ai-card-emoji {
   font-size: 36rpx;
   line-height: 1;
@@ -221,7 +232,7 @@
 .ai-card-divider {
   margin: 0 8rpx 18rpx;
   height: 0;
-  border-top: 2rpx dashed rgba(212, 195, 194, 0.5);
+  border-top: 2rpx dashed var(--color-border);
 }
 .ai-card-disclaimer {
   font-size: 20rpx;
@@ -236,20 +247,21 @@
   gap: 16rpx;
 }
 .ai-refresh-btn {
-  background: #f5dddc;
-  color: #785655;
+  background: var(--color-primary-container);
+  color: var(--color-primary);
   border: none;
   border-radius: 999rpx;
   line-height: 1.5;
   padding: 0 20rpx;
   font-size: 22rpx;
+  font-weight: 600;
 }
 .legend-item--hover { opacity: 0.7; }
 
 .retry-banner {
   text-align: center; padding: 24rpx; margin-top: 16rpx;
   font-size: 26rpx; color: var(--color-text-tertiary);
-  border-top: 2rpx dashed rgba(212,195,194,0.5);
+  border-top: 2rpx dashed var(--color-border);
 }
 .ai-debug-text {
   font-size: 22rpx;

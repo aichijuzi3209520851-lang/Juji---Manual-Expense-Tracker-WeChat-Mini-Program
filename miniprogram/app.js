@@ -1,4 +1,4 @@
-const { initAppTheme, applyTheme } = require('./utils/theme')
+const { initAppTheme, applyTheme, migrateLegacyCustomTheme } = require('./utils/theme')
 const EventBus = require('./utils/eventBus')
 
 // 橘记 - app.js
@@ -21,6 +21,9 @@ App({
       env: 'lajiaoyou-d4g78yts61f1a841d',
       traceUser: true,
     })
+
+    // 迁移旧版自定义主题（theme='custom' + custom_theme_color → user_themes）
+    migrateLegacyCustomTheme()
 
     // 初始化主题（从 Storage 读取用户选择的主题并注入全局数据）
     initAppTheme(this)
