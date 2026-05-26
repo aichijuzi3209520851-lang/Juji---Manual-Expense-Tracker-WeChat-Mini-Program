@@ -1,55 +1,20 @@
-﻿const { applyTheme, getThemeStyleString, resolveThemeVars } = require('../../utils/theme')
+﻿const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
-var VIBRANT_PALETTE = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#A78BFA', '#60A5FA', '#34D399', '#FB923C', '#F472B6']
+var MORANDI = ['#D4A5A5', '#A9C2DB', '#B2D8C8', '#D4C5A5', '#C2B8D4', '#B8D4D4', '#D4B8A5', '#C8D4A5']
 
-function drawDonut(canvasEl, data, total) {
-  if (!canvasEl || !data || !data.length || !total) return
-  var ctx = canvasEl.getContext('2d')
-  var dpr = wx.getSystemInfoSync().pixelRatio || 2
-  var W = 300, H = 300
-  canvasEl.width = W * dpr
-  canvasEl.height = H * dpr
-  ctx.scale(dpr, dpr)
-  ctx.clearRect(0, 0, W, H)
-
-  var cx = W / 2, cy = H / 2
-  var BASE = 95, MAX = 125, INNER = 52
-  var PAD_DEG = 3
-  var startAngle = -Math.PI / 2
-
-  var segs = []
+function buildDonutGradient(data, total) {
+  if (!data || !data.length || !total) return 'conic-gradient(rgba(0,0,0,0.02) 0% 100%)'
+  var PAD = 1.2, cur = 0, stops = []
   for (var i = 0; i < data.length; i++) {
-    var pct = data[i].amount / total
-    var angleDeg = pct * 360 - PAD_DEG
-    if (angleDeg < 2) angleDeg = 2
-    var angle = angleDeg * Math.PI / 180
-    var gap = (PAD_DEG * Math.PI / 180) / 2
-    var sa = startAngle + gap
-    var ea = sa + angle
-    var outerR = BASE + (MAX - BASE) * pct
-
-    ctx.beginPath()
-    ctx.arc(cx, cy, outerR, sa, ea)
-    ctx.arc(cx, cy, INNER, ea, sa, true)
-    ctx.closePath()
-    ctx.fillStyle = data[i].color
-    ctx.fill()
-
-    segs.push({ sa: sa, angle: angle, outerR: outerR, pct: pct, color: data[i].color })
-    startAngle = ea + gap
+    var pct = data[i].amount / total * 100
+    var piecePad = i === 0 || i === data.length - 1 ? PAD * 0.5 : PAD
+    var start = cur + (i > 0 ? piecePad : 0)
+    var end = cur + pct - (i < data.length - 1 ? piecePad : 0)
+    if (end <= start) end = start + 0.1
+    stops.push(data[i].color + ' ' + start.toFixed(1) + '% ' + end.toFixed(1) + '%')
+    cur += pct
   }
-
-  ctx.font = 'bold 13px -apple-system'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  for (var j = 0; j < Math.min(3, segs.length); j++) {
-    if (segs[j].pct < 0.03) continue
-    var s = segs[j]
-    var mid = s.sa + s.angle / 2
-    var lr = s.outerR + 14
-    ctx.fillStyle = s.color
-    ctx.fillText((s.pct * 100).toFixed(0) + '%', cx + Math.cos(mid) * lr, cy + Math.sin(mid) * lr)
-  }
+  return 'conic-gradient(' + stops.join(',') + ')'
 }
 
 const pad = n => String(n).padStart(2, '0')
@@ -141,6 +106,7 @@ Page({
     statsType: 'expense',
     totalAmount: '0.00',
     legendData: [],
+    donutGradient: 'conic-gradient(rgba(0,0,0,0.02) 0% 100%)',
     trendData: [],
     dailyComment: '',
     weeklyComment: '',
@@ -170,24 +136,11 @@ Page({
   onLoad() {
     this._themeHandler = (id) => {
       applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) })
-      if (this._canvasEl && this.data._canvasData && this.data._canvasTotal) {
-        drawDonut(this._canvasEl, this.data._canvasData, this.data._canvasTotal)
+      if (this.data._canvasData && this.data._canvasTotal) {
+        this.setData({ donutGradient: buildDonutGradient(this.data._canvasData, this.data._canvasTotal) })
       }
     }
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
-  },
-
-  onReady() {
-    var self = this
-    var query = wx.createSelectorQuery()
-    query.select('#donutCanvas').fields({ node: true, size: true }).exec(function(res) {
-      if (res && res[0] && res[0].node) {
-        self._canvasEl = res[0].node
-        if (self.data._canvasData && self.data._canvasTotal) {
-          drawDonut(self._canvasEl, self.data._canvasData, self.data._canvasTotal)
-        }
-      }
-    })
   },
 
   onUnload() {
@@ -248,16 +201,15 @@ Page({
           name,
           amount: amount,
           percent: total ? Math.round((amount / total) * 100) : 0,
-          color: VIBRANT_PALETTE[i % VIBRANT_PALETTE.length]
+          color: MORANDI[i % MORANDI.length]
         }))
 
       const legendData = categories.map(function(c) {
         return { name: c.name, amount: c.amount.toFixed(2), percent: c.percent, color: c.color }
       })
+      const donutGradient = buildDonutGradient(categories, total)
 
-      this.setData({ totalAmount: total.toFixed(2), legendData, _canvasData: categories, _canvasTotal: total })
-
-      if (this._canvasEl) drawDonut(this._canvasEl, categories, total)
+      this.setData({ totalAmount: total.toFixed(2), legendData, donutGradient, _canvasData: categories, _canvasTotal: total })
     } catch (err) {
       console.error('加载统计失败:', err)
       this.setData({ statsFailed: true })

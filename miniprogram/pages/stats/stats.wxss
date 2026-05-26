@@ -30,18 +30,22 @@
   box-shadow: var(--shadow-card); padding: var(--space-lg); margin-top: 24rpx;
   display: flex; flex-direction: column; align-items: center;
 }
-.donut-wrap {
-  width: 300rpx; height: 300rpx; position: relative;
+.donut-ring {
+  width: 280rpx; height: 280rpx; position: relative;
   margin-bottom: 36rpx;
+  border-radius: 50%;
+  box-shadow: -6rpx -6rpx 20rpx var(--shadow-light), 6rpx 6rpx 20rpx var(--shadow-dark);
 }
-.donut-canvas {
-  width: 300rpx; height: 300rpx;
+.donut {
+  width: 280rpx; height: 280rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
 }
 .donut-center {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
+  width: 180rpx; height: 180rpx; border-radius: 50%;
+  background: var(--color-surface);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: none;
 }
 .donut-label { font-size: var(--font-size-small); color: var(--color-text-secondary); }
 .donut-total { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-primary); }
