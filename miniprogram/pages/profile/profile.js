@@ -32,25 +32,11 @@ Page({
     themeName: '清新',
     themeStyle: getThemeStyleString(),
     footprint: null,
-    // AI 海报弹窗
-    showPoster: false,
-    posterLoading: false,
-    posterUrl: '',
-    posterError: '',
-    loadingTip: '小橘正在画画中…',
-    posterRemaining: -1,   // -1 表示未加载
-    posterTotalLimit: 20,
-
-    // 俏皮加载文案轮播
-    _loadingTips: [
-      '小橘正在画画中…',
-      '小橘正在调色盘里翻找灵感 🎨',
-      '小橘正在和AI讨论画风 ✨',
-      '小橘正在给画笔蘸墨水 🖌️',
-      '小橘正在思考怎么画更好看 🤔',
-      '小橘马上就好，再等一下下~ 🍊',
-    ],
-    _tipTimer: null,
+    // AI 信件弹窗
+    showLetter: false,
+    letterText: '',
+    letterRemaining: -1,
+    letterTotalLimit: 30,
   },
 
   onShow() {
@@ -444,11 +430,12 @@ Page({
 
   // ====== 记账足迹交互（三个独立入口）======
 
-  /** 点击"记账天数" — 弹出混元AI生成的天数纪念海报 */
+  /** 点击"记账天数" — 生成专属信件 */
   onTapDays() {
     if (!this.data.footprint) return
-    this.showPosterModal()
-    this.generateDaysPoster(this.data.footprint.days)
+    var days = this.data.footprint.days
+    var category = this.data.footprint.topCategory ? this.data.footprint.topCategory.name : '记账'
+    this.generateLetter(days, category)
   },
 
   /** 点击"累计笔数" — 跳转首页查看流水 */
@@ -456,100 +443,39 @@ Page({
     wx.switchTab({ url: '/pages/home/home' })
   },
 
-  /** 点击"最爱xx" — 弹出该分类的AI生成海报 */
+  /** 点击"最爱xx" — 生成专属信件 */
   onTapTopCategory() {
     if (!this.data.footprint || !this.data.footprint.topCategory) return
-    const { name, emoji } = this.data.footprint.topCategory
-    this.showPosterModal()
-    this.generateCategoryPoster(name, emoji)
+    var days = this.data.footprint.days
+    var category = this.data.footprint.topCategory.name
+    this.generateLetter(days, category)
   },
 
-  // --- 弹窗控制 ---
-
-  showPosterModal() {
-    this.setData({
-      showPoster: true, posterLoading: true,
-      posterUrl: '', posterError: '',
-      loadingTip: this.data._loadingTips[0],
-      posterRemaining: -1
-    })
-    this._startTipRotation()
+  closeLetter() {
+    this.setData({ showLetter: false, letterText: '' })
   },
 
-  closePoster() {
-    if (this.data._tipTimer) {
-      clearInterval(this.data._tipTimer)
-      this.data._tipTimer = null
-    }
-    this.setData({ showPoster: false, posterUrl: '', posterError: '' })
-  },
-
-  /** 每2秒切换一条俏皮加载文案 */
-  _startTipRotation() {
-    if (this.data._tipTimer) clearInterval(this.data._tipTimer)
-    let idx = 0
-    const tips = this.data._loadingTips
-    this.data._tipTimer = setInterval(() => {
-      idx = (idx + 1) % tips.length
-      this.setData({ loadingTip: tips[idx] })
-    }, 2000)
-  },
-
-  // --- AI 图片生成 ---
-
-  async generateDaysPoster(days) {
+  async generateLetter(days, category) {
+    var fallback = days + '天的坚持，每一笔都闪闪发光！原来你是【' + category + '】小达人呀～继续加油，橘子永远陪着你！🍊'
+    wx.showLoading({ title: '正在为你写一封专属信件...', mask: true })
     try {
-      const res = await wx.cloud.callFunction({
+      var res = await wx.cloud.callFunction({
         name: 'aiPoster',
-        data: { type: 'days', payload: { days } }
+        data: { days: days, category: category },
+        config: { timeout: 8000 }
       })
-
-      if (res.result && res.result.success) {
-        if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
-        this.setData({
-          posterLoading: false,
-          posterUrl: res.result.url,
-          posterError: '',
-          posterRemaining: res.result.remaining ?? -1,
-          posterTotalLimit: res.result.totalLimit ?? 20
-        })
-      } else if (res.result && res.result.code === 'LIMIT_EXCEEDED') {
-        throw new Error(res.result.message)
-      } else {
-        throw new Error((res.result && res.result.message) || '生成失败')
-      }
-    } catch (err) {
-      if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
-      console.error('[daysPoster] 失败:', err)
-      this.setData({ posterLoading: false, posterUrl: '', posterError: err.message || '生成失败，请稍后重试' })
-    }
-  },
-
-  async generateCategoryPoster(category, emoji) {
-    try {
-      const res = await wx.cloud.callFunction({
-        name: 'aiPoster',
-        data: { type: 'category', payload: { category, emoji } }
+      wx.hideLoading()
+      var letter = (res.result && res.result.letter) || fallback
+      this.setData({
+        showLetter: true,
+        letterText: letter,
+        letterRemaining: res.result ? res.result.remaining : -1,
+        letterTotalLimit: res.result ? res.result.totalLimit : 30
       })
-
-      if (res.result && res.result.success) {
-        if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
-        this.setData({
-          posterLoading: false,
-          posterUrl: res.result.url,
-          posterError: '',
-          posterRemaining: res.result.remaining ?? -1,
-          posterTotalLimit: res.result.totalLimit ?? 20
-        })
-      } else if (res.result && res.result.code === 'LIMIT_EXCEEDED') {
-        throw new Error(res.result.message)
-      } else {
-        throw new Error((res.result && res.result.message) || '生成失败')
-      }
     } catch (err) {
-      if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
-      console.error('[categoryPoster] 失败:', err)
-      this.setData({ posterLoading: false, posterUrl: '', posterError: err.message || '生成失败，请稍后重试' })
+      wx.hideLoading()
+      console.error('[generateLetter] 失败:', err)
+      this.setData({ showLetter: true, letterText: fallback })
     }
   },
 })

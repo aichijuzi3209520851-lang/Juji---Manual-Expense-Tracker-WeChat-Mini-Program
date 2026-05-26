@@ -31,32 +31,15 @@
     </view>
   </view>
 
-  <!-- AI 图片弹窗 -->
-  <view class="ai-poster-modal" wx:if="{{showPoster}}" catchtap="closePoster">
-    <view class="ai-poster-content" catchtap="">
-      <!-- 加载态 -->
-      <view class="ai-poster-loading" wx:if="{{posterLoading}}">
-        <view class="loading-spinner"></view>
-        <text class="loading-text">{{loadingTip}}</text>
-        <text class="loading-sub" wx:if="{{posterRemaining >= 0}}">今日剩余 {{posterRemaining}}/{{posterTotalLimit}} 次</text>
+  <!-- AI 信件弹窗 -->
+  <view class="letter-modal" wx:if="{{showLetter}}" catchtap="closeLetter">
+    <view class="letter-card" catchtap="">
+      <text class="letter-deco">🍊</text>
+      <text class="letter-text">{{letterText}}</text>
+      <view class="letter-footer">
+        <text class="letter-sign">— 小橘数字精灵</text>
+        <button class="letter-btn" bindtap="closeLetter">收下心意</button>
       </view>
-      <!-- 图片展示 -->
-      <view wx:if="{{!posterLoading && posterUrl}}" class="poster-img-wrap">
-        <image
-          class="ai-poster-img"
-          src="{{posterUrl}}"
-          mode="widthFix"
-          show-menu-by-longpress
-        />
-        <text class="poster-ai-disclaimer">🎨 该图片由混元AI生成，仅供娱乐</text>
-      </view>
-      <!-- 错误态 -->
-      <view class="ai-poster-error" wx:if="{{!posterLoading && !posterUrl}}">
-        <text class="error-icon">😢</text>
-        <text class="error-text">{{posterError || '生成失败，请重试'}}</text>
-      </view>
-      <!-- 关闭按钮 -->
-      <view class="poster-close-btn" bindtap="closePoster">✕</view>
     </view>
   </view>
 
