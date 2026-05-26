@@ -17,6 +17,38 @@ function resolveThemeName(id) {
 }
 const GENDERS = ['未设置', '男', '女']
 
+const ZODIAC_SIGNS = [
+  { name: '摩羯座', start: [1, 1], end: [1, 19] },
+  { name: '水瓶座', start: [1, 20], end: [2, 18] },
+  { name: '双鱼座', start: [2, 19], end: [3, 20] },
+  { name: '白羊座', start: [3, 21], end: [4, 19] },
+  { name: '金牛座', start: [4, 20], end: [5, 20] },
+  { name: '双子座', start: [5, 21], end: [6, 21] },
+  { name: '巨蟹座', start: [6, 22], end: [7, 22] },
+  { name: '狮子座', start: [7, 23], end: [8, 22] },
+  { name: '处女座', start: [8, 23], end: [9, 22] },
+  { name: '天秤座', start: [9, 23], end: [10, 23] },
+  { name: '天蝎座', start: [10, 24], end: [11, 22] },
+  { name: '射手座', start: [11, 23], end: [12, 21] },
+  { name: '摩羯座', start: [12, 22], end: [12, 31] }
+]
+
+function getZodiac(birthday) {
+  if (!birthday) return ''
+  var parts = birthday.split('-')
+  var m = parseInt(parts[1], 10)
+  var d = parseInt(parts[2], 10)
+  for (var i = 0; i < ZODIAC_SIGNS.length; i++) {
+    var z = ZODIAC_SIGNS[i]
+    var afterStart = (m > z.start[0]) || (m === z.start[0] && d >= z.start[1])
+    var beforeEnd = (m < z.end[0]) || (m === z.end[0] && d <= z.end[1])
+    if (afterStart && beforeEnd) return z.name
+  }
+  return ''
+}
+
+var OCCUPATIONS = ['学生', '程序员', '自由职业者', '设计师', '教师', '医生', '金融从业者', '运营/市场', '其他']
+
 const CATEGORY_EMOJI = {
   '餐饮':'🍜','交通':'🚇','购物':'🛍️','娱乐':'🎮','学习':'📚','日用':'🏠','医疗':'💊',
   '工资':'💼','兼职':'🧳','理财':'💹','红包':'🎁','退款':'↩️','其他':'📌'
@@ -29,6 +61,10 @@ Page({
     nickname: '点击登录',
     genderText: '未设置',
     gender: '',
+    birthday: '',
+    birthdayDisplay: '',
+    zodiac: '',
+    occupation: '',
     themeName: '清新',
     themeStyle: getThemeStyleString(),
     footprint: null,
@@ -101,6 +137,10 @@ Page({
           nickname: u.nickname || '橘记JUJI用户',
           genderText,
           gender: u.gender || '',
+          birthday: u.birthday || '',
+          birthdayDisplay: u.birthday || '',
+          zodiac: u.birthday ? getZodiac(u.birthday) : '',
+          occupation: u.occupation || '',
           themeName
         })
       }
@@ -287,6 +327,49 @@ Page({
     })
   },
 
+  // 出生日期设置
+  onBirthdayChange(e) {
+    var birthday = e.detail.value
+    var zodiac = getZodiac(birthday)
+    this.updateUserField('birthday', birthday)
+    this.setData({ birthday: birthday, birthdayDisplay: birthday, zodiac: zodiac })
+  },
+
+  // 职业设置
+  setOccupation() {
+    var that = this
+    var items = OCCUPATIONS.concat(['自定义输入…'])
+    wx.showActionSheet({
+      itemList: items,
+      success: function(res) {
+        if (res.tapIndex < OCCUPATIONS.length) {
+          var occ = OCCUPATIONS[res.tapIndex]
+          that.updateUserField('occupation', occ)
+          that.setData({ occupation: occ })
+        } else {
+          wx.showModal({
+            title: '自定义职业',
+            editable: true,
+            placeholderText: '请输入你的职业/状态',
+            content: that.data.occupation === '' ? '' : that.data.occupation,
+            success: async function(modalRes) {
+              if (!modalRes.confirm) return
+              var value = (modalRes.content || '').trim()
+              if (value.length > 20) {
+                wx.showToast({ title: '最长 20 字', icon: 'none' })
+                return
+              }
+              if (value) {
+                await that.updateUserField('occupation', value)
+                that.setData({ occupation: value })
+              }
+            }
+          })
+        }
+      }
+    })
+  },
+
   // 主题切换
   switchTheme() {
     wx.navigateTo({ url: '/pages/themes/themes' })
@@ -425,8 +508,13 @@ Page({
 
       const dates = new Set(data.map(b => b.date)).size
       const byCategory = {}
-      data.forEach(b => { byCategory[b.category] = (byCategory[b.category] || 0) + 1 })
+      var totalSpend = 0
+      data.forEach(function(b) {
+        byCategory[b.category] = (byCategory[b.category] || 0) + 1
+        if (b.type === 'expense' && b.amount) totalSpend += b.amount
+      })
       const top = Object.entries(byCategory).sort((a, b) => b[1] - a[1])[0]
+      var avgDailySpend = dates > 0 ? (totalSpend / dates).toFixed(1) : '0'
 
       this.setData({
         footprint: {
@@ -435,7 +523,9 @@ Page({
           topCategory: {
             name: top[0],
             emoji: CATEGORY_EMOJI[top[0]] || '📌'
-          }
+          },
+          totalSpend: totalSpend,
+          avgDailySpend: avgDailySpend
         }
       })
     } catch (err) { console.error('加载记账足迹失败:', err) }
@@ -469,13 +559,16 @@ Page({
   },
 
   async generateLetter(days, category) {
-    var fallback = days + '天的坚持，每一笔都闪闪发光！原来你是【' + category + '】小达人呀～继续加油，橘子永远陪着你！🍊'
+    var zodiac = this.data.zodiac || ''
+    var occupation = this.data.occupation || ''
+    var avgDailySpend = (this.data.footprint && this.data.footprint.avgDailySpend) || '0'
+    var fallback = '小橘刚才去找星星借灵感去了，稍微走了一会神。不过没关系，看着你坚持记账 ' + days + ' 天的模样，小橘想说：无论是精打细算还是偶尔挥霍，你认真生活的样子，真的很迷人！🍊'
     wx.showLoading({ title: '小橘想对你说说心里话', mask: true })
     try {
       var res = await wx.cloud.callFunction({
         name: 'aiPoster',
-        data: { days: days, category: category },
-        config: { timeout: 8000 }
+        data: { days: days, category: category, zodiac: zodiac, occupation: occupation, avgDailySpend: avgDailySpend },
+        config: { timeout: 15000 }
       })
       wx.hideLoading()
       var letter = (res.result && res.result.letter) || fallback
