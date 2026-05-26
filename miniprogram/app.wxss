@@ -54,12 +54,41 @@ page {
   --shadow-elevated: -16rpx -16rpx 48rpx var(--shadow-light), 16rpx 16rpx 48rpx var(--shadow-dark);
   --shadow-hero: 0 16rpx 40rpx var(--shadow-dark);
 
-  --font-hero: 700 96rpx/1.2 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-headline-lg: 700 48rpx/1.3 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-headline-md: 600 36rpx/1.3 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-body-lg: 400 32rpx/1.6 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-body-md: 400 28rpx/1.5 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-label: 600 24rpx/1.4 -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  /* ======= Typography Tokens ======= */
+  /* 数字专属字体族（紧凑、专业） */
+  --font-numeric: 'DIN Alternate', 'Helvetica Neue', Helvetica, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  /* 正文字体族 */
+  --font-body: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* 字号层级 */
+  --font-size-display: 96rpx;   /* 记账页核心大数字 */
+  --font-size-h1: 52rpx;       /* 首页/预算/统计 核心大数字 */
+  --font-size-h2: 44rpx;       /* 次级数字（足迹卡、进度环中心） */
+  --font-size-h3: 36rpx;       /* 三级标题 */
+  --font-size-body: 28rpx;     /* 正文 */
+  --font-size-regular: 26rpx;  /* 常规文字（分类名、列表） */
+  --font-size-small: 22rpx;    /* 辅助标签（单位符号、说明文本） */
+  --font-size-tiny: 20rpx;     /* 最小标签 */
+
+  /* 字重层级 */
+  --font-weight-black: 800;    /* 核心数字 */
+  --font-weight-bold: 700;     /* 大数字 */
+  --font-weight-semibold: 600; /* 标签 */
+  --font-weight-medium: 500;   /* 次级 */
+  --font-weight-regular: 400;  /* 正文 */
+
+  /* 行高 */
+  --line-height-tight: 1.1;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.6;
+
+  /* 复合变量（兼容旧代码） */
+  --font-hero: var(--font-weight-black) var(--font-size-display)/var(--line-height-tight) var(--font-numeric);
+  --font-headline-lg: var(--font-weight-bold) var(--font-size-h1)/var(--line-height-tight) var(--font-numeric);
+  --font-headline-md: var(--font-weight-semibold) var(--font-size-h3)/var(--line-height-normal) var(--font-body);
+  --font-body-lg: var(--font-weight-regular) var(--font-size-body)/var(--line-height-relaxed) var(--font-body);
+  --font-body-md: var(--font-weight-regular) var(--font-size-body)/var(--line-height-normal) var(--font-body);
+  --font-label: var(--font-weight-semibold) var(--font-size-small)/var(--line-height-normal) var(--font-body);
 
   background-color: var(--color-bg);
   color: var(--color-text);

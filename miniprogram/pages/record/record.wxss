@@ -83,8 +83,8 @@
   background: rgba(255, 255, 255, 0.20);
   color: var(--color-on-primary);
   opacity: 0.85;
-  font-size: 22rpx;
-  font-weight: 600;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: 1rpx;
   position: relative;
   z-index: 1;
@@ -105,8 +105,9 @@
   justify-content: center;
 }
 .amount-symbol {
-  font-size: 56rpx;
-  font-weight: 700;
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-numeric);
   color: var(--color-on-primary);
   opacity: 0.8;
   line-height: 1;
@@ -119,8 +120,9 @@
   min-width: 200rpx;
   height: 124rpx;
   line-height: 124rpx;
-  font-size: 96rpx;
-  font-weight: 800;
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-black);
+  font-family: var(--font-numeric);
   color: var(--color-on-primary);
   text-align: left;
   font-variant-numeric: tabular-nums;

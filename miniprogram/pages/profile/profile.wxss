@@ -69,12 +69,12 @@
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.menu-label { flex: 1; font-size: 30rpx; color: var(--color-text); font-weight: 500; }
+.menu-label { flex: 1; font-size: var(--font-size-body); color: var(--color-text); font-weight: var(--font-weight-medium); }
 .menu-label.danger-text { color: var(--color-error); }
-.menu-arrow { font-size: 32rpx; color: var(--color-text-tertiary); }
+.menu-arrow { font-size: var(--font-size-h3); color: var(--color-text-tertiary); }
 .menu-value-wrap { display: flex; align-items: center; gap: 8rpx; }
-.menu-value { font-size: 26rpx; color: var(--color-text-secondary); }
-.menu-badge { font-size: 22rpx; color: var(--color-primary); background: var(--color-primary-container); padding: 4rpx 16rpx; border-radius: var(--radius-full); font-weight: 600; }
+.menu-value { font-size: var(--font-size-regular); color: var(--color-text-secondary); }
+.menu-badge { font-size: var(--font-size-small); color: var(--color-primary); background: var(--color-primary-container); padding: 4rpx 16rpx; border-radius: var(--radius-full); font-weight: var(--font-weight-semibold); }
 .menu-item.disabled { opacity: 0.6; }
 /* 记账足迹 */
 .footprint-card {
@@ -83,8 +83,8 @@
   margin-top: 24rpx; display: flex; align-items: center;
 }
 .footprint-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
-.footprint-value { font-size: 44rpx; font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
-.footprint-label { font-size: 22rpx; color: var(--color-text-tertiary); }
+.footprint-value { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-primary); font-variant-numeric: tabular-nums; }
+.footprint-label { font-size: var(--font-size-small); color: var(--color-text-tertiary); }
 .footprint-emoji { font-size: 44rpx; line-height: 1; }
 .footprint-divider { width: 2rpx; height: 56rpx; background: var(--color-border); }
 /* 页脚 */

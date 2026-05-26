@@ -21,7 +21,10 @@
   padding: 48rpx 0 32rpx;
 }
 .detail-amount {
-  font-size: 80rpx; font-weight: 700; color: var(--color-primary);
+  font-size: 80rpx;
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-numeric);
+  color: var(--color-primary);
   font-variant-numeric: tabular-nums;
 }
 .detail-amount.is-income { color: var(--color-income); }
@@ -49,12 +52,12 @@
   display: flex; align-items: center; gap: 12rpx; margin-bottom: 20rpx;
 }
 .detail-cat-icon { font-size: 44rpx; }
-.detail-cat-name { font-size: 32rpx; font-weight: 600; color: var(--color-text); }
+.detail-cat-name { font-size: var(--font-size-h3); font-weight: var(--font-weight-semibold); color: var(--color-text); }
 
 /* 日期 */
 .detail-date { margin-bottom: 36rpx; }
 .detail-date-text {
-  font-size: 26rpx; color: var(--color-text-secondary);
+  font-size: var(--font-size-regular); color: var(--color-text-secondary);
   background: var(--color-surface); padding: 10rpx 24rpx;
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-soft);
@@ -83,11 +86,11 @@
 }
 .detail-note-text {
   position: relative; z-index: 1;
-  font-size: 32rpx; color: var(--color-text); line-height: 1.75;
+  font-size: var(--font-size-h3); color: var(--color-text); line-height: 1.75;
 }
 .detail-note-placeholder {
   position: relative; z-index: 1;
-  font-size: 28rpx; color: var(--color-text-tertiary); font-style: italic;
+  font-size: var(--font-size-body); color: var(--color-text-tertiary); font-style: italic;
 }
 
 /* 操作按钮区 */

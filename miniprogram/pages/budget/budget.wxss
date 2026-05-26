@@ -70,9 +70,9 @@
   justify-content: center;
   box-shadow: 0 6rpx 16rpx var(--shadow-dark);
 }
-.ring-label { font-size: 22rpx; color: var(--color-text-secondary); }
-.ring-amount { font-size: 40rpx; font-weight: 700; color: var(--color-text); font-variant-numeric: tabular-nums; }
-.ring-rate { font-size: 22rpx; color: var(--color-primary); margin-top: 4rpx; font-weight: 600; }
+.ring-label { font-size: var(--font-size-small); color: var(--color-text-secondary); }
+.ring-amount { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-text); font-variant-numeric: tabular-nums; }
+.ring-rate { font-size: var(--font-size-small); color: var(--color-primary); margin-top: 4rpx; font-weight: var(--font-weight-semibold); }
 
 .budget-summary { display: flex; flex-direction: column; align-items: center; margin-top: 4rpx; position: relative; z-index: 1; }
 .budget-total-label { font-size: 26rpx; color: var(--color-on-primary); opacity: 0.85; font-weight: 500; }
@@ -130,8 +130,8 @@
 .pace-title { font-size: 30rpx; font-weight: 700; color: var(--color-text); margin-bottom: 20rpx; display: block; }
 .pace-row { display: flex; align-items: center; }
 .pace-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
-.pace-value { font-size: 44rpx; font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
-.pace-label { font-size: 22rpx; color: var(--color-text-tertiary); }
+.pace-value { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-primary); font-variant-numeric: tabular-nums; }
+.pace-label { font-size: var(--font-size-small); color: var(--color-text-tertiary); }
 .pace-divider { width: 2rpx; height: 56rpx; background: var(--color-border); }
 .pace-footer { margin-top: 20rpx; text-align: center; font-size: 24rpx; color: var(--color-text-secondary); }
 
@@ -149,11 +149,11 @@
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.cat-name { font-size: 26rpx; color: var(--color-text); width: 80rpx; font-weight: 500; }
+.cat-name { font-size: var(--font-size-regular); color: var(--color-text); width: 80rpx; font-weight: var(--font-weight-medium); }
 .cat-bar-wrap { flex: 1; height: 12rpx; background: var(--color-primary-container); border-radius: 6rpx; overflow: hidden; }
 .cat-fill { height: 100%; background: var(--gradient-hero); border-radius: 6rpx; min-width: 4rpx; }
-.cat-amount { font-size: 26rpx; color: var(--color-text-secondary); font-weight: 500; font-variant-numeric: tabular-nums; }
-.cat-pct { font-size: 22rpx; color: var(--color-text-tertiary); width: 48rpx; text-align: right; }
+.cat-amount { font-size: var(--font-size-regular); color: var(--color-text-secondary); font-weight: var(--font-weight-medium); font-variant-numeric: tabular-nums; }
+.cat-pct { font-size: var(--font-size-small); color: var(--color-text-tertiary); width: 48rpx; text-align: right; }
 
 /* 灵犀建议 */
 .budget-suggestion {
