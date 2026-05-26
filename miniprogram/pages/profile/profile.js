@@ -470,17 +470,11 @@ Page({
     this.setData({
       showPoster: true, posterLoading: true,
       posterUrl: '', posterError: '',
-      loadingTip: this.data._loadingTips[0],
       posterRemaining: -1
     })
-    this._startTipRotation()
   },
 
   closePoster() {
-    if (this.data._tipTimer) {
-      clearInterval(this.data._tipTimer)
-      this.data._tipTimer = null
-    }
     this.setData({ showPoster: false, posterUrl: '', posterError: '' })
   },
 
@@ -498,14 +492,16 @@ Page({
   // --- AI 图片生成 ---
 
   async generateDaysPoster(days) {
+    wx.showLoading({ title: '正在为您渲染专属3D盲盒海报\n请耐心等待(约10秒)...', mask: true })
     try {
       const res = await wx.cloud.callFunction({
         name: 'aiPoster',
-        data: { type: 'days', payload: { days } }
+        data: { type: 'days', payload: { days } },
+        config: { timeout: 60000 }
       })
+      wx.hideLoading()
 
       if (res.result && res.result.success) {
-        if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
         this.setData({
           posterLoading: false,
           posterUrl: res.result.url,
@@ -514,26 +510,28 @@ Page({
           posterTotalLimit: res.result.totalLimit ?? 20
         })
       } else if (res.result && res.result.code === 'LIMIT_EXCEEDED') {
-        throw new Error(res.result.message)
+        this.setData({ posterLoading: false, posterUrl: '', posterError: res.result.message })
       } else {
-        throw new Error((res.result && res.result.message) || '生成失败')
+        this.setData({ posterLoading: false, posterUrl: '', posterError: '画师AI暂时开小差了，请稍后再试～' })
       }
     } catch (err) {
-      if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
+      wx.hideLoading()
       console.error('[daysPoster] 失败:', err)
-      this.setData({ posterLoading: false, posterUrl: '', posterError: err.message || '生成失败，请稍后重试' })
+      this.setData({ posterLoading: false, posterUrl: '', posterError: '画师AI暂时开小差了，请稍后再试～' })
     }
   },
 
   async generateCategoryPoster(category, emoji) {
+    wx.showLoading({ title: '正在为您渲染专属3D盲盒海报\n请耐心等待(约10秒)...', mask: true })
     try {
       const res = await wx.cloud.callFunction({
         name: 'aiPoster',
-        data: { type: 'category', payload: { category, emoji } }
+        data: { type: 'category', payload: { category, emoji } },
+        config: { timeout: 60000 }
       })
+      wx.hideLoading()
 
       if (res.result && res.result.success) {
-        if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
         this.setData({
           posterLoading: false,
           posterUrl: res.result.url,
@@ -542,14 +540,14 @@ Page({
           posterTotalLimit: res.result.totalLimit ?? 20
         })
       } else if (res.result && res.result.code === 'LIMIT_EXCEEDED') {
-        throw new Error(res.result.message)
+        this.setData({ posterLoading: false, posterUrl: '', posterError: res.result.message })
       } else {
-        throw new Error((res.result && res.result.message) || '生成失败')
+        this.setData({ posterLoading: false, posterUrl: '', posterError: '画师AI暂时开小差了，请稍后再试～' })
       }
     } catch (err) {
-      if (this.data._tipTimer) { clearInterval(this.data._tipTimer); this.data._tipTimer = null }
+      wx.hideLoading()
       console.error('[categoryPoster] 失败:', err)
-      this.setData({ posterLoading: false, posterUrl: '', posterError: err.message || '生成失败，请稍后重试' })
+      this.setData({ posterLoading: false, posterUrl: '', posterError: '画师AI暂时开小差了，请稍后再试～' })
     }
   },
 })
