@@ -470,7 +470,7 @@ Page({
 
   async generateLetter(days, category) {
     var fallback = days + '天的坚持，每一笔都闪闪发光！原来你是【' + category + '】小达人呀～继续加油，橘子永远陪着你！🍊'
-    wx.showLoading({ title: '正在为你写一封专属信件...', mask: true })
+    wx.showLoading({ title: '小橘想对你说说心里话', mask: true })
     try {
       var res = await wx.cloud.callFunction({
         name: 'aiPoster',
