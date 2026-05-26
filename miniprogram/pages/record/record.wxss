@@ -275,22 +275,27 @@ picker { display: flex; justify-content: center; }
   justify-content: flex-start;
 }
 .note-photo-trigger {
-  width: 76rpx; height: 76rpx; border-radius: 50%;
-  background: var(--color-primary-container);
+  width: 100rpx; height: 100rpx; border-radius: 50%;
+  background: var(--gradient-hero);
   display: inline-flex; align-items: center; justify-content: center;
   position: relative;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  box-shadow: -6rpx -6rpx 16rpx var(--shadow-light), 6rpx 6rpx 16rpx var(--shadow-dark);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.note-photo-trigger--hover { opacity: 0.7; transform: scale(0.95); }
+.note-photo-trigger--hover {
+  transform: scale(0.94);
+  box-shadow: -3rpx -3rpx 8rpx var(--shadow-light), 3rpx 3rpx 8rpx var(--shadow-dark);
+}
 .note-photo-trigger.has-photo::after {
   content: ''; position: absolute; top: 8rpx; right: 8rpx;
-  width: 14rpx; height: 14rpx; border-radius: 50%;
+  width: 18rpx; height: 18rpx; border-radius: 50%;
   background: var(--color-income);
-  border: 2rpx solid var(--color-surface);
+  border: 3rpx solid var(--color-surface);
+  box-shadow: 0 2rpx 6rpx var(--shadow-dark);
 }
 .note-photo-icon {
-  width: 32rpx; height: 32rpx;
-  filter: brightness(0) opacity(0.55);
+  width: 44rpx; height: 44rpx;
+  filter: brightness(0) invert(1);
 }
 .note-input {
   width: 100%;
