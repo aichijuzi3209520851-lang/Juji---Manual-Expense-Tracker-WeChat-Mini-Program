@@ -43,6 +43,45 @@
     </view>
   </view>
 
+  <!-- 记账打卡热力图 -->
+  <view class="profile-section">
+    <text class="profile-section-title">记账打卡</text>
+    <view class="heatmap-card">
+      <view class="heatmap-nav">
+        <text class="heatmap-arrow" bindtap="heatmapPrev">‹</text>
+        <text class="heatmap-month">{{heatmapMonth}}</text>
+        <text class="heatmap-arrow" bindtap="heatmapNext">›</text>
+      </view>
+      <view class="heatmap-weekdays">
+        <text wx:for="{{weekdays}}" wx:key="*this" class="heatmap-wd">{{item}}</text>
+      </view>
+      <view class="heatmap-grid">
+        <view wx:for="{{heatmapDays}}" wx:key="day"
+              class="heatmap-tile {{item.checked ? 'is-checked' : ''}} {{item.day === 0 ? 'is-empty' : ''}}"
+              style="{{item.checked ? 'background:' + heatmapColor + ';box-shadow:-2rpx -2rpx 6rpx rgba(255,255,255,0.8),2rpx 2rpx 6rpx ' + heatmapShadowDark : ''}}">
+          <text class="heatmap-day-num" wx:if="{{item.day > 0}}">{{item.day}}</text>
+        </view>
+      </view>
+      <text class="heatmap-summary">本月打卡 {{heatmapCheckedCount}} 天</text>
+      <view class="heatmap-color-section">
+        <text class="heatmap-color-label">打卡颜色</text>
+        <view class="heatmap-swatches">
+          <view class="heatmap-swatch {{heatmapCustomColor === '' ? 'is-active' : ''}}"
+                style="background: var(--color-primary);"
+                bindtap="pickHeatmapColor" data-hex="">
+            <text class="heatmap-swatch-check" wx:if="{{heatmapCustomColor === ''}}">✓</text>
+          </view>
+          <view wx:for="{{heatmapPalette}}" wx:key="hex"
+                class="heatmap-swatch {{heatmapCustomColor === item.hex ? 'is-active' : ''}}"
+                style="background: {{item.hex}};"
+                bindtap="pickHeatmapColor" data-hex="{{item.hex}}">
+            <text class="heatmap-swatch-check" wx:if="{{heatmapCustomColor === item.hex}}">✓</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
   <!-- 个性化设置 -->
   <view class="profile-section">
     <text class="profile-section-title">个性化设置</text>

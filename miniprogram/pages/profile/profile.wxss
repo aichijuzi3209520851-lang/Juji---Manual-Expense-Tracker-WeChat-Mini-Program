@@ -87,6 +87,70 @@
 .footprint-label { font-size: var(--font-size-small); color: var(--color-text-tertiary); }
 .footprint-emoji { font-size: 44rpx; line-height: 1; }
 .footprint-divider { width: 2rpx; height: 56rpx; background: var(--color-border); }
+/* 记账打卡热力图 */
+.heatmap-card {
+  background: var(--color-surface); border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card); padding: 28rpx 24rpx;
+}
+.heatmap-nav {
+  display: flex; align-items: center; justify-content: center; gap: 32rpx;
+  margin-bottom: 20rpx;
+}
+.heatmap-arrow { font-size: 36rpx; color: var(--color-primary); padding: 8rpx; opacity: 0.8; }
+.heatmap-month { font-size: 28rpx; font-weight: 600; color: var(--color-text); letter-spacing: 1rpx; }
+.heatmap-weekdays {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8rpx;
+  margin-bottom: 12rpx;
+}
+.heatmap-wd {
+  text-align: center; font-size: 20rpx; color: var(--color-text-tertiary);
+  font-weight: 500; padding: 4rpx 0;
+}
+.heatmap-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8rpx;
+}
+.heatmap-tile {
+  aspect-ratio: 1; border-radius: 8rpx;
+  background: var(--color-surface-low);
+  box-shadow: inset 2rpx 2rpx 4rpx var(--shadow-dark), inset -2rpx -2rpx 4rpx var(--shadow-light);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.heatmap-tile.is-checked {
+  border-radius: 8rpx;
+}
+.heatmap-tile.is-empty { background: transparent; box-shadow: none; }
+.heatmap-day-num {
+  font-size: 18rpx; font-weight: 600;
+  color: var(--color-text-tertiary);
+}
+.heatmap-tile.is-checked .heatmap-day-num { color: rgba(255,255,255,0.9); }
+.heatmap-summary {
+  display: block; text-align: center;
+  font-size: 22rpx; color: var(--color-text-tertiary);
+  margin-top: 16rpx; margin-bottom: 20rpx;
+}
+.heatmap-color-section {
+  border-top: 1rpx solid var(--color-border);
+  padding-top: 20rpx;
+}
+.heatmap-color-label {
+  font-size: 22rpx; color: var(--color-primary); font-weight: 600;
+  display: block; margin-bottom: 14rpx; letter-spacing: 1rpx;
+}
+.heatmap-swatches { display: flex; gap: 16rpx; flex-wrap: wrap; }
+.heatmap-swatch {
+  width: 56rpx; height: 56rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+}
+.heatmap-swatch.is-active {
+  transform: scale(1.15);
+  box-shadow: var(--shadow-card);
+}
+.heatmap-swatch-check { font-size: 22rpx; color: rgba(255,255,255,0.9); font-weight: 700; }
 /* 页脚 */
 .profile-footer { display: flex; flex-direction: column; align-items: center; gap: 8rpx; padding: 60rpx 0; }
 .footer-version { font-size: 22rpx; color: var(--color-text-tertiary); }

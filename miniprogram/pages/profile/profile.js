@@ -1,4 +1,4 @@
-const { applyTheme, getThemeStyleString, getCurrentThemeId, getUserThemeById } = require('../../utils/theme')
+const { applyTheme, getThemeStyleString, getCurrentThemeId, getUserThemeById, resolveThemeVars, CUSTOM_PALETTE } = require('../../utils/theme')
 
 const THEMES = [
   { id: 'mint', name: '清爽薄荷（默认）', desc: '清新绿底，护眼舒适' },
@@ -37,6 +37,17 @@ Page({
     letterText: '',
     letterRemaining: -1,
     letterTotalLimit: 30,
+    // 记账打卡热力图
+    heatmapMonth: '',
+    heatmapDays: [],
+    heatmapCheckedCount: 0,
+    heatmapColor: '',
+    heatmapShadowDark: 'rgba(0,0,0,0.08)',
+    heatmapCustomColor: '',
+    heatmapPalette: CUSTOM_PALETTE,
+    weekdays: ['一', '二', '三', '四', '五', '六', '日'],
+    _heatmapYear: 0,
+    _heatmapMonth: 0,
   },
 
   onShow() {
@@ -48,12 +59,14 @@ Page({
     this.updateCustomTabBar()
     this.loadUserInfo()
     this.loadFootprint()
+    this.initHeatmap()
   },
 
   onLoad() {
     this._themeHandler = (id) => {
       applyTheme(id)
       this.setData({ themeStyle: getThemeStyleString(id), themeName: resolveThemeName(id) })
+      this.updateHeatmapColor()
     }
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
   },
@@ -477,5 +490,99 @@ Page({
       console.error('[generateLetter] 失败:', err)
       this.setData({ showLetter: true, letterText: fallback })
     }
+  },
+
+  // ====== 记账打卡热力图 ======
+
+  initHeatmap() {
+    var now = new Date()
+    this._heatmapYear = now.getFullYear()
+    this._heatmapMonth = now.getMonth() + 1
+    this._heatmapCheckedSet = null
+    var saved = wx.getStorageSync('juji_heatmap_color') || ''
+    this.setData({ heatmapCustomColor: saved })
+    this.updateHeatmapColor()
+    this.generateHeatmap()
+    this.loadHeatmapData()
+  },
+
+  updateHeatmapColor() {
+    var custom = this.data.heatmapCustomColor
+    if (custom) {
+      this.setData({ heatmapColor: custom })
+    } else {
+      var vars = resolveThemeVars() || {}
+      var primary = vars['--color-primary'] || '#27c07d'
+      this.setData({ heatmapColor: primary })
+    }
+    var vars2 = resolveThemeVars() || {}
+    var sd = vars2['--shadow-dark'] || 'rgba(0,0,0,0.08)'
+    this.setData({ heatmapShadowDark: sd })
+  },
+
+  generateHeatmap() {
+    var y = this._heatmapYear, m = this._heatmapMonth
+    var firstDay = new Date(y, m - 1, 1).getDay()
+    var daysInMonth = new Date(y, m, 0).getDate()
+    firstDay = firstDay === 0 ? 6 : firstDay - 1
+    var tiles = []
+    for (var i = 0; i < firstDay; i++) tiles.push({ day: 0, checked: false })
+    for (var d = 1; d <= daysInMonth; d++) tiles.push({ day: d, checked: false })
+    this.setData({
+      heatmapMonth: y + '年' + m + '月',
+      heatmapDays: tiles,
+      _heatmapYear: y,
+      _heatmapMonth: m
+    })
+  },
+
+  async loadHeatmapData() {
+    var y = this._heatmapYear, m = this._heatmapMonth
+    var pad = function(n) { return n < 10 ? '0' + n : '' + n }
+    var start = y + '-' + pad(m) + '-01'
+    var end = y + '-' + pad(m) + '-' + pad(new Date(y, m, 0).getDate())
+    try {
+      var db = wx.cloud.database()
+      var _ = db.command
+      var res = await db.collection('bills').where({
+        date: _.gte(start).and(_.lte(end))
+      }).field({ date: true }).get()
+      var checkedSet = {}
+      var count = 0
+      res.data.forEach(function(b) {
+        var day = parseInt(b.date.slice(8, 10), 10)
+        if (!checkedSet[day]) { checkedSet[day] = true; count++ }
+      })
+      this._heatmapCheckedSet = checkedSet
+      var tiles = this.data.heatmapDays.map(function(t) {
+        return { day: t.day, checked: t.day > 0 && !!checkedSet[t.day] }
+      })
+      this.setData({ heatmapDays: tiles, heatmapCheckedCount: count })
+    } catch (e) {
+      console.error('[heatmap] load failed:', e)
+    }
+  },
+
+  heatmapPrev() {
+    this._heatmapMonth--
+    if (this._heatmapMonth < 1) { this._heatmapMonth = 12; this._heatmapYear-- }
+    this._heatmapCheckedSet = null
+    this.generateHeatmap()
+    this.loadHeatmapData()
+  },
+
+  heatmapNext() {
+    this._heatmapMonth++
+    if (this._heatmapMonth > 12) { this._heatmapMonth = 1; this._heatmapYear++ }
+    this._heatmapCheckedSet = null
+    this.generateHeatmap()
+    this.loadHeatmapData()
+  },
+
+  pickHeatmapColor(e) {
+    var hex = e.currentTarget.dataset.hex
+    wx.setStorageSync('juji_heatmap_color', hex)
+    this.setData({ heatmapCustomColor: hex })
+    this.updateHeatmapColor()
   },
 })
