@@ -7,8 +7,8 @@
 - **前端**：微信小程序原生（WXML + WXSS + JS），自定义 TabBar
 - **后端**：腾讯云 CloudBase / 云开发（Serverless）
 - **数据库**：CloudBase 文档型 NoSQL（`bills` / `budgets` / `users`）
-- **AI**：腾讯混元大模型 `hunyuan-v3` → `hy3-preview`（俏皮评论 + AI 海报生成，小程序成长计划 1 亿 Token）
-- **存储**：CloudBase 云存储（账单照片、用户头像、AI 生成图片）
+- **AI**：腾讯混元大模型 `hunyuan-v3` → `hy3-preview`（俏皮评论 + AI 信件生成，小程序成长计划 1 亿 Token）
+- **存储**：CloudBase 云存储（账单照片、用户头像）
 - **主题**：Design Token 体系 v2（60+ CSS 变量），4 套预设 + 8 色自定义调色板 + 用户命名主题 CRUD（最多 5 个），inline-style 注入方案，切换后即时生效
 - **UI 风格**：小红书 / Apple Wallet 风格（渐变 hero 卡 + 40rpx 大圆角 + Neumorphic 拟物阴影 + 跨色相渐变）
 - **字体**：8 级字号 + 5 级字重 + 数字专属字体族（DIN Alternate / Helvetica Neue）
@@ -52,8 +52,8 @@
 ### 我的页
 - **渐变 hero 头像区**（主色→accent 跨色相，白边头像 + 投影）
 - 头像 / 昵称在线编辑（`editImage` 裁剪 → `compressImage` → 云存储 → `getTempFileURL`）
-- **记账足迹卡**：记账天数 / 累计笔数 / 最爱分类（可点击生成 AI 海报）
-- **AI 海报生成**：混元文生图，足迹数据驱动 prompt，每日限量
+- **记账足迹卡**：记账天数 / 累计笔数 / 最爱分类（可点击生成 AI 专属信件）
+- **AI 信件生成**：混元文本大模型，足迹数据驱动 prompt，50-60 字俏皮鼓励信，每日限量
 - 性别设置、自定义分类管理、主题切换
 - 账单 CSV 导出（打开 / 分享 / 保存到手机）
 - 数据清除（二次确认）
@@ -145,7 +145,7 @@ miniprogram/                # 小程序前端
 │   ├── stats/              # 统计（渐变 hero + 甜甜圈 + 趋势图 + AI 评论）
 │   ├── record/             # 记账（渐变 hero 金额 + Neumorphic 相机按钮）
 │   ├── budget/             # 预算（渐变 hero 进度环 + 历史 + bottom-sheet）
-│   ├── profile/            # 我的（渐变 hero 头像 + 足迹 + AI 海报 + 导出）
+│   ├── profile/            # 我的（渐变 hero 头像 + 足迹 + AI 信件 + 导出）
 │   ├── categories/         # 分类管理（预设 + 自创 CRUD）
 │   ├── themes/             # 主题切换（预设 + 自定义主题 CRUD）
 │   └── detail/             # 账单详情（手账便签风格）
@@ -163,7 +163,7 @@ cloudfunctions/             # 云函数
 ├── quickstartFunctions/    # 登录（getOpenId）+ 用户同步
 ├── bills/                  # 账单服务端校验（create / delete / update）
 ├── exportBills/            # CSV 导出（含心情列）
-└── aiPoster/               # AI 海报生成（文生图 → 云存储）
+└── aiPoster/               # AI 信件生成（混元文本大模型 → 俏皮鼓励信）
 ```
 
 ## 架构概览（给新手）
@@ -205,18 +205,27 @@ cloudfunctions/             # 云函数
 
 | 项目 | 值 |
 |------|------|
-| 环境 ID | 见 `miniprogram/app.js` 中 `wx.cloud.init({ env: '...' })` |
-| 区域 | 按创建时选择 |
+| 环境 ID | `lajiaoyou-d4g78yts61f1a841d` |
+| 区域 | ap-shanghai |
 | 套餐 | 个人版 |
+| 状态 | NORMAL ✅ |
 
-### 云函数
+### 控制台入口
 
-| 函数名 | 运行时 | 说明 | 状态 |
-|--------|--------|------|------|
-| `quickstartFunctions` | Nodejs16.13 | 登录获取 openid，同步用户信息 | Active |
-| `bills` | Nodejs16.13 | 账单服务端校验 create / delete / update | Active |
-| `exportBills` | Nodejs16.13 | 生成 CSV 到云存储 `exports/` | Active |
-| `aiPoster` | Nodejs16.13 | AI 海报生成（文生图 → 上传云存储） | Active |
+- [概览](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/overview)
+- [云函数](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/scf)
+- [数据库](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/db/doc)
+- [云存储](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/storage)
+- [静态托管](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/static-hosting)
+
+### 云函数（已部署）
+
+| 函数名 | 运行时 | 说明 | 状态 | 最后更新 |
+|--------|--------|------|------|----------|
+| `quickstartFunctions` | Nodejs16.13 | 登录获取 openid，同步用户信息 | Active | 2026-05-21 |
+| **`bills`** | **Nodejs16.13** | 账单服务端校验 create / delete / **update（v1.0.1 新增）** | **Active ✅** | **2026-05-26** |
+| `exportBills` | Nodejs16.13 | 生成 CSV 到云存储 `exports/` | Active | 2026-05-24 |
+| **`aiPoster`** | **Nodejs16.13** | AI 信件生成（混元文本大模型 → 俏皮鼓励信） | **Active ✅** | **2026-05-27** |
 
 ### 数据库集合
 
@@ -228,12 +237,21 @@ cloudfunctions/             # 云函数
 
 ### AI 能力
 
-- **文本生成**：`hunyuan-v3` → `hy3-preview`，`wx.cloud.extend.AI.createModel('hunyuan-v3').streamText`
+- **文本生成（客户端）**：`wx.cloud.extend.AI.createModel('hunyuan-v3').streamText`，模型 `hy3-preview`
   - 用途：统计页 AI 俏皮评论（昨日 / 上周 / 上月）
-- **图像生成**：云函数 `aiPoster` + 混元文生图 (`hunyuan-image`, version v1.9)
-  - 用途：我的页 AI 海报（足迹数据驱动 prompt）
+- **文本生成（云函数）**：`app.ai().createModel('hunyuan-v3').chatCompletions`，模型 `hy3-preview`
+  - 用途：我的页 AI 信件（记账天数 + 最爱分类 → 50-60 字俏皮鼓励信）
 - 资源包：小程序成长计划 1 亿 Token（`pkg_hunyuan_token_la_inspire_100m`）
 
 ## License
 
 MIT
+
+---
+
+## 部署历史
+
+| 日期 | 版本 | 变更 |
+|------|------|------|
+| 2026-05-26 | **v1.0.1** | 部署 `bills`（新增 update）、`aiPoster`（修复语法 + 场景多样化）；引导页重构、主题显示 bug 修复、编辑账单功能、预算弹窗居中化 |
+| 2026-05-24 | v1.0.0 | 首次全量部署：4 个云函数 + 小程序前端 |
