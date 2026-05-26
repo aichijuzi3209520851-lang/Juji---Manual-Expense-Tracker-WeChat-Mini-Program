@@ -175,42 +175,42 @@ const THEME_VARIABLES = {
     '--shadow-dark': 'rgba(0, 0, 0, 0.6)'
   },
 
-  // ==================== 薄荷 (mint) ====================
+  // ==================== 薄荷 (mint) — #27C07D 主色 ====================
   mint: {
-    '--color-primary': '#3d7a5c',
-    '--color-primary-container': '#c0ebd3',
-    '--color-primary-light': '#a5d4bb',
+    '--color-primary': '#27c07d',
+    '--color-primary-container': '#c5f0d9',
+    '--color-primary-light': '#96deb8',
     '--color-on-primary': '#ffffff',
-    '--color-accent': '#477a8b',
-    '--color-secondary': '#4d8063',
-    '--color-secondary-container': '#b8ddc8',
-    '--color-tertiary': '#3d7a5c',
-    '--color-tertiary-container': '#c0ebd3',
+    '--color-accent': '#5ba4cb',
+    '--color-secondary': '#28b579',
+    '--color-secondary-container': '#b8ebd5',
+    '--color-tertiary': '#27c07d',
+    '--color-tertiary-container': '#c5f0d9',
     '--color-error': '#ba1a1a',
     '--color-error-container': '#ffdad6',
 
-    '--color-bg': '#f4f9f6',
+    '--color-bg': '#f2faf6',
     '--color-surface': '#ffffff',
-    '--color-surface-low': '#f2f7f3',
-    '--color-surface-container': '#edf4ef',
-    '--color-surface-high': '#e7f0ea',
-    '--color-surface-highest': '#dbe8df',
-    '--color-surface-dim': '#d2e2d7',
+    '--color-surface-low': '#eef8f2',
+    '--color-surface-container': '#e6f3ec',
+    '--color-surface-high': '#dfefe5',
+    '--color-surface-highest': '#d5eadc',
+    '--color-surface-dim': '#cce5d4',
 
     '--color-text': '#1a2620',
-    '--color-text-secondary': '#425c4e',
-    '--color-text-tertiary': '#749483',
+    '--color-text-secondary': '#3d5c4a',
+    '--color-text-tertiary': '#6e9480',
     '--color-text-on-primary': '#ffffff',
 
-    '--color-border': '#c8d9cd',
-    '--color-outline': '#8a9a90',
+    '--color-border': '#c0d8ca',
+    '--color-outline': '#82a090',
 
-    '--color-income': '#3d7a5c',
-    '--color-income-light': '#c0ebd3',
-    '--color-warning': '#6b8f70',
-    
+    '--color-income': '#27c07d',
+    '--color-income-light': '#c5f0d9',
+    '--color-warning': '#e0a030',
+
     '--shadow-light': 'rgba(255, 255, 255, 1)',
-    '--shadow-dark': 'rgba(61, 122, 92, 0.15)'
+    '--shadow-dark': 'rgba(39, 192, 125, 0.15)'
   },
 
   // ==================== 蓝天白云 (skyBlue) — #38BDF8 主色 ====================
