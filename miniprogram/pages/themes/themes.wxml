@@ -47,7 +47,7 @@
     <view class="create-plus">+</view>
     <view class="theme-info">
       <text class="theme-name">新建自定义主题</text>
-      <text class="theme-desc">最多保存 {{maxUserThemes}} 个</text>
+      <text class="theme-desc">最多保存 {{maxUserThemes}} 个 · DIY一个你喜欢的浅色系主题</text>
     </view>
   </view>
 
