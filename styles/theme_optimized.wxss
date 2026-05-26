@@ -1,0 +1,155 @@
+page[data-theme="fresh"], .theme-fresh {
+  /* 基础主色调 */
+  --color-primary: #785655;
+  --color-primary-container: #f7cac9;
+  --color-primary-light: #eed7d4;
+  --color-on-primary: #ffffff;
+  --color-accent: #6a7855;
+  
+  /* 辅助色 */
+  --color-secondary: #6c5a59;
+  --color-secondary-container: #f4e3e0;
+  --color-tertiary: #4b6458;
+  --color-tertiary-container: #c0dbcc;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-income: #4b6458;
+  --color-income-light: #c0dbcc;
+  --color-warning: #6c5a59;
+
+  /* 拟物风/3D 背景色系 */
+  --color-bg: #fcf6f5;
+  --color-surface: #ffffff;
+  --color-surface-low: #fdf5f3;
+  --color-surface-container: #f8efed;
+  
+  /* 3D 拟物高光与阴影 */
+  --shadow-light: rgba(255, 255, 255, 1);
+  --shadow-dark: rgba(120, 86, 85, 0.15);
+
+  /* 文字颜色层级 */
+  --color-text: #2d2625;
+  --color-text-secondary: #5b4d4a;
+  --color-text-tertiary: #938481;
+  --color-text-on-primary: #ffffff;
+  
+  --color-border: #e4d5d3;
+  --color-outline: #938481;
+}
+
+page[data-theme="dark"], .theme-dark {
+  /* 基础主色调 */
+  --color-primary: #d4a574;
+  --color-primary-container: #3d2d22;
+  --color-primary-light: #5a4335;
+  --color-on-primary: #1a1a1f;
+  --color-accent: #a8c986;
+  
+  /* 辅助色 */
+  --color-secondary: #cfa882;
+  --color-secondary-container: #362a21;
+  --color-tertiary: #7db892;
+  --color-tertiary-container: #1f3a28;
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-income: #7db892;
+  --color-income-light: #1f3a28;
+  --color-warning: #cfa882;
+
+  /* 拟物风/3D 背景色系 */
+  --color-bg: #1e1e24;
+  --color-surface: #27272e;
+  --color-surface-low: #1f1f24;
+  --color-surface-container: #2a2a30;
+  
+  /* 3D 拟物高光与阴影 */
+  --shadow-light: rgba(255, 255, 255, 0.08);
+  --shadow-dark: rgba(0, 0, 0, 0.6);
+
+  /* 文字颜色层级 */
+  --color-text: #f0eee9;
+  --color-text-secondary: #c4c0b9;
+  --color-text-tertiary: #8f8c87;
+  --color-text-on-primary: #1a1a1f;
+  
+  --color-border: #3a3a44;
+  --color-outline: #6a6a74;
+}
+
+page[data-theme="mint"], .theme-mint {
+  /* 基础主色调 */
+  --color-primary: #3d7a5c;
+  --color-primary-container: #c0ebd3;
+  --color-primary-light: #a5d4bb;
+  --color-on-primary: #ffffff;
+  --color-accent: #477a8b;
+  
+  /* 辅助色 */
+  --color-secondary: #4d8063;
+  --color-secondary-container: #b8ddc8;
+  --color-tertiary: #3d7a5c;
+  --color-tertiary-container: '#c0ebd3';
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-income: #3d7a5c;
+  --color-income-light: #c0ebd3;
+  --color-warning: #6b8f70;
+
+  /* 拟物风/3D 背景色系 */
+  --color-bg: #f4f9f6;
+  --color-surface: #ffffff;
+  --color-surface-low: #f2f7f3;
+  --color-surface-container: #edf4ef;
+  
+  /* 3D 拟物高光与阴影 */
+  --shadow-light: rgba(255, 255, 255, 1);
+  --shadow-dark: rgba(61, 122, 92, 0.15);
+
+  /* 文字颜色层级 */
+  --color-text: #1a2620;
+  --color-text-secondary: #425c4e;
+  --color-text-tertiary: #749483;
+  --color-text-on-primary: #ffffff;
+  
+  --color-border: #c8d9cd;
+  --color-outline: #8a9a90;
+}
+
+page[data-theme="skyBlue"], .theme-skyBlue {
+  /* 基础主色调 */
+  --color-primary: #38bdf8;
+  --color-primary-container: #cceeff;
+  --color-primary-light: #a8dff7;
+  --color-on-primary: #022c45;
+  --color-accent: #7e69cf;
+  
+  /* 辅助色 */
+  --color-secondary: #0ea5e9;
+  --color-secondary-container: #bae6fd;
+  --color-tertiary: #6366f1;
+  --color-tertiary-container: #e0e7ff;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-income: #22c55e;
+  --color-income-light: #bbf7d0;
+  --color-warning: #d97706;
+
+  /* 拟物风/3D 背景色系 */
+  --color-bg: #eef8ff;
+  --color-surface: #ffffff;
+  --color-surface-low: #f5fcff;
+  --color-surface-container: #edf8ff;
+  
+  /* 3D 拟物高光与阴影 */
+  --shadow-light: rgba(255, 255, 255, 1);
+  --shadow-dark: rgba(56, 189, 248, 0.18);
+
+  /* 文字颜色层级 */
+  --color-text: #0b1d2b;
+  --color-text-secondary: #24445c;
+  --color-text-tertiary: #52758e;
+  --color-text-on-primary: #ffffff;
+  
+  --color-border: #bfdfef;
+  --color-outline: #7aadc4;
+}

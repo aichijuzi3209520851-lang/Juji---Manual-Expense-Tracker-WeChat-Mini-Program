@@ -32,14 +32,14 @@
   display: flex; align-items: center; gap: 24rpx;
   background: var(--color-surface); border-radius: var(--radius-xl);
   padding: var(--space-md) var(--space-lg); margin-top: 20rpx;
-  box-shadow: 0 4rpx 16rpx rgba(120,86,85,0.04);
+  box-shadow: 0 4rpx 16rpx var(--shadow-dark);
   border: 2rpx solid transparent;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   position: relative;
 }
 .theme-card.is-current {
   border-color: var(--color-primary);
-  box-shadow: 0 6rpx 24rpx rgba(120,86,85,0.08);
+  box-shadow: 0 6rpx 24rpx var(--shadow-dark);
 }
 
 .theme-colors {
@@ -47,7 +47,7 @@
 }
 .theme-swatch {
   width: 36rpx; height: 36rpx; border-radius: 50%;
-  box-shadow: 0 2rpx 6rpx rgba(120,86,85,0.08);
+  box-shadow: 0 2rpx 6rpx var(--shadow-dark);
 }
 
 .theme-info { flex: 1; }
@@ -114,7 +114,7 @@
 }
 .picker-preview {
   width: 96rpx; height: 96rpx; border-radius: 24rpx; flex-shrink: 0;
-  box-shadow: 0 4rpx 16rpx rgba(120,86,85,0.10);
+  box-shadow: 0 4rpx 16rpx var(--shadow-dark);
   transition: background 0.2s ease;
 }
 .picker-wheel {

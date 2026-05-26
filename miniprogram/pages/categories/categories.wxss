@@ -28,7 +28,7 @@
   display: flex; align-items: center; justify-content: space-between;
   background: var(--color-surface); padding: 24rpx 20rpx;
   border-radius: var(--radius-md); margin-bottom: 8rpx;
-  box-shadow: 0 2rpx 8rpx rgba(120,86,85,0.03);
+  box-shadow: 0 2rpx 8rpx var(--shadow-dark);
 }
 .cat-row-left { display: flex; align-items: center; gap: 16rpx; }
 .cat-emoji { font-size: 40rpx; }
@@ -61,7 +61,7 @@
   transform: translateY(-50%);
   background: var(--color-surface); border-radius: var(--radius-xl);
   padding: var(--space-lg);
-  box-shadow: 0 20rpx 60rpx rgba(120,86,85,0.12);
+  box-shadow: 0 20rpx 60rpx var(--shadow-dark);
 }
 .dialog-title {
   font-size: 34rpx; font-weight: 700; color: var(--color-text);
