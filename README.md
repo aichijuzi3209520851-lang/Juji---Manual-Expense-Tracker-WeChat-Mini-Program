@@ -9,42 +9,48 @@
 - **数据库**：CloudBase 文档型 NoSQL（`bills` / `budgets` / `users`）
 - **AI**：腾讯混元大模型 `hunyuan-v3` → `hy3-preview`（俏皮评论 + AI 海报生成，小程序成长计划 1 亿 Token）
 - **存储**：CloudBase 云存储（账单照片、用户头像、AI 生成图片）
-- **主题**：CSS 变量 Token 体系（42 个语义变量），4 套预设主题（清爽薄荷 / 暖暖阳光 / 夜猫子 / 蓝天白云），inline-style 注入方案，切换后退出小程序生效
+- **主题**：Design Token 体系 v2（60+ CSS 变量），4 套预设 + 8 色自定义调色板 + 用户命名主题 CRUD（最多 5 个），inline-style 注入方案，切换后即时生效
+- **UI 风格**：小红书 / Apple Wallet 风格（渐变 hero 卡 + 40rpx 大圆角 + Neumorphic 拟物阴影 + 跨色相渐变）
+- **字体**：8 级字号 + 5 级字重 + 数字专属字体族（DIN Alternate / Helvetica Neue）
 
 ## 功能
 
 ### 记账
-- 收/支双模式，滑块切换，支出玫瑰色 / 收入薄荷绿双色系
-- 金额大字输入（104rpx），分类网格选择（8 预设 + 自创）
+- 收/支双模式，滑块切换，**Neumorphic 3D 药丸控件**（毛玻璃背景 + 白底滑块）
+- 金额大字输入（96rpx 数字专属字体），分类网格选择（8 预设 + 自创）
 - **自创分类**：页内弹窗，名称 + emoji 图标池，即时创建并自动选中
 - **日期选择**：原生 picker mode="date"，智能显示今天/昨天/X月X日
 - **心情记录**：8 预设 emoji + 自定义输入，可选
-- 备注 + 照片（拍照 / 相册，压缩上传云存储）
+- 备注 + **Neumorphic 3D 相机按钮**（主色渐变背景 + 高光深影，100rpx 圆形）
 - 频率限制：3s 防抖 + 单日 500 笔上限
 
 ### 首页
-- **今天 / 昨天消费**双数字卡
+- **渐变 hero 卡**（主色→accent 跨色相渐变）：今天 / 昨天消费双数字卡
 - **预算进度条**：未设引导 / 正常进度 / 超支红色三态
 - **季节标签**：当前季节氛围点缀
-- **账单流水**：按日分组（日期 + 周几 + 当日净额），近 30 条
+- **账单流水**：按日分组卡片（日期 + 周几 + 当日净额），近 30 条
 - 点击账单 → **手账风格详情页**（拍立得照片框 + 心情印章 + 信纸纹理备注）
 - 长按删除（二次确认）
 
 ### 统计页
-- 月份前后切换 + **收入/支出 segment toggle**
+- **渐变 hero 月份选择器**（主色→accent 跨色相渐变）
+- 收入/支出 **segment toggle**（primary-container 背景 + 白底激活态）
 - 甜甜圈类目占比图（Top 8 图例）
-- **6 个月收支趋势柱状图**（纯 CSS，当前月高亮）
+- **6 个月收支趋势柱状图**（纯 CSS，当前月渐变高亮）
 - **AI 俏皮评论**（小橘的便签）：昨日 / 上周 / 上月三张卡片
   - 混元 `hy3-preview` `streamText`，串行调用 + 429 退避重试
   - `periodKey` 自动缓存，失败不写缓存允许重试
 
 ### 预算页
-- CSS conic-gradient 进度环（入场 scale-in 动画）
+- **渐变 hero 进度环**（主色→accent 跨色相，白色环 + 半透明白未完成）
 - **6 个月预算达成率历史**条形图（超支月红色）
+- **消费节奏卡**：日均预算 / 今日消费 / 剩余天数 / 建议日均
+- **钱去哪了**：Top 3 消费分类（emoji + 金额 + 百分比进度条）
 - **底部滑入面板**（bottom-sheet）调整预算
 - 未设预算空态引导
 
 ### 我的页
+- **渐变 hero 头像区**（主色→accent 跨色相，白边头像 + 投影）
 - 头像 / 昵称在线编辑（`editImage` 裁剪 → `compressImage` → 云存储 → `getTempFileURL`）
 - **记账足迹卡**：记账天数 / 累计笔数 / 最爱分类（可点击生成 AI 海报）
 - **AI 海报生成**：混元文生图，足迹数据驱动 prompt，每日限量
@@ -52,9 +58,18 @@
 - 账单 CSV 导出（打开 / 分享 / 保存到手机）
 - 数据清除（二次确认）
 
+### 主题系统（Design Token 体系 v2）
+- **4 套预设主题**：清爽薄荷 / 温馨玫瑰 / 夜猫子 / 蓝天白云
+- **8 色自定义调色板**（Tailwind 400/500 级高饱和亮色）：樱花粉 / 蜜桃橙 / 柠檬黄 / 青葱绿 / 蒂芙尼蓝 / 鸢尾紫 / 玫瑰金 / 晴空蓝
+- **用户命名主题 CRUD**：最多保存 5 个自定义主题，支持命名、切换、长按删除
+- **accent 跨色相渐变**：每个主题有 primary + accent（primary.h + 60°）双色相，hero 渐变自动跨色相
+- **Neumorphic 拟物阴影**：`--shadow-light`（高光）+ `--shadow-dark`（深影），per-theme 主题色
+- **衍生 token 自动注入**：`--gradient-hero`、`--shadow-card` 等在 `getThemeStyleString()` 里计算实际值，避免 CSS var() 提前解析
+- **旧版迁移**：`theme='custom'` + `custom_theme_color` 自动迁移到 `user_themes`
+
 ### 子页面
 - **分类管理** (`pages/categories/`)：预设 + 自创列表，CRUD + emoji 图标池
-- **主题预览** (`pages/themes/`)：4 套配色色板卡片，选中切换
+- **主题预览** (`pages/themes/`)：预设主题 + 我的主题两区，创建面板（颜色 picker + 名称输入）
 - **账单详情** (`pages/detail/`)：手账便签风格，金额 + 照片 + 心情 + 分类 + 日期 + 信纸备注 + 删除
 
 ### 登录 & 引导
@@ -62,40 +77,93 @@
 - 4 页滑动引导（柔光渐变背景 + emoji 入场动画 + 自定义圆点指示器）
 - 首次安装显示，看过一次后不再出现
 
+## Design Token 体系
+
+### 颜色 Token（per-theme）
+
+| Token | 说明 |
+|-------|------|
+| `--color-primary` | 主色调 |
+| `--color-accent` | 跨色相互补色（primary.h + 60°） |
+| `--color-primary-container` | 主色浅版（容器背景） |
+| `--color-primary-light` | 主色亮版（高光） |
+| `--color-on-primary` | 主色上方文字（自动对比度：浅色主色→深字，深色主色→白字） |
+| `--color-bg` / `--color-surface` | 页面背景 / 卡片表面 |
+| `--color-text` / `--color-text-secondary` / `--color-text-tertiary` | 主/次/辅文字 |
+| `--color-border` / `--color-outline` | 边框 / 轮廓 |
+| `--color-income` / `--color-error` / `--color-warning` | 语义色 |
+
+### 渐变 Token
+
+| Token | 说明 |
+|-------|------|
+| `--gradient-hero` | 主色→accent 跨色相渐变（135deg） |
+| `--gradient-hero-soft` | primary-container→primary-light 柔和渐变 |
+
+### 阴影 Token（Neumorphic）
+
+| Token | 说明 |
+|-------|------|
+| `--shadow-light` | 高光色（per-theme，浅色主题白色，暗色主题半透明白） |
+| `--shadow-dark` | 深影色（per-theme，fresh 棕色，mint 绿色，dark 黑色） |
+| `--shadow-soft` | 双侧柔阴影（-8rpx / 8rpx） |
+| `--shadow-card` | 双侧卡片阴影（-12rpx / 12rpx） |
+| `--shadow-elevated` | 双侧提升阴影（-16rpx / 16rpx） |
+| `--shadow-hero` | 单侧 hero 阴影（0 16rpx） |
+
+### 字体 Token
+
+| Token | 说明 |
+|-------|------|
+| `--font-numeric` | 数字专属字体族（DIN Alternate / Helvetica Neue） |
+| `--font-body` | 正文字体族 |
+| `--font-size-display` (96rpx) | 记账页核心大数字 |
+| `--font-size-h1` (52rpx) | 首页/预算核心数字 |
+| `--font-size-h2` (44rpx) | 次级数字（足迹、进度环） |
+| `--font-size-h3` (36rpx) | 三级标题 |
+| `--font-size-body` (28rpx) | 正文 |
+| `--font-size-regular` (26rpx) | 常规文字 |
+| `--font-size-small` (22rpx) | 辅助标签 |
+| `--font-weight-black` (800) | 核心数字 |
+| `--font-weight-bold` (700) | 大数字 |
+| `--font-weight-semibold` (600) | 标签 |
+| `--font-weight-medium` (500) | 次级 |
+| `--font-weight-regular` (400) | 正文 |
+
 ## 项目结构
 
 ```
 miniprogram/                # 小程序前端
-├── app.js                  # 入口：CloudBase 初始化 + 主题 + 登录
+├── app.js                  # 入口：CloudBase 初始化 + 主题迁移 + 登录
 ├── app.json                # 路由 + 窗口 + 自定义 TabBar 配置
-├── app.wxss                # 全局主题 Token (30+ CSS 变量)
+├── app.wxss                # 全局 Design Token（60+ CSS 变量）+ 通用组件样式
 ├── custom-tab-bar/         # 自定义毛玻璃 TabBar（5 列，中间记账按钮凸起）
 ├── pages/
 │   ├── login/              # 登录页（柔光 + 漂浮图标 drift 动画）
 │   ├── guide/              # 新手引导（swiper + 入场动画）
-│   ├── home/               # 首页（今日/昨天 + 预算 + 分组流水 + 季节）
-│   ├── stats/              # 统计（甜甜圈 + 趋势图 + AI 评论）
-│   ├── record/             # 记账（金额 + 分类 + 日期 + 心情 + 照片）
-│   ├── budget/             # 预算（进度环 + 历史 + bottom-sheet）
-│   ├── profile/            # 我的（头像 + 足迹 + AI 海报 + 导出）
+│   ├── home/               # 首页（渐变 hero + 预算 + 分组流水 + 季节）
+│   ├── stats/              # 统计（渐变 hero + 甜甜圈 + 趋势图 + AI 评论）
+│   ├── record/             # 记账（渐变 hero 金额 + Neumorphic 相机按钮）
+│   ├── budget/             # 预算（渐变 hero 进度环 + 历史 + bottom-sheet）
+│   ├── profile/            # 我的（渐变 hero 头像 + 足迹 + AI 海报 + 导出）
 │   ├── categories/         # 分类管理（预设 + 自创 CRUD）
-│   ├── themes/             # 主题切换（4 套配色预览）
+│   ├── themes/             # 主题切换（预设 + 自定义主题 CRUD）
 │   └── detail/             # 账单详情（手账便签风格）
 ├── utils/
-│   ├── theme.js            # 主题系统（CSS 变量动态注入）
+│   ├── theme.js            # 主题系统核心（CSS 变量推导 + 用户主题 CRUD + 衍生 token 注入）
+│   ├── eventBus.js         # 事件总线（on/off/emit，跨页面通信）
 │   ├── rateLimiter.js      # 频率限制（防抖 + 日上限）
 │   └── validate.js         # 账单输入校验
 └── images/
-    ├── login/              # 登录页 SVG 图标
-    ├── record/             # 记账页 SVG 图标
+    ├── login/              # 登录页 SVG 图标（8 个，灰色调）
+    ├── record/             # 记账页 SVG 图标（14 个，黑色调，filter 染色）
     └── tabbar/             # TabBar 图标
 
 cloudfunctions/             # 云函数
 ├── quickstartFunctions/    # 登录（getOpenId）+ 用户同步
-├── bills/                  # 账单服务端校验（create / delete）
-├── exportBills/            # CSV 导出（含用户身份 meta 头）
-├── aiPoster/               # AI 海报生成（文生图 → 云存储）
-└── generateImage-WtU3mJ/   # 混元文生图（CloudBase AI+ 扩展）
+├── bills/                  # 账单服务端校验（create / delete / update）
+├── exportBills/            # CSV 导出（含心情列）
+└── aiPoster/               # AI 海报生成（文生图 → 云存储）
 ```
 
 ## 架构概览（给新手）
@@ -120,7 +188,8 @@ cloudfunctions/             # 云函数
 - **WXSS** = 小程序版的 CSS（写样式，支持 `var(--color-primary)` 这种变量）
 - **JS** = JavaScript（写交互逻辑，调用 `wx.cloud.database()` 读写数据库）
 - **云函数** = 跑在腾讯云上的 Node.js 代码，处理需要服务端做的事情（生成 CSV、调 AI 画图）
-- **主题怎么切换的**：`utils/theme.js` 把 30 个颜色变量拼成字符串，塞进每页最外层 view 的 `style` 属性，所有 `var(--color-*)` 自动生效
+- **主题怎么切换的**：`utils/theme.js` 的 `getThemeStyleString()` 把 60+ 个颜色/阴影/渐变变量计算成实际值，拼成字符串注入每页最外层 view 的 `style` 属性，所有 `var(--color-*)` 自动生效
+- **为什么不用 CSS var() 继承**：微信小程序的 `page {}` 中声明的 CSS 变量会在声明时被解析为默认值，不会跟随子 view 的内联 style 覆盖重新解析。因此衍生 token（`--gradient-hero` 等）必须在 `getThemeStyleString()` 里直接计算实际值
 
 ## 开始
 
@@ -145,10 +214,9 @@ cloudfunctions/             # 云函数
 | 函数名 | 运行时 | 说明 | 状态 |
 |--------|--------|------|------|
 | `quickstartFunctions` | Nodejs16.13 | 登录获取 openid，同步用户信息 | Active |
-| `bills` | Nodejs16.13 | 账单服务端校验 create / delete | Active（客户端绕过中） |
+| `bills` | Nodejs16.13 | 账单服务端校验 create / delete / update | Active |
 | `exportBills` | Nodejs16.13 | 生成 CSV 到云存储 `exports/` | Active |
 | `aiPoster` | Nodejs16.13 | AI 海报生成（文生图 → 上传云存储） | Active |
-| `generateImage-WtU3mJ` | — | CloudBase AI+ 扩展自动生成（混元文生图） | Active |
 
 ### 数据库集合
 
@@ -162,16 +230,9 @@ cloudfunctions/             # 云函数
 
 - **文本生成**：`hunyuan-v3` → `hy3-preview`，`wx.cloud.extend.AI.createModel('hunyuan-v3').streamText`
   - 用途：统计页 AI 俏皮评论（昨日 / 上周 / 上月）
-- **图像生成**：CloudBase AI+ 扩展 `generateImage-WtU3mJ`
+- **图像生成**：云函数 `aiPoster` + 混元文生图 (`hunyuan-image`, version v1.9)
   - 用途：我的页 AI 海报（足迹数据驱动 prompt）
 - 资源包：小程序成长计划 1 亿 Token（`pkg_hunyuan_token_la_inspire_100m`）
-- ⚠️ `hunyuan-exp` 组将于 2026/8/30 下线，已切换至 `hunyuan-v3` 组
-
-### 静态托管
-
-| 项目 | 值 |
-|------|------|
-| 域名 | （CloudBase 控制台 → 静态托管查看） |
 
 ## License
 
