@@ -387,6 +387,7 @@ module.exports = {
   MAX_USER_THEMES,
   getCurrentThemeId,
   getThemeStyleString,
+  resolveThemeVars,
   applyTheme,
   initAppTheme,
   getUserThemes,

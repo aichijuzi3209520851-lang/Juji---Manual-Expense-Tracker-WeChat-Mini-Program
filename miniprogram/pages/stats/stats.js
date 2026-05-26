@@ -1,5 +1,45 @@
-﻿const COLORS = ['#e8bcba', '#f5dddc', '#ffdad8', '#cee9da', '#d8c1c0', '#f7cac8', '#b2cdbe', '#e9e1df']
-const { applyTheme, getThemeStyleString } = require('../../utils/theme')
+﻿const { applyTheme, getThemeStyleString, resolveThemeVars } = require('../../utils/theme')
+
+function buildMonochromePalette(hex) {
+  var r = parseInt(hex.slice(1, 3), 16) / 255
+  var g = parseInt(hex.slice(3, 5), 16) / 255
+  var b = parseInt(hex.slice(5, 7), 16) / 255
+  var max = Math.max(r, g, b), min = Math.min(r, g, b), h = 0, s = 0
+  var l = (max + min) / 2
+  if (max !== min) {
+    var d = max - min
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
+    else if (max === g) h = ((b - r) / d + 2) / 6
+    else h = ((r - g) / d + 4) / 6
+  }
+  var hs = Math.round(h * 360), ss = Math.round(s * 100)
+  return [
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.95)',
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.78)',
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.61)',
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.50)',
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.43)',
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.39)',
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.36)',
+    'hsla(' + hs + ',' + ss + '%,' + Math.round(l) + '%,0.35)'
+  ]
+}
+
+function buildDonutGradient(categories, total) {
+  if (!categories || !categories.length || !total) return 'conic-gradient(var(--color-surface) 0% 100%)'
+  var PAD = 0.8, cur = 0, stops = []
+  for (var i = 0; i < categories.length; i++) {
+    var pct = categories[i].amount / total * 100
+    var piecePad = i === 0 || i === categories.length - 1 ? PAD * 0.5 : PAD
+    var start = cur + (i > 0 ? piecePad : 0)
+    var end = cur + pct - (i < categories.length - 1 ? piecePad : 0)
+    if (end <= start) end = start + 0.1
+    stops.push(categories[i].color + ' ' + start.toFixed(1) + '% ' + end.toFixed(1) + '%')
+    cur += pct
+  }
+  return 'conic-gradient(' + stops.join(',') + ')'
+}
 
 const pad = n => String(n).padStart(2, '0')
 const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
@@ -90,6 +130,7 @@ Page({
     statsType: 'expense',
     totalAmount: '0.00',
     legendData: [],
+    donutGradient: 'conic-gradient(var(--color-surface) 0% 100%)',
     trendData: [],
     dailyComment: '',
     weeklyComment: '',
@@ -117,7 +158,10 @@ Page({
   },
 
   onLoad() {
-    this._themeHandler = (id) => { applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) }) }
+    this._themeHandler = (id) => {
+      applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) })
+      var d = this.data; if (d.legendData && d.legendData.length) this.loadStats()
+    }
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
   },
 
@@ -172,17 +216,25 @@ Page({
         total += b.amount
       })
 
-      const legendData = Object.entries(byCategory)
+      var vars = resolveThemeVars() || {}
+      var palette = buildMonochromePalette(vars['--color-primary'] || '#8f6b63')
+
+      const categories = Object.entries(byCategory)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 8)
         .map(([name, amount], i) => ({
           name,
-          amount: amount.toFixed(2),
+          amount: amount,
           percent: total ? Math.round((amount / total) * 100) : 0,
-          color: COLORS[i % COLORS.length]
+          color: palette[i]
         }))
 
-      this.setData({ totalAmount: total.toFixed(2), legendData })
+      const legendData = categories.map(function(c) {
+        return { name: c.name, amount: c.amount.toFixed(2), percent: c.percent, color: c.color }
+      })
+      const donutGradient = buildDonutGradient(categories, total)
+
+      this.setData({ totalAmount: total.toFixed(2), legendData, donutGradient })
     } catch (err) {
       console.error('加载统计失败:', err)
       this.setData({ statsFailed: true })

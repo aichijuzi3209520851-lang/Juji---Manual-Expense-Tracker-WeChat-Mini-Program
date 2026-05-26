@@ -12,7 +12,7 @@
   </view>
 
   <view class="donut-card">
-    <view class="donut">
+    <view class="donut" style="background: {{donutGradient}}">
       <view class="donut-center">
         <text class="donut-label">{{statsType === 'expense' ? '总支出' : '总收入'}}</text>
         <text class="donut-total">¥{{totalAmount}}</text>
