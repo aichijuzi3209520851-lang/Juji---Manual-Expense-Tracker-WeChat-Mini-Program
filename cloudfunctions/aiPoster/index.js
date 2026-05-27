@@ -26,50 +26,73 @@ function checkDailyLimit() {
   return { ok: true, remaining: DAILY_LIMIT - used - 1 }
 }
 
+function buildFallback(days) {
+  return `小橘刚才去找星星借灵感去了，稍微走了一会神。不过没关系，看着你坚持记账 ${days} 天的模样，小橘想说：无论是精打细算还是偶尔挥霍，你认真生活的样子，真的很迷人！🍊`
+}
+
 exports.main = async (event, context) => {
   const { days, category, zodiac, occupation, avgDailySpend } = event
-  try {
-    const limit = checkDailyLimit()
-    if (!limit.ok) return { success: false, message: '今日信件生成次数已用完，明天再来吧~', code: 'LIMIT_EXCEEDED' }
 
-    const prompt = SYSTEM_PROMPT
+  try {
+    // ── 限流检查 ──
+    const limit = checkDailyLimit()
+    if (!limit.ok) {
+      console.warn('[aiLetter] daily limit exceeded')
+      return { success: false, message: '今日信件生成次数已用完，明天再来吧~', code: 'LIMIT_EXCEEDED' }
+    }
+
+    // ── 构建 prompt ──
+    const systemContent = SYSTEM_PROMPT
       .replace('${occupation}', occupation || '未知')
       .replace('${zodiac}', zodiac || '未知星座')
       .replace('${days}', days)
       .replace('${category}', category || '日常')
       .replace('${avgDailySpend}', avgDailySpend || '未知')
 
-    const userPrompt = `用户已经记账 ${days} 天，职业是${occupation || '未知'}，${zodiac || '未知星座'}，最爱的消费分类是「${category}」，日均消费 ${avgDailySpend || '未知'} 元。请给 TA 写一封 150-180 字的深情心里话。`
+    const userContent = `用户已经记账 ${days} 天，职业是${occupation || '未知'}，${zodiac || '未知星座'}，最爱的消费分类是「${category}」，日均消费 ${avgDailySpend || '未知'} 元。请给 TA 写一封 150-180 字的深情心里话。`
 
+    // ── 调用 AI 模型（CloudBase Node SDK 正确用法）──
     const model = ai.createModel('hunyuan-v3')
-    let letter = ''
+    console.log('[aiLetter] calling generateText with model=hy3-preview...')
 
-    const res = await model.chatCompletions({
+    const result = await model.generateText({
       model: 'hy3-preview',
       messages: [
-        { role: 'system', content: prompt },
-        { role: 'user', content: userPrompt }
+        { role: 'system', content: systemContent },
+        { role: 'user', content: userContent }
       ],
-      max_tokens: 400,
-      temperature: 0.9
     })
-    letter = res.choices?.[0]?.message?.content?.trim() || ''
 
+    // ── 正确解析返回值：CloudBase SDK generateText 返回 result.text ──
+    console.log('[aiLetter] generateText result keys:', Object.keys(result))
+    let letter = (result.text || '').trim()
+
+    // 去除首尾引号
     letter = letter.replace(/^[""']+/, '').replace(/[""']+$/, '').trim()
 
     if (!letter || letter.length < 10) {
-      letter = `小橘刚才去找星星借灵感去了，稍微走了一会神。不过没关系，看着你坚持记账 ${days} 天的模样，小橘想说：无论是精打细算还是偶尔挥霍，你认真生活的样子，真的很迷人！🍊`
+      console.warn('[aiLetter] letter too short or empty, using fallback. raw text length:', (result.text || '').length)
+      letter = buildFallback(days)
     }
 
+    console.log('[aiLetter] success, letter length:', letter.length)
     return { success: true, letter, remaining: limit.remaining, totalLimit: DAILY_LIMIT }
+
   } catch (err) {
-    console.error('[aiLetter] error:', err)
+    // ── 详细错误日志（最重要）──
+    console.error('[aiLetter] 调用失败详情:')
+    console.error('  message:', err && err.message)
+    console.error('  code:', err && err.code)
+    console.error('  stack:', err && err.stack)
+    console.error('  full err:', JSON.stringify(err, Object.getOwnPropertyNames(err)))
+
     return {
       success: true,
-      letter: `小橘刚才去找星星借灵感去了，稍微走了一会神。不过没关系，看着你坚持记账 ${days} 天的模样，小橘想说：无论是精打细算还是偶尔挥霍，你认真生活的样子，真的很迷人！🍊`,
+      letter: buildFallback(days),
       remaining: -1,
       totalLimit: DAILY_LIMIT,
-      fallback: true
+      fallback: true,
+      errorDetail: err && err.message
     }
   }
 }

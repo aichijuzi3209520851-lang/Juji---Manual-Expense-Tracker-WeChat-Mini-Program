@@ -50,6 +50,10 @@ Page({
   },
 
   resetForm(nextType = 'expense') {
+    const today = new Date()
+    const y = today.getFullYear()
+    const m = String(today.getMonth() + 1).padStart(2, '0')
+    const d = String(today.getDate()).padStart(2, '0')
     const preset = this.getPresetCategories(nextType)
     this.setData({
       type: nextType,
@@ -59,12 +63,16 @@ Page({
       photoUrl: '',
       photoCloudPath: '',
       mood: '',
+      isCustomMood: false,
+      dateStr: `${y}-${m}-${d}`,
+      displayDate: '今天',
       categories: preset,
       selectedCategory: preset[0]?.name || '',
       editMode: false,
       editBillId: ''
     })
     this.loadCustomCategories(nextType)
+    wx.setNavigationBarTitle({ title: '记一笔' })
   },
 
   onLoad(options) {
@@ -87,8 +95,17 @@ Page({
     }
   },
 
+  onHide() {
+    // 仅清理编辑模式状态，避免残留污染下次新增；新增模式下的表单数据保留
+    if (this.data.editMode) {
+      this.setData({ editMode: false, editBillId: '' })
+      wx.setNavigationBarTitle({ title: '记一笔' })
+    }
+  },
+
   onUnload() {
     if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    this.resetForm()
   },
 
   updateCustomTabBar() {
@@ -106,6 +123,8 @@ Page({
     this.loadCustomCategories(this.data.type)
 
     // 检测从详情页跳转过来的编辑请求（通过全局变量，因为 switchTab 不能带参数）
+    // 若当前已在编辑模式，跳过，防止状态被意外覆盖
+    if (this.data.editMode) return
     const editId = getApp().globalData._editBillId
     if (editId) {
       // 清除标记，避免重复触发
@@ -383,8 +402,9 @@ Page({
           }
         })
         wx.hideLoading()
-        wx.showToast({ title: '修改成功 ✅', icon: 'success' })
-        setTimeout(() => { wx.navigateBack() }, 800)
+        this.resetForm()
+        wx.showToast({ title: '已保存', icon: 'success', duration: 1200, mask: true })
+        setTimeout(() => { wx.switchTab({ url: '/pages/home/home' }) }, 1200)
       } else {
         // 新增模式：日上限检查 + 走云函数服务端校验
         const daily = checkDailyLimit('bills', 500)
@@ -408,8 +428,9 @@ Page({
         }
         daily.increment()
         wx.hideLoading()
-        wx.showToast({ title: '记账成功 ✅', icon: 'success' })
         this.resetForm(type)
+        wx.showToast({ title: '已保存', icon: 'success', duration: 1200, mask: true })
+        setTimeout(() => { wx.switchTab({ url: '/pages/home/home' }) }, 1200)
       }
     } catch (err) {
       wx.hideLoading()

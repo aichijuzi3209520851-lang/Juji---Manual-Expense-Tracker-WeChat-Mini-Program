@@ -47,7 +47,7 @@ function getZodiac(birthday) {
   return ''
 }
 
-var OCCUPATIONS = ['学生', '程序员', '自由职业者', '设计师', '教师', '医生', '金融从业者', '运营/市场', '其他']
+var OCCUPATIONS = ['学生', '程序员', '自由职业者', '设计师', '教师']
 
 const CATEGORY_EMOJI = {
   '餐饮':'🍜','交通':'🚇','购物':'🛍️','娱乐':'🎮','学习':'📚','日用':'🏠','医疗':'💊',
@@ -568,19 +568,32 @@ Page({
       var res = await wx.cloud.callFunction({
         name: 'aiPoster',
         data: { days: days, category: category, zodiac: zodiac, occupation: occupation, avgDailySpend: avgDailySpend },
-        config: { timeout: 15000 }
+        config: { timeout: 30000 }
       })
       wx.hideLoading()
-      var letter = (res.result && res.result.letter) || fallback
+
+      // 详细日志：打印云函数返回结果结构
+      console.log('[generateLetter] 云函数返回 result:', JSON.stringify(res.result))
+
+      var result = res.result || {}
+      // 如果云函数内部 catch 了错误并返回 fallback，日志提醒
+      if (result.fallback) {
+        console.warn('[generateLetter] 云函数返回了兜底文案, errorDetail:', result.errorDetail)
+      }
+      var letter = result.letter || fallback
       this.setData({
         showLetter: true,
         letterText: letter,
-        letterRemaining: res.result ? res.result.remaining : -1,
-        letterTotalLimit: res.result ? res.result.totalLimit : 30
+        letterRemaining: result.remaining !== undefined ? result.remaining : -1,
+        letterTotalLimit: result.totalLimit || 30
       })
     } catch (err) {
       wx.hideLoading()
-      console.error('[generateLetter] 失败:', err)
+      // 详细错误日志
+      console.error('[generateLetter] AI调用失败详情:')
+      console.error('  errMsg:', err && err.errMsg)
+      console.error('  message:', err && err.message)
+      console.error('  full err:', err)
       this.setData({ showLetter: true, letterText: fallback })
     }
   },
@@ -600,15 +613,16 @@ Page({
   },
 
   updateHeatmapColor() {
+    var currentId = getCurrentThemeId()
     var custom = this.data.heatmapCustomColor
     if (custom) {
       this.setData({ heatmapColor: custom })
     } else {
-      var vars = resolveThemeVars() || {}
+      var vars = resolveThemeVars(currentId) || {}
       var primary = vars['--color-primary'] || '#27c07d'
       this.setData({ heatmapColor: primary })
     }
-    var vars2 = resolveThemeVars() || {}
+    var vars2 = resolveThemeVars(currentId) || {}
     var sd = vars2['--shadow-dark'] || 'rgba(0,0,0,0.08)'
     this.setData({ heatmapShadowDark: sd })
   },

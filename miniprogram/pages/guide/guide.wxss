@@ -1,255 +1,309 @@
-/* ========== 容器 & 背景 ========== */
+/* pages/guide/guide.wxss */
+
+/* ========== 基础容器 ========== */
 .guide-wrap {
   height: 100vh;
+  width: 100vw;
   overflow: hidden;
   position: relative;
-  background: #fffaf8;
+  background-color: var(--color-bg, #FAFAFA); 
 }
 
-.guide-swiper { height: calc(100vh - 120rpx); }
-
-/* ========== 通用页面 ========== */
-.guide-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ========== 第 1 页：C 品牌印象 ========== */
-.guide-page-brand {
-  background:
-    radial-gradient(circle at 50% 30%, rgba(247,202,201,0.20), transparent 45%),
-    linear-gradient(180deg, #fffaf8 0%, #fdf6f5 100%);
-  justify-content: center;
-  padding: 120rpx 60rpx 80rpx;
-}
-.brand-emoji {
-  font-size: 160rpx;
-  line-height: 1;
-  margin-bottom: 36rpx;
-  opacity: 0;
-  transform: translateY(30rpx);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.brand-emoji.float-in { animation: brandFloat 3s ease-in-out infinite; opacity: 1; transform: translateY(0); }
-@keyframes brandFloat {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-16rpx); }
-}
-.brand-title {
-  font-size: 52rpx;
-  font-weight: 800;
-  color: var(--color-text, #1e1b1a);
-  letter-spacing: 6rpx;
-  margin-bottom: 10rpx;
-}
-.brand-sub {
-  font-size: 28rpx;
-  color: var(--color-text-secondary, #938481);
-  margin-bottom: 8rpx;
-}
-.brand-line {
-  width: 64rpx; height: 6rpx; border-radius: 3rpx;
-  background: linear-gradient(90deg, #f7caca, #f4a0a0);
-  margin: 32rpx 0;
-}
-.brand-desc {
-  font-size: 26rpx;
-  color: var(--color-text-tertiary, #b5a5a2);
-  line-height: 1.8;
-  text-align: center;
-  max-width: 420rpx;
-}
-
-/* ========== 第 2 页：C→B 核心卖点 ========== */
-.guide-page-feature {
-  background:
-    radial-gradient(circle at 70% 15%, rgba(237,247,241,0.26), transparent 40%),
-    linear-gradient(180deg, #fffaf8 0%, #f5faf7 100%);
-  justify-content: center;
-  padding: 80rpx 44rpx 60rpx;
-}
-.feature-big-icon {
-  font-size: 128rpx;
-  margin-bottom: 28rpx;
-  opacity: 0;
-  transform: translateY(30rpx);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-.feature-big-icon.slide-up { opacity: 1; transform: translateY(0); }
-.feature-title {
-  font-size: 42rpx;
-  font-weight: 700;
-  color: var(--color-text, #1e1b1a);
-  margin-bottom: 14rpx;
-}
-.feature-desc {
-  font-size: 27rpx;
-  color: var(--color-text-secondary, #888);
-  line-height: 1.7;
-  text-align: center;
-  margin-bottom: 36rpx;
-  max-width: 380rpx;
-}
-.step-cards {
-  width: 100%;
-  padding: 0 44rpx;
-}
-.step-card {
-  display: flex;
-  align-items: center;
-  gap: 20rpx;
-  background: #fff;
-  border-radius: 24rpx;
-  padding: 24rpx 28rpx;
-  margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
-}
-.step-icon {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 16rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26rpx;
-  flex-shrink: 0;
-  font-weight: 700;
-}
-.step-1 { background: #edf7f1; }
-.step-2 { background: #fef0ef; }
-.step-3 { background: #eff6fd; }
-.step-text {
-  font-size: 25rpx;
-  color: var(--color-text, #555);
-  font-weight: 500;
-}
-
-/* ========== 第 3 页：B 功能卡片 ========== */
-.guide-page-cards {
-  background:
-    radial-gradient(circle at 20% 70%, rgba(239,246,253,0.18), transparent 38%)
-    #fffaf8;
-  justify-content: center;
-  padding: 180rpx 36rpx 120rpx;
-}
-.cards-section-title {
-  font-size: 32rpx;
-  font-weight: 700;
-  color: var(--color-text, #333);
-  margin-bottom: 24rpx;
-  align-self: flex-start;
-}
-.feat-card {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  gap: 16rpx;
-  background: #fff;
-  border-radius: 22rpx;
-  padding: 20rpx 24rpx;
-  margin-bottom: 14rpx;
-  box-shadow: 0 2rpx 12rpx rgba(120,86,85,0.05);
-}
-.feat-icon {
-  width: 68rpx;
-  height: 68rpx;
-  border-radius: 16rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 34rpx;
-  flex-shrink: 0;
-}
-.feat-pink { background: #fef0ef; }
-.feat-green { background: #edf7f1; }
-.feat-blue { background: #eff6fd; }
-.feat-orange { background: #fdf4ec; }
-.feat-purple { background: #f5eeff; }
-.feat-gold { background: #fef9e8; }
-.feat-teal { background: #e8f5f0; }
-.feat-rose { background: #fef2f0; }
-.feat-sky { background: #eef5ff; }
-.feat-body {
-  display: flex;
-  flex-direction: column;
-  gap: 6rpx;
-}
-.feat-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: var(--color-text, #1e1b1a);
-}
-.feat-info {
-  font-size: 24rpx;
-  color: var(--color-text-tertiary, #999);
-  line-height: 1.5;
-}
-
-/* ========== 第 4 页：C 行动召唤 ========== */
-.guide-page-action {
-  background:
-    radial-gradient(circle at 50% 50%, rgba(247,202,201,0.18), transparent 50%),
-    linear-gradient(180deg, #fffaf8 0%, #fdf6f5 100%);
-  justify-content: center;
-  padding: 80rpx 48rpx 100rpx;
-}
-.action-emoji {
-  font-size: 104rpx;
-  margin-bottom: 28rpx;
-  opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
-}
-.action-emoji.pop-in { opacity: 1; transform: scale(1); }
-.action-title {
-  font-size: 40rpx;
-  font-weight: 700;
-  color: var(--color-text, #1e1b1a);
-  margin-bottom: 16rpx;
-}
-.action-desc {
-  font-size: 26rpx;
-  color: var(--color-text-tertiary, #aaa);
-  line-height: 1.7;
-  text-align: center;
-  margin-bottom: 48rpx;
-  max-width: 400rpx;
-}
-
-/* ========== 开始使用按钮 ========== */
-.guide-btn-go {
-  padding: 26rpx 84rpx;
-  background: linear-gradient(135deg, #785655, #9a7472);
-  color: #fff;
-  border-radius: 52rpx;
-  font-size: 30rpx;
-  font-weight: 600;
-  border: none;
-  box-shadow: 0 12rpx 40rpx rgba(120,86,85,0.30);
-}
-.guide-btn-go::after { border: none; }
-.guide-btn-go:active { transform: scale(0.96); opacity: 0.92; }
-
-/* ========== 底部圆点 ========== */
-.guide-dots {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14rpx;
-  padding: 20rpx 0 40rpx;
+.guide-swiper {
+  height: 100vh;
+  width: 100vw;
   position: relative;
   z-index: 10;
 }
+
+/* ========== 弥散光背景 (Mesh Gradient Ambient) ========== */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* 极大模糊，模拟舞台氛围光 */
+  opacity: 0.6;
+  z-index: 1; 
+  pointer-events: none; 
+}
+
+.ambient-1 {
+  width: 600rpx;
+  height: 600rpx;
+  top: -100rpx;
+  left: -150rpx;
+  background: radial-gradient(circle, var(--color-primary-container, rgba(255,165,0,0.4)) 0%, transparent 70%);
+  animation: ambientFloat1 15s ease-in-out infinite alternate;
+}
+
+.ambient-2 {
+  width: 800rpx;
+  height: 800rpx;
+  bottom: -200rpx;
+  right: -200rpx;
+  background: radial-gradient(circle, var(--color-primary-light, rgba(255,200,100,0.3)) 0%, transparent 70%);
+  animation: ambientFloat2 18s ease-in-out infinite alternate;
+}
+
+.ambient-3 {
+  width: 500rpx;
+  height: 500rpx;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+  opacity: 0.4;
+  mix-blend-mode: overlay; 
+}
+
+@keyframes ambientFloat1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50rpx, 50rpx) scale(1.1); }
+}
+@keyframes ambientFloat2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-60rpx, -40rpx) scale(1.15); }
+}
+
+
+/* ========== 通用页面结构 ========== */
+.guide-page {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 左偏移打破对称 */
+  justify-content: center;
+  padding: 0 80rpx;
+  box-sizing: border-box;
+  position: relative;
+}
+
+
+/* ========== 汉字超级符号水印 (Chinese Typography Background) ========== */
+.guide-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* 绝对居中 */
+  transform: translate(-50%, -50%);
+  
+  /* 极其夸张的汉字字号，产生超出屏幕被裁切的高级感 */
+  font-size: 600rpx; 
+  font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  
+  /* 颜色透明度极低，作为高级暗纹存在 */
+  color: rgba(0, 0, 0, 0.03); 
+  
+  pointer-events: none;
+  user-select: none;
+  z-index: 2; /* 在弥散光之上，毛玻璃之下 */
+}
+
+/* 深色模式下的水印适配尝试 (如果支持) */
+@media (prefers-color-scheme: dark) {
+  .guide-watermark {
+    color: rgba(255, 255, 255, 0.03);
+  }
+}
+
+
+/* ========== 真正的毛玻璃悬浮球 (True Glassmorphism Orb) ========== */
+.orb-reveal-wrap {
+  position: relative;
+  z-index: 20;
+  margin-bottom: 60rpx;
+  margin-left: 20rpx; /* 略微偏离中心线，拉开设计张力 */
+}
+
+.guide-glass-orb {
+  width: 300rpx; 
+  height: 300rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* 核心 CSS 魔法参数 */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  
+  /* 内部体积光 & 外部环境投影 */
+  box-shadow: 
+    inset 0 0 40px rgba(255, 255, 255, 0.4), 
+    0 16px 32px rgba(0, 0, 0, 0.05);
+    
+  /* 缓慢上下呼吸浮动动画 */
+  animation: floating 6s ease-in-out infinite alternate;
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-20px); }
+}
+
+.guide-emoji {
+  font-size: 120rpx; 
+  line-height: 1;
+  filter: drop-shadow(0 8rpx 16rpx rgba(0,0,0,0.15));
+}
+
+
+/* ========== 错落排版文字区块 ========== */
+.guide-text-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 540rpx;
+  position: relative;
+  z-index: 20;
+  margin-left: 20rpx; /* 整体向左对齐区块 */
+}
+
+.guide-title {
+  font-size: 64rpx;
+  font-weight: 900;
+  color: var(--color-text, #333);
+  letter-spacing: 4rpx;
+  margin-bottom: 24rpx;
+  line-height: 1.2;
+}
+
+.guide-sub {
+  font-size: 30rpx;
+  font-weight: 400;
+  color: var(--color-text-tertiary, #888);
+  line-height: 1.6;
+  letter-spacing: 2rpx;
+}
+
+
+/* ========== 电影级错落排版与贝塞尔曲线动效 (Staggered Cinematic Reveal) ========== */
+/* 初始状态：隐藏且下沉 */
+.orb-reveal-wrap:not(.reveal),
+.guide-title:not(.reveal),
+.guide-sub:not(.reveal) {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* 按钮使用绝对定位锚定居中，所以需要合并 translateX(-50%) */
+.guide-page .guide-btn-go:not(.reveal) {
+  opacity: 0;
+  transform: translateX(-50%) translateY(40px);
+}
+
+/* 顶级贝塞尔曲线入场动画 */
+@keyframes smoothUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes smoothUpCenter {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.reveal {
+  /* 使用指定的顶级贝塞尔曲线 */
+  animation: smoothUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* 当 .reveal 添加到带绝对居中定位的按钮上时，重载其使用的动画 */
+.guide-btn-go.reveal {
+  animation: smoothUpCenter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+
+/* ========== 沉浸式 CTA 按钮 ========== */
+.guide-btn-go {
+  /* 距离屏幕底部约 18vh，绝对居中对齐 */
+  position: absolute;
+  bottom: 18vh; 
+  left: 50%;
+  transform: translateX(-50%); 
+  
+  width: 75%;
+  height: 110rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--color-primary, #FF8C00); 
+  border-radius: 60rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+  letter-spacing: 4rpx;
+  z-index: 20;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.guide-btn-go::after {
+  display: none;
+}
+
+.guide-btn-go--pressed {
+  transform: translateX(-50%) scale(0.96);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  .guide-btn-go {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+}
+
+
+/* ========== 胶囊指示器 ========== */
+.guide-dots {
+  position: absolute;
+  bottom: calc(8vh + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16rpx;
+  z-index: 30;
+}
+
 .guide-dot {
   width: 12rpx;
   height: 12rpx;
   border-radius: 6rpx;
-  background: rgba(120,86,85,0.15);
-  transition: width 0.3s ease, background 0.3s ease;
+  background: var(--color-border, rgba(0,0,0,0.1));
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
 .guide-dot.is-active {
-  width: 32rpx;
-  background: var(--color-primary, #785655);
+  width: 48rpx;
+  background: var(--color-primary, #FF8C00);
+  box-shadow: 0 2rpx 8rpx var(--color-primary-light, rgba(255,165,0,0.3));
 }
