@@ -1,8 +1,7 @@
 <!-- pages/guide/guide.wxml -->
-<!-- 极致空间计算美学 (VisionOS Style) - 汉字超级符号版 -->
 <view class="guide-wrap" style="{{themeStyle}}">
 
-  <!-- 弥散光背景 (Mesh Gradient Ambient) -->
+  <!-- 弥散光背景 (Mesh Gradient Ambient - 冷暖对比) -->
   <view class="ambient-orb ambient-1"></view>
   <view class="ambient-orb ambient-2"></view>
   <view class="ambient-orb ambient-3"></view>
@@ -15,18 +14,17 @@
         <!-- 巨型汉字超级符号水印 -->
         <text class="guide-watermark">快</text>
         
-        <!-- 毛玻璃悬浮球包裹器 (错落入场) -->
-        <view class="orb-reveal-wrap {{currentIndex === 0 ? 'reveal' : ''}}" style="animation-delay: 0s">
-          <!-- 真正的毛玻璃悬浮球 (呼吸动画) -->
+        <!-- 毛玻璃悬浮球包裹器 (每次切屏绑定 animKey 重新触发动效) -->
+        <view class="orb-reveal-wrap {{currentIndex === 0 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0s">
           <view class="guide-glass-orb">
             <text class="guide-emoji">🍊</text>
           </view>
         </view>
 
-        <!-- 错落排版文字区块 -->
+        <!-- 居中排版文字区块 -->
         <view class="guide-text-block">
-          <text class="guide-title {{currentIndex === 0 ? 'reveal' : ''}}" style="animation-delay: 0.1s">极速，毫无负担</text>
-          <text class="guide-sub {{currentIndex === 0 ? 'reveal' : ''}}" style="animation-delay: 0.2s">打开即记，三步搞定。不打断你的生活节奏。</text>
+          <text class="guide-title {{currentIndex === 0 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0.1s">极速，毫无负担</text>
+          <text class="guide-sub {{currentIndex === 0 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0.2s">打开即记，三步搞定。不打断你的生活节奏。</text>
         </view>
       </view>
     </swiper-item>
@@ -34,18 +32,17 @@
     <!-- 第 2 屏：美学与光影 -->
     <swiper-item>
       <view class="guide-page">
-        <!-- 巨型汉字超级符号水印 -->
         <text class="guide-watermark">美</text>
         
-        <view class="orb-reveal-wrap {{currentIndex === 1 ? 'reveal' : ''}}" style="animation-delay: 0s">
+        <view class="orb-reveal-wrap {{currentIndex === 1 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0s">
           <view class="guide-glass-orb">
             <text class="guide-emoji">🎨</text>
           </view>
         </view>
 
         <view class="guide-text-block">
-          <text class="guide-title {{currentIndex === 1 ? 'reveal' : ''}}" style="animation-delay: 0.1s">高颜值，会呼吸</text>
-          <text class="guide-sub {{currentIndex === 1 ? 'reveal' : ''}}" style="animation-delay: 0.2s">空间计算美学，专属光影质感。让记账成为视觉享受。</text>
+          <text class="guide-title {{currentIndex === 1 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0.1s">高颜值，会呼吸</text>
+          <text class="guide-sub {{currentIndex === 1 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0.2s">空间计算美学，专属光影质感。让记账成为视觉享受。</text>
         </view>
       </view>
     </swiper-item>
@@ -53,22 +50,21 @@
     <!-- 第 3 屏：灵魂与温度 -->
     <swiper-item>
       <view class="guide-page">
-        <!-- 巨型汉字超级符号水印 -->
         <text class="guide-watermark">心</text>
         
-        <view class="orb-reveal-wrap {{currentIndex === 2 ? 'reveal' : ''}}" style="animation-delay: 0s">
+        <view class="orb-reveal-wrap {{currentIndex === 2 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0s">
           <view class="guide-glass-orb">
             <text class="guide-emoji">✉️</text>
           </view>
         </view>
 
         <view class="guide-text-block">
-          <text class="guide-title {{currentIndex === 2 ? 'reveal' : ''}}" style="animation-delay: 0.1s">懂账单，更懂你</text>
-          <text class="guide-sub {{currentIndex === 2 ? 'reveal' : ''}}" style="animation-delay: 0.2s">赛博知己"小橘"，为你写下专属的温情信件。</text>
+          <text class="guide-title {{currentIndex === 2 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0.1s">懂账单，更懂你</text>
+          <text class="guide-sub {{currentIndex === 2 ? 'reveal' : ''}} anim-{{animKey}}" style="animation-delay: 0.2s">赛博知己"小橘"，为你写下专属的温情信件。</text>
         </view>
         
-        <!-- 沉浸式按钮 -->
-        <button class="guide-btn-go {{currentIndex === 2 ? 'reveal' : ''}}" hover-class="guide-btn-go--pressed" style="animation-delay: 0.3s" bindtap="finishGuide">
+        <!-- 实心高亮 CTA 按钮 -->
+        <button class="guide-btn-go {{currentIndex === 2 ? 'reveal' : ''}} anim-{{animKey}}" hover-class="guide-btn-go--pressed" style="animation-delay: 0.3s" bindtap="finishGuide">
           开启记账之旅
         </button>
       </view>

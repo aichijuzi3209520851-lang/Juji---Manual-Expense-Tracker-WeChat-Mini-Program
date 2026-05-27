@@ -3,7 +3,8 @@ const { getThemeStyleString } = require('../../utils/theme')
 Page({
   data: {
     currentIndex: 0,
-    themeStyle: ''
+    themeStyle: '',
+    animKey: Date.now() // 添加 animKey 用于强制触发动画
   },
 
   onLoad() {
@@ -27,7 +28,11 @@ Page({
   },
 
   onSwiperChange(e) {
-    this.setData({ currentIndex: e.detail.current })
+    // 每次切换时更新 animKey，配合 WXML 中的 class 和 WXSS，强制动画重新播放
+    this.setData({ 
+      currentIndex: e.detail.current,
+      animKey: Date.now() 
+    })
   },
 
   finishGuide() {
