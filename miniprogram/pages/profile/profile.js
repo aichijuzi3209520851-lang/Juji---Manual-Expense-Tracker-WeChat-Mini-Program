@@ -380,88 +380,157 @@ Page({
     wx.navigateTo({ url: '/pages/categories/categories' })
   },
 
-  // 导出数据
+  // ====== 导出账单数据（JSON） ======
   exportData() {
     wx.showModal({
-      title: '导出账单',
-      content: '将生成 CSV 文件，可用 Excel 打开。导出后你可以保存到手机或分享给好友。',
+      title: '导出账单数据',
+      content: '将生成 JSON 备份文件，可用于数据迁移或恢复。导出后请发送给【文件传输助手】妥善保存。',
       confirmText: '开始导出',
-      success: res => { if (res.confirm) this.doExport() }
+      success: res => { if (res.confirm) this.doExportJSON() }
     })
   },
 
-  async doExport() {
+  async doExportJSON() {
     wx.showLoading({ title: '导出中…', mask: true })
     try {
-      const res = await wx.cloud.callFunction({ name: 'exportBills', data: {} })
+      const res = await wx.cloud.callFunction({ name: 'dataMigration', data: { action: 'export' } })
       wx.hideLoading()
-      if (!res.result.success) {
-        wx.showToast({ title: res.result.message, icon: 'none' }); return
+      const result = res.result || {}
+      if (!result.success) {
+        wx.showToast({ title: result.message || '导出失败', icon: 'none' }); return
       }
 
-      this.exportFileID = res.result.fileID
-      this.exportFileName = res.result.filename
-      this.exportCount = res.result.count
+      // 写入本地临时文件
+      const now = new Date()
+      const ts = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`
+      const filename = `橘记_账单备份_${ts}.json`
+      const filePath = `${wx.env.USER_DATA_PATH}/${filename}`
+      const fs = wx.getFileSystemManager()
 
-      // 弹窗让用户选择下一步
-      wx.showActionSheet({
-        itemList: ['打开文件', '分享给好友', '保存到手机'],
-        success: action => {
-          if (action.tapIndex === 0) this.openExportFile()
-          else if (action.tapIndex === 1) this.shareExportFile()
-          else if (action.tapIndex === 2) this.openExportFile() // 同样打开，菜单里有保存选项
+      fs.writeFile({
+        filePath,
+        data: JSON.stringify({ version: 1, exportTime: new Date().toISOString(), count: result.count, bills: result.bills }, null, 2),
+        encoding: 'utf8',
+        success: () => {
+          wx.showActionSheet({
+            itemList: ['分享给文件传输助手', '打开文件'],
+            success: action => {
+              if (action.tapIndex === 0) this.shareJSONFile(filePath, filename)
+              else this.openJSONFile(filePath)
+            }
+          })
+        },
+        fail: (err) => {
+          console.error('[export] writeFile failed:', err)
+          wx.showToast({ title: '写入文件失败', icon: 'none' })
         }
       })
     } catch (err) {
       wx.hideLoading()
-      console.error('导出失败:', err)
+      console.error('[export] failed:', err)
       wx.showToast({ title: '导出失败，请重试', icon: 'none' })
     }
   },
 
-  async openExportFile() {
-    wx.showLoading({ title: '加载中…' })
-    try {
-      const dl = await wx.cloud.downloadFile({ fileID: this.exportFileID })
-      wx.hideLoading()
-      wx.openDocument({
-        filePath: dl.tempFilePath,
-        fileType: 'csv',
-        showMenu: true,  // 右上角菜单可转发/收藏
-        success: () => wx.showToast({ title: `已导出 ${this.exportCount} 条` })
-      })
-    } catch (err) {
-      wx.hideLoading()
-      wx.showToast({ title: '打开失败', icon: 'none' })
-    }
+  shareJSONFile(filePath, fileName) {
+    wx.shareFileMessage({
+      filePath,
+      fileName,
+      success: () => wx.showToast({ title: '请发送给文件传输助手保存' }),
+      fail: err => {
+        console.error('[share] wx.shareFileMessage failed:', err)
+        wx.showModal({
+          title: '无法直接分享',
+          content: '当前环境暂不支持文件转发，请选择「打开文件」后通过右上角菜单手动发送。',
+          confirmText: '打开文件',
+          success: res => { if (res.confirm) this.openJSONFile(filePath) }
+        })
+      }
+    })
   },
 
-  async shareExportFile() {
-    wx.showLoading({ title: '准备分享…' })
+  openJSONFile(filePath) {
+    wx.openDocument({
+      filePath,
+      fileType: 'json',
+      showMenu: true,
+      success: () => wx.showToast({ title: '可从右上角菜单保存' }),
+      fail: () => wx.showToast({ title: '打开失败', icon: 'none' })
+    })
+  },
+
+  // ====== 导入账单数据（JSON） ======
+  importData() {
+    wx.showModal({
+      title: '导入账单数据',
+      content: '将从聊天记录中选择之前导出的 JSON 备份文件，导入后数据会合并到当前账单中。',
+      confirmText: '选择文件',
+      success: res => {
+        if (res.confirm) this.doImportJSON()
+      }
+    })
+  },
+
+  async doImportJSON() {
+    let filePath
     try {
-      const dl = await wx.cloud.downloadFile({ fileID: this.exportFileID })
-      wx.hideLoading()
-      wx.shareFileMessage({
-        filePath: dl.tempFilePath,
-        fileName: this.exportFileName,
-        success: () => wx.showToast({ title: '已发送' }),
-        fail: err => {
-          console.error('[share] wx.shareFileMessage failed:', err)
-          const msg = (err && err.errMsg) || '分享失败'
-          // 部分机型/基础库不支持文件转发，降级为提示用户手动操作
-          wx.showModal({
-            title: '无法直接分享',
-            content: '当前环境暂不支持文件转发，请选择「打开文件」后通过右上角菜单手动发送。',
-            confirmText: '打开文件',
-            success: res => { if (res.confirm) this.openExportFile() }
-          })
-        }
+      const chooseRes = await wx.chooseMessageFile({
+        count: 1,
+        type: 'file',
+        extension: ['json']
       })
+      if (!chooseRes || !chooseRes.tempFiles || !chooseRes.tempFiles[0]) return
+      filePath = chooseRes.tempFiles[0].path
     } catch (err) {
-      wx.hideLoading()
-      console.error('[share] download failed:', err)
-      wx.showToast({ title: '分享失败', icon: 'none' })
+      if (err && err.errMsg && /cancel/i.test(err.errMsg)) return
+      wx.showToast({ title: '选择文件失败', icon: 'none' })
+      return
     }
+
+    // 读取并解析
+    let parsed
+    try {
+      const fs = wx.getFileSystemManager()
+      const content = fs.readFileSync(filePath, 'utf8')
+      parsed = JSON.parse(content)
+    } catch (err) {
+      wx.showToast({ title: '文件格式错误', icon: 'none' })
+      return
+    }
+
+    // 兼容两种格式：{ bills: [...] } 或直接 [...]
+    const bills = Array.isArray(parsed) ? parsed : (parsed.bills || [])
+    if (!Array.isArray(bills) || bills.length === 0) {
+      wx.showToast({ title: '文件中没有账单数据', icon: 'none' })
+      return
+    }
+
+    wx.showModal({
+      title: '确认导入',
+      content: `检测到 ${bills.length} 条账单记录，确定要导入吗？`,
+      success: async (confirmRes) => {
+        if (!confirmRes.confirm) return
+        wx.showLoading({ title: '正在恢复账单数据…', mask: true })
+        try {
+          const res = await wx.cloud.callFunction({
+            name: 'dataMigration',
+            data: { action: 'import', bills }
+          })
+          wx.hideLoading()
+          const result = res.result || {}
+          if (result.success) {
+            wx.showToast({ title: `成功导入 ${result.count} 条`, icon: 'success' })
+            this.loadFootprint()
+          } else {
+            wx.showToast({ title: result.message || '导入失败', icon: 'none' })
+          }
+        } catch (err) {
+          wx.hideLoading()
+          console.error('[import] failed:', err)
+          wx.showToast({ title: '导入失败，请重试', icon: 'none' })
+        }
+      }
+    })
   },
 
   // 清除数据

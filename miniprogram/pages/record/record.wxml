@@ -32,7 +32,7 @@
   <view class="category-section">
     <view class="section-label">分类</view>
     <view class="category-grid">
-      <view wx:for="{{categories}}" wx:key="name" class="category-item {{selectedCategory === item.name ? 'selected' : ''}}" data-name="{{item.name}}" bindtap="selectCategory">
+      <view wx:for="{{categories}}" wx:key="name" class="category-item {{selectedCategory === item.name ? 'selected' : ''}}" data-name="{{item.name}}" data-item="{{item}}" bindtap="selectCategory" bindlongpress="handleDeleteCategory">
         <view class="category-card">
           <view class="category-icon">
             <image wx:if="{{item.iconPath}}" class="category-image {{selectedCategory === item.name ? 'is-selected' : ''}}" src="{{item.iconPath}}" mode="aspectFit" />
@@ -107,10 +107,7 @@
     </view>
     <view class="add-dialog-field">
       <text class="add-dialog-label">分类图标</text>
-      <view class="add-dialog-icon-row" bindtap="pickAddEmoji">
-        <text class="add-dialog-icon-preview">{{addCategoryEmoji || '📌'}}</text>
-        <text class="add-dialog-icon-hint">点击选择 → 从输入法选取 emoji</text>
-      </view>
+      <input class="add-dialog-input" value="{{addCategoryEmoji}}" placeholder="粘贴或输入一个 emoji 表情" placeholder-class="add-dialog-placeholder" bindinput="onAddEmoji" maxlength="2" />
     </view>
     <view class="add-dialog-actions">
       <button class="add-dialog-cancel" bindtap="closeAddDialog">取消</button>

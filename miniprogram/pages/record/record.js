@@ -242,23 +242,11 @@ Page({
 
   // ===== 自创分类 =====
   openAddDialog() {
-    this.setData({ showAddDialog: true, addCategoryName: '', addCategoryEmoji: '🍜', addCategoryError: '' })
+    this.setData({ showAddDialog: true, addCategoryName: '', addCategoryEmoji: '', addCategoryError: '' })
   },
   closeAddDialog() { this.setData({ showAddDialog: false, addCategoryError: '' }) },
   onAddName(e) { this.setData({ addCategoryName: e.detail.value, addCategoryError: '' }) },
-  pickAddEmoji() {
-    wx.showModal({
-      title: '选择图标',
-      content: '在下方输入框中粘贴或输入一个 emoji 表情',
-      editable: true,
-      placeholderText: '如：🍵 🎵 🐾',
-      success: res => {
-        if (!res.confirm) return
-        const v = (res.content || '').trim()
-        if (v) this.setData({ addCategoryEmoji: v })
-      }
-    })
-  },
+  onAddEmoji(e) { this.setData({ addCategoryEmoji: e.detail.value }) },
 
   async saveAddCategory() {
     const name = this.data.addCategoryName.trim()
@@ -268,6 +256,10 @@ Page({
     if (name === '自创') {
       this.setData({ addCategoryError: '不能使用这个名称' }); return
     }
+    const icon = (this.data.addCategoryEmoji || '').trim()
+    if (!icon || icon.length > 2) {
+      wx.showToast({ title: '请仅输入一个Emoji', icon: 'none' }); return
+    }
     const presetNames = new Set([...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES].map(c => c.name))
     const existingCustom = (getApp().globalData.userInfo?.customCategories || []).map(c => c.name)
     if (presetNames.has(name) || existingCustom.includes(name)) {
@@ -275,7 +267,7 @@ Page({
     }
 
     const app = getApp()
-    const custom = [...(app.globalData.userInfo?.customCategories || []), { name, icon: this.data.addCategoryEmoji }]
+    const custom = [...(app.globalData.userInfo?.customCategories || []), { name, icon }]
     try {
       await wx.cloud.database().collection('users')
         .where({ _openid: app.globalData.openid })
@@ -289,6 +281,41 @@ Page({
       wx.showToast({ title: '创建失败', icon: 'none' })
     }
   },
+  // ===== 长按删除自定义分类 =====
+  handleDeleteCategory(e) {
+    const item = e.currentTarget.dataset.item
+    if (!item) return
+    // 安全守卫：仅允许删除自定义分类（无 iconPath 即为自定义）
+    const presetNames = new Set([...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES].map(c => c.name))
+    if (presetNames.has(item.name)) return
+
+    wx.showModal({
+      title: '删除分类',
+      content: '确定要删除该自定义分类吗？',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          const app = getApp()
+          const updated = (app.globalData.userInfo?.customCategories || []).filter(c => c.name !== item.name)
+          await wx.cloud.database().collection('users')
+            .where({ _openid: app.globalData.openid })
+            .update({ data: { customCategories: updated } })
+          app.globalData.userInfo.customCategories = updated
+          // 如果删的是当前选中的分类，重置为第一个预设分类
+          if (this.data.selectedCategory === item.name) {
+            const preset = this.getPresetCategories(this.data.type)
+            this.setData({ selectedCategory: preset[0]?.name || '' })
+          }
+          this.loadCustomCategories(this.data.type)
+          wx.showToast({ title: '已删除', icon: 'success' })
+        } catch (err) {
+          console.error('删除分类失败:', err)
+          wx.showToast({ title: '删除失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
   previewPhoto() { wx.previewImage({ urls: [this.data.photoUrl] }) },
 
   // ===== 编辑模式：加载已有数据回填 =====

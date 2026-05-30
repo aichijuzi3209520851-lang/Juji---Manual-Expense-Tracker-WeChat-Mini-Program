@@ -137,8 +137,13 @@
     <text class="profile-section-title">数据与隐私</text>
     <view class="profile-menu">
       <view class="menu-item" bindtap="exportData">
+        <text class="menu-icon">📤</text>
+        <text class="menu-label">导出账单数据</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="importData">
         <text class="menu-icon">📥</text>
-        <text class="menu-label">导出数据</text>
+        <text class="menu-label">导入账单数据</text>
         <text class="menu-arrow">›</text>
       </view>
       <view class="menu-item danger" bindtap="clearData">
