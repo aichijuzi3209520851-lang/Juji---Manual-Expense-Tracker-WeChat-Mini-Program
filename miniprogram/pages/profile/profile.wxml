@@ -71,9 +71,10 @@
   <view class="letter-modal" wx:if="{{showLetter}}" catchtap="closeLetter">
     <view class="letter-card" catchtap="">
       <text class="letter-deco">🍊</text>
+      <text class="letter-salutation">亲爱的{{nickname}}：</text>
       <text class="letter-text">{{letterText}}</text>
+      <text class="letter-sign">—— 你的赛博知己 小橘</text>
       <view class="letter-footer">
-        <text class="letter-sign">— 你的赛博知己 小橘</text>
         <button class="letter-btn" bindtap="closeLetter">收下心意</button>
       </view>
     </view>
