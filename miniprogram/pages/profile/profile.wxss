@@ -83,9 +83,10 @@
   box-shadow: var(--shadow-card); padding: 36rpx var(--space-md);
   margin-top: 24rpx; display: flex; align-items: center;
 }
-.footprint-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
-.footprint-value { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-primary); font-variant-numeric: tabular-nums; }
-.footprint-label { font-size: var(--font-size-small); color: var(--color-text-tertiary); }
+.footprint-item { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.footprint-value-wrap { height: 60rpx; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 12rpx; }
+.footprint-value { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-primary); font-variant-numeric: tabular-nums; line-height: 1; }
+.footprint-label { font-size: var(--font-size-small); color: var(--color-text-tertiary); line-height: 1; }
 .footprint-emoji { font-size: 44rpx; line-height: 1; }
 .footprint-divider { width: 2rpx; height: 56rpx; background: var(--color-border); }
 /* 记账打卡热力图 */

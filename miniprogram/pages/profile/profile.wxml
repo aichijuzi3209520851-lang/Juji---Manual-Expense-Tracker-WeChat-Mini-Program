@@ -16,17 +16,23 @@
   <!-- 记账足迹 -->
   <view class="footprint-card" wx:if="{{footprint}}">
     <view class="footprint-item" bindtap="onTapDays" hover-class="footprint-hover">
-      <text class="footprint-value">{{footprint.days}}</text>
+      <view class="footprint-value-wrap">
+        <text class="footprint-value">{{footprint.days}}</text>
+      </view>
       <text class="footprint-label">记账天数</text>
     </view>
     <view class="footprint-divider"></view>
     <view class="footprint-item" bindtap="onTapCount" hover-class="footprint-hover">
-      <text class="footprint-value">{{footprint.count}}</text>
+      <view class="footprint-value-wrap">
+        <text class="footprint-value">{{footprint.count}}</text>
+      </view>
       <text class="footprint-label">累计笔数</text>
     </view>
     <view class="footprint-divider"></view>
     <view class="footprint-item" bindtap="onTapTopCategory" hover-class="footprint-hover">
-      <text class="footprint-emoji">{{footprint.topCategory.emoji}}</text>
+      <view class="footprint-value-wrap">
+        <text class="footprint-emoji">{{footprint.topCategory.emoji}}</text>
+      </view>
       <text class="footprint-label">最爱{{footprint.topCategory.name}}</text>
     </view>
   </view>
