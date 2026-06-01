@@ -556,6 +556,25 @@ Page({
     })
   },
 
+  // 退出登录
+  logout() {
+    wx.showModal({
+      title: '退出登录',
+      content: '退出后本地缓存的主题、引导等设置将保留，账单数据仍保留在云端。下次打开需重新登录。',
+      success: res => {
+        if (!res.confirm) return
+        const app = getApp()
+        // 清除全局状态
+        app.globalData.openid = ''
+        app.globalData.userInfo = null
+        // 清除登录相关 Storage
+        wx.removeStorageSync('has_seen_guide')
+        // 跳转登录页
+        wx.reLaunch({ url: '/pages/login/login' })
+      }
+    })
+  },
+
   async updateUserField(field, value) {
     const app = getApp()
     if (!app.globalData.openid) return
