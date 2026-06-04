@@ -96,9 +96,9 @@ Page({
   },
 
   onHide() {
-    // 仅清理编辑模式状态，避免残留污染下次新增；新增模式下的表单数据保留
-    if (this.data.editMode) {
-      this.setData({ editMode: false, editBillId: '' })
+    // 编辑模式下不清除状态（switchTab 会触发 onHide，但编辑链路未结束）
+    // 仅在新增模式下重置导航栏标题
+    if (!this.data.editMode) {
       wx.setNavigationBarTitle({ title: '记一笔' })
     }
   },
@@ -412,7 +412,7 @@ Page({
 
       if (editMode) {
         // 编辑模式：调用云函数 update
-        await wx.cloud.callFunction({
+        const res = await wx.cloud.callFunction({
           name: 'bills',
           data: {
             action: 'update',
@@ -428,6 +428,9 @@ Page({
             }
           }
         })
+        if (!res.result || !res.result.success) {
+          throw new Error((res.result && res.result.message) || '修改失败')
+        }
         wx.hideLoading()
         this.resetForm()
         wx.showToast({ title: '已保存', icon: 'success', duration: 1200, mask: true })
