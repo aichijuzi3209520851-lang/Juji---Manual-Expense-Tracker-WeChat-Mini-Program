@@ -76,96 +76,96 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "miniprogram/pages/example"
+        "value": "miniprogram/pages/example",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "橘记"
+        "value": "橘记",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "微信小程序"
+        "value": "微信小程序",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "miniprogram-cloudbase-miniprogram-template"
+        "value": "miniprogram-cloudbase-miniprogram-template",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/juji.png"
+        "value": "miniprogram/images/juji.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/create_cbr.png"
+        "value": "miniprogram/images/create_cbr.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/create_cbrf.png"
+        "value": "miniprogram/images/create_cbrf.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/ai_example1.png"
+        "value": "miniprogram/images/ai_example1.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/ai_example2.png"
+        "value": "miniprogram/images/ai_example2.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/env-select.png"
+        "value": "miniprogram/images/env-select.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/default-goods-image.png"
+        "value": "miniprogram/images/default-goods-image.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/database.png"
+        "value": "miniprogram/images/database.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/database_add.png"
+        "value": "miniprogram/images/database_add.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/create_env.png"
+        "value": "miniprogram/images/create_env.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/function_deploy.png"
+        "value": "miniprogram/images/function_deploy.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/scf-enter.png"
+        "value": "miniprogram/images/scf-enter.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/cloud_dev.png"
+        "value": "miniprogram/images/cloud_dev.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/avatar.png"
+        "value": "miniprogram/images/avatar.png",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/arrow.svg"
+        "value": "miniprogram/images/arrow.svg",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "miniprogram/images/copy.svg"
+        "value": "miniprogram/images/copy.svg",
+        "type": "file"
       },
       {
-        "type": "folder",
-        "value": "miniprogram/images/icons"
+        "value": "miniprogram/images/icons",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": "ui-ux-pro-max-mini-SKILL.md"
+        "value": "ui-ux-pro-max-mini-SKILL.md",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "记账小程序-头脑风暴产物.md"
+        "value": "记账小程序-头脑风暴产物.md",
+        "type": "file"
       }
     ],
     "include": []
