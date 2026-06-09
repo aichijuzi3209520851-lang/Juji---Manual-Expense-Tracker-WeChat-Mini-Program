@@ -1,5 +1,7 @@
 ﻿const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
+const { getAll } = require('../../utils/dbPager')
+
 var MORANDI = ['#D4A5A5', '#A9C2DB', '#B2D8C8', '#D4C5A5', '#C2B8D4', '#B8D4D4', '#D4B8A5', '#C8D4A5']
 
 function buildDonutGradient(data, total) {
@@ -183,13 +185,13 @@ Page({
     const m = this.data.currentMonth
 
     try {
-      const res = await db.collection('bills')
+      const data = await getAll(db.collection('bills')
         .where({ type: this.data.statsType, date: _.gte(`${m}-01`).and(_.lte(monthEnd(parseInt(m.slice(0,4)), parseInt(m.slice(5,7))))) })
-        .get()
+      )
 
       const byCategory = {}
       let total = 0
-      res.data.forEach(b => {
+      data.forEach(b => {
         byCategory[b.category] = (byCategory[b.category] || 0) + b.amount
         total += b.amount
       })
@@ -239,12 +241,12 @@ Page({
     }
 
     try {
-      const { data } = await db.collection('bills')
+      const data = await getAll(db.collection('bills')
         .where({
           type: this.data.statsType,
           date: _.gte(`${months[0].key}-01`).and(_.lte(monthEnd(parseInt(months[5].key.slice(0,4)), parseInt(months[5].key.slice(5,7)))))
         })
-        .get()
+      )
 
       const byMonth = {}
       data.forEach(b => {
@@ -362,9 +364,9 @@ Page({
   async fetchBills(start, end) {
     const db = wx.cloud.database()
     const _ = db.command
-    const { data } = await db.collection('bills')
+    const data = await getAll(db.collection('bills')
       .where({ type: 'expense', date: _.gte(start).and(_.lte(end)) })
-      .get()
+    )
     return data
   },
 

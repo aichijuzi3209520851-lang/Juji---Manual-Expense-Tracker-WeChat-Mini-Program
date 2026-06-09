@@ -1,6 +1,7 @@
 const pad = n => String(n).padStart(2, '0')
 const monthEnd = (y, m) => `${y}-${pad(m)}-${new Date(y, m, 0).getDate()}`
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
+const { getAll } = require('../../utils/dbPager')
 
 const CATEGORY_EMOJI = {
   '餐饮':'🍜','交通':'🚇','购物':'🛍️','娱乐':'🎮','学习':'📚','日用':'🏠','医疗':'💊',
@@ -63,11 +64,11 @@ Page({
       let budgetAmount = 0
       if (budgetRes.data.length > 0) budgetAmount = budgetRes.data[0].amount
 
-      const billRes = await db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }).get()
+      const bills = await getAll(db.collection('bills')
+        .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
 
       let spent = 0
-      billRes.data.forEach(b => { spent += b.amount })
+      bills.forEach(b => { spent += b.amount })
 
       const percent = budgetAmount ? Math.min(Math.round((spent / budgetAmount) * 100), 100) : 0
       let status = 'safe', statusText = ''
@@ -83,7 +84,7 @@ Page({
         const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
         const dailyBudget = budgetAmount / daysInMonth
         const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(dayOfMonth)}`
-        const todaySpent = billRes.data.filter(b => b.date === todayStr).reduce((s, b) => s + b.amount, 0)
+        const todaySpent = bills.filter(b => b.date === todayStr).reduce((s, b) => s + b.amount, 0)
         const daysLeft = daysInMonth - dayOfMonth + 1
         const remaining = budgetAmount - spent
         const remainDaily = daysLeft > 0 ? remaining / daysLeft : 0
@@ -97,7 +98,7 @@ Page({
 
       // 类目排行 Top 3
       const byCate = {}
-      billRes.data.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
+      bills.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
       const topCategories = Object.entries(byCate)
         .sort((a, b) => b[1] - a[1]).slice(0, 3)
         .map(([name, amt]) => ({
@@ -135,8 +136,8 @@ Page({
       const { data: budgets } = await db.collection('budgets')
         .where({ month: _.in(months.map(m => m.key)) }).get()
 
-      const { data: bills } = await db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${months[0].key}-01`).and(_.lte(monthEnd(parseInt(months[5].key.slice(0,4)), parseInt(months[5].key.slice(5,7))))) }).get()
+      const bills = await getAll(db.collection('bills')
+        .where({ type: 'expense', date: _.gte(`${months[0].key}-01`).and(_.lte(monthEnd(parseInt(months[5].key.slice(0,4)), parseInt(months[5].key.slice(5,7))))) }))
 
       const byMonth = {}
       bills.forEach(b => { const k = b.date.slice(0,7); byMonth[k] = (byMonth[k] || 0) + b.amount })
@@ -208,8 +209,8 @@ Page({
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
       const key = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
       try {
-        const { data } = await db.collection('bills')
-          .where({ type: 'expense', date: _.gte(`${key}-01`).and(_.lte(monthEnd(parseInt(key.slice(0,4)), parseInt(key.slice(5,7))))) }).get()
+        const data = await getAll(db.collection('bills')
+          .where({ type: 'expense', date: _.gte(`${key}-01`).and(_.lte(monthEnd(parseInt(key.slice(0,4)), parseInt(key.slice(5,7))))) }))
         if (data.length > 0) { total += data.reduce((s, b) => s + b.amount, 0); months++ }
       } catch (err) { /* skip */ }
     }

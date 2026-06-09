@@ -1,4 +1,5 @@
 const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CUSTOM_PALETTE } = require('../../utils/theme')
+const { getAll } = require('../../utils/dbPager')
 const {
   CATEGORY_EMOJI,
   GENDERS,
@@ -536,7 +537,7 @@ Page({
     if (!app.globalData.openid) return
     try {
       const db = wx.cloud.database()
-      const { data } = await db.collection('bills').where({ _openid: app.globalData.openid }).get()
+      const data = await getAll(db.collection('bills').where({ _openid: app.globalData.openid }))
       if (!data || data.length === 0) return
 
       const dates = new Set(data.map(b => b.date)).size
@@ -680,12 +681,12 @@ Page({
     try {
       var db = wx.cloud.database()
       var _ = db.command
-      var res = await db.collection('bills').where({
+      var data = await getAll(db.collection('bills').where({
         date: _.gte(start).and(_.lte(end))
-      }).field({ date: true }).get()
+      }).field({ date: true }))
       var checkedSet = {}
       var count = 0
-      res.data.forEach(function(b) {
+      data.forEach(function(b) {
         var day = parseInt(b.date.slice(8, 10), 10)
         if (!checkedSet[day]) { checkedSet[day] = true; count++ }
       })

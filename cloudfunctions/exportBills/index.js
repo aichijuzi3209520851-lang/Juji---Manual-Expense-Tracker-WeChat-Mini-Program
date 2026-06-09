@@ -2,6 +2,8 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
+const MAX_EXPORT = 10000
+const EXPORT_PAGE_SIZE = 100
 
 exports.main = async (event) => {
   const wxContext = cloud.getWXContext()
@@ -40,13 +42,11 @@ exports.main = async (event) => {
       query.date = query.date ? _.and(query.date, _.lte(endDate)) : _.lte(endDate)
     }
 
-    const MAX_EXPORT = 10000
-    const { data: bills } = await db.collection('bills')
+    const bills = await getAll(db.collection('bills')
       .where(query)
       .orderBy('date', 'desc')
       .orderBy('createdAt', 'desc')
-      .limit(MAX_EXPORT)
-      .get()
+    )
 
     if (!bills || bills.length === 0) {
       return { success: false, message: '暂无账单数据可导出' }
@@ -73,6 +73,23 @@ exports.main = async (event) => {
     console.error('导出失败:', err)
     return { success: false, message: '导出失败，请稍后重试' }
   }
+}
+
+// Paged query helper
+async function getAll(query) {
+  const all = []
+  for (let offset = 0; offset < MAX_EXPORT;) {
+    const { data = [] } = await query
+      .skip(offset)
+      .limit(Math.min(EXPORT_PAGE_SIZE, MAX_EXPORT - offset))
+      .get()
+
+    if (!data.length) break
+    all.push(...data)
+    if (data.length < EXPORT_PAGE_SIZE) break
+    offset += data.length
+  }
+  return all
 }
 
 // 星座推算

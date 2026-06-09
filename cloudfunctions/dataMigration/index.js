@@ -11,6 +11,8 @@ const MAX_NOTE_LEN = 200
 const MAX_MOOD_LEN = 10
 const VALID_TYPES = ['expense', 'income']
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+const MAX_EXPORT_COUNT = 10000
+const EXPORT_PAGE_SIZE = 100
 
 exports.main = async (event) => {
   const wxContext = cloud.getWXContext()
@@ -25,13 +27,11 @@ exports.main = async (event) => {
 // ====== 导出：查询全部账单，返回 JSON ======
 async function handleExport(openid) {
   try {
-    const MAX = 10000
-    const { data: bills } = await db.collection('bills')
+    const bills = await getAll(db.collection('bills')
       .where({ _openid: openid })
       .orderBy('date', 'desc')
       .orderBy('createdAt', 'desc')
-      .limit(MAX)
-      .get()
+    )
 
     if (!bills || bills.length === 0) {
       return { success: false, message: '暂无账单数据可导出' }
@@ -90,6 +90,22 @@ async function handleImport(openid, bills) {
   }
 
   return { success: true, count: imported }
+}
+
+async function getAll(query) {
+  const all = []
+  for (let offset = 0; offset < MAX_EXPORT_COUNT;) {
+    const { data = [] } = await query
+      .skip(offset)
+      .limit(Math.min(EXPORT_PAGE_SIZE, MAX_EXPORT_COUNT - offset))
+      .get()
+
+    if (!data.length) break
+    all.push(...data)
+    if (data.length < EXPORT_PAGE_SIZE) break
+    offset += data.length
+  }
+  return all
 }
 
 function sanitizeBill(b) {
