@@ -1,4 +1,5 @@
 const PRIVACY_TOAST = '请先同意隐私协议'
+const PRIVACY_AGREED_KEY = 'juji_privacy_agreed'
 
 function initPrivacyAuthorization() {
   if (initPrivacyAuthorization._inited) return
@@ -86,6 +87,7 @@ function resolvePrivacy(resolve, agreed) {
 }
 
 module.exports = {
+  PRIVACY_AGREED_KEY,
   initPrivacyAuthorization,
   requirePrivacyAuthorization,
   openPrivacyAgreement,
