@@ -56,7 +56,8 @@ exports.main = async (event) => {
 
     // 上传到云存储
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
-    const filename = `exports/juji_export_${timestamp}.csv`
+    const random = Math.random().toString(36).slice(2, 10)
+    const filename = `exports/${openid}/juji_export_${timestamp}_${random}.csv`
     const uploadRes = await cloud.uploadFile({
       cloudPath: filename,
       fileContent: Buffer.from(csvContent, 'utf-8')
@@ -135,6 +136,10 @@ function generateCSV(bills, meta) {
 
 // CSV 转义：包含逗号或引号的字段加双引号
 function escapeCSV(str) {
+  str = String(str)
+  if (/^[=+\-@]/.test(str)) {
+    str = "'" + str
+  }
   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
     return '"' + str.replace(/"/g, '""') + '"'
   }
