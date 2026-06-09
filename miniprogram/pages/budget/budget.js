@@ -174,19 +174,19 @@ Page({
     const month = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
 
     try {
-      const db = wx.cloud.database()
-      const existing = await db.collection('budgets').where({ month }).get()
-      if (existing.data.length > 0) {
-        await db.collection('budgets').doc(existing.data[0]._id).update({ data: { amount: val } })
-      } else {
-        await db.collection('budgets').add({ data: { month, amount: val, createdAt: new Date() } })
+      const res = await wx.cloud.callFunction({
+        name: 'budgets',
+        data: { action: 'upsert', data: { month, amount: val } }
+      })
+      if (!res.result || !res.result.success) {
+        throw new Error((res.result && res.result.message) || '设置失败')
       }
       wx.showToast({ title: '预算已更新', icon: 'success' })
       this.setData({ showEditor: false, ringReady: false })
       this.loadBudget()
       this.loadHistory()
     } catch (err) {
-      wx.showToast({ title: '设置失败', icon: 'none' })
+      wx.showToast({ title: err.message || '设置失败', icon: 'none' })
     }
   },
 
