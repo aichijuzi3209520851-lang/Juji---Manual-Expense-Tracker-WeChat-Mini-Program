@@ -2,6 +2,11 @@ const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CU
 const { getAll } = require('../../utils/dbPager')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const {
+  requirePrivacyAuthorization,
+  openPrivacyAgreement: showPrivacyAgreement,
+  openUserAgreement: showUserAgreement
+} = require('../../utils/privacy')
+const {
   CATEGORY_EMOJI,
   GENDERS,
   OCCUPATIONS,
@@ -103,7 +108,10 @@ Page({
   },
 
   // 头像修改
-  changeAvatar() {
+  async changeAvatar() {
+    const ok = await requirePrivacyAuthorization('头像设置')
+    if (!ok) return
+
     wx.showActionSheet({
       itemList: ['拍照', '从相册选择'],
       success: res => {
@@ -340,6 +348,9 @@ Page({
   },
 
   async doExportJSON() {
+    const ok = await requirePrivacyAuthorization('数据导出')
+    if (!ok) return
+
     wx.showLoading({ title: '导出中…', mask: true })
     try {
       const res = await wx.cloud.callFunction({ name: 'dataMigration', data: { action: 'export' } })
@@ -421,6 +432,9 @@ Page({
   },
 
   async doImportJSON() {
+    const ok = await requirePrivacyAuthorization('数据导入')
+    if (!ok) return
+
     let filePath
     try {
       const chooseRes = await wx.chooseMessageFile({
@@ -483,6 +497,14 @@ Page({
   },
 
   // 清除数据
+  viewPrivacyAgreement() {
+    showPrivacyAgreement()
+  },
+
+  viewUserAgreement() {
+    showUserAgreement()
+  },
+
   clearData() {
     wx.showModal({
       title: '确认清除',

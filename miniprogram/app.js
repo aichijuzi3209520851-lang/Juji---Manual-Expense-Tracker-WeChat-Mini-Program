@@ -1,6 +1,7 @@
 const { initAppTheme, applyTheme, migrateLegacyCustomTheme } = require('./utils/theme')
 const EventBus = require('./utils/eventBus')
 const { initMonitoring } = require('./utils/monitor')
+const { initPrivacyAuthorization } = require('./utils/privacy')
 
 // 橘记 - app.js
 App({
@@ -24,6 +25,7 @@ App({
       traceUser: true,
     })
     initMonitoring()
+    initPrivacyAuthorization()
 
     // 迁移旧版自定义主题（theme='custom' + custom_theme_color → user_themes）
     migrateLegacyCustomTheme()

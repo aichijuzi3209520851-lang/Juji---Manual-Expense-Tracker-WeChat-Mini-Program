@@ -22,6 +22,7 @@ const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const { ensureSafeText } = require('../../utils/contentSafety')
+const { requirePrivacyAuthorization } = require('../../utils/privacy')
 
 const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
 
@@ -193,7 +194,10 @@ Page({
     this.setData({ dateStr, displayDate })
   },
 
-  choosePhoto() {
+  async choosePhoto() {
+    const ok = await requirePrivacyAuthorization('账单照片')
+    if (!ok) return
+
     if (this.data.photoUrl) {
       wx.showActionSheet({
         itemList: ['重新拍照', '从相册选择', '删除照片'],

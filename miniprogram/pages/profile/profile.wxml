@@ -153,6 +153,16 @@
         <text class="menu-label">导入账单数据</text>
         <text class="menu-arrow">›</text>
       </view>
+      <view class="menu-item" bindtap="viewPrivacyAgreement">
+        <text class="menu-icon">🔐</text>
+        <text class="menu-label">隐私协议</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="viewUserAgreement">
+        <text class="menu-icon">📄</text>
+        <text class="menu-label">用户协议</text>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-item danger" bindtap="clearData">
         <text class="menu-icon">🗑️</text>
         <text class="menu-label danger-text">清除所有数据</text>
