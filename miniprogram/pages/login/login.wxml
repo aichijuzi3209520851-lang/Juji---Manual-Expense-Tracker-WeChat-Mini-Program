@@ -20,6 +20,11 @@
   </view>
 
   <view class="login-action">
+    <button class="login-btn {{!privacyAgreed ? 'login-btn-disabled' : ''}}" bindtap="handleLogin" hover-class="login-btn-hover" loading="{{loading}}">
+      <text wx:if="{{!loading}}">微信一键登录</text>
+      <text wx:else>登录中...</text>
+    </button>
+
     <view class="privacy-row">
       <checkbox-group class="privacy-check-group" bindchange="onPrivacyChange">
         <checkbox value="agree" checked="{{privacyAgreed}}" color="#785655" />
@@ -31,11 +36,5 @@
         <text class="privacy-link" catchtap="viewUserAgreement">《用户协议》</text>
       </view>
     </view>
-
-    <button class="login-btn {{!privacyAgreed ? 'login-btn-disabled' : ''}}" bindtap="handleLogin" hover-class="login-btn-hover" loading="{{loading}}">
-      <text wx:if="{{!loading}}">微信一键登录</text>
-      <text wx:else>登录中...</text>
-    </button>
-    <text class="login-hint">无需输入密码，直接一键体验</text>
   </view>
 </view>
