@@ -1,4 +1,5 @@
 const { getThemeStyleString } = require('../../utils/theme')
+const { ensureSafeText } = require('../../utils/contentSafety')
 
 const PRESET_EXPENSE = [
   { name: '餐饮', icon: '🍜' }, { name: '交通', icon: '🚇' }, { name: '购物', icon: '🛍️' },
@@ -109,6 +110,8 @@ Page({
     if (name === '自创') {
       wx.showToast({ title: '不能使用这个名称', icon: 'none' }); return
     }
+
+    if (!(await ensureSafeText(name, { scene: 2 }))) return
 
     const app = getApp()
     const custom = app.globalData.userInfo?.customCategories || []

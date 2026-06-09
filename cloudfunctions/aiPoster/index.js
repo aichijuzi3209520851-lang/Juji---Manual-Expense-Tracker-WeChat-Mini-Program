@@ -17,6 +17,15 @@ const SYSTEM_PROMPT = `你是一个住在"橘记"记账本里的赛博知己兼�
 
 const DAILY_LIMIT = 30
 const dailyCounters = new Map()
+const BLOCK_PATTERNS = [
+  /赌博|博彩|赌球|私彩|代购彩票/,
+  /色情|裸聊|约炮|成人视频|淫秽/,
+  /毒品|冰毒|大麻|贩毒|吸毒/,
+  /枪支|弹药|炸药|爆炸物|制爆/,
+  /诈骗|洗钱|套现|跑分/,
+  /自杀|轻生|自残/,
+  /暴恐|恐怖袭击/
+]
 
 function checkDailyLimit() {
   const today = new Date().toISOString().slice(0, 10)
@@ -28,6 +37,12 @@ function checkDailyLimit() {
 
 function buildFallback(days) {
   return `小橘刚才去找星星借灵感去了，稍微走了一会神。不过没关系，看着你坚持记账 ${days} 天的模样，小橘想说：无论是精打细算还是偶尔挥霍，你认真生活的样子，真的很迷人！🍊`
+}
+
+function isUnsafeText(text) {
+  text = String(text || '')
+  if (!text) return false
+  return BLOCK_PATTERNS.some(pattern => pattern.test(text))
 }
 
 exports.main = async (event, context) => {
@@ -42,6 +57,10 @@ exports.main = async (event, context) => {
     }
 
     // ── 构建 prompt ──
+    if (isUnsafeText([category, occupation].join('\n'))) {
+      return { success: true, letter: buildFallback(days), remaining: limit.remaining, totalLimit: DAILY_LIMIT, fallback: true }
+    }
+
     const systemContent = SYSTEM_PROMPT
       .replace('${occupation}', occupation || '未知')
       .replace('${zodiac}', zodiac || '未知星座')
@@ -71,6 +90,10 @@ exports.main = async (event, context) => {
 
     if (!letter || letter.length < 10) {
       console.warn('[aiLetter] letter too short or empty, using fallback. raw text length:', (result.text || '').length)
+      letter = buildFallback(days)
+    }
+    if (isUnsafeText(letter)) {
+      console.warn('[aiLetter] content safety fallback')
       letter = buildFallback(days)
     }
 

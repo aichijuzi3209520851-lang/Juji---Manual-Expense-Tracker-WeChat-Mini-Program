@@ -5,6 +5,15 @@ const db = cloud.database()
 
 const MAX_AMOUNT = 99999999.99
 const MAX_NOTE_LEN = 200
+const BLOCK_PATTERNS = [
+  /赌博|博彩|赌球|私彩|代购彩票/,
+  /色情|裸聊|约炮|成人视频|淫秽/,
+  /毒品|冰毒|大麻|贩毒|吸毒/,
+  /枪支|弹药|炸药|爆炸物|制爆/,
+  /诈骗|洗钱|套现|跑分/,
+  /自杀|轻生|自残/,
+  /暴恐|恐怖袭击/
+]
 
 function validate(data) {
   if (!data || !data.type || !['expense', 'income'].includes(data.type)) return '类型错误'
@@ -12,6 +21,7 @@ function validate(data) {
   if (isNaN(amount) || amount <= 0 || amount > MAX_AMOUNT) return '金额无效'
   if (!data.category || typeof data.category !== 'string' || !data.category.trim()) return '分类不能为空'
   if (data.category.length > 20) return '分类名过长'
+  if (containsUnsafeText([data.category, data.note, data.mood].join('\n'))) return '内容可能不适合展示，请修改后再试'
   const datePattern = /^\d{4}-\d{2}-\d{2}$/
   if (!datePattern.test(data.date)) return '日期格式错误'
   const dateObj = new Date(data.date + 'T00:00:00')
@@ -21,6 +31,12 @@ function validate(data) {
   if (data.note && data.note.length > MAX_NOTE_LEN) return '备注过长'
   if (data.photoUrl && !data.photoUrl.startsWith('cloud://')) return '照片格式错误'
   return null
+}
+
+function containsUnsafeText(text) {
+  text = String(text || '')
+  if (!text) return false
+  return BLOCK_PATTERNS.some(pattern => pattern.test(text))
 }
 
 exports.main = async (event, context) => {

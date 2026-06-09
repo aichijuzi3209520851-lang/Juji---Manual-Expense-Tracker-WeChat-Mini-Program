@@ -13,6 +13,15 @@ const VALID_TYPES = ['expense', 'income']
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 const MAX_EXPORT_COUNT = 10000
 const EXPORT_PAGE_SIZE = 100
+const BLOCK_PATTERNS = [
+  /赌博|博彩|赌球|私彩|代购彩票/,
+  /色情|裸聊|约炮|成人视频|淫秽/,
+  /毒品|冰毒|大麻|贩毒|吸毒/,
+  /枪支|弹药|炸药|爆炸物|制爆/,
+  /诈骗|洗钱|套现|跑分/,
+  /自杀|轻生|自残/,
+  /暴恐|恐怖袭击/
+]
 
 exports.main = async (event) => {
   const wxContext = cloud.getWXContext()
@@ -119,17 +128,27 @@ function sanitizeBill(b) {
   const category = String(b.category || '其他').trim().slice(0, MAX_CATEGORY_LEN)
   if (!category) return null
 
+  const note = String(b.note || '').slice(0, MAX_NOTE_LEN)
+  const mood = String(b.mood || '').slice(0, MAX_MOOD_LEN)
+  if (containsUnsafeText([category, note, mood].join('\n'))) return null
+
   const createdAt = normalizeCreatedAt(b.createdAt)
   return {
     type: VALID_TYPES.includes(b.type) ? b.type : 'expense',
     amount,
     category,
     date,
-    note: String(b.note || '').slice(0, MAX_NOTE_LEN),
+    note,
     photoUrl: '',
-    mood: String(b.mood || '').slice(0, MAX_MOOD_LEN),
+    mood,
     createdAt
   }
+}
+
+function containsUnsafeText(text) {
+  text = String(text || '')
+  if (!text) return false
+  return BLOCK_PATTERNS.some(pattern => pattern.test(text))
 }
 
 function normalizeCreatedAt(value) {

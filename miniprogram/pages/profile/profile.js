@@ -1,5 +1,6 @@
 const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CUSTOM_PALETTE } = require('../../utils/theme')
 const { getAll } = require('../../utils/dbPager')
+const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const {
   CATEGORY_EMOJI,
   GENDERS,
@@ -254,6 +255,7 @@ Page({
           wx.showToast({ title: '昵称最长 20 字', icon: 'none' })
           return
         }
+        if (value && !(await ensureSafeText(value, { scene: 2 }))) return
         await this.updateUserField('nickname', value)
         this.setData({ nickname: value || '橘记JUJI用户' })
         wx.showToast({ title: '昵称已更新', icon: 'success' })
@@ -306,6 +308,7 @@ Page({
                 return
               }
               if (value) {
+                if (!(await ensureSafeText(value, { scene: 2 }))) return
                 await that.updateUserField('occupation', value)
                 that.setData({ occupation: value })
               }
@@ -612,6 +615,8 @@ Page({
         console.warn('[generateLetter] 云函数返回了兜底文案')
       }
       var letter = result.letter || fallback
+      const letterSafety = await checkText(letter, { scene: 4 })
+      if (!letterSafety.ok) letter = fallback
       this.setData({
         showLetter: true,
         letterText: letter,

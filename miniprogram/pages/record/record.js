@@ -21,6 +21,7 @@ const INCOME_CATEGORIES = [
 const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
+const { ensureSafeText } = require('../../utils/contentSafety')
 
 const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
 
@@ -231,10 +232,11 @@ Page({
       editable: true,
       placeholderText: '如：😋',
       content: this.data.isCustomMood ? this.data.mood : '',
-      success: res => {
+      success: async res => {
         if (!res.confirm) return
         const v = (res.content || '').trim()
         if (!v) { this.setData({ mood: '', isCustomMood: false }); return }
+        if (!(await ensureSafeText(v, { scene: 2 }))) return
         this.setData({ mood: v, isCustomMood: true })
       }
     })
@@ -256,6 +258,7 @@ Page({
     if (name === '自创') {
       this.setData({ addCategoryError: '不能使用这个名称' }); return
     }
+    if (!(await ensureSafeText(name, { scene: 2 }))) return
     const icon = (this.data.addCategoryEmoji || '').trim()
     if (!icon || icon.length > 2) {
       wx.showToast({ title: '请仅输入一个Emoji', icon: 'none' }); return
@@ -393,6 +396,9 @@ Page({
     if (!v.valid) {
       wx.showToast({ title: v.message, icon: 'none' }); return
     }
+
+    const safetyText = [selectedCategory, note, mood].filter(Boolean).join('\n')
+    if (!(await ensureSafeText(safetyText, { scene: 2 }))) return
 
     wx.showLoading({ title: editMode ? '修改中…' : '保存中…' })
     try {

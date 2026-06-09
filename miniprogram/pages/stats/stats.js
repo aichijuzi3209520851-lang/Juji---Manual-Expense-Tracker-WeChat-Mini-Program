@@ -1,6 +1,7 @@
 ﻿const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 
 const { getAll } = require('../../utils/dbPager')
+const { checkText } = require('../../utils/contentSafety')
 
 var MORANDI = ['#D4A5A5', '#A9C2DB', '#B2D8C8', '#D4C5A5', '#C2B8D4', '#B8D4D4', '#D4B8A5', '#C8D4A5']
 
@@ -303,6 +304,8 @@ Page({
       const raw = await this.callAI(userPrompt)
       const cleaned = this.cleanText(raw)
       if (!cleaned) throw new Error('AI返回为空')
+      const safety = await checkText(cleaned, { scene: 4 })
+      if (!safety.ok) throw new Error('AI内容安全检测未通过')
 
       wx.setStorageSync(STORAGE_KEYS[scope], { periodKey: info.periodKey, text: cleaned })
       this.setData({
