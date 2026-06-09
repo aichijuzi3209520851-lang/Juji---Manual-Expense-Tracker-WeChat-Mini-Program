@@ -54,7 +54,7 @@
 - **渐变 hero 头像区**（主色→accent 跨色相，白边头像 + 投影）
 - 头像 / 昵称在线编辑（`editImage` 裁剪 → `compressImage` → 云存储 → `getTempFileURL`）
 - **记账足迹卡**：记账天数 / 累计笔数 / 最爱分类（可点击生成 AI 专属信件），数值区定高 60rpx + flex-end 基线对齐
-- **AI 信件生成**（拟物书信风弹窗）：混元文本大模型，足迹数据驱动 prompt，50-60 字俏皮鼓励信，每日限量。信纸横线纹理 + 🍊 左上角挂件 + 称呼层 + 正文对齐横线 + 右对齐落款
+- **AI 信件生成**（拟物书信风弹窗）：混元文本大模型，足迹数据驱动 prompt，150-180 字俏皮鼓励信，每日限量。信纸横线纹理 + 🍊 左上角挂件 + 称呼层 + 正文对齐横线 + 右对齐落款
 - 性别设置、自定义分类管理、主题切换
 - **JSON 数据导出**：云函数查询全部账单 → 清除内部字段 → `writeFile` 写入本地 → `shareFileMessage` 分享给文件传输助手
 - **JSON 数据导入**：`chooseMessageFile` 选取 `.json` → 解析清洗 → 云函数分批写入（每批 20 条）
@@ -244,8 +244,8 @@ cloudfunctions/             # 云函数
 
 - **文本生成（客户端）**：`wx.cloud.extend.AI.createModel('hunyuan-v3').streamText`，模型 `hy3-preview`
   - 用途：统计页 AI 俏皮评论（昨日 / 上周 / 上月）
-- **文本生成（云函数）**：`app.ai().createModel('hunyuan-v3').chatCompletions`，模型 `hy3-preview`
-  - 用途：我的页 AI 信件（记账天数 + 最爱分类 → 50-60 字俏皮鼓励信）
+- **文本生成（云函数）**：`app.ai().createModel('hunyuan-v3').generateText`，模型 `hy3-preview`
+  - 用途：我的页 AI 信件（记账天数 + 最爱分类 → 150-180 字俏皮鼓励信）
 - 资源包：小程序成长计划 1 亿 Token（`pkg_hunyuan_token_la_inspire_100m`）
 
 ## License
