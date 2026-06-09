@@ -8,7 +8,8 @@ App({
     userInfo: null,
     hasSeenGuide: false,
     currentTheme: 'mint',
-    eventBus: new EventBus()
+    eventBus: new EventBus(),
+    _loginPromise: null
   },
 
   onLaunch() {
@@ -33,11 +34,21 @@ App({
     this.globalData.hasSeenGuide = !!guideFlag
 
     // 尝试静默登录
-    this.silentLogin()
+    this.silentLogin().catch(() => {})
   },
 
   // 静默登录：获取 openid
   async silentLogin() {
+    if (this.globalData._loginPromise) return this.globalData._loginPromise
+    this.globalData._loginPromise = this._doSilentLogin()
+    try {
+      return await this.globalData._loginPromise
+    } finally {
+      this.globalData._loginPromise = null
+    }
+  },
+
+  async _doSilentLogin() {
     try {
       const res = await wx.cloud.callFunction({
         name: 'quickstartFunctions',
@@ -50,6 +61,7 @@ App({
       await this.syncUserInfo()
     } catch (err) {
       console.warn('⚠️ 静默登录失败, 可能需要部署云函数:', err.errMsg || err)
+      throw err
     }
   },
 
@@ -63,18 +75,25 @@ App({
 
       if (data.length === 0) {
         // 新用户，创建记录
-        await db.collection('users').add({
-          data: {
-            nickname: '',
-            avatarUrl: '',
-            gender: '',
-            customCategories: [],
-            theme: 'mint',
-            budgetDefault: 2000,
-            createdAt: new Date(),
-            lastLoginAt: new Date()
-          }
+        const now = new Date()
+        const userInfo = {
+          nickname: '',
+          avatarUrl: '',
+          gender: '',
+          customCategories: [],
+          theme: 'mint',
+          budgetDefault: 2000,
+          createdAt: now,
+          lastLoginAt: now
+        }
+        const addRes = await db.collection('users').add({
+          data: userInfo
         })
+        this.globalData.userInfo = {
+          ...userInfo,
+          _id: addRes._id,
+          _openid: this.globalData.openid
+        }
       } else {
         // 老用户，更新登录时间
         this.globalData.userInfo = data[0]
