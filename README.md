@@ -233,6 +233,7 @@ cloudfunctions/             # 云函数
 | `exportBills` | Nodejs16.13 | CSV 导出到云存储；当前主要 UI 导出路径为 `dataMigration` 的 JSON 导出 |
 | `aiPoster` | Nodejs16.13 | AI 信件生成（混元文本大模型 `generateText`） |
 | `dataMigration` | Nodejs16.13 | JSON 数据迁移（export 查询全部 / import 分批写入） |
+| `clearUserData` | Nodejs16.13 | 清除当前用户账单、预算、头像和账单照片 |
 
 ### 数据库集合
 

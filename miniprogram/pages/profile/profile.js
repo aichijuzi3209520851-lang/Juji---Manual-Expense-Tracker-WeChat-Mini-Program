@@ -512,18 +512,55 @@ Page({
       confirmColor: '#ba1a1a',
       success: async res => {
         if (!res.confirm) return
+        wx.showLoading({ title: '清除中…', mask: true })
         try {
-          const db = wx.cloud.database()
-          const bills = await db.collection('bills').get()
-          for (const b of bills.data) {
-            await db.collection('bills').doc(b._id).remove()
-          }
-          this.setData({ footprint: null })
+          const clearRes = await wx.cloud.callFunction({ name: 'clearUserData' })
+          const result = clearRes.result || {}
+          if (!result.success) throw new Error(result.message || '清除失败')
+          wx.hideLoading()
+          this.resetLocalProfileAfterClear()
           wx.showToast({ title: '已清除', icon: 'success' })
         } catch (err) {
-          wx.showToast({ title: '清除失败', icon: 'none' })
+          wx.hideLoading()
+          wx.showToast({ title: err.message || '清除失败', icon: 'none' })
         }
       }
+    })
+  },
+
+  // 清除后重置本地展示状态
+  resetLocalProfileAfterClear() {
+    const app = getApp()
+    if (app.globalData.userInfo) {
+      app.globalData.userInfo = {
+        ...app.globalData.userInfo,
+        nickname: '',
+        avatarUrl: '',
+        gender: '',
+        birthday: '',
+        occupation: '',
+        customCategories: [],
+        budgetDefault: 2000
+      }
+    }
+
+    const heatmapDays = this.data.heatmapDays.map(function(day) {
+      return { ...day, checked: false }
+    })
+
+    this.setData({
+      avatarUrl: '',
+      avatarError: false,
+      nickname: '橘记JUJI用户',
+      genderText: '未设置',
+      gender: '',
+      birthday: '',
+      birthdayDisplay: '',
+      zodiac: '',
+      occupation: '',
+      footprint: null,
+      heatmapDays,
+      heatmapCheckedCount: 0
     })
   },
 
