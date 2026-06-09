@@ -343,7 +343,7 @@ Page({
   getErrText(err) {
     if (!err) return '未知错误'
     if (typeof err === 'string') return err
-    return err.errMsg || err.message || JSON.stringify(err)
+    return err.errMsg || err.message || String(err)
   },
 
   getPeriodInfo(scope) {
@@ -414,14 +414,14 @@ Page({
             const delta = chunk?.choices?.[0]?.delta
             if (delta && typeof delta.content === 'string') acc += delta.content
           } catch (e) {
-            console.warn('[ai-debug] chunk parse failed:', event.data, e?.message)
+            console.warn('[ai-debug] chunk parse failed:', e?.message)
           }
         }
         console.log('[ai-debug] eventStream done, length:', acc.length)
         return acc
       }
 
-      console.warn('[ai-debug] streamText returned no stream:', res)
+      console.warn('[ai-debug] streamText returned no stream')
       return ''
     } catch (err) {
       const errMsg = err?.errMsg || err?.message || String(err)

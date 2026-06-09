@@ -44,7 +44,7 @@ App({
         data: { type: 'getOpenId' }
       })
       this.globalData.openid = res.result.openid
-      console.log('✅ 登录成功, openid:', this.globalData.openid)
+      console.log('✅ 登录成功')
 
       // 同步用户资料
       await this.syncUserInfo()

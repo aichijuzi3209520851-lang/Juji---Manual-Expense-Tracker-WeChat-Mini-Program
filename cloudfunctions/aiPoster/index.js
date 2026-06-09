@@ -64,7 +64,6 @@ exports.main = async (event, context) => {
     })
 
     // ── 正确解析返回值：CloudBase SDK generateText 返回 result.text ──
-    console.log('[aiLetter] generateText result keys:', Object.keys(result))
     let letter = (result.text || '').trim()
 
     // 去除首尾引号
@@ -79,12 +78,9 @@ exports.main = async (event, context) => {
     return { success: true, letter, remaining: limit.remaining, totalLimit: DAILY_LIMIT }
 
   } catch (err) {
-    // ── 详细错误日志（最重要）──
     console.error('[aiLetter] 调用失败详情:')
     console.error('  message:', err && err.message)
     console.error('  code:', err && err.code)
-    console.error('  stack:', err && err.stack)
-    console.error('  full err:', JSON.stringify(err, Object.getOwnPropertyNames(err)))
 
     return {
       success: true,

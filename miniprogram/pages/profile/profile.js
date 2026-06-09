@@ -172,7 +172,6 @@ Page({
         throw new Error('未取到图片')
       }
       pickedFile = choose.tempFiles[0].tempFilePath
-      console.log('[avatar] picked tempFile:', pickedFile)
     } catch (err) {
       if (err && err.errMsg && /cancel/i.test(err.errMsg)) return
       console.warn('[avatar] pick failed:', err)
@@ -188,7 +187,6 @@ Page({
         const edit = await wx.editImage({ src: pickedFile })
         if (edit && edit.tempFilePath) {
           editedFile = edit.tempFilePath
-          console.log('[avatar] edited:', editedFile)
         }
       } catch (err) {
         if (err && err.errMsg && /cancel/i.test(err.errMsg)) {
@@ -207,7 +205,6 @@ Page({
       const comp = await wx.compressImage({ src: editedFile, quality: 80 })
       if (comp && comp.tempFilePath) {
         toUpload = comp.tempFilePath
-        console.log('[avatar] compressed:', toUpload)
       }
     } catch (err) {
       console.warn('[avatar] compress failed, uploading uncompressed:', err && err.errMsg)
@@ -232,10 +229,8 @@ Page({
       if (!ext || !SUPPORTED.includes(ext)) ext = 'jpg'
 
       const cloudPath = `avatars/${app.globalData.openid}_${Date.now()}.${ext}`
-      console.log('[avatar] upload start:', { cloudPath, filePath })
 
       const up = await wx.cloud.uploadFile({ cloudPath, filePath })
-      console.log('[avatar] uploaded fileID:', up && up.fileID)
       if (!up || !up.fileID) throw new Error('上传返回为空')
 
       // 直接 db 操作以便捕获错误（updateUserField 内部 swallow 错误，无法暴露落库失败）
@@ -243,7 +238,6 @@ Page({
       const updateRes = await db.collection('users')
         .where({ _openid: app.globalData.openid })
         .update({ data: { avatarUrl: up.fileID } })
-      console.log('[avatar] db update result:', updateRes && updateRes.stats)
       if (updateRes && updateRes.stats && updateRes.stats.updated === 0) {
         throw new Error('未找到用户记录')
       }
@@ -252,13 +246,12 @@ Page({
       // 立刻把 fileID 换成 https tempFileURL 再 setData 一次，确保 image 一定能渲染
       // （image 直接渲染 cloud:// 在部分基础库下不稳，这是官方推荐的"上传后立即展示"路径）
       const tempUrl = await this.resolveAvatarSrc(up.fileID)
-      console.log('[avatar] setData display url:', tempUrl)
       this.setData({ avatarUrl: tempUrl || up.fileID, avatarError: false })
       wx.hideLoading()
       wx.showToast({ title: '头像已更新', icon: 'success' })
     } catch (err) {
       wx.hideLoading()
-      console.error('[avatar] upload chain failed:', err)
+      console.error('[avatar] upload chain failed:', err && (err.errMsg || err.message))
       const raw = (err && (err.errMsg || err.message)) || '上传失败'
       const msg = raw.length > 14 ? raw.slice(0, 14) + '…' : raw
       wx.showToast({ title: msg, icon: 'none', duration: 2500 })
@@ -268,7 +261,7 @@ Page({
   // 头像加载失败回退到占位
   onAvatarError(e) {
     const errMsg = e && e.detail && e.detail.errMsg
-    console.warn('[avatar] image load failed:', errMsg, 'src:', this.data.avatarUrl)
+    console.warn('[avatar] image load failed:', errMsg)
     this.setData({ avatarError: true })
   },
 
@@ -281,7 +274,6 @@ Page({
       const res = await wx.cloud.getTempFileURL({ fileList: [fileID] })
       const item = res && res.fileList && res.fileList[0]
       const url = item && item.tempFileURL
-      console.log('[avatar] resolved tempFileURL:', url, 'from:', fileID)
       if (item && item.status !== 0) {
         console.warn('[avatar] getTempFileURL non-zero status:', item.status, item.errMsg)
       }
@@ -660,13 +652,10 @@ Page({
       })
       wx.hideLoading()
 
-      // 详细日志：打印云函数返回结果结构
-      console.log('[generateLetter] 云函数返回 result:', JSON.stringify(res.result))
-
       var result = res.result || {}
       // 如果云函数内部 catch 了错误并返回 fallback，日志提醒
       if (result.fallback) {
-        console.warn('[generateLetter] 云函数返回了兜底文案, errorDetail:', result.errorDetail)
+        console.warn('[generateLetter] 云函数返回了兜底文案')
       }
       var letter = result.letter || fallback
       this.setData({
@@ -677,11 +666,10 @@ Page({
       })
     } catch (err) {
       wx.hideLoading()
-      // 详细错误日志
       console.error('[generateLetter] AI调用失败详情:')
       console.error('  errMsg:', err && err.errMsg)
       console.error('  message:', err && err.message)
-      console.error('  full err:', err)
+      console.error('  code:', err && err.code)
       this.setData({ showLetter: true, letterText: fallback })
     }
   },
