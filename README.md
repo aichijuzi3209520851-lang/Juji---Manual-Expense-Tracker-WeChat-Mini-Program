@@ -241,6 +241,15 @@ cloudfunctions/             # 云函数
 | `bills` | 仅创建者可读写 | `type, amount, category, date, note, photoUrl, mood, createdAt` |
 | `budgets` | 仅创建者可读写 | `month, amount, createdAt` |
 | `users` | 仅创建者可读写 | `nickname, avatarUrl, gender, customCategories, theme, budgetDefault` |
+| `client_logs` | 仅创建者可读写 | `type, message, stack, route, createdAt` |
+
+### 运维与备份
+
+- **前端异常监控**：`miniprogram/utils/monitor.js` 监听 `wx.onError` 和 `wx.onUnhandledRejection`，写入 `client_logs` 集合；建议在 CloudBase 控制台创建 `client_logs`，权限设为“仅创建者可读写”，定期按 `createdAt` 清理 30 天前日志。
+- **云函数日志**：云函数失败时使用 `[function] action failed` 格式输出 `action/openid/message/code`，排障优先查看 CloudBase 控制台对应函数日志。
+- **数据备份**：每周在“我的页”执行 JSON 导出，并将备份文件保存到独立位置；大版本发布前必须额外导出一次。
+- **数据恢复**：使用“我的页”JSON 导入，导入前先确认备份文件来源可信；导入后检查首页、统计页、预算页数量和金额是否符合预期。
+- **灾难恢复**：如误删或线上异常，先暂停提审/发布，保留 CloudBase 日志，再用最近一次 JSON 备份分批恢复账单数据。
 
 ### AI 能力
 

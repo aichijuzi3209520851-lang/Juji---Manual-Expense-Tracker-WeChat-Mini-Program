@@ -1,5 +1,6 @@
 const { initAppTheme, applyTheme, migrateLegacyCustomTheme } = require('./utils/theme')
 const EventBus = require('./utils/eventBus')
+const { initMonitoring } = require('./utils/monitor')
 
 // 橘记 - app.js
 App({
@@ -22,6 +23,7 @@ App({
       env: 'lajiaoyou-d4g78yts61f1a841d',
       traceUser: true,
     })
+    initMonitoring()
 
     // 迁移旧版自定义主题（theme='custom' + custom_theme_color → user_themes）
     migrateLegacyCustomTheme()

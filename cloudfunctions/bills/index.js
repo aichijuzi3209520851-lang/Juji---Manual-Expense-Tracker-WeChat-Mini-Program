@@ -64,6 +64,7 @@ exports.main = async (event, context) => {
         })
         return { success: true, id: res._id }
       } catch (e) {
+        logFunctionError('create', e, wxContext)
         return { success: false, message: e.message }
       }
     }
@@ -78,6 +79,7 @@ exports.main = async (event, context) => {
         await db.collection('bills').doc(data.billId).remove()
         return { success: true }
       } catch (e) {
+        logFunctionError('delete', e, wxContext)
         return { success: false, message: e.message }
       }
     }
@@ -106,6 +108,7 @@ exports.main = async (event, context) => {
         })
         return { success: true }
       } catch (e) {
+        logFunctionError('update', e, wxContext)
         return { success: false, message: e.message }
       }
     }
@@ -113,4 +116,13 @@ exports.main = async (event, context) => {
     default:
       return { success: false, message: '未知操作' }
   }
+}
+
+function logFunctionError(action, err, wxContext) {
+  console.error('[bills] action failed:', {
+    action,
+    openid: wxContext && wxContext.OPENID,
+    message: err && err.message,
+    code: err && err.code
+  })
 }

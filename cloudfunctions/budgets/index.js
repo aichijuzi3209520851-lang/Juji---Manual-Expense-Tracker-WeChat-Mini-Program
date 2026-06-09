@@ -44,6 +44,12 @@ exports.main = async (event) => {
     })
     return { success: true, id: res._id, month, amount }
   } catch (e) {
+    console.error('[budgets] upsert failed:', {
+      openid: wxContext.OPENID,
+      month,
+      message: e && e.message,
+      code: e && e.code
+    })
     return { success: false, message: e.message || '预算保存失败' }
   }
 }
