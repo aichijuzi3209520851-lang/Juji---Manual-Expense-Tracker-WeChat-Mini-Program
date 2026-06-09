@@ -2,6 +2,7 @@ const cloud = require('wx-server-sdk')
 const tcb = require('@cloudbase/node-sdk')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+const db = cloud.database()
 const app = tcb.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const ai = app.ai()
 
@@ -16,7 +17,7 @@ const SYSTEM_PROMPT = `你是一个住在"橘记"记账本里的赛博知己兼�
 5. 字数严格控制在 150-180 字之间。`
 
 const DAILY_LIMIT = 30
-const dailyCounters = new Map()
+const LIMIT_FEATURE = 'profileLetter'
 const BLOCK_PATTERNS = [
   /赌博|博彩|赌球|私彩|代购彩票/,
   /色情|裸聊|约炮|成人视频|淫秽/,
@@ -27,12 +28,60 @@ const BLOCK_PATTERNS = [
   /暴恐|恐怖袭击/
 ]
 
-function checkDailyLimit() {
-  const today = new Date().toISOString().slice(0, 10)
-  const used = dailyCounters.get(today) || 0
-  if (used >= DAILY_LIMIT) return { ok: false, remaining: 0 }
-  dailyCounters.set(today, used + 1)
-  return { ok: true, remaining: DAILY_LIMIT - used - 1 }
+async function checkDailyLimit(openid) {
+  const date = getDateKey()
+  const docId = makeUsageDocId(openid, date, LIMIT_FEATURE)
+  const ref = db.collection('ai_usage_limits').doc(docId)
+  const now = new Date()
+
+  const current = await getUsageRecord(ref)
+  if (current && current.count >= DAILY_LIMIT) {
+    return { ok: false, remaining: 0 }
+  }
+
+  const nextCount = current ? current.count + 1 : 1
+  if (current) {
+    await ref.update({
+      data: {
+        count: nextCount,
+        updatedAt: now
+      }
+    })
+  } else {
+    await ref.set({
+      data: {
+        _openid: openid,
+        date,
+        feature: LIMIT_FEATURE,
+        count: nextCount,
+        limit: DAILY_LIMIT,
+        createdAt: now,
+        updatedAt: now
+      }
+    })
+  }
+
+  return { ok: true, remaining: Math.max(DAILY_LIMIT - nextCount, 0) }
+}
+
+async function getUsageRecord(ref) {
+  try {
+    const res = await ref.get()
+    return res && res.data ? res.data : null
+  } catch (err) {
+    const msg = (err && (err.errMsg || err.message)) || ''
+    if (/not exist|not found|document not exists/i.test(msg)) return null
+    return null
+  }
+}
+
+function getDateKey() {
+  const beijingTime = new Date(Date.now() + 8 * 60 * 60 * 1000)
+  return beijingTime.toISOString().slice(0, 10)
+}
+
+function makeUsageDocId(openid, date, feature) {
+  return [openid, date, feature].join('_').replace(/[^\w-]/g, '_')
 }
 
 function buildFallback(days) {
@@ -47,10 +96,12 @@ function isUnsafeText(text) {
 
 exports.main = async (event, context) => {
   const { days, category, zodiac, occupation, avgDailySpend } = event
+  const wxContext = cloud.getWXContext()
+  const openid = wxContext.OPENID
 
   try {
     // ── 限流检查 ──
-    const limit = checkDailyLimit()
+    const limit = await checkDailyLimit(openid)
     if (!limit.ok) {
       console.warn('[aiLetter] daily limit exceeded')
       return { success: false, message: '今日信件生成次数已用完，明天再来吧~', code: 'LIMIT_EXCEEDED' }

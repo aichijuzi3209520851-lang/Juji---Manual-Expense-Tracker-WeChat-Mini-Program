@@ -243,6 +243,7 @@ cloudfunctions/             # 云函数
 | `budgets` | 仅创建者可读写 | `month, amount, createdAt` |
 | `users` | 仅创建者可读写 | `nickname, avatarUrl, gender, customCategories, theme, budgetDefault` |
 | `client_logs` | 仅创建者可读写 | `type, message, stack, route, createdAt` |
+| `ai_usage_limits` | 仅创建者可读写 | `_openid, date, feature, count, limit, createdAt, updatedAt` |
 
 ### 运维与备份
 
