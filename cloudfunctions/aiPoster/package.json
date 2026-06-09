@@ -1,1 +1,1 @@
-{"name": "aiPoster", "version": "1.0.0", "description": "混元AI海报生成 — 记账天数/分类最爱", "main": "index.js", "scripts": {"test": "echo \"Error: no test specified\" && exit 1"}, "dependencies": {"wx-server-sdk": "~2.6.3", "@cloudbase/node-sdk": "^3.16.0"}}
+{"name": "aiPoster", "version": "1.0.0", "description": "混元AI信件生成 — 记账天数/分类最爱", "main": "index.js", "scripts": {"test": "echo \"Error: no test specified\" && exit 1"}, "dependencies": {"wx-server-sdk": "~2.6.3", "@cloudbase/node-sdk": "^3.16.0"}}
