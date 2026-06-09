@@ -163,9 +163,9 @@ miniprogram/                # 小程序前端
     └── tabbar/             # TabBar 图标
 
 cloudfunctions/             # 云函数
-├── quickstartFunctions/    # 登录（getOpenId）+ 用户同步
+├── quickstartFunctions/    # 登录获取 openid
 ├── bills/                  # 账单服务端校验（create / delete / update）
-├── exportBills/            # CSV 导出（含心情列）
+├── exportBills/            # CSV 导出到云存储；当前主要 UI 导出路径为 dataMigration 的 JSON 导出
 ├── aiPoster/               # AI 信件生成（混元文本大模型 → 俏皮鼓励信）
 └── dataMigration/          # JSON 数据迁移（导出全部 / 分批导入）
 ```
@@ -191,7 +191,7 @@ cloudfunctions/             # 云函数
 - **WXML** = 小程序版的 HTML（写页面结构）
 - **WXSS** = 小程序版的 CSS（写样式，支持 `var(--color-primary)` 这种变量）
 - **JS** = JavaScript（写交互逻辑，调用 `wx.cloud.database()` 读写数据库）
-- **云函数** = 跑在腾讯云上的 Node.js 代码，处理需要服务端做的事情（生成 CSV、调 AI 画图）
+- **云函数** = 跑在腾讯云上的 Node.js 代码，处理需要服务端做的事情（账单服务端校验、CSV 导出、JSON 数据迁移、AI 文本信件生成）
 - **主题怎么切换的**：`utils/theme.js` 的 `getThemeStyleString()` 把 60+ 个颜色/阴影/渐变变量计算成实际值，拼成字符串注入每页最外层 view 的 `style` 属性，所有 `var(--color-*)` 自动生效
 - **为什么不用 CSS var() 继承**：微信小程序的 `page {}` 中声明的 CSS 变量会在声明时被解析为默认值，不会跟随子 view 的内联 style 覆盖重新解析。因此衍生 token（`--gradient-hero` 等）必须在 `getThemeStyleString()` 里直接计算实际值
 
@@ -222,15 +222,17 @@ cloudfunctions/             # 云函数
 - [云存储](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/storage)
 - [静态托管](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/static-hosting)
 
-### 云函数（已部署）
+### 云函数清单
 
-| 函数名 | 运行时 | 说明 | 状态 | 最后更新 |
-|--------|--------|------|------|----------|
-| `quickstartFunctions` | Nodejs16.13 | 登录获取 openid，同步用户信息 | Active | 2026-05-21 |
-| **`bills`** | **Nodejs16.13** | 账单服务端校验 create / delete / **update（v1.0.1 新增）** | **Active ✅** | **2026-05-26** |
-| `exportBills` | Nodejs16.13 | 生成 CSV 到云存储 `exports/` | Active | 2026-05-24 |
-| **`aiPoster`** | **Nodejs16.13** | AI 信件生成（混元文本大模型 → 俏皮鼓励信） | **Active ✅** | **2026-05-27** |
-| **`dataMigration`** | **Nodejs16.13** | JSON 数据迁移（export 查询全部 / import 分批写入） | **Active ✅** | **2026-05-31** |
+> 部署状态和最后更新时间以 CloudBase 云开发控制台为准，README 仅记录当前代码中的云函数职责。
+
+| 函数名 | 运行时 | 说明 |
+|--------|--------|------|
+| `quickstartFunctions` | Nodejs16.13 | 登录获取 openid；用户资料同步由 `miniprogram/app.js` 的 `syncUserInfo()` 执行 |
+| `bills` | Nodejs16.13 | 账单服务端校验 create / delete / update |
+| `exportBills` | Nodejs16.13 | CSV 导出到云存储；当前主要 UI 导出路径为 `dataMigration` 的 JSON 导出 |
+| `aiPoster` | Nodejs16.13 | AI 信件生成（混元文本大模型 `generateText`） |
+| `dataMigration` | Nodejs16.13 | JSON 数据迁移（export 查询全部 / import 分批写入） |
 
 ### 数据库集合
 
