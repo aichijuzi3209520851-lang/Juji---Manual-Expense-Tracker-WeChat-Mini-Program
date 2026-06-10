@@ -77,6 +77,12 @@ Page({
     wx.setNavigationBarTitle({ title: '记一笔' })
   },
 
+  scrollToTop() {
+    wx.nextTick(() => {
+      wx.pageScrollTo({ scrollTop: 0, duration: 0 })
+    })
+  },
+
   onLoad(options) {
     this._themeHandler = (id) => { applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) }) }
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
@@ -132,6 +138,11 @@ Page({
       // 清除标记，避免重复触发
       getApp().globalData._editBillId = ''
       this.loadBillForEdit(editId)
+      return
+    }
+
+    if (!this.data.amount && !this.data.note && !this.data.photoUrl && !this.data.mood) {
+      this.scrollToTop()
     }
   },
 
@@ -373,6 +384,7 @@ Page({
       }
 
       wx.setNavigationBarTitle({ title: '编辑账单' })
+      this.scrollToTop()
     } catch (err) {
       console.error('加载账单失败:', err)
       wx.showToast({ title: '加载失败', icon: 'none' })
@@ -443,6 +455,7 @@ Page({
         }
         wx.hideLoading()
         this.resetForm()
+        this.scrollToTop()
         wx.showToast({ title: '已保存', icon: 'success', duration: 1200, mask: true })
         setTimeout(() => { wx.switchTab({ url: '/pages/home/home' }) }, 1200)
       } else {
@@ -469,6 +482,7 @@ Page({
         daily.increment()
         wx.hideLoading()
         this.resetForm(type)
+        this.scrollToTop()
         wx.showToast({ title: '已保存', icon: 'success', duration: 1200, mask: true })
         setTimeout(() => { wx.switchTab({ url: '/pages/home/home' }) }, 1200)
       }

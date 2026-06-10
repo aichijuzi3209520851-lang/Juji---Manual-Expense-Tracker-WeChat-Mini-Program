@@ -7,10 +7,11 @@ const {
 } = require('../../utils/privacy')
 
 Page({
-  data: { loading: false, themeStyle: '', privacyAgreed: false },
+  data: { loading: false, themeStyle: '', privacyAgreed: true },
 
   onLoad() {
-    this.setData({ privacyAgreed: !!wx.getStorageSync(PRIVACY_AGREED_KEY) })
+    // Privacy agreement gate is temporarily disabled until the formal agreement is ready.
+    // this.setData({ privacyAgreed: !!wx.getStorageSync(PRIVACY_AGREED_KEY) })
     this._themeHandler = (id) => { applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) }) }
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
   },
@@ -38,13 +39,14 @@ Page({
   },
 
   async handleLogin() {
-    if (!this.data.privacyAgreed) {
+    if (false && !this.data.privacyAgreed) {
       wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
       return
     }
 
     this.setData({ loading: true })
     try {
+      /*
       const privacyOk = await requirePrivacyAuthorization('登录')
       if (!privacyOk) {
         this.setData({ privacyAgreed: false })
@@ -52,6 +54,7 @@ Page({
         return
       }
       wx.setStorageSync(PRIVACY_AGREED_KEY, true)
+      */
 
       const app = getApp()
       await app.silentLogin()
