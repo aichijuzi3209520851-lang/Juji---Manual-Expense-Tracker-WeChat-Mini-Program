@@ -6,8 +6,8 @@
 
 - **前端**：微信小程序原生（WXML + WXSS + JS），自定义 TabBar
 - **后端**：腾讯云 CloudBase / 云开发（Serverless）
-- **数据库**：CloudBase 文档型 NoSQL（`bills` / `budgets` / `users`）
-- **AI**：腾讯混元大模型 `hunyuan-v3` → `hy3-preview`（俏皮评论 + AI 信件生成，小程序成长计划 1 亿 Token）
+- **数据库**：CloudBase 文档型 NoSQL（`bills` / `budgets` / `users` / `ai_usage_limits` / `client_logs`）
+- **AI**：腾讯混元大模型 `hunyuan-v3` → `hy3-preview`（统计页俏皮评论 + 我的页 AI 信件/每日称号 + 「小橘」聊天助手 + 对话记账，小程序成长计划 1 亿 Token）
 - **存储**：CloudBase 云存储（账单照片、用户头像）
 - **主题**：Design Token 体系 v2（60+ CSS 变量），4 套预设 + 8 色自定义调色板 + 用户命名主题 CRUD（最多 5 个），inline-style 注入方案，切换后即时生效
 - **UI 风格**：小红书 / Apple Wallet 风格（渐变 hero 卡 + 40rpx 大圆角 + Neumorphic 拟物阴影 + 跨色相渐变）
@@ -55,6 +55,8 @@
 - 头像 / 昵称在线编辑（`editImage` 裁剪 → `compressImage` → 云存储 → `getTempFileURL`）
 - **记账足迹卡**：记账天数 / 累计笔数 / 最爱分类（可点击生成 AI 专属信件），数值区定高 60rpx + flex-end 基线对齐
 - **AI 信件生成**（拟物书信风弹窗）：混元文本大模型，足迹数据驱动 prompt，150-180 字俏皮鼓励信，每日限量。信纸横线纹理 + 🍊 左上角挂件 + 称呼层 + 正文对齐横线 + 右对齐落款
+- **「小橘」AI 聊天助手**（hero 右上角 CSS 吉祥物，点击唤起聊天弹窗）：混元 `hy3-preview` 云函数，轻量闲聊 / 消费复盘，8 条 × 300 字上限，本地正则 + msgSecCheck 双层内容安全
+- **小橘对话记账**：在聊天里用口语描述（如「中午吃饭18，买了瓶4元冰红茶，交了电费40」），AI 提取多笔账单 → 渲染待确认卡（可编辑金额/备注、删行）→ 确认后批量写入；非预设分类优先映射已有分类，新分类可勾选创建（否则归「其他」+备注原词）
 - 性别设置、自定义分类管理、主题切换
 - **JSON 数据导出**：云函数查询全部账单 → 清除内部字段 → `writeFile` 写入本地 → `shareFileMessage` 分享给文件传输助手
 - **JSON 数据导入**：`chooseMessageFile` 选取 `.json` → 解析清洗 → 云函数分批写入（每批 20 条）
@@ -156,7 +158,12 @@ miniprogram/                # 小程序前端
 │   ├── theme.js            # 主题系统核心（CSS 变量推导 + 用户主题 CRUD + 衍生 token 注入）
 │   ├── eventBus.js         # 事件总线（on/off/emit，跨页面通信）
 │   ├── rateLimiter.js      # 频率限制（防抖 + 日上限）
-│   └── validate.js         # 账单输入校验
+│   ├── validate.js         # 账单 / 预算输入校验
+│   ├── privacy.js          # 隐私授权（onNeedPrivacyAuthorization + requirePrivacyAuthorization）
+│   ├── contentSafety.js    # 内容安全（本地正则 + msgSecCheck 双层）
+│   ├── monitor.js          # 前端异常监控（onError / onUnhandledRejection → client_logs）
+│   ├── dbPager.js          # 数据库分页拉取（绕开 20 条查询上限）
+│   └── profileHelpers.js   # 我的页辅助（星座 / 称号兜底 / 分类 emoji 等）
 └── images/
     ├── login/              # 登录页 SVG 图标（8 个，灰色调）
     ├── record/             # 记账页 SVG 图标（14 个，黑色调，filter 染色）
@@ -164,10 +171,14 @@ miniprogram/                # 小程序前端
 
 cloudfunctions/             # 云函数
 ├── quickstartFunctions/    # 登录获取 openid
-├── bills/                  # 账单服务端校验（create / delete / update）
-├── exportBills/            # CSV 导出到云存储；当前主要 UI 导出路径为 dataMigration 的 JSON 导出
-├── aiPoster/               # AI 信件生成（混元文本大模型 → 俏皮鼓励信）
-└── dataMigration/          # JSON 数据迁移（导出全部 / 分批导入）
+├── bills/                  # 账单服务端校验（create / delete / update / batchCreate）
+├── budgets/                # 预算服务端校验（按月 upsert）
+├── exportBills/            # CSV 导出到云存储
+├── dataMigration/          # JSON 数据迁移（导出全部 / 分批导入）
+├── clearUserData/          # 清除当前用户账单 / 预算 / 文件 + 重置资料
+├── aiPoster/               # AI 信件 + 每日消费称号（混元，ai_usage_limits 限流）
+├── aiChat/                 # 「小橘」聊天助手 + 对话记账解析（混元）
+└── contentSafety/          # 文本内容安全（本地正则 + msgSecCheck）
 ```
 
 ## 架构概览（给新手）
@@ -191,7 +202,7 @@ cloudfunctions/             # 云函数
 - **WXML** = 小程序版的 HTML（写页面结构）
 - **WXSS** = 小程序版的 CSS（写样式，支持 `var(--color-primary)` 这种变量）
 - **JS** = JavaScript（写交互逻辑，调用 `wx.cloud.database()` 读写数据库）
-- **云函数** = 跑在腾讯云上的 Node.js 代码，处理需要服务端做的事情（账单服务端校验、CSV 导出、JSON 数据迁移、AI 文本信件生成）
+- **云函数** = 跑在腾讯云上的 Node.js 代码，处理需要服务端做的事情（账单/预算服务端校验、批量记账、CSV 导出、JSON 数据迁移、清除用户数据、AI 信件/称号、「小橘」聊天与对话记账、内容安全审核）
 - **主题怎么切换的**：`utils/theme.js` 的 `getThemeStyleString()` 把 60+ 个颜色/阴影/渐变变量计算成实际值，拼成字符串注入每页最外层 view 的 `style` 属性，所有 `var(--color-*)` 自动生效
 - **为什么不用 CSS var() 继承**：微信小程序的 `page {}` 中声明的 CSS 变量会在声明时被解析为默认值，不会跟随子 view 的内联 style 覆盖重新解析。因此衍生 token（`--gradient-hero` 等）必须在 `getThemeStyleString()` 里直接计算实际值
 
@@ -199,7 +210,7 @@ cloudfunctions/             # 云函数
 
 1. 微信开发者工具导入项目（需填入你自己的 AppID）
 2. 部署所有云函数：右键每个文件夹 →「上传并部署：云端安装依赖」
-3. 创建数据库集合 `bills`、`budgets`、`users`（权限：「仅创建者可读写」）
+3. 创建数据库集合 `bills`、`budgets`、`users`、`ai_usage_limits`、`client_logs`（权限：「仅创建者可读写」）
 4. 在微信公众平台 → 行业能力 → 小程序成长计划 报名，获取 AI Token
 5. CloudBase 控制台 → AI+ 扩展能力 → 开通混元大模型，接入 `hunyuan-v3`
 
@@ -229,11 +240,14 @@ cloudfunctions/             # 云函数
 | 函数名 | 运行时 | 说明 |
 |--------|--------|------|
 | `quickstartFunctions` | Nodejs16.13 | 登录获取 openid；用户资料同步由 `miniprogram/app.js` 的 `syncUserInfo()` 执行 |
-| `bills` | Nodejs16.13 | 账单服务端校验 create / delete / update |
+| `bills` | Nodejs16.13 | 账单服务端校验 create / delete / update / batchCreate（批量写入供对话记账使用） |
+| `budgets` | Nodejs16.13 | 预算服务端校验，按 `month` upsert（一月一条） |
 | `exportBills` | Nodejs16.13 | CSV 导出到云存储；当前主要 UI 导出路径为 `dataMigration` 的 JSON 导出 |
-| `aiPoster` | Nodejs16.13 | AI 信件生成（混元文本大模型 `generateText`） |
 | `dataMigration` | Nodejs16.13 | JSON 数据迁移（export 查询全部 / import 分批写入） |
-| `clearUserData` | Nodejs16.13 | 清除当前用户账单、预算、头像和账单照片 |
+| `clearUserData` | Nodejs16.13 | 清除当前用户账单、预算、头像和账单照片，并重置 users 资料 |
+| `aiPoster` | Nodejs16.13 | AI 信件 + 每日消费称号（混元 `generateText`，`ai_usage_limits` 按功能限流） |
+| `aiChat` | Nodejs16.13 | 「小橘」聊天助手 + 对话记账解析（混元 `generateText`，结构化 JSON + 容错解析） |
+| `contentSafety` | Nodejs16.13 | 文本内容安全（本地正则 + `security.msgSecCheck` v2） |
 
 ### 数据库集合
 
@@ -264,7 +278,8 @@ cloudfunctions/             # 云函数
 - **文本生成（客户端）**：`wx.cloud.extend.AI.createModel('hunyuan-v3').streamText`，模型 `hy3-preview`
   - 用途：统计页 AI 俏皮评论（昨日 / 上周 / 上月）
 - **文本生成（云函数）**：`app.ai().createModel('hunyuan-v3').generateText`，模型 `hy3-preview`
-  - 用途：我的页 AI 信件（记账天数 + 最爱分类 → 150-180 字俏皮鼓励信）
+  - `aiPoster`：我的页 AI 信件（记账天数 + 最爱分类 → 150-180 字俏皮鼓励信）+ 每日消费称号
+  - `aiChat`：「小橘」聊天助手 + 对话记账（口语 → 结构化 JSON `{intent, reply, bills}`，容错解析 + `temperature 0.2`）
 - 资源包：小程序成长计划 1 亿 Token（`pkg_hunyuan_token_la_inspire_100m`）
 
 ## License
