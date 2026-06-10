@@ -11,6 +11,23 @@
       <text class="profile-nickname" bindtap="editNickname" hover-class="profile-nickname-hover">{{nickname}}</text>
       <text class="profile-gender" bindtap="setGender">{{genderText}}</text>
     </view>
+    <view class="juji-pet juji-pet--{{petAction}}" bindtap="openAiChat" aria-label="小橘AI助手">
+      <view wx:if="{{petBubble}}" class="juji-pet-bubble">{{petBubble}}</view>
+      <view wx:for="{{petHearts}}" wx:key="id" class="juji-pet-heart">❤</view>
+      <view class="juji-pet-shadow"></view>
+      <view class="juji-pet-body">
+        <view class="juji-pet-leaf"></view>
+        <view class="juji-pet-face">
+          <view class="juji-pet-eye juji-pet-eye--left"></view>
+          <view class="juji-pet-eye juji-pet-eye--right"></view>
+          <view class="juji-pet-mouth"></view>
+        </view>
+        <view class="juji-pet-arm juji-pet-arm--left"></view>
+        <view class="juji-pet-arm juji-pet-arm--right"></view>
+        <view class="juji-pet-foot juji-pet-foot--left"></view>
+        <view class="juji-pet-foot juji-pet-foot--right"></view>
+      </view>
+    </view>
   </view>
 
   <!-- 记账足迹 -->
@@ -31,9 +48,9 @@
     <view class="footprint-divider"></view>
     <view class="footprint-item" bindtap="onTapTopCategory" hover-class="footprint-hover">
       <view class="footprint-value-wrap">
-        <text class="footprint-emoji">{{footprint.topCategory.emoji}}</text>
+        <text class="footprint-title-value {{profileTitle.status === 'locked' ? 'is-locked' : ''}} {{profileTitle.status === 'loading' ? 'is-loading' : ''}}">{{profileTitle.title}}</text>
       </view>
-      <text class="footprint-label">最爱{{footprint.topCategory.name}}</text>
+      <text class="footprint-label">今日称号</text>
     </view>
   </view>
 
@@ -67,12 +84,69 @@
     </view>
   </view>
 
+  <!-- AI 今日称号解释弹窗 -->
+  <view class="title-modal" wx:if="{{showProfileTitle}}" catchtap="closeProfileTitle">
+    <view class="title-card" catchtap="">
+      <text class="title-kicker">今日称号</text>
+      <view class="title-name-row">
+        <text class="title-emoji">{{profileTitle.emoji}}</text>
+        <text class="title-name">{{profileTitle.title}}</text>
+      </view>
+      <text class="title-source" wx:if="{{profileTitle.status !== 'locked'}}">来自今日「{{profileTitle.category}}」支出</text>
+      <text class="title-reason">{{profileTitle.reason}}</text>
+      <view class="title-actions">
+        <button class="title-btn title-btn--ghost" bindtap="closeProfileTitle">知道了</button>
+        <button wx:if="{{profileTitle.status === 'ready'}}" class="title-btn title-btn--primary" bindtap="writeLetterFromTitle">让小橘写封信</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 小橘 AI 助手聊天弹窗 -->
+  <view class="ai-chat-modal" wx:if="{{showAiChat}}" style="{{chatModalStyle}}" catchtap="closeAiChat" catchtouchmove="noop">
+    <view class="ai-chat-panel {{chatKeyboardHeight > 0 ? 'is-keyboard' : ''}}" catchtap="noop">
+      <view class="ai-chat-header">
+        <view class="ai-chat-title">
+          <image class="ai-chat-logo" src="/images/juji2.jpg" mode="aspectFill" />
+          <view>
+            <text class="ai-chat-name">小橘 AI 助手</text>
+            <text class="ai-chat-subtitle">AI生成，仅供参考</text>
+          </view>
+        </view>
+        <text class="ai-chat-close" bindtap="closeAiChat">×</text>
+      </view>
+
+      <scroll-view class="ai-chat-body" scroll-y="{{true}}" scroll-into-view="{{chatScrollTo}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+        <view wx:for="{{chatMessages}}" wx:key="id" id="{{item.id}}" class="chat-row chat-row--{{item.role}}">
+          <image wx:if="{{item.role === 'assistant'}}" class="chat-avatar" src="/images/juji2.jpg" mode="aspectFill" />
+          <view wx:if="{{item.role === 'user' && avatarUrl && !avatarError}}" class="chat-avatar chat-avatar--user-img">
+            <image class="chat-avatar-img" src="{{avatarUrl}}" mode="aspectFill" />
+          </view>
+          <view wx:if="{{item.role === 'user' && (!avatarUrl || avatarError)}}" class="chat-avatar chat-avatar--fallback">我</view>
+          <view class="chat-bubble chat-bubble--{{item.role}}">{{item.content}}</view>
+        </view>
+        <view wx:if="{{chatLoading}}" id="chat_loading" class="chat-row chat-row--assistant">
+          <image class="chat-avatar" src="/images/juji2.jpg" mode="aspectFill" />
+          <view class="chat-bubble chat-bubble--assistant chat-bubble--typing">小橘正在想...</view>
+        </view>
+      </scroll-view>
+
+      <view class="ai-chat-footer">
+        <text class="ai-chat-notice">AI生成，仅供参考，请勿输入敏感个人信息。</text>
+        <view class="ai-chat-input-row">
+          <input class="ai-chat-input" value="{{chatInput}}" bindinput="onChatInput" bindblur="onChatInputBlur" bindconfirm="sendChatMessage" bindkeyboardheightchange="onChatKeyboardHeightChange" confirm-type="send" adjust-position="{{false}}" cursor-spacing="12" placeholder="和小橘聊聊..." maxlength="300" />
+          <button class="ai-chat-send {{chatLoading || !chatInput ? 'is-disabled' : ''}}" bindtap="sendChatMessage">发送</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
   <!-- AI 信件弹窗 -->
   <view class="letter-modal" wx:if="{{showLetter}}" catchtap="closeLetter">
     <view class="letter-card" catchtap="">
       <text class="letter-deco">🍊</text>
       <text class="letter-salutation">亲爱的{{nickname}}：</text>
       <text class="letter-text">{{letterText}}</text>
+      <text class="letter-disclaimer">AI生成，仅供娱乐</text>
       <text class="letter-sign">—— 你的赛博知己 小橘</text>
       <view class="letter-footer">
         <button class="letter-btn" bindtap="closeLetter">收下心意</button>

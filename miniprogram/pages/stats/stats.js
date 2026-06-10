@@ -1,28 +1,60 @@
-﻿const { applyTheme, getThemeStyleString } = require('../../utils/theme')
+const {
+  applyTheme,
+  getThemeStyleString,
+  getCurrentThemeId,
+  resolveThemeVars
+} = require('../../utils/theme')
 
 const { getAll } = require('../../utils/dbPager')
 const { checkText } = require('../../utils/contentSafety')
 
 var MORANDI = ['#D4A5A5', '#A9C2DB', '#B2D8C8', '#D4C5A5', '#C2B8D4', '#B8D4D4', '#D4B8A5', '#C8D4A5']
 
-function buildDonutGradient(data, total) {
-  if (!data || !data.length || !total) return 'conic-gradient(rgba(0,0,0,0.02) 0% 100%)'
-  var PAD = 1.2, cur = 0, stops = []
-  for (var i = 0; i < data.length; i++) {
-    var pct = data[i].amount / total * 100
-    var piecePad = i === 0 || i === data.length - 1 ? PAD * 0.5 : PAD
-    var start = cur + (i > 0 ? piecePad : 0)
-    var end = cur + pct - (i < data.length - 1 ? piecePad : 0)
-    if (end <= start) end = start + 0.1
-    stops.push(data[i].color + ' ' + start.toFixed(1) + '% ' + end.toFixed(1) + '%')
-    cur += pct
-  }
-  return 'conic-gradient(' + stops.join(',') + ')'
+const RANGE_TABS = [
+  { key: 'day', label: '天', caption: '近30天' },
+  { key: 'week', label: '周', caption: '近12周' },
+  { key: 'month', label: '月', caption: '近12个月' }
+]
+
+const RANGE_LABELS = {
+  day: '近30天',
+  week: '近12周',
+  month: '近12个月'
+}
+
+const CN_MONTHS = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+const CN_WEEK_ORDERS = ['第一周', '第二周', '第三周', '第四周', '第五周', '第六周', '第七周', '第八周', '第九周', '第十周', '第十一周', '第十二周']
+const CHART_SIZES = {
+  day: { width: 1320, tick: 44 },
+  week: { width: 920, tick: 76 },
+  month: { width: 920, tick: 76 }
 }
 
 const pad = n => String(n).padStart(2, '0')
 const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
-const monthEnd = (y, m) => `${y}-${pad(m)}-${new Date(y, m, 0).getDate()}`
+
+function parseDateStr(s) {
+  const parts = String(s || '').split('-').map(Number)
+  return new Date(parts[0], (parts[1] || 1) - 1, parts[2] || 1)
+}
+
+function addDays(d, n) {
+  const next = new Date(d)
+  next.setDate(next.getDate() + n)
+  return next
+}
+
+function getWeekStart(d) {
+  const next = new Date(d)
+  const day = next.getDay() || 7
+  next.setDate(next.getDate() - day + 1)
+  next.setHours(0, 0, 0, 0)
+  return next
+}
+
+function monthKey(d) {
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
+}
 
 function yesterdayStr() {
   const d = new Date(); d.setDate(d.getDate() - 1)
@@ -31,12 +63,9 @@ function yesterdayStr() {
 
 function lastWeekRange() {
   const today = new Date()
-  const day = today.getDay() || 7
-  const thisMon = new Date(today)
-  thisMon.setDate(today.getDate() - (day - 1))
-  thisMon.setHours(0, 0, 0, 0)
-  const lastMon = new Date(thisMon); lastMon.setDate(thisMon.getDate() - 7)
-  const lastSun = new Date(thisMon); lastSun.setDate(thisMon.getDate() - 1)
+  const thisMon = getWeekStart(today)
+  const lastMon = addDays(thisMon, -7)
+  const lastSun = addDays(thisMon, -1)
   return { start: fmtDate(lastMon), end: fmtDate(lastSun) }
 }
 
@@ -48,8 +77,57 @@ function lastMonthRange() {
   return {
     start: fmtDate(firstDay),
     end: fmtDate(lastDay),
-    monthKey: `${lastDay.getFullYear()}-${pad(lastDay.getMonth() + 1)}`
+    monthKey: monthKey(lastDay)
   }
+}
+
+function buildRange(mode) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const buckets = []
+
+  if (mode === 'day') {
+    const start = addDays(today, -29)
+    for (let i = 0; i < 30; i++) {
+      const d = addDays(start, i)
+      buckets.push({
+        key: fmtDate(d),
+        label: String(d.getDate())
+      })
+    }
+    return { mode, start: fmtDate(start), end: fmtDate(today), label: RANGE_LABELS.day, buckets }
+  }
+
+  if (mode === 'week') {
+    const currentMonday = getWeekStart(today)
+    const start = addDays(currentMonday, -77)
+    for (let i = 0; i < 12; i++) {
+      const d = addDays(start, i * 7)
+      buckets.push({
+        key: fmtDate(d),
+        label: CN_WEEK_ORDERS[i] || `第${i + 1}周`
+      })
+    }
+    return { mode, start: fmtDate(start), end: fmtDate(today), label: RANGE_LABELS.week, buckets }
+  }
+
+  const firstOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+  const startMonth = new Date(firstOfThisMonth.getFullYear(), firstOfThisMonth.getMonth() - 11, 1)
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(startMonth.getFullYear(), startMonth.getMonth() + i, 1)
+    buckets.push({
+      key: monthKey(d),
+      label: CN_MONTHS[d.getMonth()]
+    })
+  }
+  return { mode: 'month', start: fmtDate(startMonth), end: fmtDate(today), label: RANGE_LABELS.month, buckets }
+}
+
+function getBucketKey(dateStr, mode) {
+  if (mode === 'day') return dateStr
+  const d = parseDateStr(dateStr)
+  if (mode === 'week') return fmtDate(getWeekStart(d))
+  return dateStr.slice(0, 7)
 }
 
 function summarize(bills) {
@@ -69,6 +147,21 @@ function summarize(bills) {
       percent: total ? Math.round(amount / total * 100) : 0
     }))
   return { empty: false, total: total.toFixed(2), count: bills.length, top }
+}
+
+function alphaColor(color, alpha) {
+  if (!color) return `rgba(39,192,125,${alpha})`
+  if (color.indexOf('rgba') === 0) return color.replace(/rgba\(([^)]+),\s*[\d.]+\)/, `rgba($1, ${alpha})`)
+  if (color.indexOf('rgb') === 0) return color.replace('rgb(', 'rgba(').replace(')', `, ${alpha})`)
+  if (color[0] === '#') {
+    let hex = color.slice(1)
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('')
+    const r = parseInt(hex.slice(0, 2), 16)
+    const g = parseInt(hex.slice(2, 4), 16)
+    const b = parseInt(hex.slice(4, 6), 16)
+    return `rgba(${r},${g},${b},${alpha})`
+  }
+  return color
 }
 
 const SYSTEM_PROMPT = `你是"橘记JUJI"记账小程序的俏皮评论助手。根据用户的消费数据，写一句生动幽默的评论。
@@ -104,19 +197,26 @@ const AI_MODEL = 'hy3-preview'
 
 Page({
   data: {
-    displayMonth: '',
-    currentMonth: '',
+    rangeTabs: RANGE_TABS,
+    rangeMode: 'month',
+    rangeLabel: RANGE_LABELS.month,
     statsType: 'expense',
     totalAmount: '0.00',
     legendData: [],
-    donutGradient: 'conic-gradient(rgba(0,0,0,0.02) 0% 100%)',
     trendData: [],
+    trendAxisLabels: [],
+    trendCanvasWidth: CHART_SIZES.month.width,
+    trendTickWidth: CHART_SIZES.month.tick,
+    trendAverage: '0.00',
+    trendEmpty: true,
     dailyComment: '',
     weeklyComment: '',
     monthlyComment: '',
     dailyLoading: true,
     weeklyLoading: true,
     monthlyLoading: true,
+    aiCurrentIndex: 0,
+    aiHintVisible: true,
     aiDebugText: '',
     statsFailed: false,
     themeStyle: getThemeStyleString()
@@ -126,28 +226,26 @@ Page({
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
-    const now = new Date()
-    this.setData({
-      currentMonth: `${now.getFullYear()}-${pad(now.getMonth() + 1)}`,
-      displayMonth: `${now.getFullYear()}年${now.getMonth() + 1}月`
-    })
-    this.loadStats()
-    this.loadTrend()
+    this.loadDashboard()
     this.loadAIComments({ force: false })
   },
 
   onLoad() {
+    const sys = wx.getSystemInfoSync()
+    this._aiScrollStep = (sys.windowWidth || 375) * 0.83
+    this.setData({ aiHintVisible: !wx.getStorageSync('juji_ai_note_swiped') })
     this._themeHandler = (id) => {
-      applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) })
-      if (this.data._canvasData && this.data._canvasTotal) {
-        this.setData({ donutGradient: buildDonutGradient(this.data._canvasData, this.data._canvasTotal) })
-      }
+      applyTheme(id)
+      this.setData({ themeStyle: getThemeStyleString(id) }, () => {
+        this.drawTrendChart(false)
+      })
     }
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
   },
 
   onUnload() {
     if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    this.clearTrendAnimation()
   },
 
   updateCustomTabBar() {
@@ -158,120 +256,288 @@ Page({
     }
   },
 
-  prevMonth() {
-    const [y, m] = this.data.currentMonth.split('-').map(Number)
-    const d = new Date(y, m - 2, 1)
+  switchRange(e) {
+    const mode = e.currentTarget.dataset.mode
+    if (!mode || mode === this.data.rangeMode) return
     this.setData({
-      currentMonth: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
-      displayMonth: `${d.getFullYear()}年${d.getMonth() + 1}月`
-    })
-    this.loadStats()
-    this.loadTrend()
+      rangeMode: mode,
+      rangeLabel: RANGE_LABELS[mode] || RANGE_LABELS.month,
+      trendCanvasWidth: (CHART_SIZES[mode] || CHART_SIZES.month).width,
+      trendTickWidth: (CHART_SIZES[mode] || CHART_SIZES.month).tick
+    }, () => this.loadDashboard())
   },
 
-  nextMonth() {
-    const [y, m] = this.data.currentMonth.split('-').map(Number)
-    const d = new Date(y, m, 1)
-    this.setData({
-      currentMonth: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
-      displayMonth: `${d.getFullYear()}年${d.getMonth() + 1}月`
-    })
-    this.loadStats()
-    this.loadTrend()
+  switchType(e) {
+    const type = e.currentTarget.dataset.type
+    if (type === this.data.statsType) return
+    this.setData({ statsType: type }, () => this.loadDashboard())
   },
 
-  async loadStats() {
+  async loadDashboard() {
     const db = wx.cloud.database()
     const _ = db.command
-    const m = this.data.currentMonth
+    const range = buildRange(this.data.rangeMode)
 
     try {
       const data = await getAll(db.collection('bills')
-        .where({ type: this.data.statsType, date: _.gte(`${m}-01`).and(_.lte(monthEnd(parseInt(m.slice(0,4)), parseInt(m.slice(5,7))))) })
+        .where({
+          type: this.data.statsType,
+          date: _.gte(range.start).and(_.lte(range.end))
+        })
       )
 
-      const byCategory = {}
-      let total = 0
-      data.forEach(b => {
-        byCategory[b.category] = (byCategory[b.category] || 0) + b.amount
-        total += b.amount
-      })
-
-      const categories = Object.entries(byCategory)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 8)
-        .map(([name, amount], i) => ({
-          name,
-          amount: amount,
-          percent: total ? Math.round((amount / total) * 100) : 0,
-          color: MORANDI[i % MORANDI.length]
-        }))
-
-      const legendData = categories.map(function(c) {
-        return { name: c.name, amount: c.amount.toFixed(2), percent: c.percent, color: c.color }
-      })
-      const donutGradient = buildDonutGradient(categories, total)
-
-      this.setData({ totalAmount: total.toFixed(2), legendData, donutGradient, _canvasData: categories, _canvasTotal: total })
+      this.applyCategoryStats(data)
+      this.applyTrendStats(data, range)
+      this.setData({ statsFailed: false })
     } catch (err) {
       console.error('加载统计失败:', err)
       this.setData({ statsFailed: true })
     }
   },
 
-  switchType(e) {
-    const type = e.currentTarget.dataset.type
-    if (type === this.data.statsType) return
-    this.setData({ statsType: type })
-    this.loadStats()
-    this.loadTrend()
-  },
+  applyCategoryStats(data) {
+    const byCategory = {}
+    let total = 0
+    data.forEach(b => {
+      const amount = Number(b.amount) || 0
+      byCategory[b.category] = (byCategory[b.category] || 0) + amount
+      total += amount
+    })
 
-  async loadTrend() {
-    const db = wx.cloud.database()
-    const _ = db.command
-    const [y, m] = this.data.currentMonth.split('-').map(Number)
-
-    const months = []
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(y, m - 1 - i, 1)
-      months.push({
-        key: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
-        label: `${d.getMonth() + 1}月`
-      })
-    }
-
-    try {
-      const data = await getAll(db.collection('bills')
-        .where({
-          type: this.data.statsType,
-          date: _.gte(`${months[0].key}-01`).and(_.lte(monthEnd(parseInt(months[5].key.slice(0,4)), parseInt(months[5].key.slice(5,7)))))
-        })
-      )
-
-      const byMonth = {}
-      data.forEach(b => {
-        const k = b.date.slice(0, 7)
-        byMonth[k] = (byMonth[k] || 0) + b.amount
-      })
-
-      const amounts = months.map(mo => byMonth[mo.key] || 0)
-      const max = Math.max(...amounts, 1)
-
-      const trendData = months.map((mo, i) => ({
-        monthKey: mo.key,
-        monthLabel: mo.label,
-        amount: amounts[i].toFixed(2),
-        percent: Math.round((amounts[i] / max) * 100),
-        isSelected: mo.key === this.data.currentMonth,
-        hasData: amounts[i] > 0
+    const categories = Object.entries(byCategory)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([name, amount], i) => ({
+        name,
+        amount,
+        percent: total ? Math.round((amount / total) * 100) : 0,
+        color: MORANDI[i % MORANDI.length]
       }))
 
-      this.setData({ trendData })
-    } catch (err) {
-      console.error('加载趋势失败:', err)
-      this.setData({ statsFailed: true })
+    const legendData = categories.map(c => ({
+      name: c.name,
+      amount: c.amount.toFixed(2),
+      percent: c.percent,
+      color: c.color
+    }))
+
+    this.setData({
+      totalAmount: total.toFixed(2),
+      legendData
+    })
+  },
+
+  applyTrendStats(data, range) {
+    const byBucket = {}
+    range.buckets.forEach(b => { byBucket[b.key] = 0 })
+    data.forEach(b => {
+      const key = getBucketKey(b.date, range.mode)
+      if (Object.prototype.hasOwnProperty.call(byBucket, key)) {
+        byBucket[key] += Number(b.amount) || 0
+      }
+    })
+
+    const amounts = range.buckets.map(b => byBucket[b.key] || 0)
+    const max = Math.max(...amounts, 1)
+    const total = amounts.reduce((sum, amount) => sum + amount, 0)
+    const average = amounts.length ? total / amounts.length : 0
+    const trendData = range.buckets.map((b, i) => ({
+      key: b.key,
+      label: b.label,
+      amount: amounts[i].toFixed(2),
+      rawAmount: amounts[i],
+      percent: Math.round((amounts[i] / max) * 100),
+      hasData: amounts[i] > 0
+    }))
+
+    this.setData({
+      rangeLabel: range.label,
+      trendData,
+      trendAxisLabels: range.buckets.map(b => b.label),
+      trendCanvasWidth: (CHART_SIZES[range.mode] || CHART_SIZES.month).width,
+      trendTickWidth: (CHART_SIZES[range.mode] || CHART_SIZES.month).tick,
+      trendAverage: average.toFixed(2),
+      trendEmpty: total <= 0
+    }, () => this.drawTrendChart(true))
+  },
+
+  getTrendColors() {
+    const vars = resolveThemeVars(getCurrentThemeId())
+    const line = this.data.statsType === 'income'
+      ? (vars['--color-income'] || vars['--color-primary'])
+      : vars['--color-primary']
+    return {
+      line,
+      fill: alphaColor(line, 0.14),
+      point: vars['--color-surface'] || '#ffffff',
+      grid: alphaColor(vars['--color-outline'] || '#82a090', 0.16),
+      axis: alphaColor(vars['--color-outline'] || '#82a090', 0.24),
+      average: alphaColor(line, 0.36)
     }
+  },
+
+  clearTrendAnimation() {
+    if (this._trendFrame && this._trendCanvas && this._trendCanvas.canvas && this._trendCanvas.canvas.cancelAnimationFrame) {
+      this._trendCanvas.canvas.cancelAnimationFrame(this._trendFrame)
+    }
+    if (this._trendTimer) clearTimeout(this._trendTimer)
+    this._trendFrame = null
+    this._trendTimer = null
+  },
+
+  drawTrendChart(animated) {
+    const query = wx.createSelectorQuery().in(this)
+    query.select('#trendCanvas').fields({ node: true, size: true }).exec(res => {
+      const info = res && res[0]
+      if (!info || !info.node || !info.width || !info.height) return
+      const canvas = info.node
+      const ctx = canvas.getContext('2d')
+      const dpr = wx.getSystemInfoSync().pixelRatio || 1
+      canvas.width = info.width * dpr
+      canvas.height = info.height * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      this.clearTrendAnimation()
+      this._trendCanvas = { canvas, ctx, width: info.width, height: info.height }
+
+      const duration = animated ? 300 : 0
+      const started = Date.now()
+      const step = () => {
+        const raw = duration ? Math.min(1, (Date.now() - started) / duration) : 1
+        const progress = 1 - Math.pow(1 - raw, 3)
+        this.paintTrend(progress)
+        if (raw < 1) {
+          if (canvas.requestAnimationFrame) {
+            this._trendFrame = canvas.requestAnimationFrame(step)
+          } else {
+            this._trendTimer = setTimeout(step, 16)
+          }
+        }
+      }
+      step()
+    })
+  },
+
+  paintTrend(progress) {
+    const box = this._trendCanvas
+    if (!box) return
+    const { ctx, width, height } = box
+    const data = this.data.trendData || []
+    const values = data.map(item => Number(item.rawAmount) || 0)
+    const max = Math.max(...values, 1)
+    const colors = this.getTrendColors()
+    const left = 20
+    const right = 16
+    const top = 22
+    const bottom = 34
+    const plotW = width - left - right
+    const plotH = height - top - bottom
+
+    ctx.clearRect(0, 0, width, height)
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.lineWidth = 1
+    ctx.strokeStyle = colors.grid
+
+    for (let i = 0; i < 4; i++) {
+      const y = top + (plotH / 3) * i
+      ctx.beginPath()
+      ctx.moveTo(left, y)
+      ctx.lineTo(width - right, y)
+      ctx.stroke()
+    }
+
+    ctx.strokeStyle = colors.axis
+    ctx.beginPath()
+    ctx.moveTo(left, top + plotH)
+    ctx.lineTo(width - right, top + plotH)
+    ctx.stroke()
+
+    if (!data.length) return
+
+    const points = values.map((value, i) => {
+      const x = data.length === 1 ? left + plotW / 2 : left + (plotW / (data.length - 1)) * i
+      const y = top + plotH - (value / max) * plotH
+      return { x, y, value }
+    })
+
+    const avg = values.reduce((sum, value) => sum + value, 0) / values.length
+    const avgY = top + plotH - (avg / max) * plotH
+    ctx.save()
+    ctx.setLineDash([5, 7])
+    ctx.strokeStyle = colors.average
+    ctx.beginPath()
+    ctx.moveTo(left, avgY)
+    ctx.lineTo(width - right, avgY)
+    ctx.stroke()
+    ctx.restore()
+
+    if (this.data.trendEmpty) {
+      return
+    }
+
+    const visibleCount = Math.max(1, Math.ceil(points.length * progress))
+    const visible = points.slice(0, visibleCount)
+    const last = visible[visible.length - 1]
+
+    ctx.beginPath()
+    ctx.moveTo(visible[0].x, top + plotH)
+    visible.forEach((p, i) => {
+      if (i === 0) ctx.lineTo(p.x, p.y)
+      else ctx.lineTo(p.x, p.y)
+    })
+    ctx.lineTo(last.x, top + plotH)
+    ctx.closePath()
+    ctx.fillStyle = colors.fill
+    ctx.fill()
+
+    ctx.beginPath()
+    visible.forEach((p, i) => {
+      if (i === 0) ctx.moveTo(p.x, p.y)
+      else ctx.lineTo(p.x, p.y)
+    })
+    ctx.strokeStyle = colors.line
+    ctx.lineWidth = 3
+    ctx.stroke()
+
+    visible.forEach((p, i) => {
+      if (!data[i].hasData) return
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, i === visible.length - 1 ? 4.8 : 3.6, 0, Math.PI * 2)
+      ctx.fillStyle = colors.point
+      ctx.fill()
+      ctx.lineWidth = 2
+      ctx.strokeStyle = colors.line
+      ctx.stroke()
+    })
+  },
+
+  onAINoteScroll(e) {
+    const step = this._aiScrollStep || 312
+    const index = Math.max(0, Math.min(2, Math.round((e.detail.scrollLeft || 0) / step)))
+    const next = {}
+    if (index !== this.data.aiCurrentIndex) next.aiCurrentIndex = index
+    if (this.data.aiHintVisible && (e.detail.scrollLeft || 0) > 8) {
+      next.aiHintVisible = false
+      wx.setStorageSync('juji_ai_note_swiped', true)
+    }
+    if (Object.keys(next).length) this.setData(next)
+  },
+
+  showAINoteFull(e) {
+    const scope = e.currentTarget.dataset.scope
+    const map = {
+      daily: { title: '昨日回顾', loading: this.data.dailyLoading, text: this.data.dailyComment },
+      weekly: { title: '上周回顾', loading: this.data.weeklyLoading, text: this.data.weeklyComment },
+      monthly: { title: '上月回顾', loading: this.data.monthlyLoading, text: this.data.monthlyComment }
+    }
+    const item = map[scope]
+    if (!item || item.loading || !item.text) return
+    wx.showModal({
+      title: item.title,
+      content: item.text,
+      showCancel: false,
+      confirmText: '知道了'
+    })
   },
 
   async loadAIComments({ force = false } = {}) {

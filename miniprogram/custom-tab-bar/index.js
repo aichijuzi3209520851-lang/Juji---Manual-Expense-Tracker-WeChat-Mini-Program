@@ -2,6 +2,7 @@ const { getThemeStyleString } = require('../utils/theme')
 
 Component({
   data: {
+    hidden: false,
     selected: 'pages/home/home',
     themeStyle: '',
     list: [
@@ -87,6 +88,11 @@ Component({
       if (currentRoute && currentRoute !== this.data.selected) {
         this.setData({ selected: currentRoute })
       }
+    },
+
+    setHidden(hidden) {
+      if (this.data.hidden === !!hidden) return
+      this.setData({ hidden: !!hidden })
     }
   }
 })

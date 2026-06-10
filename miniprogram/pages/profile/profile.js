@@ -14,6 +14,114 @@ const {
   resolveThemeName
 } = require('../../utils/profileHelpers')
 
+const PROFILE_TITLE_LOCKED = {
+  status: 'locked',
+  title: '待解锁',
+  reason: '今天记一笔支出后，小橘会根据消费数据给你取一个今日称号。',
+  category: '',
+  emoji: '🏷️',
+  fallback: false
+}
+
+const PROFILE_TITLE_FALLBACKS = {
+  '交通': '通勤飞人',
+  '购物': '购物研究员',
+  '娱乐': '快乐续费官',
+  '学习': '知识充电王',
+  '日用': '生活管家',
+  '医疗': '健康守护员',
+  '其他': '日常收藏家'
+}
+const AI_CHAT_FALLBACK = '小橘不知道，来聊聊别的吧~'
+const AI_CHAT_WELCOME = {
+  id: 'chat_welcome',
+  role: 'assistant',
+  content: '嗨，我是小橘。可以陪你聊聊记账、消费复盘和生活小事。',
+  avatar: '/images/juji2.jpg'
+}
+const WEATHER_QUESTION_PATTERN = /天气|气温|下雨|降雨|刮风|冷不冷|热不热|穿什么/
+
+function pad(n) {
+  return n < 10 ? '0' + n : '' + n
+}
+
+function getTodayKey() {
+  var d = new Date()
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+}
+
+function getProfileTitleCacheKey(openid) {
+  return 'juji_profile_title_' + openid
+}
+
+function getFallbackTitleName(category, gender) {
+  if (category === '餐饮') {
+    if (gender === 'male') return '大馋小子'
+    if (gender === 'female') return '大馋丫头'
+    return '饭点雷达'
+  }
+  return PROFILE_TITLE_FALLBACKS[category] || PROFILE_TITLE_FALLBACKS['其他']
+}
+
+function makeProfileTitleFallback(category, gender) {
+  var safeCategory = category || '日常'
+  return {
+    status: 'ready',
+    title: getFallbackTitleName(safeCategory, gender),
+    reason: '今天的支出里，' + safeCategory + '最抢镜，小橘先给你贴一个轻松标签。',
+    category: safeCategory,
+    emoji: CATEGORY_EMOJI[safeCategory] || '🏷️',
+    fallback: true
+  }
+}
+
+function buildTodayExpenseSummary(bills, dateKey) {
+  var byCategory = {}
+  var count = 0
+  var total = 0
+
+  bills.forEach(function(b) {
+    if (b.type !== 'expense' || b.date !== dateKey) return
+    var amount = Number(b.amount) || 0
+    if (amount <= 0) return
+    var category = b.category || '其他'
+    if (!byCategory[category]) byCategory[category] = { name: category, amount: 0, count: 0 }
+    byCategory[category].amount += amount
+    byCategory[category].count += 1
+    count += 1
+    total += amount
+  })
+
+  var categories = Object.keys(byCategory)
+    .map(function(name) {
+      return byCategory[name]
+    })
+    .sort(function(a, b) {
+      return b.amount - a.amount
+    })
+    .map(function(item) {
+      return {
+        name: item.name,
+        amount: Number(item.amount.toFixed(2)),
+        count: item.count,
+        percent: total ? Math.round(item.amount / total * 100) : 0
+      }
+    })
+
+  var signature = dateKey + '|' + count + '|' + total.toFixed(2) + '|' + categories.map(function(item) {
+    return item.name + ':' + item.amount.toFixed(2) + ':' + item.count
+  }).join('|')
+
+  return {
+    dateKey: dateKey,
+    count: count,
+    total: Number(total.toFixed(2)),
+    topCategory: categories[0] ? categories[0].name : '',
+    categories: categories.slice(0, 5),
+    signature: signature
+  }
+}
+
 Page({
   data: {
     avatarUrl: '',
@@ -28,6 +136,18 @@ Page({
     themeName: '清新',
     themeStyle: getThemeStyleString(),
     footprint: null,
+    profileTitle: PROFILE_TITLE_LOCKED,
+    showProfileTitle: false,
+    petAction: 'idle',
+    petBubble: '',
+    petHearts: [],
+    showAiChat: false,
+    chatMessages: [],
+    chatInput: '',
+    chatLoading: false,
+    chatScrollTo: '',
+    chatKeyboardHeight: 0,
+    chatModalStyle: '',
     // AI 信件弹窗
     showLetter: false,
     letterText: '',
@@ -50,12 +170,15 @@ Page({
     applyTheme()
     this.setData({
       themeStyle: getThemeStyleString(),
-      themeName: resolveThemeName(getCurrentThemeId())
+      themeName: resolveThemeName(getCurrentThemeId()),
+      showProfileTitle: false
     })
     this.updateCustomTabBar()
     this.loadUserInfo()
-    this.loadFootprint()
+      .then(() => this.loadFootprint())
+      .catch(() => this.loadFootprint())
     this.initHeatmap()
+    this.startPetLoop()
   },
 
   onLoad() {
@@ -67,8 +190,15 @@ Page({
     getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
   },
 
+  onHide() {
+    this.setCustomTabBarHidden(false)
+    this.stopPetLoop()
+  },
+
   onUnload() {
     if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    this.setCustomTabBarHidden(false)
+    this.stopPetLoop()
   },
 
   updateCustomTabBar() {
@@ -77,6 +207,202 @@ Page({
     if (tabBar && typeof tabBar.updateSelected === 'function') {
       tabBar.updateSelected()
     }
+  },
+
+  noop() {},
+
+  setCustomTabBarHidden(hidden) {
+    if (typeof this.getTabBar !== 'function') return
+    var tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.setHidden === 'function') {
+      tabBar.setHidden(hidden)
+    }
+  },
+
+  startPetLoop() {
+    this.stopPetLoop()
+    this.schedulePetAction()
+  },
+
+  stopPetLoop() {
+    if (this._petTimer) clearTimeout(this._petTimer)
+    if (this._petActionTimer) clearTimeout(this._petActionTimer)
+    this._petTimer = null
+    this._petActionTimer = null
+  },
+
+  schedulePetAction() {
+    var delay = 4200 + Math.floor(Math.random() * 5200)
+    this._petTimer = setTimeout(() => {
+      this.triggerRandomPetAction()
+      this.schedulePetAction()
+    }, delay)
+  },
+
+  triggerRandomPetAction() {
+    var roll = Math.random()
+    var action = roll < 0.55 ? 'heart' : roll < 0.85 ? 'wave' : 'jump'
+    this.playPetAction(action)
+  },
+
+  playPetAction(action) {
+    if (this._petActionTimer) clearTimeout(this._petActionTimer)
+    var bubble = action === 'wave' ? 'Hi' : action === 'heart' ? '给你小心心' : ''
+    var patch = { petAction: action, petBubble: bubble }
+
+    if (action === 'heart') {
+      var heart = { id: 'heart_' + Date.now() }
+      patch.petHearts = [heart]
+    }
+
+    this.setData(patch)
+    this._petActionTimer = setTimeout(() => {
+      this.setData({ petAction: 'idle', petBubble: '', petHearts: [] })
+    }, action === 'heart' ? 1600 : 1100)
+  },
+
+  async openAiChat() {
+    // Temporary debug bypass until the mini-program privacy agreement is approved.
+    this.setCustomTabBarHidden(true)
+    this.playPetAction('wave')
+    this.setData({
+      showAiChat: true,
+      chatInput: '',
+      chatLoading: false,
+      chatMessages: [Object.assign({}, AI_CHAT_WELCOME)],
+      chatScrollTo: 'chat_welcome',
+      chatKeyboardHeight: 0,
+      chatModalStyle: ''
+    })
+  },
+
+  closeAiChat() {
+    this.setCustomTabBarHidden(false)
+    this.setData({
+      showAiChat: false,
+      chatMessages: [],
+      chatInput: '',
+      chatLoading: false,
+      chatScrollTo: '',
+      chatKeyboardHeight: 0,
+      chatModalStyle: ''
+    })
+  },
+
+  onChatInput(e) {
+    this.setData({ chatInput: e.detail.value || '' })
+  },
+
+  onChatKeyboardHeightChange(e) {
+    var height = Math.max(0, Math.round((e.detail && e.detail.height) || 0))
+    this.setData({
+      chatKeyboardHeight: height,
+      chatModalStyle: height ? 'bottom:' + height + 'px;' : ''
+    })
+  },
+
+  onChatInputBlur() {
+    this.setData({
+      chatKeyboardHeight: 0,
+      chatModalStyle: ''
+    })
+  },
+
+  async sendChatMessage() {
+    var text = (this.data.chatInput || '').trim()
+    if (!text || this.data.chatLoading) return
+
+    var userMessage = this.buildChatMessage('user', text)
+    var messages = this.data.chatMessages.concat([userMessage])
+    this.setData({
+      chatMessages: messages,
+      chatInput: '',
+      chatLoading: true,
+      chatScrollTo: userMessage.id
+    })
+
+    var safety = await checkText(text, { scene: 2 })
+    if (!safety.ok) {
+      this.appendAssistantMessage(AI_CHAT_FALLBACK)
+      this.setData({ chatLoading: false })
+      return
+    }
+
+    if (this.isWeatherQuestion(text)) {
+      this.appendAssistantMessage('天气查询功能先下线了，咱们聊记账、消费复盘或者生活小事吧~')
+      this.setData({ chatLoading: false })
+      return
+    }
+
+    try {
+      var res = await wx.cloud.callFunction({
+        name: 'aiChat',
+        data: {
+          messages: this.getRecentChatMessages(messages),
+          userProfile: this.getChatUserProfile()
+        },
+        config: { timeout: 30000 }
+      })
+      var result = res.result || {}
+      var reply = result.reply || AI_CHAT_FALLBACK
+      var replySafety = await checkText(reply, { scene: 4 })
+      if (!replySafety.ok) reply = AI_CHAT_FALLBACK
+      this.appendAssistantMessage(reply)
+    } catch (err) {
+      console.error('[aiChat] 调用失败:', err)
+      this.appendAssistantMessage(AI_CHAT_FALLBACK)
+    } finally {
+      this.setData({ chatLoading: false })
+    }
+  },
+
+  buildChatMessage(role, content) {
+    var id = 'chat_' + role + '_' + Date.now() + '_' + Math.floor(Math.random() * 1000)
+    return {
+      id,
+      role,
+      content,
+      avatar: role === 'assistant' ? '/images/juji2.jpg' : (this.data.avatarUrl || '')
+    }
+  },
+
+  appendAssistantMessage(content) {
+    var message = this.buildChatMessage('assistant', content)
+    this.setData({
+      chatMessages: this.data.chatMessages.concat([message]),
+      chatScrollTo: message.id
+    })
+  },
+
+  getRecentChatMessages(messages) {
+    return messages
+      .filter(function(item) {
+        return item.role === 'user' || item.role === 'assistant'
+      })
+      .slice(-8)
+      .map(function(item) {
+        return {
+          role: item.role,
+          content: item.content
+        }
+      })
+  },
+
+  getChatUserProfile() {
+    return {
+      nickname: this.data.nickname || '',
+      gender: this.data.gender || '',
+      zodiac: this.data.zodiac || '',
+      occupation: this.data.occupation || '',
+      days: this.data.footprint ? this.data.footprint.days : 0,
+      count: this.data.footprint ? this.data.footprint.count : 0,
+      avgDailySpend: this.data.footprint ? this.data.footprint.avgDailySpend : '0',
+      profileTitle: this.data.profileTitle && this.data.profileTitle.status === 'ready' ? this.data.profileTitle.title : ''
+    }
+  },
+
+  isWeatherQuestion(text) {
+    return WEATHER_QUESTION_PATTERN.test(String(text || ''))
   },
 
   async loadUserInfo() {
@@ -279,6 +605,7 @@ Page({
         const gender = res.tapIndex === 0 ? 'male' : 'female'
         await this.updateUserField('gender', gender)
         this.setData({ gender, genderText: res.tapIndex === 0 ? '男' : '女' })
+        this.loadFootprint()
       }
     })
   },
@@ -531,6 +858,7 @@ Page({
   // 清除后重置本地展示状态
   resetLocalProfileAfterClear() {
     const app = getApp()
+    if (app.globalData.openid) wx.removeStorageSync(getProfileTitleCacheKey(app.globalData.openid))
     if (app.globalData.userInfo) {
       app.globalData.userInfo = {
         ...app.globalData.userInfo,
@@ -559,6 +887,8 @@ Page({
       zodiac: '',
       occupation: '',
       footprint: null,
+      profileTitle: PROFILE_TITLE_LOCKED,
+      showProfileTitle: false,
       heatmapDays,
       heatmapCheckedCount: 0
     })
@@ -600,7 +930,14 @@ Page({
     try {
       const db = wx.cloud.database()
       const data = await getAll(db.collection('bills').where({ _openid: app.globalData.openid }))
-      if (!data || data.length === 0) return
+      if (!data || data.length === 0) {
+        this.setData({
+          footprint: null,
+          profileTitle: PROFILE_TITLE_LOCKED,
+          showProfileTitle: false
+        })
+        return
+      }
 
       const dates = new Set(data.map(b => b.date)).size
       const byCategory = {}
@@ -624,7 +961,107 @@ Page({
           avgDailySpend: avgDailySpend
         }
       })
+
+      this.updateProfileTitle(buildTodayExpenseSummary(data, getTodayKey()))
     } catch (err) { console.error('加载记账足迹失败:', err) }
+  },
+
+  async updateProfileTitle(summary) {
+    const app = getApp()
+    if (!app.globalData.openid) return
+
+    if (!summary || summary.count <= 0) {
+      this._profileTitleSignature = ''
+      this.setData({ profileTitle: PROFILE_TITLE_LOCKED })
+      return
+    }
+
+    var gender = this.data.gender || ''
+    var signature = summary.signature + '|gender:' + (gender || 'unknown')
+    var cacheKey = getProfileTitleCacheKey(app.globalData.openid)
+    var cached = wx.getStorageSync(cacheKey)
+    if (cached && cached.dateKey === summary.dateKey && cached.signature === signature && cached.title) {
+      this._profileTitleSignature = signature
+      this.setData({
+        profileTitle: {
+          status: 'ready',
+          title: cached.title,
+          reason: cached.reason || '',
+          category: cached.category || summary.topCategory,
+          emoji: cached.emoji || CATEGORY_EMOJI[cached.category] || '🏷️',
+          fallback: !!cached.fallback
+        }
+      })
+      return
+    }
+
+    var fallback = makeProfileTitleFallback(summary.topCategory, gender)
+    this._profileTitleSignature = signature
+    this.setData({
+      profileTitle: {
+        status: 'loading',
+        title: '生成中',
+        reason: '小橘正在看今天的钱都去了哪里。',
+        category: summary.topCategory,
+        emoji: fallback.emoji,
+        fallback: false
+      }
+    })
+
+    try {
+      var res = await wx.cloud.callFunction({
+        name: 'aiPoster',
+        data: {
+          action: 'profileTitle',
+          gender: gender,
+          dateKey: summary.dateKey,
+          expenseSummary: {
+            total: summary.total,
+            count: summary.count,
+            topCategory: summary.topCategory,
+            categories: summary.categories
+          }
+        },
+        config: { timeout: 30000 }
+      })
+      var result = res.result || {}
+      var nextTitle = {
+        status: 'ready',
+        title: result.title || fallback.title,
+        reason: result.reason || fallback.reason,
+        category: result.category || summary.topCategory || fallback.category,
+        emoji: CATEGORY_EMOJI[result.category || summary.topCategory] || fallback.emoji,
+        fallback: !!result.fallback
+      }
+
+      var safety = await checkText([nextTitle.title, nextTitle.reason].join('\n'), { scene: 4 })
+      if (!safety.ok) nextTitle = fallback
+
+      if (this._profileTitleSignature !== signature) return
+      wx.setStorageSync(cacheKey, {
+        dateKey: summary.dateKey,
+        signature: signature,
+        title: nextTitle.title,
+        reason: nextTitle.reason,
+        category: nextTitle.category,
+        emoji: nextTitle.emoji,
+        fallback: nextTitle.fallback
+      })
+      this.setData({ profileTitle: nextTitle })
+    } catch (err) {
+      console.error('[profileTitle] AI称号生成失败:', err)
+      if (this._profileTitleSignature !== signature) return
+      wx.setStorageSync(cacheKey, {
+        dateKey: summary.dateKey,
+        signature: signature,
+        title: fallback.title,
+        reason: fallback.reason,
+        category: fallback.category,
+        emoji: fallback.emoji,
+        fallback: true
+      })
+      this.setData({ profileTitle: fallback })
+    }
   },
 
   // ====== 记账足迹交互（三个独立入口）======
@@ -642,11 +1079,21 @@ Page({
     wx.switchTab({ url: '/pages/home/home' })
   },
 
-  /** 点击"最爱xx" — 生成专属信件 */
+  /** 点击"今日称号" — 查看称号解释 */
   onTapTopCategory() {
-    if (!this.data.footprint || !this.data.footprint.topCategory) return
+    if (!this.data.footprint) return
+    this.setData({ showProfileTitle: true })
+  },
+
+  closeProfileTitle() {
+    this.setData({ showProfileTitle: false })
+  },
+
+  writeLetterFromTitle() {
+    if (!this.data.footprint || this.data.profileTitle.status !== 'ready') return
     var days = this.data.footprint.days
-    var category = this.data.footprint.topCategory.name
+    var category = this.data.profileTitle.category || (this.data.footprint.topCategory ? this.data.footprint.topCategory.name : '记账')
+    this.setData({ showProfileTitle: false })
     this.generateLetter(days, category)
   },
 

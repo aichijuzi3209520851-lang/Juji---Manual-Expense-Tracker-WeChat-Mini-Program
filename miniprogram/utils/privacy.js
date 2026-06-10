@@ -62,7 +62,7 @@ function openUserAgreement() {
 function showPrivacySummary() {
   wx.showModal({
     title: '隐私协议',
-    content: '橘记会在记账、头像、照片、文件导入导出和 AI 信件功能中使用必要数据。数据主要存储在你的云开发账户隔离空间中，仅用于记账展示、统计、备份和生成反馈。',
+    content: '橘记会在记账、头像、照片、文件导入导出、AI 对话/信件中使用必要数据。数据主要存储在你的云开发账户隔离空间中，仅用于记账展示、统计、备份和生成反馈。',
     confirmText: '我知道了',
     showCancel: false
   })

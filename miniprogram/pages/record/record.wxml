@@ -16,7 +16,7 @@
     <view class="amount-row">
       <view class="amount-field">
         <text class="amount-symbol">¥</text>
-        <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{true}}" bindinput="onAmountInput" cursor-spacing="24" />
+        <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{true}}" confirm-type="done" bindinput="onAmountInput" bindfocus="onAmountFocus" bindblur="onAmountBlur" bindconfirm="quickSaveRecord" bindkeyboardheightchange="onKeyboardHeightChange" cursor-spacing="24" />
       </view>
     </view>
     <picker mode="date" value="{{dateStr}}" start="2020-01-01" end="2027-12-31" fields="day" bindchange="onDateChange">
@@ -94,6 +94,14 @@
       </block>
       <button class="save-btn {{editMode ? 'edit-save' : ''}}" bindtap="saveRecord">{{editMode ? '保存修改' : '保存'}}</button>
     </view>
+  </view>
+
+  <view wx:if="{{amountFocused && !editMode}}" class="quick-confirm-bar" style="{{quickConfirmStyle}}">
+    <view class="quick-confirm-copy">
+      <text class="quick-confirm-label">{{type === 'expense' ? '快速记支出' : '快速记收入'}}</text>
+      <text class="quick-confirm-meta">{{selectedCategory}} · {{displayDate}} · ¥{{amount ? amount : '0.00'}}</text>
+    </view>
+    <button class="quick-confirm-btn {{quickCanSave && !quickSaving ? '' : 'is-disabled'}}" loading="{{quickSaving}}" disabled="{{!quickCanSave || quickSaving}}" catchtap="quickSaveRecord">确认记账</button>
   </view>
 
   <!-- 自创分类弹窗 -->

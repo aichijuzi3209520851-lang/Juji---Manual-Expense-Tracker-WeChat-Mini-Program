@@ -46,6 +46,11 @@ Page({
     addCategoryName: '',
     addCategoryEmoji: '📌',
     addCategoryError: '',
+    amountFocused: false,
+    keyboardHeight: 0,
+    quickConfirmStyle: 'bottom:0px;',
+    quickCanSave: false,
+    quickSaving: false,
     // 编辑模式
     editMode: false,
     editBillId: ''
@@ -66,6 +71,11 @@ Page({
       photoCloudPath: '',
       mood: '',
       isCustomMood: false,
+      amountFocused: false,
+      keyboardHeight: 0,
+      quickConfirmStyle: 'bottom:0px;',
+      quickCanSave: false,
+      quickSaving: false,
       dateStr: `${y}-${m}-${d}`,
       displayDate: '今天',
       categories: preset,
@@ -113,6 +123,7 @@ Page({
 
   onUnload() {
     if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    if (this._amountBlurTimer) clearTimeout(this._amountBlurTimer)
     this.resetForm()
   },
 
@@ -176,7 +187,29 @@ Page({
     })
     this.loadCustomCategories(type)
   },
-  onAmountInput(e) { this.setData({ amount: e.detail.value }) },
+  onAmountInput(e) {
+    const amount = e.detail.value
+    this.setData({ amount, quickCanSave: parseFloat(amount) > 0 })
+  },
+  onAmountFocus() {
+    if (this._amountBlurTimer) clearTimeout(this._amountBlurTimer)
+    if (!this.data.editMode) {
+      this.setData({ amountFocused: true, quickCanSave: parseFloat(this.data.amount) > 0 })
+    }
+  },
+  onAmountBlur() {
+    if (this._amountBlurTimer) clearTimeout(this._amountBlurTimer)
+    this._amountBlurTimer = setTimeout(() => {
+      this.setData({ amountFocused: false })
+    }, 160)
+  },
+  onKeyboardHeightChange(e) {
+    const height = Math.max(0, e.detail.height || 0)
+    this.setData({
+      keyboardHeight: height,
+      quickConfirmStyle: `bottom:${height}px;`
+    })
+  },
   onNoteInput(e) { this.setData({ note: e.detail.value }) },
   onNoteFocus() { this.setData({ showNoteInput: true }) },
   onNoteBlur() { if (!this.data.note) this.setData({ showNoteInput: false }) },
@@ -395,6 +428,71 @@ Page({
   cancelEdit() {
     if (this.data.editMode) {
       wx.navigateBack()
+    }
+  },
+
+  async quickSaveRecord() {
+    if (this.data.editMode || this.data.quickSaving) return
+
+    if (!canSaveBill()) {
+      wx.showToast({ title: '操作太快，请稍候', icon: 'none' }); return
+    }
+
+    const { type, amount, selectedCategory, dateStr, presetMoods } = this.data
+    const mood = presetMoods[0] || ''
+    const v = validateBill({ type, amount, category: selectedCategory, date: dateStr, note: '', photoUrl: '' })
+    if (!v.valid) {
+      wx.showToast({ title: v.message, icon: 'none' }); return
+    }
+
+    const safetyText = [selectedCategory, mood].filter(Boolean).join('\n')
+    if (!(await ensureSafeText(safetyText, { scene: 2 }))) return
+
+    const daily = checkDailyLimit('bills', 500)
+    if (daily.exceeded) {
+      wx.showToast({ title: '今日已达上限', icon: 'none' }); return
+    }
+
+    wx.hideKeyboard()
+    this.setData({ quickSaving: true })
+    wx.showLoading({ title: '保存中…' })
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'bills',
+        data: {
+          action: 'create',
+          data: {
+            type,
+            amount: parseFloat(amount),
+            category: selectedCategory,
+            date: dateStr,
+            note: '',
+            photoUrl: '',
+            mood
+          }
+        }
+      })
+      if (!res.result || !res.result.success) {
+        throw new Error((res.result && res.result.message) || '保存失败')
+      }
+      daily.increment()
+      wx.hideLoading()
+      this.setData({
+        amountFocused: false,
+        keyboardHeight: 0,
+        quickConfirmStyle: 'bottom:0px;',
+        quickCanSave: false,
+        quickSaving: false
+      })
+      this.resetForm(type)
+      this.scrollToTop()
+      wx.showToast({ title: '已保存', icon: 'success', duration: 1200, mask: true })
+      setTimeout(() => { wx.switchTab({ url: '/pages/home/home' }) }, 1200)
+    } catch (err) {
+      wx.hideLoading()
+      this.setData({ quickSaving: false })
+      console.error('快捷保存失败:', err)
+      wx.showToast({ title: err.message || '保存失败，请重试', icon: 'none' })
     }
   },
 

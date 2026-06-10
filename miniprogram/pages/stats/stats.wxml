@@ -1,79 +1,138 @@
-﻿<!-- 统计页 -->
+<!-- 统计页 -->
 <view class="stats-page" style="{{themeStyle}}">
-  <view class="month-picker">
-    <view class="month-arrow" bindtap="prevMonth">‹</view>
-    <text class="month-text">{{displayMonth}}</text>
-    <view class="month-arrow" bindtap="nextMonth">›</view>
+  <view class="stats-hero">
+    <view class="stats-hero__copy">
+      <text class="stats-hero__eyebrow">{{statsType === 'expense' ? '支出走势' : '收入走势'}}</text>
+      <text class="stats-hero__title">{{rangeLabel}}</text>
+    </view>
+    <view class="stats-hero__metric">
+      <text class="stats-hero__label">总{{statsType === 'expense' ? '支出' : '收入'}}</text>
+      <text class="stats-hero__amount">¥{{totalAmount}}</text>
+    </view>
   </view>
 
-  <view class="seg-toggle">
-    <view class="seg-item {{statsType === 'expense' ? 'is-active' : ''}}" data-type="expense" bindtap="switchType">支出</view>
-    <view class="seg-item {{statsType === 'income' ? 'is-active' : ''}}" data-type="income" bindtap="switchType">收入</view>
-  </view>
-
-  <view class="donut-card">
-    <view class="donut-ring">
-      <view class="donut" style="background: {{donutGradient}}"></view>
-      <view class="donut-center">
-        <text class="donut-label">{{statsType === 'expense' ? '总支出' : '总收入'}}</text>
-        <text class="donut-total">¥{{totalAmount}}</text>
+  <view class="control-panel">
+    <view class="range-toggle">
+      <view wx:for="{{rangeTabs}}" wx:key="key" class="range-item {{rangeMode === item.key ? 'is-active' : ''}}" data-mode="{{item.key}}" bindtap="switchRange">
+        <text class="range-label">{{item.label}}</text>
+        <text class="range-caption">{{item.caption}}</text>
       </view>
     </view>
 
-    <view class="legend">
-      <view wx:for="{{legendData}}" wx:key="name" class="legend-item" hover-class="legend-item--hover">
-        <view class="legend-dot" style="background: {{item.color}}"></view>
-        <text class="legend-name">{{item.name}}</text>
-        <text class="legend-pct">{{item.percent}}%</text>
-      </view>
-      <view wx:if="{{legendData.length === 0}}" class="legend-empty">暂无数据</view>
+    <view class="seg-toggle">
+      <view class="seg-item {{statsType === 'expense' ? 'is-active' : ''}}" data-type="expense" bindtap="switchType">支出</view>
+      <view class="seg-item {{statsType === 'income' ? 'is-active' : ''}}" data-type="income" bindtap="switchType">收入</view>
     </view>
   </view>
 
   <view class="trend-card">
     <view class="trend-header">
-      <text class="trend-title">近 6 个月{{statsType === 'expense' ? '支出' : '收入'}}</text>
-    </view>
-    <view class="trend-bars">
-      <view wx:for="{{trendData}}" wx:key="monthKey" class="trend-col">
-        <view class="trend-amount {{item.hasData ? '' : 'is-muted'}}">{{item.hasData ? '¥' + item.amount : ''}}</view>
-        <view class="trend-bar-wrap">
-          <view class="trend-bar {{item.isSelected ? 'is-selected' : ''}} {{item.hasData ? '' : 'is-empty'}}" style="height: {{item.hasData ? item.percent : 4}}%"></view>
-        </view>
-        <view class="trend-month {{item.isSelected ? 'is-selected' : ''}}">{{item.monthLabel}}</view>
+      <view>
+        <text class="trend-title">总{{statsType === 'expense' ? '支出' : '收入'}}</text>
+        <text class="trend-total">¥{{totalAmount}}</text>
+        <text class="trend-subtitle">平均值：¥{{trendAverage}}</text>
       </view>
+      <view class="trend-legend-mini">
+        <view class="trend-legend-item"><text class="trend-legend-line {{statsType === 'income' ? 'is-income' : ''}}"></text><text>当前</text></view>
+        <view class="trend-legend-item"><text class="trend-legend-dash {{statsType === 'income' ? 'is-income' : ''}}"></text><text>均值</text></view>
+      </view>
+    </view>
+    <scroll-view class="trend-scroll" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+      <view class="trend-chart-inner" style="width: {{trendCanvasWidth}}rpx;">
+        <view class="trend-canvas-wrap">
+          <canvas id="trendCanvas" type="2d" class="trend-canvas" style="width: {{trendCanvasWidth}}rpx;"></canvas>
+          <view wx:if="{{trendEmpty}}" class="trend-empty">这个区间还没有记录</view>
+        </view>
+        <view class="trend-axis" style="width: {{trendCanvasWidth}}rpx;">
+          <text wx:for="{{trendAxisLabels}}" wx:key="*this" class="trend-axis-label" style="width: {{trendTickWidth}}rpx;">{{item}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="trend-scroll-hint">横向滑动查看完整时间轴</view>
+  </view>
+
+  <view class="ranking-section">
+    <view class="ranking-title">{{statsType === 'expense' ? '支出' : '收入'}}排行榜</view>
+    <view class="ranking-list">
+      <view wx:for="{{legendData}}" wx:key="name" class="ranking-row" hover-class="ranking-row--hover">
+        <view class="ranking-icon" style="background: {{item.color}}">
+          <text>{{index + 1}}</text>
+        </view>
+        <view class="ranking-main">
+          <view class="ranking-row-head">
+            <text class="ranking-name">{{item.name}}</text>
+            <text class="ranking-amount">¥{{item.amount}}</text>
+          </view>
+          <view class="ranking-bar-track">
+            <view class="ranking-bar" style="width: {{item.percent}}%; background: {{item.color}}"></view>
+          </view>
+          <text class="ranking-percent">{{item.percent}}%</text>
+        </view>
+      </view>
+      <view wx:if="{{legendData.length === 0}}" class="ranking-empty">暂无数据</view>
     </view>
   </view>
 
   <view class="ai-section">
     <view class="ai-header-row">
-      <view class="ai-section-title">小橘的便签</view>
-      <button class="ai-refresh-btn" size="mini" bindtap="refreshAIComments">✨ 催小橘更新</button>
+      <view class="ai-title-wrap">
+        <view class="ai-section-title">小橘的便签</view>
+        <view wx:if="{{aiHintVisible}}" class="ai-swipe-hint">左右滑动</view>
+      </view>
+      <button class="ai-refresh-btn" size="mini" bindtap="refreshAIComments">催小橘更新</button>
     </view>
     <!-- <text wx:if="{{aiDebugText}}" class="ai-debug-text">{{aiDebugText}}</text> -->
 
-    <view class="ai-card">
-      <view class="ai-card-stamp ai-card-stamp--daily"><text class="ai-card-emoji">📅</text></view>
-      <text class="ai-card-label">昨日回顾</text>
-      <text class="ai-card-text {{dailyLoading ? 'is-loading' : ''}}">{{dailyLoading ? '小橘正在琢磨…' : dailyComment}}</text>
-      <view class="ai-card-divider"></view>
-      <text class="ai-card-disclaimer">以上内容由腾讯混元AI生成，仅供娱乐参考</text>
+    <view class="ai-carousel">
+      <scroll-view class="ai-scroll" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}" bindscroll="onAINoteScroll">
+        <view class="ai-track">
+          <view class="ai-card ai-card--daily" data-scope="daily" bindtap="showAINoteFull">
+            <view class="ai-card-head">
+              <view class="ai-card-stamp ai-card-stamp--daily"><text class="ai-card-emoji">📅</text></view>
+              <text class="ai-card-label">昨日回顾</text>
+              <text class="ai-card-arrow">›</text>
+            </view>
+            <text class="ai-card-text {{dailyLoading ? 'is-loading' : ''}}">{{dailyLoading ? '小橘正在琢磨…' : dailyComment}}</text>
+            <view class="ai-card-foot">
+              <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
+              <text wx:if="{{!dailyLoading && dailyComment.length > 42}}" class="ai-card-more">查看全文</text>
+            </view>
+          </view>
+
+          <view class="ai-card ai-card--weekly" data-scope="weekly" bindtap="showAINoteFull">
+            <view class="ai-card-head">
+              <view class="ai-card-stamp ai-card-stamp--weekly"><text class="ai-card-emoji">📊</text></view>
+              <text class="ai-card-label">上周回顾</text>
+              <text class="ai-card-arrow">›</text>
+            </view>
+            <text class="ai-card-text {{weeklyLoading ? 'is-loading' : ''}}">{{weeklyLoading ? '小橘正在琢磨…' : weeklyComment}}</text>
+            <view class="ai-card-foot">
+              <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
+              <text wx:if="{{!weeklyLoading && weeklyComment.length > 42}}" class="ai-card-more">查看全文</text>
+            </view>
+          </view>
+
+          <view class="ai-card ai-card--monthly" data-scope="monthly" bindtap="showAINoteFull">
+            <view class="ai-card-head">
+              <view class="ai-card-stamp ai-card-stamp--monthly"><text class="ai-card-emoji">📈</text></view>
+              <text class="ai-card-label">上月回顾</text>
+              <text class="ai-card-arrow">›</text>
+            </view>
+            <text class="ai-card-text {{monthlyLoading ? 'is-loading' : ''}}">{{monthlyLoading ? '小橘正在琢磨…' : monthlyComment}}</text>
+            <view class="ai-card-foot">
+              <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
+              <text wx:if="{{!monthlyLoading && monthlyComment.length > 42}}" class="ai-card-more">查看全文</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="ai-fade"></view>
     </view>
 
-    <view class="ai-card">
-      <view class="ai-card-stamp ai-card-stamp--weekly"><text class="ai-card-emoji">📊</text></view>
-      <text class="ai-card-label">上周回顾</text>
-      <text class="ai-card-text {{weeklyLoading ? 'is-loading' : ''}}">{{weeklyLoading ? '小橘正在琢磨…' : weeklyComment}}</text>
-      <view class="ai-card-divider"></view>
-      <text class="ai-card-disclaimer">以上内容由腾讯混元AI生成，仅供娱乐参考</text>
-    </view>
-
-    <view class="ai-card">
-      <view class="ai-card-stamp ai-card-stamp--monthly"><text class="ai-card-emoji">📈</text></view>
-      <text class="ai-card-label">上月回顾</text>
-      <text class="ai-card-text {{monthlyLoading ? 'is-loading' : ''}}">{{monthlyLoading ? '小橘正在琢磨…' : monthlyComment}}</text>
-      <view class="ai-card-divider"></view>
-      <text class="ai-card-disclaimer">以上内容由腾讯混元AI生成，仅供娱乐参考</text>
+    <view class="ai-dots">
+      <view class="ai-dot {{aiCurrentIndex === 0 ? 'is-active' : ''}}"></view>
+      <view class="ai-dot {{aiCurrentIndex === 1 ? 'is-active' : ''}}"></view>
+      <view class="ai-dot {{aiCurrentIndex === 2 ? 'is-active' : ''}}"></view>
     </view>
   </view>
 

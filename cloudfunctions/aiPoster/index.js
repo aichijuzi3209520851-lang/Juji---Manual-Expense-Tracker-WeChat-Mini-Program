@@ -16,8 +16,21 @@ const SYSTEM_PROMPT = `你是一个住在"橘记"记账本里的赛博知己兼�
 4. 绝对不要出现"亲爱的用户"、"此致敬礼"等客套话。像一个深夜陪在身边的好友一样娓娓道来。
 5. 字数严格控制在 150-180 字之间。`
 
+const PROFILE_TITLE_SYSTEM_PROMPT = `你是"橘记"记账小程序里的俏皮称号策划。
+你的任务是根据用户今天的支出数据，生成一个轻松、可爱、不冒犯的今日消费称号。
+
+输出要求：
+1. 只输出 JSON，不要 Markdown，不要解释。
+2. JSON 格式：{"title":"4到8个中文字符","reason":"18到36个中文字符","category":"主要分类"}
+3. title 可以调皮，但必须友好，不能羞辱、不能贬低、不能评价身材、贫富、智商或人格。
+4. 严禁使用"败家"、"穷"、"胖"、"懒"、"废"、"蠢"、"丑"、"韭菜"、"冤种"等攻击性词。
+5. 已知性别为男时，可以自然使用"小子"；已知性别为女时，可以自然使用"丫头"；未知性别时使用中性称号。
+6. 如果餐饮占比最高，可以生成类似"大馋小子"、"大馋丫头"、"饭点雷达"的称号。`
+
 const DAILY_LIMIT = 30
 const LIMIT_FEATURE = 'profileLetter'
+const PROFILE_TITLE_DAILY_LIMIT = 8
+const PROFILE_TITLE_FEATURE = 'profileTitle'
 const BLOCK_PATTERNS = [
   /赌博|博彩|赌球|私彩|代购彩票/,
   /色情|裸聊|约炮|成人视频|淫秽/,
@@ -27,15 +40,18 @@ const BLOCK_PATTERNS = [
   /自杀|轻生|自残/,
   /暴恐|恐怖袭击/
 ]
+const TITLE_BLOCK_PATTERNS = [
+  /败家|穷|胖|懒|废|蠢|丑|土鳖|韭菜|冤种|饭桶|吃货本货/
+]
 
-async function checkDailyLimit(openid) {
+async function checkDailyLimit(openid, feature = LIMIT_FEATURE, limit = DAILY_LIMIT) {
   const date = getDateKey()
-  const docId = makeUsageDocId(openid, date, LIMIT_FEATURE)
+  const docId = makeUsageDocId(openid, date, feature)
   const ref = db.collection('ai_usage_limits').doc(docId)
   const now = new Date()
 
   const current = await getUsageRecord(ref)
-  if (current && current.count >= DAILY_LIMIT) {
+  if (current && current.count >= limit) {
     return { ok: false, remaining: 0 }
   }
 
@@ -52,16 +68,16 @@ async function checkDailyLimit(openid) {
       data: {
         _openid: openid,
         date,
-        feature: LIMIT_FEATURE,
+        feature,
         count: nextCount,
-        limit: DAILY_LIMIT,
+        limit,
         createdAt: now,
         updatedAt: now
       }
     })
   }
 
-  return { ok: true, remaining: Math.max(DAILY_LIMIT - nextCount, 0) }
+  return { ok: true, remaining: Math.max(limit - nextCount, 0) }
 }
 
 async function getUsageRecord(ref) {
@@ -94,10 +110,136 @@ function isUnsafeText(text) {
   return BLOCK_PATTERNS.some(pattern => pattern.test(text))
 }
 
+function isUnsafeProfileTitleText(text) {
+  text = String(text || '')
+  if (!text) return false
+  return isUnsafeText(text) || TITLE_BLOCK_PATTERNS.some(pattern => pattern.test(text))
+}
+
+function buildProfileTitleFallback(category, gender) {
+  const safeCategory = category || '其他'
+  let title
+  if (safeCategory === '餐饮') {
+    title = gender === 'male' ? '大馋小子' : gender === 'female' ? '大馋丫头' : '饭点雷达'
+  } else {
+    title = {
+      '交通': '通勤飞人',
+      '购物': '购物研究员',
+      '娱乐': '快乐续费官',
+      '学习': '知识充电王',
+      '日用': '生活管家',
+      '医疗': '健康守护员',
+      '其他': '日常收藏家'
+    }[safeCategory] || '日常收藏家'
+  }
+
+  return {
+    success: true,
+    title,
+    reason: `今天的支出里，${safeCategory}最抢镜，小橘先给你贴一个轻松标签。`,
+    category: safeCategory,
+    fallback: true,
+    remaining: -1,
+    totalLimit: PROFILE_TITLE_DAILY_LIMIT
+  }
+}
+
+function parseJsonObject(text) {
+  text = String(text || '').trim()
+  if (!text) return null
+  text = text.replace(/^```(?:json)?/i, '').replace(/```$/i, '').trim()
+  const start = text.indexOf('{')
+  const end = text.lastIndexOf('}')
+  if (start < 0 || end <= start) return null
+  try {
+    return JSON.parse(text.slice(start, end + 1))
+  } catch (err) {
+    return null
+  }
+}
+
+function normalizeProfileTitle(raw, fallback) {
+  const title = String(raw && raw.title || '').replace(/^[""']+/, '').replace(/[""']+$/, '').trim()
+  const reason = String(raw && raw.reason || '').trim()
+  const category = String(raw && raw.category || fallback.category || '其他').trim()
+  if (!title || title.length < 2 || title.length > 8) return fallback
+  if (!reason || reason.length < 6) return fallback
+  if (isUnsafeProfileTitleText([title, reason, category].join('\n'))) return fallback
+  return {
+    success: true,
+    title,
+    reason: reason.slice(0, 42),
+    category: category.slice(0, 12),
+    fallback: false
+  }
+}
+
+async function generateProfileTitle(event, openid) {
+  const gender = event.gender || ''
+  const summary = event.expenseSummary || {}
+  const topCategory = summary.topCategory || (summary.categories && summary.categories[0] && summary.categories[0].name) || '其他'
+  const fallback = buildProfileTitleFallback(topCategory, gender)
+
+  if (!summary.count || !summary.categories || !summary.categories.length) {
+    return fallback
+  }
+  if (isUnsafeProfileTitleText(JSON.stringify(summary.categories))) {
+    return fallback
+  }
+
+  const limit = await checkDailyLimit(openid, PROFILE_TITLE_FEATURE, PROFILE_TITLE_DAILY_LIMIT)
+  if (!limit.ok) {
+    return {
+      ...fallback,
+      remaining: 0,
+      totalLimit: PROFILE_TITLE_DAILY_LIMIT
+    }
+  }
+
+  try {
+    const genderText = gender === 'male' ? '男' : gender === 'female' ? '女' : '未设置'
+    const categoryText = summary.categories.map(item => {
+      return `${item.name} ${item.amount}元 ${item.percent || 0}% ${item.count || 0}笔`
+    }).join('；')
+    const userContent = `日期：${event.dateKey || getDateKey()}。性别：${genderText}。今日支出总额：${summary.total || 0}元，共${summary.count || 0}笔。分类金额排行：${categoryText}。请生成今日消费称号 JSON。`
+
+    const model = ai.createModel('hunyuan-v3')
+    console.log('[profileTitle] calling generateText with model=hy3-preview...')
+    const result = await model.generateText({
+      model: 'hy3-preview',
+      messages: [
+        { role: 'system', content: PROFILE_TITLE_SYSTEM_PROMPT },
+        { role: 'user', content: userContent }
+      ],
+    })
+
+    const parsed = parseJsonObject(result.text)
+    const normalized = normalizeProfileTitle(parsed, fallback)
+    return {
+      ...normalized,
+      remaining: limit.remaining,
+      totalLimit: PROFILE_TITLE_DAILY_LIMIT
+    }
+  } catch (err) {
+    console.error('[profileTitle] 调用失败:', err && err.message)
+    return {
+      ...fallback,
+      remaining: limit.remaining,
+      totalLimit: PROFILE_TITLE_DAILY_LIMIT,
+      errorDetail: err && err.message
+    }
+  }
+}
+
 exports.main = async (event, context) => {
+  event = event || {}
   const { days, category, zodiac, occupation, avgDailySpend } = event
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID
+
+  if (event.action === 'profileTitle') {
+    return generateProfileTitle(event, openid)
+  }
 
   try {
     // ── 限流检查 ──
