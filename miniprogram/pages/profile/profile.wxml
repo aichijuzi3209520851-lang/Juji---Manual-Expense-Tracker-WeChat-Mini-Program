@@ -96,7 +96,7 @@
       <text class="title-reason">{{profileTitle.reason}}</text>
       <view class="title-actions">
         <button class="title-btn title-btn--ghost" bindtap="closeProfileTitle">知道了</button>
-        <button wx:if="{{profileTitle.status === 'ready'}}" class="title-btn title-btn--primary" bindtap="writeLetterFromTitle">让小橘写封信</button>
+        <button wx:if="{{profileTitle.status === 'ready'}}" class="title-btn title-btn--primary" bindtap="writeLetterFromTitle">看看小橘心里话</button>
       </view>
     </view>
   </view>
