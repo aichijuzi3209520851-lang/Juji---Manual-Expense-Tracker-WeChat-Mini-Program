@@ -41,6 +41,10 @@ const AI_CHAT_WELCOME = {
 }
 const WEATHER_QUESTION_PATTERN = /天气|气温|下雨|降雨|刮风|冷不冷|热不热|穿什么/
 
+// 预设分类名（与 pages/record/record.js 保持一致；用于对话记账时把分类清单喂给模型）
+const PRESET_EXPENSE_CATEGORIES = ['餐饮', '交通', '购物', '娱乐', '学习', '日用', '医疗', '其他']
+const PRESET_INCOME_CATEGORIES = ['工资', '兼职', '理财', '红包', '退款', '其他']
+
 function pad(n) {
   return n < 10 ? '0' + n : '' + n
 }
@@ -339,7 +343,9 @@ Page({
         name: 'aiChat',
         data: {
           messages: this.getRecentChatMessages(messages),
-          userProfile: this.getChatUserProfile()
+          userProfile: this.getChatUserProfile(),
+          categories: this.getKnownCategories(),
+          today: getTodayKey()
         },
         config: { timeout: 30000 }
       })
@@ -348,6 +354,10 @@ Page({
       var replySafety = await checkText(reply, { scene: 4 })
       if (!replySafety.ok) reply = AI_CHAT_FALLBACK
       this.appendAssistantMessage(reply)
+      var drafts = Array.isArray(result.bills) ? result.bills : []
+      if (reply !== AI_CHAT_FALLBACK && drafts.length) {
+        this.appendBillDraft(drafts)
+      }
     } catch (err) {
       console.error('[aiChat] 调用失败:', err)
       this.appendAssistantMessage(AI_CHAT_FALLBACK)
@@ -372,6 +382,228 @@ Page({
       chatMessages: this.data.chatMessages.concat([message]),
       chatScrollTo: message.id
     })
+  },
+
+  // 当前用户全部可用分类名（预设 + 自定义），喂给模型做映射
+  getKnownCategories() {
+    var custom = (getApp().globalData.userInfo && getApp().globalData.userInfo.customCategories) || []
+    var customNames = custom.map(function(c) { return c.name })
+    var all = PRESET_EXPENSE_CATEGORIES.concat(PRESET_INCOME_CATEGORIES).concat(customNames)
+    var seen = {}
+    return all.filter(function(name) {
+      if (!name || seen[name]) return false
+      seen[name] = true
+      return true
+    })
+  },
+
+  // 把模型解析出的账单渲染成一张可编辑的待确认卡片消息
+  appendBillDraft(drafts) {
+    var id = 'chat_draft_' + Date.now() + '_' + Math.floor(Math.random() * 1000)
+    var items = drafts.slice(0, 10).map(function(d, i) {
+      var isNew = !!d.isNewCategory
+      return {
+        key: id + '_' + i,
+        type: d.type === 'income' ? 'income' : 'expense',
+        category: String(d.category || '其他'),
+        amount: Number(d.amount) || 0,
+        amountText: (Number(d.amount) || 0).toFixed(2),
+        note: String(d.note || ''),
+        date: d.date || getTodayKey(),
+        isNewCategory: isNew,
+        createNew: false // 新分类默认不勾选 → 归"其他"+备注原词
+      }
+    })
+    var message = {
+      id: id,
+      role: 'assistant',
+      type: 'billDraft',
+      status: 'pending', // pending | saving | done
+      drafts: items,
+      avatar: '/images/juji2.jpg'
+    }
+    this.setData({
+      chatMessages: this.data.chatMessages.concat([message]),
+      chatScrollTo: id
+    })
+  },
+
+  _findDraftMessage(msgId) {
+    var messages = this.data.chatMessages
+    for (var i = 0; i < messages.length; i++) {
+      if (messages[i].id === msgId && messages[i].type === 'billDraft') {
+        return { index: i, message: messages[i] }
+      }
+    }
+    return null
+  },
+
+  _updateDraftMessage(msgId, mutate) {
+    var found = this._findDraftMessage(msgId)
+    if (!found) return
+    var drafts = found.message.drafts.map(function(d) { return Object.assign({}, d) })
+    mutate(drafts, found.message)
+    var patch = {}
+    patch['chatMessages[' + found.index + '].drafts'] = drafts
+    this.setData(patch)
+  },
+
+  onDraftAmountInput(e) {
+    var msgId = e.currentTarget.dataset.msg
+    var key = e.currentTarget.dataset.key
+    var val = e.detail.value
+    this._updateDraftMessage(msgId, function(drafts) {
+      drafts.forEach(function(d) {
+        if (d.key === key) {
+          d.amountText = val
+          d.amount = parseFloat(val) || 0
+        }
+      })
+    })
+  },
+
+  onDraftNoteInput(e) {
+    var msgId = e.currentTarget.dataset.msg
+    var key = e.currentTarget.dataset.key
+    var val = e.detail.value
+    this._updateDraftMessage(msgId, function(drafts) {
+      drafts.forEach(function(d) {
+        if (d.key === key) d.note = val
+      })
+    })
+  },
+
+  removeDraftRow(e) {
+    var msgId = e.currentTarget.dataset.msg
+    var key = e.currentTarget.dataset.key
+    var self = this
+    var found = this._findDraftMessage(msgId)
+    if (!found) return
+    var drafts = found.message.drafts.filter(function(d) { return d.key !== key })
+    var patch = {}
+    patch['chatMessages[' + found.index + '].drafts'] = drafts
+    self.setData(patch)
+  },
+
+  toggleDraftNewCategory(e) {
+    var msgId = e.currentTarget.dataset.msg
+    var key = e.currentTarget.dataset.key
+    this._updateDraftMessage(msgId, function(drafts) {
+      drafts.forEach(function(d) {
+        if (d.key === key) d.createNew = !d.createNew
+      })
+    })
+  },
+
+  cancelBillDraft(e) {
+    var msgId = e.currentTarget.dataset.msg
+    var found = this._findDraftMessage(msgId)
+    if (!found) return
+    var messages = this.data.chatMessages.filter(function(m) { return m.id !== msgId })
+    this.setData({ chatMessages: messages })
+  },
+
+  async confirmBillDraft(e) {
+    var msgId = e.currentTarget.dataset.msg
+    var found = this._findDraftMessage(msgId)
+    if (!found || found.message.status !== 'pending') return
+
+    var rows = found.message.drafts
+    if (!rows.length) {
+      wx.showToast({ title: '没有可记录的账单', icon: 'none' })
+      return
+    }
+    // 校验金额
+    for (var i = 0; i < rows.length; i++) {
+      var amt = parseFloat(rows[i].amountText)
+      if (isNaN(amt) || amt <= 0) {
+        wx.showToast({ title: '第' + (i + 1) + '笔金额无效', icon: 'none' })
+        return
+      }
+    }
+
+    var statusPatch = {}
+    statusPatch['chatMessages[' + found.index + '].status'] = 'saving'
+    this.setData(statusPatch)
+
+    // 解析每行：勾选新建→保留原分类名;未勾选的新分类→归"其他"+备注带原词
+    var newCategoryNames = []
+    var bills = rows.map(function(d) {
+      var category = d.category
+      var note = d.note
+      if (d.isNewCategory && !d.createNew) {
+        note = note ? (d.category + '·' + note) : d.category
+        category = '其他'
+      } else if (d.isNewCategory && d.createNew) {
+        newCategoryNames.push(d.category)
+      }
+      return {
+        type: d.type,
+        amount: parseFloat(d.amountText),
+        category: category,
+        note: note,
+        date: d.date || getTodayKey()
+      }
+    })
+
+    try {
+      var res = await wx.cloud.callFunction({
+        name: 'bills',
+        data: { action: 'batchCreate', data: { bills: bills } },
+        config: { timeout: 20000 }
+      })
+      var result = res.result || {}
+      if (!result.success) {
+        this._setDraftStatus(msgId, 'pending')
+        wx.showToast({ title: result.message || '记账失败', icon: 'none' })
+        return
+      }
+      // 追加勾选的新分类到 users.customCategories
+      if (newCategoryNames.length) {
+        await this._appendCustomCategories(newCategoryNames)
+      }
+      var created = result.created || 0
+      this._setDraftStatus(msgId, 'done')
+      this.appendAssistantMessage('已记 ' + created + ' 笔，可以在首页查看啦~')
+    } catch (err) {
+      console.error('[batchCreate] 调用失败:', err)
+      this._setDraftStatus(msgId, 'pending')
+      wx.showToast({ title: '记账失败，请重试', icon: 'none' })
+    }
+  },
+
+  _setDraftStatus(msgId, status) {
+    var found = this._findDraftMessage(msgId)
+    if (!found) return
+    var patch = {}
+    patch['chatMessages[' + found.index + '].status'] = status
+    this.setData(patch)
+  },
+
+  async _appendCustomCategories(names) {
+    var app = getApp()
+    if (!app.globalData.openid) return
+    var existing = (app.globalData.userInfo && app.globalData.userInfo.customCategories) || []
+    var existingNames = {}
+    existing.forEach(function(c) { existingNames[c.name] = true })
+    var preset = {}
+    PRESET_EXPENSE_CATEGORIES.concat(PRESET_INCOME_CATEGORIES).forEach(function(n) { preset[n] = true })
+    var toAdd = []
+    names.forEach(function(name) {
+      if (!name || existingNames[name] || preset[name]) return
+      existingNames[name] = true
+      toAdd.push({ name: name, icon: CATEGORY_EMOJI[name] || '🏷️' })
+    })
+    if (!toAdd.length) return
+    var merged = existing.concat(toAdd)
+    try {
+      await wx.cloud.database().collection('users')
+        .where({ _openid: app.globalData.openid })
+        .update({ data: { customCategories: merged } })
+      app.globalData.userInfo.customCategories = merged
+    } catch (err) {
+      console.warn('[batchCreate] 追加自定义分类失败:', err)
+    }
   },
 
   getRecentChatMessages(messages) {

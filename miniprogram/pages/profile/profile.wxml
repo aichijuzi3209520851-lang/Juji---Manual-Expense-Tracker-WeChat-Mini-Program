@@ -122,7 +122,38 @@
             <image class="chat-avatar-img" src="{{avatarUrl}}" mode="aspectFill" />
           </view>
           <view wx:if="{{item.role === 'user' && (!avatarUrl || avatarError)}}" class="chat-avatar chat-avatar--fallback">我</view>
-          <view class="chat-bubble chat-bubble--{{item.role}}">{{item.content}}</view>
+
+          <!-- 待确认账单卡 -->
+          <view wx:if="{{item.type === 'billDraft'}}" class="bill-draft">
+            <view class="bill-draft-title">理出这几笔，确认下吧</view>
+            <view wx:for="{{item.drafts}}" wx:for-item="row" wx:key="key" class="bill-draft-row">
+              <view class="bill-draft-main">
+                <view class="bill-draft-cat">
+                  <text class="bill-draft-cat-name">{{row.category}}</text>
+                  <text wx:if="{{row.type === 'income'}}" class="bill-draft-tag bill-draft-tag--income">收入</text>
+                  <text wx:if="{{row.isNewCategory}}" class="bill-draft-tag bill-draft-tag--new">新</text>
+                </view>
+                <view class="bill-draft-amount">
+                  <text class="bill-draft-yuan">¥</text>
+                  <input class="bill-draft-amount-input" type="digit" value="{{row.amountText}}" disabled="{{item.status !== 'pending'}}" data-msg="{{item.id}}" data-key="{{row.key}}" bindinput="onDraftAmountInput" />
+                </view>
+                <view wx:if="{{item.status === 'pending'}}" class="bill-draft-del" data-msg="{{item.id}}" data-key="{{row.key}}" bindtap="removeDraftRow">✕</view>
+              </view>
+              <input class="bill-draft-note" value="{{row.note}}" placeholder="备注（可选）" maxlength="30" disabled="{{item.status !== 'pending'}}" data-msg="{{item.id}}" data-key="{{row.key}}" bindinput="onDraftNoteInput" />
+              <view wx:if="{{row.isNewCategory && item.status === 'pending'}}" class="bill-draft-newcat" data-msg="{{item.id}}" data-key="{{row.key}}" bindtap="toggleDraftNewCategory">
+                <text class="bill-draft-check {{row.createNew ? 'is-on' : ''}}">{{row.createNew ? '✓' : ''}}</text>
+                <text class="bill-draft-newcat-label">创建新分类「{{row.category}}」（不勾则归「其他」）</text>
+              </view>
+            </view>
+            <view wx:if="{{item.status === 'pending'}}" class="bill-draft-actions">
+              <button class="bill-draft-btn bill-draft-btn--ghost" data-msg="{{item.id}}" bindtap="cancelBillDraft">取消</button>
+              <button class="bill-draft-btn bill-draft-btn--primary" data-msg="{{item.id}}" bindtap="confirmBillDraft">确认记账</button>
+            </view>
+            <view wx:if="{{item.status === 'saving'}}" class="bill-draft-status">记账中...</view>
+            <view wx:if="{{item.status === 'done'}}" class="bill-draft-status bill-draft-status--done">✓ 已记账</view>
+          </view>
+
+          <view wx:else class="chat-bubble chat-bubble--{{item.role}}">{{item.content}}</view>
         </view>
         <view wx:if="{{chatLoading}}" id="chat_loading" class="chat-row chat-row--assistant">
           <image class="chat-avatar" src="/images/juji2.jpg" mode="aspectFill" />

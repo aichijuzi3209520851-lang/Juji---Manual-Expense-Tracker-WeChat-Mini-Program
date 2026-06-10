@@ -17,6 +17,7 @@ AGENTS.md
 .agents/
 .codebuddy/
 ui-ux-pro-max-mini-SKILL.md
+skills-lock.json
 
 # Editor / tooling backups
 *.bak

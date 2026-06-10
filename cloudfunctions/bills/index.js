@@ -5,6 +5,7 @@ const db = cloud.database()
 
 const MAX_AMOUNT = 99999999.99
 const MAX_NOTE_LEN = 200
+const MAX_BATCH = 10
 const BLOCK_PATTERNS = [
   /赌博|博彩|赌球|私彩|代购彩票/,
   /色情|裸聊|约炮|成人视频|淫秽/,
@@ -39,6 +40,20 @@ function containsUnsafeText(text) {
   return BLOCK_PATTERNS.some(pattern => pattern.test(text))
 }
 
+function buildBillDoc(data, openid) {
+  return {
+    _openid: openid,
+    type: data.type,
+    amount: parseFloat(data.amount),
+    category: data.category.trim(),
+    date: data.date,
+    note: (data.note || '').slice(0, MAX_NOTE_LEN),
+    photoUrl: data.photoUrl || '',
+    mood: data.mood || '',
+    createdAt: new Date()
+  }
+}
+
 exports.main = async (event, context) => {
   const { action, data } = event
   const wxContext = cloud.getWXContext()
@@ -50,23 +65,40 @@ exports.main = async (event, context) => {
 
       try {
         const res = await db.collection('bills').add({
-          data: {
-            _openid: wxContext.OPENID,
-            type: data.type,
-            amount: parseFloat(data.amount),
-            category: data.category.trim(),
-            date: data.date,
-            note: (data.note || '').slice(0, MAX_NOTE_LEN),
-            photoUrl: data.photoUrl || '',
-            mood: data.mood || '',
-            createdAt: new Date()
-          }
+          data: buildBillDoc(data, wxContext.OPENID)
         })
         return { success: true, id: res._id }
       } catch (e) {
         logFunctionError('create', e, wxContext)
         return { success: false, message: e.message }
       }
+    }
+
+    case 'batchCreate': {
+      const bills = Array.isArray(data && data.bills) ? data.bills : []
+      if (!bills.length) return { success: false, message: '没有可记录的账单' }
+      if (bills.length > MAX_BATCH) return { success: false, message: '一次最多记录 10 笔' }
+
+      const results = []
+      for (let i = 0; i < bills.length; i++) {
+        const item = bills[i]
+        const err = validate(item)
+        if (err) {
+          results.push({ index: i, success: false, message: err })
+          continue
+        }
+        try {
+          const res = await db.collection('bills').add({
+            data: buildBillDoc(item, wxContext.OPENID)
+          })
+          results.push({ index: i, success: true, id: res._id })
+        } catch (e) {
+          logFunctionError('batchCreate', e, wxContext)
+          results.push({ index: i, success: false, message: e.message })
+        }
+      }
+      const created = results.filter(r => r.success).length
+      return { success: created > 0, created, total: bills.length, results }
     }
 
     case 'delete': {

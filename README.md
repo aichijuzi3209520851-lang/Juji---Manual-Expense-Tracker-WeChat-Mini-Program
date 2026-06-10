@@ -277,6 +277,8 @@ MIT
 
 | 日期 | 版本 | 变更 |
 |------|------|------|
+| 2026-06-11 | **v1.0.9** | 新增「小橘对话记账」：AI 从口语提取多笔账单 → 待确认卡（可编辑金额/备注/删行）→ 批量写入；非预设分类优先映射，新分类可勾选创建（否则归「其他」+备注原词）；`bills` 新增 `batchCreate`，`aiChat` 结构化 JSON 输出 + 容错解析 + temperature 0.2；优化「我的」页小橘 CSS 形象 |
+| 2026-06-11 | **v1.0.8** | 全量更新 9 个云函数（quickstartFunctions / bills / exportBills / aiPoster / dataMigration / aiChat / contentSafety / budgets / clearUserData）；修复 clearUserData 云函数（安全清除用户数据）；新增 aiChat（AI 聊天）、contentSafety（内容安全）、budgets（预算服务端校验）、clearUserData（清除用户数据）4 个云函数 |
 | 2026-06-06 | **v1.0.7** | 新增退出登录功能（符合审核标准 3.5.5）；编辑账单防重复 — onHide 不清除编辑状态 + update 返回值校验；`project.config.json` key 排序同步 + 审核参考文档 |
 | 2026-05-31 | **v1.0.6** | 新增 `dataMigration` 云函数（JSON 导出/导入）；记账页 Emoji 输入校验 + 长按删除自定义分类；足迹卡片基线对齐；AI 信件弹窗拟物书信风重构 |
 | 2026-05-26 | **v1.0.1** | 部署 `bills`（新增 update）、`aiPoster`（修复语法 + 场景多样化）；引导页重构、主题显示 bug 修复、编辑账单功能、预算弹窗居中化 |
