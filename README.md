@@ -1,6 +1,10 @@
 # 橘记 (Juji) — 极简手动记账微信小程序
 
-🍊 一个让人愿意坚持用的记账习惯养成工具。打开就记，记完就走，月底安心回顾。
+<p align="center">
+  <img src="docs/xiaoju.png" alt="橘记吉祥物「小橘」" width="180" />
+</p>
+
+🍊 一个让人愿意坚持用的记账习惯养成工具。打开即记，记完就走，月底安心回顾。陪伴你的是 AI 助手「小橘」——动动嘴就能记账，还能聊天、复盘开销。
 
 ## 技术栈
 
@@ -292,6 +296,7 @@ MIT
 
 | 日期 | 版本 | 变更 |
 |------|------|------|
+| 2026-06-11 | **v1.1.0** | 引导页新增第 4 屏「遇见小橘」：吉祥物招手 + 发射爱心，介绍对话记账与聊天复盘（沿用现有毛玻璃悬浮球 / 水印汉字 / 错落入场设计语言）；README 展示「小橘」形象图 |
 | 2026-06-11 | **v1.0.9** | 新增「小橘对话记账」：AI 从口语提取多笔账单 → 待确认卡（可编辑金额/备注/删行）→ 批量写入；非预设分类优先映射，新分类可勾选创建（否则归「其他」+备注原词）；`bills` 新增 `batchCreate`，`aiChat` 结构化 JSON 输出 + 容错解析 + temperature 0.2；优化「我的」页小橘 CSS 形象 |
 | 2026-06-11 | **v1.0.8** | 全量更新 9 个云函数（quickstartFunctions / bills / exportBills / aiPoster / dataMigration / aiChat / contentSafety / budgets / clearUserData）；修复 clearUserData 云函数（安全清除用户数据）；新增 aiChat（AI 聊天）、contentSafety（内容安全）、budgets（预算服务端校验）、clearUserData（清除用户数据）4 个云函数 |
 | 2026-06-06 | **v1.0.7** | 新增退出登录功能（符合审核标准 3.5.5）；编辑账单防重复 — onHide 不清除编辑状态 + update 返回值校验；`project.config.json` key 排序同步 + 审核参考文档 |
