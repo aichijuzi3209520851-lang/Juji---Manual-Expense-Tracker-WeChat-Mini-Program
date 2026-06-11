@@ -21,10 +21,30 @@ const INCOME_CATEGORIES = [
 const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
-const { ensureSafeText } = require('../../utils/contentSafety')
+const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const { requirePrivacyAuthorization } = require('../../utils/privacy')
+const { CATEGORY_EMOJI } = require('../../utils/profileHelpers')
 
 const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
+const AI_CHAT_FALLBACK = '小橘不知道，来聊聊别的吧~'
+const AI_CHAT_WELCOME = {
+  id: 'chat_welcome',
+  role: 'assistant',
+  content: '嗨，我是小橘。可以陪你聊聊记账、消费复盘和生活小事。',
+  avatar: '/images/juji2.jpg'
+}
+const WEATHER_QUESTION_PATTERN = /天气|气温|下雨|降雨|刮风|冷不冷|热不热|穿什么/
+const PRESET_EXPENSE_CATEGORIES = ['餐饮', '交通', '购物', '娱乐', '学习', '日用', '医疗', '其他']
+const PRESET_INCOME_CATEGORIES = ['工资', '兼职', '理财', '红包', '退款', '其他']
+
+function pad(n) {
+  return n < 10 ? '0' + n : '' + n
+}
+
+function getTodayKey() {
+  var d = new Date()
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+}
 
 Page({
   data: {
@@ -46,6 +66,7 @@ Page({
     addCategoryName: '',
     addCategoryEmoji: '📌',
     addCategoryError: '',
+    amountAutoFocus: true,
     amountFocused: false,
     keyboardHeight: 0,
     quickConfirmStyle: 'bottom:0px;',
@@ -53,7 +74,19 @@ Page({
     quickSaving: false,
     // 编辑模式
     editMode: false,
-    editBillId: ''
+    editBillId: '',
+    petAction: 'idle',
+    petBubble: '',
+    petHearts: [],
+    showAiChat: false,
+    chatMessages: [],
+    chatInput: '',
+    chatLoading: false,
+    chatScrollTo: '',
+    chatKeyboardHeight: 0,
+    chatModalStyle: '',
+    chatUserAvatarUrl: '',
+    chatAvatarError: false
   },
 
   resetForm(nextType = 'expense') {
@@ -71,6 +104,7 @@ Page({
       photoCloudPath: '',
       mood: '',
       isCustomMood: false,
+      amountAutoFocus: true,
       amountFocused: false,
       keyboardHeight: 0,
       quickConfirmStyle: 'bottom:0px;',
@@ -114,6 +148,8 @@ Page({
   },
 
   onHide() {
+    this.setCustomTabBarHidden(false)
+    this.stopPetLoop()
     // 编辑模式下不清除状态（switchTab 会触发 onHide，但编辑链路未结束）
     // 仅在新增模式下重置导航栏标题
     if (!this.data.editMode) {
@@ -124,6 +160,8 @@ Page({
   onUnload() {
     if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
     if (this._amountBlurTimer) clearTimeout(this._amountBlurTimer)
+    this.setCustomTabBarHidden(false)
+    this.stopPetLoop()
     this.resetForm()
   },
 
@@ -135,11 +173,444 @@ Page({
     }
   },
 
+  noop() {},
+
+  setCustomTabBarHidden(hidden) {
+    if (typeof this.getTabBar !== 'function') return
+    const tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.setHidden === 'function') {
+      tabBar.setHidden(hidden)
+    }
+  },
+
+  startPetLoop() {
+    this.stopPetLoop()
+    this.schedulePetAction()
+  },
+
+  stopPetLoop() {
+    if (this._petTimer) clearTimeout(this._petTimer)
+    if (this._petActionTimer) clearTimeout(this._petActionTimer)
+    this._petTimer = null
+    this._petActionTimer = null
+  },
+
+  schedulePetAction() {
+    const delay = 4200 + Math.floor(Math.random() * 5200)
+    this._petTimer = setTimeout(() => {
+      this.triggerRandomPetAction()
+      this.schedulePetAction()
+    }, delay)
+  },
+
+  triggerRandomPetAction() {
+    const roll = Math.random()
+    const action = roll < 0.55 ? 'heart' : roll < 0.85 ? 'wave' : 'jump'
+    this.playPetAction(action)
+  },
+
+  playPetAction(action) {
+    if (this._petActionTimer) clearTimeout(this._petActionTimer)
+    const bubble = action === 'wave' ? 'Hi' : action === 'heart' ? '给你小心心' : ''
+    const patch = { petAction: action, petBubble: bubble }
+
+    if (action === 'heart') {
+      patch.petHearts = [{ id: 'heart_' + Date.now() }]
+    }
+
+    this.setData(patch)
+    this._petActionTimer = setTimeout(() => {
+      this.setData({ petAction: 'idle', petBubble: '', petHearts: [] })
+    }, action === 'heart' ? 1600 : 1100)
+  },
+
+  openAiChat() {
+    const app = getApp()
+    const userInfo = (app.globalData && app.globalData.userInfo) || {}
+    wx.hideKeyboard()
+    this.setCustomTabBarHidden(true)
+    this.playPetAction('wave')
+    this.setData({
+      showAiChat: true,
+      chatInput: '',
+      chatLoading: false,
+      chatMessages: [Object.assign({}, AI_CHAT_WELCOME)],
+      chatScrollTo: 'chat_welcome',
+      chatKeyboardHeight: 0,
+      chatModalStyle: '',
+      chatUserAvatarUrl: userInfo.avatarUrl || '',
+      chatAvatarError: false,
+      amountAutoFocus: false,
+      amountFocused: false,
+      keyboardHeight: 0,
+      quickConfirmStyle: 'bottom:0px;'
+    })
+  },
+
+  closeAiChat() {
+    this.setCustomTabBarHidden(false)
+    this.setData({
+      showAiChat: false,
+      chatMessages: [],
+      chatInput: '',
+      chatLoading: false,
+      chatScrollTo: '',
+      chatKeyboardHeight: 0,
+      chatModalStyle: ''
+    })
+  },
+
+  onChatInput(e) {
+    this.setData({ chatInput: e.detail.value || '' })
+  },
+
+  onChatKeyboardHeightChange(e) {
+    const height = Math.max(0, Math.round((e.detail && e.detail.height) || 0))
+    this.setData({
+      chatKeyboardHeight: height,
+      chatModalStyle: height ? 'bottom:' + height + 'px;' : ''
+    })
+  },
+
+  onChatInputBlur() {
+    this.setData({
+      chatKeyboardHeight: 0,
+      chatModalStyle: ''
+    })
+  },
+
+  onChatAvatarError() {
+    this.setData({ chatAvatarError: true })
+  },
+
+  async sendChatMessage() {
+    const text = (this.data.chatInput || '').trim()
+    if (!text || this.data.chatLoading) return
+
+    const userMessage = this.buildChatMessage('user', text)
+    const messages = this.data.chatMessages.concat([userMessage])
+    this.setData({
+      chatMessages: messages,
+      chatInput: '',
+      chatLoading: true,
+      chatScrollTo: userMessage.id
+    })
+
+    const safety = await checkText(text, { scene: 2 })
+    if (!safety.ok) {
+      this.appendAssistantMessage(AI_CHAT_FALLBACK)
+      this.setData({ chatLoading: false })
+      return
+    }
+
+    if (this.isWeatherQuestion(text)) {
+      this.appendAssistantMessage('天气查询功能先下线了，咱们聊记账、消费复盘或者生活小事吧~')
+      this.setData({ chatLoading: false })
+      return
+    }
+
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'aiChat',
+        data: {
+          messages: this.getRecentChatMessages(messages),
+          userProfile: this.getChatUserProfile(),
+          categories: this.getKnownCategories(),
+          today: getTodayKey()
+        },
+        config: { timeout: 30000 }
+      })
+      const result = res.result || {}
+      let reply = result.reply || AI_CHAT_FALLBACK
+      const replySafety = await checkText(reply, { scene: 4 })
+      if (!replySafety.ok) reply = AI_CHAT_FALLBACK
+      this.appendAssistantMessage(reply)
+      const drafts = Array.isArray(result.bills) ? result.bills : []
+      if (reply !== AI_CHAT_FALLBACK && drafts.length) {
+        this.appendBillDraft(drafts)
+      }
+    } catch (err) {
+      console.error('[aiChat] 调用失败:', err)
+      this.appendAssistantMessage(AI_CHAT_FALLBACK)
+    } finally {
+      this.setData({ chatLoading: false })
+    }
+  },
+
+  buildChatMessage(role, content) {
+    const id = 'chat_' + role + '_' + Date.now() + '_' + Math.floor(Math.random() * 1000)
+    return {
+      id,
+      role,
+      content,
+      avatar: role === 'assistant' ? '/images/juji2.jpg' : (this.data.chatUserAvatarUrl || '')
+    }
+  },
+
+  appendAssistantMessage(content) {
+    const message = this.buildChatMessage('assistant', content)
+    this.setData({
+      chatMessages: this.data.chatMessages.concat([message]),
+      chatScrollTo: message.id
+    })
+  },
+
+  appendBillDraft(drafts) {
+    const id = 'chat_draft_' + Date.now() + '_' + Math.floor(Math.random() * 1000)
+    const items = drafts.slice(0, 10).map(function(d, i) {
+      const isNew = !!d.isNewCategory
+      return {
+        key: id + '_' + i,
+        type: d.type === 'income' ? 'income' : 'expense',
+        category: String(d.category || '其他'),
+        amount: Number(d.amount) || 0,
+        amountText: (Number(d.amount) || 0).toFixed(2),
+        note: String(d.note || ''),
+        date: d.date || getTodayKey(),
+        isNewCategory: isNew,
+        createNew: false
+      }
+    })
+    const message = {
+      id,
+      role: 'assistant',
+      type: 'billDraft',
+      status: 'pending',
+      drafts: items,
+      avatar: '/images/juji2.jpg'
+    }
+    this.setData({
+      chatMessages: this.data.chatMessages.concat([message]),
+      chatScrollTo: id
+    })
+  },
+
+  _findDraftMessage(msgId) {
+    const messages = this.data.chatMessages
+    for (let i = 0; i < messages.length; i++) {
+      if (messages[i].id === msgId && messages[i].type === 'billDraft') {
+        return { index: i, message: messages[i] }
+      }
+    }
+    return null
+  },
+
+  _updateDraftMessage(msgId, mutate) {
+    const found = this._findDraftMessage(msgId)
+    if (!found) return
+    const drafts = found.message.drafts.map(function(d) { return Object.assign({}, d) })
+    mutate(drafts, found.message)
+    const patch = {}
+    patch['chatMessages[' + found.index + '].drafts'] = drafts
+    this.setData(patch)
+  },
+
+  onDraftAmountInput(e) {
+    const msgId = e.currentTarget.dataset.msg
+    const key = e.currentTarget.dataset.key
+    const val = e.detail.value
+    this._updateDraftMessage(msgId, function(drafts) {
+      drafts.forEach(function(d) {
+        if (d.key === key) {
+          d.amountText = val
+          d.amount = parseFloat(val) || 0
+        }
+      })
+    })
+  },
+
+  onDraftNoteInput(e) {
+    const msgId = e.currentTarget.dataset.msg
+    const key = e.currentTarget.dataset.key
+    const val = e.detail.value
+    this._updateDraftMessage(msgId, function(drafts) {
+      drafts.forEach(function(d) {
+        if (d.key === key) d.note = val
+      })
+    })
+  },
+
+  removeDraftRow(e) {
+    const msgId = e.currentTarget.dataset.msg
+    const key = e.currentTarget.dataset.key
+    const found = this._findDraftMessage(msgId)
+    if (!found) return
+    const drafts = found.message.drafts.filter(function(d) { return d.key !== key })
+    const patch = {}
+    patch['chatMessages[' + found.index + '].drafts'] = drafts
+    this.setData(patch)
+  },
+
+  toggleDraftNewCategory(e) {
+    const msgId = e.currentTarget.dataset.msg
+    const key = e.currentTarget.dataset.key
+    this._updateDraftMessage(msgId, function(drafts) {
+      drafts.forEach(function(d) {
+        if (d.key === key) d.createNew = !d.createNew
+      })
+    })
+  },
+
+  cancelBillDraft(e) {
+    const msgId = e.currentTarget.dataset.msg
+    const found = this._findDraftMessage(msgId)
+    if (!found) return
+    const messages = this.data.chatMessages.filter(function(m) { return m.id !== msgId })
+    this.setData({ chatMessages: messages })
+  },
+
+  async confirmBillDraft(e) {
+    const msgId = e.currentTarget.dataset.msg
+    const found = this._findDraftMessage(msgId)
+    if (!found || found.message.status !== 'pending') return
+
+    const rows = found.message.drafts
+    if (!rows.length) {
+      wx.showToast({ title: '没有可记录的账单', icon: 'none' })
+      return
+    }
+    for (let i = 0; i < rows.length; i++) {
+      const amt = parseFloat(rows[i].amountText)
+      if (isNaN(amt) || amt <= 0) {
+        wx.showToast({ title: '第' + (i + 1) + '笔金额无效', icon: 'none' })
+        return
+      }
+    }
+
+    const statusPatch = {}
+    statusPatch['chatMessages[' + found.index + '].status'] = 'saving'
+    this.setData(statusPatch)
+
+    const newCategoryNames = []
+    const bills = rows.map(function(d) {
+      let category = d.category
+      let note = d.note
+      if (d.isNewCategory && !d.createNew) {
+        note = note ? (d.category + '·' + note) : d.category
+        category = '其他'
+      } else if (d.isNewCategory && d.createNew) {
+        newCategoryNames.push(d.category)
+      }
+      return {
+        type: d.type,
+        amount: parseFloat(d.amountText),
+        category,
+        note,
+        date: d.date || getTodayKey()
+      }
+    })
+
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'bills',
+        data: { action: 'batchCreate', data: { bills } },
+        config: { timeout: 20000 }
+      })
+      const result = res.result || {}
+      if (!result.success) {
+        this._setDraftStatus(msgId, 'pending')
+        wx.showToast({ title: result.message || '记账失败', icon: 'none' })
+        return
+      }
+      if (newCategoryNames.length) {
+        await this._appendCustomCategories(newCategoryNames)
+      }
+      const created = result.created || 0
+      this._setDraftStatus(msgId, 'done')
+      this.loadCustomCategories(this.data.type)
+      this.appendAssistantMessage('已记 ' + created + ' 笔，可以在首页查看啦~')
+    } catch (err) {
+      console.error('[batchCreate] 调用失败:', err)
+      this._setDraftStatus(msgId, 'pending')
+      wx.showToast({ title: '记账失败，请重试', icon: 'none' })
+    }
+  },
+
+  _setDraftStatus(msgId, status) {
+    const found = this._findDraftMessage(msgId)
+    if (!found) return
+    const patch = {}
+    patch['chatMessages[' + found.index + '].status'] = status
+    this.setData(patch)
+  },
+
+  async _appendCustomCategories(names) {
+    const app = getApp()
+    if (!app.globalData.openid) return
+    const existing = (app.globalData.userInfo && app.globalData.userInfo.customCategories) || []
+    const existingNames = {}
+    existing.forEach(function(c) { existingNames[c.name] = true })
+    const preset = {}
+    PRESET_EXPENSE_CATEGORIES.concat(PRESET_INCOME_CATEGORIES).forEach(function(n) { preset[n] = true })
+    const toAdd = []
+    names.forEach(function(name) {
+      if (!name || existingNames[name] || preset[name]) return
+      existingNames[name] = true
+      toAdd.push({ name: name, icon: CATEGORY_EMOJI[name] || '🏷️' })
+    })
+    if (!toAdd.length) return
+    const merged = existing.concat(toAdd)
+    try {
+      await wx.cloud.database().collection('users')
+        .where({ _openid: app.globalData.openid })
+        .update({ data: { customCategories: merged } })
+      if (!app.globalData.userInfo) app.globalData.userInfo = {}
+      app.globalData.userInfo.customCategories = merged
+    } catch (err) {
+      console.warn('[batchCreate] 追加自定义分类失败:', err)
+    }
+  },
+
+  getRecentChatMessages(messages) {
+    return messages
+      .filter(function(item) {
+        return (item.role === 'user' || item.role === 'assistant') && item.content
+      })
+      .slice(-8)
+      .map(function(item) {
+        return {
+          role: item.role,
+          content: item.content
+        }
+      })
+  },
+
+  getKnownCategories() {
+    const custom = (getApp().globalData.userInfo && getApp().globalData.userInfo.customCategories) || []
+    const customNames = custom.map(function(c) { return c.name })
+    const all = PRESET_EXPENSE_CATEGORIES.concat(PRESET_INCOME_CATEGORIES).concat(customNames)
+    const seen = {}
+    return all.filter(function(name) {
+      if (!name || seen[name]) return false
+      seen[name] = true
+      return true
+    })
+  },
+
+  getChatUserProfile() {
+    const userInfo = (getApp().globalData && getApp().globalData.userInfo) || {}
+    return {
+      nickname: userInfo.nickname || '',
+      gender: userInfo.gender || '',
+      zodiac: userInfo.zodiac || '',
+      occupation: userInfo.occupation || '',
+      currentType: this.data.type,
+      currentCategory: this.data.selectedCategory,
+      currentAmount: this.data.amount || '',
+      currentDate: this.data.dateStr || getTodayKey()
+    }
+  },
+
+  isWeatherQuestion(text) {
+    return WEATHER_QUESTION_PATTERN.test(String(text || ''))
+  },
+
   onShow() {
     applyTheme()
-    this.setData({ themeStyle: getThemeStyleString() })
+    this.setData({ themeStyle: getThemeStyleString(), amountAutoFocus: !this.data.showAiChat })
     this.updateCustomTabBar()
     this.loadCustomCategories(this.data.type)
+    this.startPetLoop()
 
     // 检测从详情页跳转过来的编辑请求（通过全局变量，因为 switchTab 不能带参数）
     // 若当前已在编辑模式，跳过，防止状态被意外覆盖

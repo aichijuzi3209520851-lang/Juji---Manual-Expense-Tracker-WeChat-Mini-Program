@@ -12,11 +12,29 @@
       </view>
     </view>
 
+    <view class="juji-pet juji-pet--{{petAction}}" bindtap="openAiChat" aria-label="小橘AI助手">
+      <view wx:if="{{petBubble}}" class="juji-pet-bubble">{{petBubble}}</view>
+      <view wx:for="{{petHearts}}" wx:key="id" class="juji-pet-heart">❤</view>
+      <view class="juji-pet-shadow"></view>
+      <view class="juji-pet-body">
+        <view class="juji-pet-leaf"></view>
+        <view class="juji-pet-face">
+          <view class="juji-pet-eye juji-pet-eye--left"></view>
+          <view class="juji-pet-eye juji-pet-eye--right"></view>
+          <view class="juji-pet-mouth"></view>
+        </view>
+        <view class="juji-pet-arm juji-pet-arm--left"></view>
+        <view class="juji-pet-arm juji-pet-arm--right"></view>
+        <view class="juji-pet-foot juji-pet-foot--left"></view>
+        <view class="juji-pet-foot juji-pet-foot--right"></view>
+      </view>
+    </view>
+
     <view class="amount-chip">{{type === 'expense' ? '本次支出' : '本次收入'}}</view>
     <view class="amount-row">
       <view class="amount-field">
         <text class="amount-symbol">¥</text>
-        <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{true}}" confirm-type="done" bindinput="onAmountInput" bindfocus="onAmountFocus" bindblur="onAmountBlur" bindconfirm="quickSaveRecord" bindkeyboardheightchange="onKeyboardHeightChange" cursor-spacing="24" />
+        <input class="amount-input" value="{{amount}}" placeholder="0.00" placeholder-class="amount-placeholder" type="digit" focus="{{amountAutoFocus}}" confirm-type="done" bindinput="onAmountInput" bindfocus="onAmountFocus" bindblur="onAmountBlur" bindconfirm="quickSaveRecord" bindkeyboardheightchange="onKeyboardHeightChange" cursor-spacing="24" />
       </view>
     </view>
     <picker mode="date" value="{{dateStr}}" start="2020-01-01" end="2027-12-31" fields="day" bindchange="onDateChange">
@@ -102,6 +120,75 @@
       <text class="quick-confirm-meta">{{selectedCategory}} · {{displayDate}} · ¥{{amount ? amount : '0.00'}}</text>
     </view>
     <button class="quick-confirm-btn {{quickCanSave && !quickSaving ? '' : 'is-disabled'}}" loading="{{quickSaving}}" disabled="{{!quickCanSave || quickSaving}}" catchtap="quickSaveRecord">确认记账</button>
+  </view>
+
+  <!-- 小橘 AI 助手聊天弹窗 -->
+  <view class="ai-chat-modal" wx:if="{{showAiChat}}" style="{{chatModalStyle}}" catchtap="closeAiChat" catchtouchmove="noop">
+    <view class="ai-chat-panel {{chatKeyboardHeight > 0 ? 'is-keyboard' : ''}}" catchtap="noop">
+      <view class="ai-chat-header">
+        <view class="ai-chat-title">
+          <image class="ai-chat-logo" src="/images/juji2.jpg" mode="aspectFill" />
+          <view>
+            <text class="ai-chat-name">小橘 AI 助手</text>
+            <text class="ai-chat-subtitle">AI生成，仅供参考</text>
+          </view>
+        </view>
+        <text class="ai-chat-close" bindtap="closeAiChat">×</text>
+      </view>
+
+      <scroll-view class="ai-chat-body" scroll-y="{{true}}" scroll-into-view="{{chatScrollTo}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+        <view wx:for="{{chatMessages}}" wx:key="id" id="{{item.id}}" class="chat-row chat-row--{{item.role}}">
+          <image wx:if="{{item.role === 'assistant'}}" class="chat-avatar" src="/images/juji2.jpg" mode="aspectFill" />
+          <view wx:if="{{item.role === 'user' && chatUserAvatarUrl && !chatAvatarError}}" class="chat-avatar chat-avatar--user-img">
+            <image class="chat-avatar-img" src="{{chatUserAvatarUrl}}" mode="aspectFill" binderror="onChatAvatarError" />
+          </view>
+          <view wx:if="{{item.role === 'user' && (!chatUserAvatarUrl || chatAvatarError)}}" class="chat-avatar chat-avatar--fallback">我</view>
+
+          <view wx:if="{{item.type === 'billDraft'}}" class="bill-draft">
+            <view class="bill-draft-title">理出这几笔，确认下吧</view>
+            <view wx:for="{{item.drafts}}" wx:for-item="row" wx:key="key" class="bill-draft-row">
+              <view class="bill-draft-main">
+                <view class="bill-draft-cat">
+                  <text class="bill-draft-cat-name">{{row.category}}</text>
+                  <text wx:if="{{row.type === 'income'}}" class="bill-draft-tag bill-draft-tag--income">收入</text>
+                  <text wx:if="{{row.isNewCategory}}" class="bill-draft-tag bill-draft-tag--new">新</text>
+                </view>
+                <view class="bill-draft-amount">
+                  <text class="bill-draft-yuan">¥</text>
+                  <input class="bill-draft-amount-input" type="digit" value="{{row.amountText}}" disabled="{{item.status !== 'pending'}}" data-msg="{{item.id}}" data-key="{{row.key}}" bindinput="onDraftAmountInput" />
+                </view>
+                <view wx:if="{{item.status === 'pending'}}" class="bill-draft-del" data-msg="{{item.id}}" data-key="{{row.key}}" bindtap="removeDraftRow">✕</view>
+              </view>
+              <input class="bill-draft-note" value="{{row.note}}" placeholder="备注（可选）" maxlength="30" disabled="{{item.status !== 'pending'}}" data-msg="{{item.id}}" data-key="{{row.key}}" bindinput="onDraftNoteInput" />
+              <view wx:if="{{row.isNewCategory && item.status === 'pending'}}" class="bill-draft-newcat" data-msg="{{item.id}}" data-key="{{row.key}}" bindtap="toggleDraftNewCategory">
+                <text class="bill-draft-check {{row.createNew ? 'is-on' : ''}}">{{row.createNew ? '✓' : ''}}</text>
+                <text class="bill-draft-newcat-label">创建新分类「{{row.category}}」（不勾则归「其他」+备注原词）</text>
+              </view>
+            </view>
+            <view wx:if="{{item.status === 'pending'}}" class="bill-draft-actions">
+              <button class="bill-draft-btn bill-draft-btn--ghost" data-msg="{{item.id}}" bindtap="cancelBillDraft">取消</button>
+              <button class="bill-draft-btn bill-draft-btn--primary" data-msg="{{item.id}}" bindtap="confirmBillDraft">确认记账</button>
+            </view>
+            <view wx:if="{{item.status === 'saving'}}" class="bill-draft-status">记账中...</view>
+            <view wx:if="{{item.status === 'done'}}" class="bill-draft-status bill-draft-status--done">✓ 已记账</view>
+          </view>
+
+          <view wx:else class="chat-bubble chat-bubble--{{item.role}}">{{item.content}}</view>
+        </view>
+        <view wx:if="{{chatLoading}}" id="chat_loading" class="chat-row chat-row--assistant">
+          <image class="chat-avatar" src="/images/juji2.jpg" mode="aspectFill" />
+          <view class="chat-bubble chat-bubble--assistant chat-bubble--typing">小橘正在想...</view>
+        </view>
+      </scroll-view>
+
+      <view class="ai-chat-footer">
+        <text class="ai-chat-notice">AI生成，仅供参考，请勿输入敏感个人信息。</text>
+        <view class="ai-chat-input-row">
+          <input class="ai-chat-input" value="{{chatInput}}" bindinput="onChatInput" bindblur="onChatInputBlur" bindconfirm="sendChatMessage" bindkeyboardheightchange="onChatKeyboardHeightChange" confirm-type="send" adjust-position="{{false}}" cursor-spacing="12" placeholder="和小橘聊聊..." maxlength="300" />
+          <button class="ai-chat-send {{chatLoading || !chatInput ? 'is-disabled' : ''}}" bindtap="sendChatMessage">发送</button>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 自创分类弹窗 -->

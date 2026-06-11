@@ -1,7 +1,9 @@
 const PRIVACY_TOAST = '请先同意隐私协议'
 const PRIVACY_AGREED_KEY = 'juji_privacy_agreed'
+const PRIVACY_DEBUG_BYPASS = true
 
 function initPrivacyAuthorization() {
+  if (PRIVACY_DEBUG_BYPASS) return
   if (initPrivacyAuthorization._inited) return
   initPrivacyAuthorization._inited = true
 
@@ -21,6 +23,7 @@ function initPrivacyAuthorization() {
 }
 
 async function requirePrivacyAuthorization(featureName = '') {
+  if (PRIVACY_DEBUG_BYPASS) return true
   const needAuthorization = await getNeedAuthorization()
   if (!needAuthorization) return true
 
@@ -69,6 +72,7 @@ function showPrivacySummary() {
 }
 
 function getNeedAuthorization() {
+  if (PRIVACY_DEBUG_BYPASS) return Promise.resolve(false)
   if (typeof wx.getPrivacySetting !== 'function') return Promise.resolve(false)
   return new Promise(resolve => {
     wx.getPrivacySetting({
