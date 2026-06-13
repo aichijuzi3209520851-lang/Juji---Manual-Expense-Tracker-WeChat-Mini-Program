@@ -836,6 +836,35 @@ picker { display: flex; justify-content: center; }
   color: var(--color-text-tertiary);
   animation: juji-chat-typing 1.2s ease-in-out infinite;
 }
+.chat-suggestions {
+  margin: -6rpx 0 24rpx 72rpx;
+  max-width: 560rpx;
+}
+.chat-suggestions-title {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 20rpx;
+  color: var(--color-text-tertiary);
+  line-height: 1.3;
+}
+.chat-suggestion-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+.chat-suggestion-chip {
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12rpx 18rpx;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border);
+  color: var(--color-primary);
+  font-size: 24rpx;
+  font-weight: 600;
+  line-height: 1.35;
+  box-shadow: 0 6rpx 16rpx rgba(0,0,0,0.05);
+}
 @keyframes juji-chat-typing {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }

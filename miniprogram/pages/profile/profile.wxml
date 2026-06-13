@@ -155,6 +155,12 @@
 
           <view wx:else class="chat-bubble chat-bubble--{{item.role}}">{{item.content}}</view>
         </view>
+        <view wx:if="{{showChatSuggestions}}" class="chat-suggestions">
+          <text class="chat-suggestions-title">可以这样问小橘</text>
+          <view class="chat-suggestion-list">
+            <view wx:for="{{chatSuggestions}}" wx:for-item="suggestion" wx:key="*this" class="chat-suggestion-chip" data-text="{{suggestion}}" bindtap="sendChatSuggestion">{{suggestion}}</view>
+          </view>
+        </view>
         <view wx:if="{{chatLoading}}" id="chat_loading" class="chat-row chat-row--assistant">
           <image class="chat-avatar" src="/images/juji2.jpg" mode="aspectFill" />
           <view class="chat-bubble chat-bubble--assistant chat-bubble--typing">小橘正在想...</view>

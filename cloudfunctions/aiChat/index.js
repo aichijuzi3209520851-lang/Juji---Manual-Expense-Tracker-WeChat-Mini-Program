@@ -4,6 +4,7 @@ const tcb = require('@cloudbase/node-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const app = tcb.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const ai = app.ai()
+const db = cloud.database()
 
 const AI_MODEL = 'hy3-preview'
 const FALLBACK_REPLY = '小橘不知道，来聊聊别的吧~'
@@ -61,6 +62,25 @@ exports.main = async (event = {}) => {
   const inputSafe = await checkContent(openid, latest.content, 2)
   if (!inputSafe) {
     return { success: true, reply: FALLBACK_REPLY, fallback: true, bills: [] }
+  }
+
+  const dataQuery = parseDataQuery(latest.content, today)
+  if (dataQuery) {
+    try {
+      const analytics = await resolveDataQuery(openid, dataQuery)
+      const reply = buildAnalyticsReply(analytics)
+      const outputSafe = await checkContent(openid, reply, 4)
+      return {
+        success: true,
+        reply: outputSafe ? reply : FALLBACK_REPLY,
+        bills: [],
+        analytics,
+        fallback: !outputSafe
+      }
+    } catch (err) {
+      console.error('[aiChat] analytics failed:', err && (err.message || err.errMsg))
+      return { success: true, reply: '小橘查账时走神了，你稍后再试一下~', bills: [], fallback: true }
+    }
   }
 
   try {
@@ -216,6 +236,319 @@ function buildModelMessages(messages, profile, categories, today) {
     list.push({ role: item.role, content: item.content })
   })
   return list
+}
+
+function parseDataQuery(text, today) {
+  const compact = String(text || '').replace(/\s+/g, '')
+  if (!compact) return null
+
+  const isTop = /哪类|哪一类|分类|最多|最大头|占大头|钱花哪|花哪|花在/.test(compact)
+  const isCount = /几笔|多少笔|记了几笔|记账几笔|记账多少/.test(compact)
+  const isNet = /结余|净收入|收支差|剩下多少/.test(compact)
+  const isCompare = /(比|对比|省了|省多少|多花|少花|多了|少了)/.test(compact) && /(上周|上星期|上月|上个月|昨天)/.test(compact)
+  const hasAmountQuery = /多少钱|多少|合计|总共|一共|统计|查一下|看看|算一下/.test(compact)
+  const hasRange = /(今天|今日|昨天|本周|这周|这一周|这个星期|本星期|上周|上星期|本月|这个月|这月|上月|上个月)/.test(compact)
+
+  if (!isTop && !isCount && !isNet && !isCompare && !hasAmountQuery) return null
+  if (!hasRange && !/(花|消费|支出|收入|记账|结余|净收入|钱)/.test(compact)) return null
+
+  const range = detectRange(compact, today) || buildRange('thisMonth', today)
+  let kind = 'total'
+  if (isCompare) kind = 'compare'
+  else if (isTop) kind = 'top'
+  else if (isCount) kind = 'count'
+  else if (isNet) kind = 'net'
+
+  const type = detectQueryType(compact, kind)
+  return {
+    intent: 'analytics',
+    kind,
+    type,
+    range,
+    previousRange: kind === 'compare' ? buildPreviousRange(range, today) : null
+  }
+}
+
+function detectQueryType(text, kind) {
+  if (/结余|净收入|收支差|剩下多少/.test(text)) return 'net'
+  if (/收入|进账|入账|赚了|工资/.test(text)) return 'income'
+  if (kind === 'count' && !/(花|消费|支出|收入)/.test(text)) return 'all'
+  return 'expense'
+}
+
+function detectRange(text, today) {
+  if (/今天|今日/.test(text)) return buildRange('today', today)
+  if (/昨天/.test(text)) return buildRange('yesterday', today)
+  if (/本周|这周|这一周|这个星期|本星期/.test(text)) return buildRange('thisWeek', today)
+  if (/上周|上星期/.test(text)) return buildRange('lastWeek', today)
+  if (/本月|这个月|这月/.test(text)) return buildRange('thisMonth', today)
+  if (/上月|上个月/.test(text)) return buildRange('lastMonth', today)
+  return null
+}
+
+function buildRange(key, today) {
+  const d = parseDate(today)
+  if (key === 'today') {
+    const day = fmtDate(d)
+    return { key, unit: 'day', label: '今天', start: day, end: day }
+  }
+  if (key === 'yesterday') {
+    const day = fmtDate(addDays(d, -1))
+    return { key, unit: 'day', label: '昨天', start: day, end: day }
+  }
+  if (key === 'thisWeek') {
+    return { key, unit: 'week', label: '本周', start: fmtDate(getWeekStart(d)), end: fmtDate(d) }
+  }
+  if (key === 'lastWeek') {
+    const end = addDays(getWeekStart(d), -1)
+    const start = addDays(end, -6)
+    return { key, unit: 'week', label: '上周', start: fmtDate(start), end: fmtDate(end) }
+  }
+  if (key === 'lastMonth') {
+    const start = new Date(d.getFullYear(), d.getMonth() - 1, 1)
+    const end = new Date(d.getFullYear(), d.getMonth(), 0)
+    return { key, unit: 'month', label: '上月', start: fmtDate(start), end: fmtDate(end) }
+  }
+  return {
+    key: 'thisMonth',
+    unit: 'month',
+    label: '本月',
+    start: fmtDate(new Date(d.getFullYear(), d.getMonth(), 1)),
+    end: fmtDate(d)
+  }
+}
+
+function buildPreviousRange(range, today) {
+  if (!range) return buildRange('lastMonth', today)
+  if (range.key === 'thisWeek') return buildRange('lastWeek', today)
+  if (range.key === 'thisMonth') return buildRange('lastMonth', today)
+  if (range.key === 'today') return buildRange('yesterday', today)
+  if (range.key === 'lastWeek') {
+    const start = addDays(parseDate(range.start), -7)
+    const end = addDays(parseDate(range.end), -7)
+    return { key: 'prevWeek', unit: 'week', label: '再上一周', start: fmtDate(start), end: fmtDate(end) }
+  }
+  if (range.key === 'lastMonth') {
+    const d = parseDate(range.start)
+    const start = new Date(d.getFullYear(), d.getMonth() - 1, 1)
+    const end = new Date(d.getFullYear(), d.getMonth(), 0)
+    return { key: 'prevMonth', unit: 'month', label: '再上月', start: fmtDate(start), end: fmtDate(end) }
+  }
+  return buildRange('yesterday', today)
+}
+
+async function resolveDataQuery(openid, query) {
+  if (query.kind === 'compare') {
+    const currentBills = await queryBills(openid, query.type, query.range.start, query.range.end)
+    const previousBills = await queryBills(openid, query.type, query.previousRange.start, query.previousRange.end)
+    return {
+      intent: 'analytics',
+      kind: query.kind,
+      type: query.type,
+      range: query.range,
+      previousRange: query.previousRange,
+      current: summarizeBills(currentBills),
+      previous: summarizeBills(previousBills)
+    }
+  }
+
+  const type = query.kind === 'net' ? 'all' : query.type
+  const bills = await queryBills(openid, type, query.range.start, query.range.end)
+  return {
+    intent: 'analytics',
+    kind: query.kind,
+    type: query.type,
+    range: query.range,
+    current: summarizeBills(bills)
+  }
+}
+
+async function queryBills(openid, type, start, end) {
+  const _ = db.command
+  const where = {
+    _openid: openid,
+    date: _.gte(start).and(_.lte(end))
+  }
+  if (type && type !== 'all' && type !== 'net') where.type = type
+  return getAll(db.collection('bills').where(where), 100, 10000)
+}
+
+async function getAll(query, pageSize, max) {
+  const all = []
+  const size = Math.max(1, Math.min(pageSize || 100, max || 10000))
+  const limit = max || 10000
+
+  for (let offset = 0; offset < limit;) {
+    const res = await query.skip(offset).limit(Math.min(size, limit - offset)).get()
+    const data = (res && res.data) || []
+    if (!data.length) break
+    all.push(...data)
+    if (data.length < size) break
+    offset += data.length
+  }
+  return all
+}
+
+function summarizeBills(bills) {
+  const summary = {
+    count: 0,
+    total: 0,
+    totalText: '0.00',
+    expenseTotal: 0,
+    expenseText: '0.00',
+    expenseCount: 0,
+    incomeTotal: 0,
+    incomeText: '0.00',
+    incomeCount: 0,
+    topCategories: []
+  }
+  const byCategory = {}
+
+  ;(bills || []).forEach(item => {
+    const amount = Number(item.amount) || 0
+    if (amount <= 0) return
+    const type = item.type === 'income' ? 'income' : 'expense'
+    const category = safeCategoryName(item.category || '其他')
+    summary.count += 1
+    summary.total += amount
+    if (type === 'income') {
+      summary.incomeTotal += amount
+      summary.incomeCount += 1
+    } else {
+      summary.expenseTotal += amount
+      summary.expenseCount += 1
+    }
+    byCategory[category] = (byCategory[category] || 0) + amount
+  })
+
+  summary.total = roundMoney(summary.total)
+  summary.totalText = formatMoney(summary.total)
+  summary.expenseTotal = roundMoney(summary.expenseTotal)
+  summary.expenseText = formatMoney(summary.expenseTotal)
+  summary.incomeTotal = roundMoney(summary.incomeTotal)
+  summary.incomeText = formatMoney(summary.incomeTotal)
+  summary.topCategories = Object.keys(byCategory)
+    .map(name => ({
+      name,
+      amount: roundMoney(byCategory[name]),
+      amountText: formatMoney(byCategory[name]),
+      percent: summary.total ? Math.round(byCategory[name] / summary.total * 100) : 0
+    }))
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 5)
+  return summary
+}
+
+function buildAnalyticsReply(analytics) {
+  const kind = analytics.kind
+  if (kind === 'compare') return buildCompareReply(analytics)
+  if (kind === 'top') return buildTopReply(analytics)
+  if (kind === 'count') return buildCountReply(analytics)
+  if (kind === 'net') return buildNetReply(analytics)
+  return buildTotalReply(analytics)
+}
+
+function buildTotalReply(analytics) {
+  const summary = analytics.current
+  const typeName = analytics.type === 'income' ? '收入' : '支出'
+  if (!summary.count) return `这个区间还没有${typeName}记录，先记一笔我再帮你算。`
+  const top = summary.topCategories[0]
+  const topText = top ? ` ${analytics.type === 'income' ? '主要来自' : '花得最多'}「${top.name}」¥${top.amountText}。` : ''
+  return `${analytics.range.label}${typeName} ¥${summary.totalText}，共 ${summary.count} 笔。${topText}`
+}
+
+function buildCompareReply(analytics) {
+  const current = analytics.current
+  const previous = analytics.previous
+  const currentLabel = analytics.range.label
+  const previousLabel = analytics.previousRange.label
+  const typeName = analytics.type === 'income' ? '收入' : '支出'
+
+  if (!current.count && !previous.count) {
+    return `${currentLabel}和${previousLabel}都还没有${typeName}记录，先记一笔我再帮你比。`
+  }
+  if (!previous.count) {
+    return `${previousLabel}还没有${typeName}记录，${currentLabel}${typeName} ¥${current.totalText}。`
+  }
+
+  const diff = roundMoney(current.total - previous.total)
+  if (analytics.type === 'income') {
+    if (diff > 0) return `${currentLabel}收入 ¥${current.totalText}，比${previousLabel}多收入 ¥${formatMoney(diff)}。`
+    if (diff < 0) return `${currentLabel}收入 ¥${current.totalText}，比${previousLabel}少收入 ¥${formatMoney(Math.abs(diff))}。`
+    return `${currentLabel}收入 ¥${current.totalText}，和${previousLabel}一样。`
+  }
+
+  if (diff > 0) return `${currentLabel}支出 ¥${current.totalText}，比${previousLabel}多花 ¥${formatMoney(diff)}。`
+  if (diff < 0) return `${currentLabel}支出 ¥${current.totalText}，比${previousLabel}省了 ¥${formatMoney(Math.abs(diff))}。`
+  return `${currentLabel}支出 ¥${current.totalText}，和${previousLabel}一样。`
+}
+
+function buildTopReply(analytics) {
+  const summary = analytics.current
+  const typeName = analytics.type === 'income' ? '收入' : '支出'
+  if (!summary.count) return `这个区间还没有${typeName}记录，先记一笔我再帮你看钱去哪了。`
+  const top = summary.topCategories[0]
+  if (!top) return `这个区间还没有可分析的分类数据。`
+  const topList = summary.topCategories.slice(0, 3).map(item => `${item.name} ¥${item.amountText}`).join('、')
+  const verb = analytics.type === 'income' ? '最多的是' : '花得最多的是'
+  return `${analytics.range.label}${verb}「${top.name}」，¥${top.amountText}，占 ${top.percent}%。Top 3：${topList}。`
+}
+
+function buildCountReply(analytics) {
+  const summary = analytics.current
+  if (!summary.count) return '这个区间还没有记账记录，先记一笔我再帮你数。'
+  if (analytics.type === 'all') {
+    return `${analytics.range.label}共记了 ${summary.count} 笔：支出 ${summary.expenseCount} 笔 ¥${summary.expenseText}，收入 ${summary.incomeCount} 笔 ¥${summary.incomeText}。`
+  }
+  const typeName = analytics.type === 'income' ? '收入' : '支出'
+  return `${analytics.range.label}${typeName}共 ${summary.count} 笔，合计 ¥${summary.totalText}。`
+}
+
+function buildNetReply(analytics) {
+  const summary = analytics.current
+  if (!summary.count) return '这个区间还没有记账记录，先记一笔我再帮你算结余。'
+  const net = roundMoney(summary.incomeTotal - summary.expenseTotal)
+  const netText = (net < 0 ? '-¥' : '¥') + formatMoney(Math.abs(net))
+  return `${analytics.range.label}收入 ¥${summary.incomeText}，支出 ¥${summary.expenseText}，结余 ${netText}。`
+}
+
+function parseDate(dateStr) {
+  const str = normalizeToday(dateStr)
+  const parts = str.split('-').map(n => parseInt(n, 10))
+  return new Date(parts[0], parts[1] - 1, parts[2])
+}
+
+function getWeekStart(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const day = d.getDay() || 7
+  d.setDate(d.getDate() - day + 1)
+  return d
+}
+
+function addDays(date, days) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  d.setDate(d.getDate() + days)
+  return d
+}
+
+function fmtDate(date) {
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${m}-${d}`
+}
+
+function roundMoney(value) {
+  return Math.round((Number(value) || 0) * 100) / 100
+}
+
+function formatMoney(value) {
+  return roundMoney(value).toFixed(2)
+}
+
+function safeCategoryName(name) {
+  const text = String(name || '其他').trim().slice(0, 20)
+  if (!text || isUnsafeText(text)) return '某分类'
+  return text
 }
 
 async function checkContent(openid, content, scene) {

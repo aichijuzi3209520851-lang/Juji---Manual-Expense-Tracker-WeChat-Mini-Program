@@ -33,6 +33,14 @@ const AI_CHAT_WELCOME = {
   content: '嗨，我是小橘。可以陪你聊聊记账、消费复盘和生活小事。',
   avatar: '/images/juji2.jpg'
 }
+const CHAT_SUGGESTIONS = [
+  '看看这周花了多少钱',
+  '这周比上周省了多少',
+  '这个月花了多少钱',
+  '本月哪类花得最多',
+  '今天记了几笔',
+  '这个月收入多少'
+]
 const WEATHER_QUESTION_PATTERN = /天气|气温|下雨|降雨|刮风|冷不冷|热不热|穿什么/
 const PRESET_EXPENSE_CATEGORIES = ['餐饮', '交通', '购物', '娱乐', '学习', '日用', '医疗', '其他']
 const PRESET_INCOME_CATEGORIES = ['工资', '兼职', '理财', '红包', '退款', '其他']
@@ -80,6 +88,8 @@ Page({
     petHearts: [],
     showAiChat: false,
     chatMessages: [],
+    chatSuggestions: CHAT_SUGGESTIONS,
+    showChatSuggestions: false,
     chatInput: '',
     chatLoading: false,
     chatScrollTo: '',
@@ -205,7 +215,7 @@ Page({
 
   triggerRandomPetAction() {
     const roll = Math.random()
-    const action = roll < 0.55 ? 'heart' : roll < 0.85 ? 'wave' : 'jump'
+    const action = roll < 0.25 ? 'idle' : roll < 0.5 ? 'heart' : roll < 0.75 ? 'wave' : 'jump'
     this.playPetAction(action)
   },
 
@@ -235,6 +245,8 @@ Page({
       chatInput: '',
       chatLoading: false,
       chatMessages: [Object.assign({}, AI_CHAT_WELCOME)],
+      chatSuggestions: CHAT_SUGGESTIONS,
+      showChatSuggestions: true,
       chatScrollTo: 'chat_welcome',
       chatKeyboardHeight: 0,
       chatModalStyle: '',
@@ -252,6 +264,7 @@ Page({
     this.setData({
       showAiChat: false,
       chatMessages: [],
+      showChatSuggestions: false,
       chatInput: '',
       chatLoading: false,
       chatScrollTo: '',
@@ -283,8 +296,13 @@ Page({
     this.setData({ chatAvatarError: true })
   },
 
-  async sendChatMessage() {
-    const text = (this.data.chatInput || '').trim()
+  sendChatSuggestion(e) {
+    const text = e && e.currentTarget && e.currentTarget.dataset ? e.currentTarget.dataset.text : ''
+    this.sendChatMessage(text)
+  },
+
+  async sendChatMessage(inputText) {
+    const text = (typeof inputText === 'string' ? inputText : (this.data.chatInput || '')).trim()
     if (!text || this.data.chatLoading) return
 
     const userMessage = this.buildChatMessage('user', text)
@@ -293,6 +311,7 @@ Page({
       chatMessages: messages,
       chatInput: '',
       chatLoading: true,
+      showChatSuggestions: false,
       chatScrollTo: userMessage.id
     })
 

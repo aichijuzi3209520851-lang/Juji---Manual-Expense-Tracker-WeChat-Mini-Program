@@ -39,6 +39,14 @@ const AI_CHAT_WELCOME = {
   content: '嗨，我是小橘。可以陪你聊聊记账、消费复盘和生活小事。',
   avatar: '/images/juji2.jpg'
 }
+const CHAT_SUGGESTIONS = [
+  '看看这周花了多少钱',
+  '这周比上周省了多少',
+  '这个月花了多少钱',
+  '本月哪类花得最多',
+  '今天记了几笔',
+  '这个月收入多少'
+]
 const WEATHER_QUESTION_PATTERN = /天气|气温|下雨|降雨|刮风|冷不冷|热不热|穿什么/
 
 // 预设分类名（与 pages/record/record.js 保持一致；用于对话记账时把分类清单喂给模型）
@@ -147,6 +155,8 @@ Page({
     petHearts: [],
     showAiChat: false,
     chatMessages: [],
+    chatSuggestions: CHAT_SUGGESTIONS,
+    showChatSuggestions: false,
     chatInput: '',
     chatLoading: false,
     chatScrollTo: '',
@@ -245,7 +255,7 @@ Page({
 
   triggerRandomPetAction() {
     var roll = Math.random()
-    var action = roll < 0.55 ? 'heart' : roll < 0.85 ? 'wave' : 'jump'
+    var action = roll < 0.25 ? 'idle' : roll < 0.5 ? 'heart' : roll < 0.75 ? 'wave' : 'jump'
     this.playPetAction(action)
   },
 
@@ -274,6 +284,8 @@ Page({
       chatInput: '',
       chatLoading: false,
       chatMessages: [Object.assign({}, AI_CHAT_WELCOME)],
+      chatSuggestions: CHAT_SUGGESTIONS,
+      showChatSuggestions: true,
       chatScrollTo: 'chat_welcome',
       chatKeyboardHeight: 0,
       chatModalStyle: ''
@@ -285,6 +297,7 @@ Page({
     this.setData({
       showAiChat: false,
       chatMessages: [],
+      showChatSuggestions: false,
       chatInput: '',
       chatLoading: false,
       chatScrollTo: '',
@@ -312,8 +325,13 @@ Page({
     })
   },
 
-  async sendChatMessage() {
-    var text = (this.data.chatInput || '').trim()
+  sendChatSuggestion(e) {
+    var text = e && e.currentTarget && e.currentTarget.dataset ? e.currentTarget.dataset.text : ''
+    this.sendChatMessage(text)
+  },
+
+  async sendChatMessage(inputText) {
+    var text = (typeof inputText === 'string' ? inputText : (this.data.chatInput || '')).trim()
     if (!text || this.data.chatLoading) return
 
     var userMessage = this.buildChatMessage('user', text)
@@ -322,6 +340,7 @@ Page({
       chatMessages: messages,
       chatInput: '',
       chatLoading: true,
+      showChatSuggestions: false,
       chatScrollTo: userMessage.id
     })
 
