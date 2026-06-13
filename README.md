@@ -1,4 +1,4 @@
-# 橘记 (Juji) — 极简手动记账微信小程序
+# 橘记 (JuJI) — 极简手动记账微信小程序
 
 <p align="center">
   <img src="docs/xiaoju.png" alt="橘记吉祥物「小橘」" width="180" />
