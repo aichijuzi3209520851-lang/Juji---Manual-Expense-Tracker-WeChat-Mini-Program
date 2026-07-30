@@ -814,6 +814,7 @@ Page({
         .where({ _openid: app.globalData.openid })
         .update({ data: { customCategories: custom } })
       app.globalData.userInfo.customCategories = custom
+      app.globalData.eventBus.emit('categoryChanged')
       this.setData({ showAddDialog: false, selectedCategory: name })
       this.loadCustomCategories(this.data.type)
       wx.showToast({ title: `已创建「${name}」`, icon: 'success' })
@@ -842,6 +843,7 @@ Page({
             .where({ _openid: app.globalData.openid })
             .update({ data: { customCategories: updated } })
           app.globalData.userInfo.customCategories = updated
+          app.globalData.eventBus.emit('categoryChanged')
           // 如果删的是当前选中的分类，重置为第一个预设分类
           if (this.data.selectedCategory === item.name) {
             const preset = this.getPresetCategories(this.data.type)
@@ -966,6 +968,7 @@ Page({
         throw new Error((res.result && res.result.message) || '保存失败')
       }
       daily.increment()
+      getApp().globalData.eventBus.emit('billChanged')
       wx.hideLoading()
       this.setData({
         amountFocused: false,
@@ -1041,6 +1044,7 @@ Page({
         if (!res.result || !res.result.success) {
           throw new Error((res.result && res.result.message) || '修改失败')
         }
+        getApp().globalData.eventBus.emit('billChanged')
         wx.hideLoading()
         this.resetForm()
         this.scrollToTop()
@@ -1068,6 +1072,7 @@ Page({
           throw new Error((res.result && res.result.message) || '保存失败')
         }
         daily.increment()
+        getApp().globalData.eventBus.emit('billChanged')
         wx.hideLoading()
         this.resetForm(type)
         this.scrollToTop()

@@ -297,156 +297,157 @@
   box-shadow: inset -8rpx -6rpx 0 rgba(207,79,30,0.18), inset 7rpx 7rpx 0 rgba(255,236,184,0.22);
 }
 .juji-pet-body::before,
+.juji-pet-body::before,
 .juji-pet-body::after {
   content: '';
   position: absolute;
   pointer-events: none;
 }
 .juji-pet-body::before {
-  left: 13rpx;
-  top: 15rpx;
-  width: 14rpx;
-  height: 30rpx;
-  background: rgba(253,248,227,0.85);
-  border-radius: 9rpx 9rpx 5rpx 5rpx;
-  transform: rotate(34deg);
-  box-shadow: 14rpx -6rpx 0 -5rpx rgba(253,248,227,0.7), -6rpx 30rpx 0 -4rpx rgba(253,248,227,0.5);
+  left: 14rpx;
+  top: 12rpx;
+  width: 22rpx;
+  height: 14rpx;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  transform: rotate(-24deg);
+  filter: blur(0.5rpx);
 }
 .juji-pet-body::after {
-  right: 7rpx;
-  top: 20rpx;
-  width: 13rpx;
-  height: 48rpx;
-  background: rgba(232,141,23,0.22);
-  border-radius: 4rpx 18rpx 18rpx 4rpx;
+  right: 10rpx;
+  bottom: 12rpx;
+  width: 16rpx;
+  height: 40rpx;
+  background: rgba(234, 88, 12, 0.2);
+  border-radius: 50%;
 }
 .juji-pet-leaf {
   position: absolute;
-  left: 52rpx;
-  top: -28rpx;
-  width: 38rpx;
-  height: 26rpx;
-  background: linear-gradient(135deg, #6fc63f 0%, #3a7d2b 100%);
-  border: 5rpx solid #2d1f0d;
-  border-radius: 4rpx 26rpx 4rpx 26rpx;
-  transform: rotate(16deg);
-  box-shadow: inset -6rpx -4rpx 0 rgba(43,90,40,0.3);
+  left: 48rpx;
+  top: -26rpx;
+  width: 36rpx;
+  height: 24rpx;
+  background: linear-gradient(135deg, #84cc16 0%, #4d7c0f 100%);
+  border: 4.5rpx solid #233807;
+  border-radius: 2rpx 24rpx 2rpx 24rpx;
+  transform: rotate(18deg);
+  box-shadow: inset -4rpx -3rpx 0 rgba(20, 45, 4, 0.3);
 }
 .juji-pet-leaf::before {
   content: '';
   position: absolute;
-  left: -12rpx;
-  top: 16rpx;
-  width: 9rpx;
-  height: 22rpx;
-  background: #5a9a32;
-  border: 4rpx solid #2d1f0d;
+  left: -10rpx;
+  top: 14rpx;
+  width: 8rpx;
+  height: 20rpx;
+  background: #65a30d;
+  border: 4rpx solid #233807;
   border-radius: 6rpx;
-  transform: rotate(28deg);
+  transform: rotate(26deg);
 }
 .juji-pet-leaf::after {
   content: '';
   position: absolute;
-  left: 10rpx;
-  top: 9rpx;
-  width: 20rpx;
-  height: 5rpx;
-  background: rgba(45,127,43,0.4);
+  left: 8rpx;
+  top: 8rpx;
+  width: 18rpx;
+  height: 4rpx;
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 4rpx;
-  transform: rotate(28deg);
+  transform: rotate(26deg);
 }
 .juji-pet-face {
   position: absolute;
-  left: 16rpx;
-  top: 34rpx;
-  width: 62rpx;
-  height: 36rpx;
+  left: 14rpx;
+  top: 32rpx;
+  width: 72rpx;
+  height: 38rpx;
   z-index: 2;
 }
 .juji-pet-face::before,
 .juji-pet-face::after {
   content: '';
   position: absolute;
-  top: 17rpx;
-  width: 20rpx;
-  height: 14rpx;
-  background: #f7a0a4;
+  top: 16rpx;
+  width: 24rpx;
+  height: 16rpx;
+  background: radial-gradient(circle, #ff7b92 0%, rgba(255, 123, 146, 0.1) 80%);
   border-radius: 50%;
 }
-.juji-pet-face::before { left: -9rpx; }
-.juji-pet-face::after { right: -9rpx; }
+.juji-pet-face::before { left: -8rpx; }
+.juji-pet-face::after { right: -8rpx; }
 .juji-pet-eye {
   position: absolute;
-  top: 0;
-  width: 16rpx;
-  height: 16rpx;
-  background: #2d1f0d;
+  top: 2rpx;
+  width: 18rpx;
+  height: 18rpx;
+  background: #2b1708;
   border-radius: 50%;
-  box-shadow: inset 5rpx 5rpx 0 -2rpx rgba(255,255,255,0.95);
-  animation: juji-pet-blink 4.6s steps(1) infinite;
+  box-shadow: inset 4rpx 4rpx 0 0 #ffffff, inset -2rpx -2rpx 0 0 rgba(255, 255, 255, 0.5);
+  animation: juji-pet-blink 4.2s ease-in-out infinite;
 }
-.juji-pet-eye--left { left: 5rpx; }
-.juji-pet-eye--right { right: 5rpx; }
+.juji-pet-eye--left { left: 8rpx; }
+.juji-pet-eye--right { right: 8rpx; }
 .juji-pet-mouth {
   position: absolute;
-  left: 22rpx;
-  top: 22rpx;
-  width: 18rpx;
+  left: 26rpx;
+  top: 20rpx;
+  width: 20rpx;
   height: 12rpx;
-  border: 4rpx solid #2d1f0d;
+  border: 4.5rpx solid #2b1708;
   border-top: 0;
   border-radius: 0 0 16rpx 16rpx;
   background: transparent;
   box-sizing: border-box;
 }
+/* 软糯水滴四肢重构 */
 .juji-pet-arm {
   position: absolute;
-  top: 50rpx;
-  width: 17rpx;
-  height: 36rpx;
-  background: linear-gradient(180deg, #f7a628 0%, #e88d17 100%);
-  border: 5rpx solid #2d1f0d;
-  border-radius: 14rpx 14rpx 10rpx 10rpx;
+  top: 46rpx;
+  width: 22rpx;
+  height: 38rpx;
+  background: linear-gradient(180deg, #ffc843 0%, #fb923c 100%);
+  border: 4.5rpx solid #3b200b;
+  border-radius: 50% 50% 45% 45% / 40% 40% 60% 60%;
   z-index: 1;
 }
 .juji-pet-arm--left {
-  left: -17rpx;
-  transform: rotate(18deg);
+  left: -15rpx;
+  transform: rotate(24deg);
 }
-/* 右臂持续招手（自动循环：两下挥手 + 短暂停歇） */
 .juji-pet-arm--right {
-  right: -17rpx;
-  transform-origin: 50% 10%;
-  transform: rotate(-18deg);
+  right: -15rpx;
+  transform-origin: 50% 15%;
+  transform: rotate(-24deg);
   animation: guide-juji-wave 2.8s ease-in-out infinite;
 }
 .juji-pet-foot {
   position: absolute;
-  bottom: -18rpx;
-  width: 24rpx;
-  height: 18rpx;
-  background: linear-gradient(180deg, #f7a628 0%, #e88d17 100%);
-  border: 5rpx solid #2d1f0d;
-  border-radius: 8rpx 8rpx 6rpx 6rpx;
+  bottom: -14rpx;
+  width: 28rpx;
+  height: 20rpx;
+  background: linear-gradient(180deg, #fb923c 0%, #f97316 100%);
+  border: 4.5rpx solid #3b200b;
+  border-radius: 50% 50% 45% 45%;
 }
-.juji-pet-foot--left { left: 16rpx; }
-.juji-pet-foot--right { right: 16rpx; }
+.juji-pet-foot--left { left: 14rpx; }
+.juji-pet-foot--right { right: 14rpx; }
 .juji-pet-shadow {
   position: absolute;
-  bottom: 0;
-  width: 112rpx;
-  height: 16rpx;
+  bottom: -6rpx;
+  width: 110rpx;
+  height: 20rpx;
+  background: rgba(59, 32, 11, 0.15);
   border-radius: 50%;
-  background: rgba(48,38,31,0.16);
-  filter: blur(1rpx);
+  filter: blur(3rpx);
+  animation: juji-pet-shadow 3.2s ease-in-out infinite;
 }
-/* 飘升的爱心（3 颗，错开延迟，循环发射） */
 .guide-heart {
   position: absolute;
   top: 10rpx;
   left: 84rpx;
   font-size: 30rpx;
-  color: #ff5d7a;
+  color: #ef4444;
   pointer-events: none;
   opacity: 0;
   animation: guide-heart-fly 2.6s ease-out infinite;
@@ -456,20 +457,24 @@
 .guide-heart--3 { left: 104rpx; font-size: 26rpx; animation-delay: 1.7s; }
 
 @keyframes juji-pet-idle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4rpx); }
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-8rpx) scale(1.03, 0.97); }
+}
+@keyframes juji-pet-shadow {
+  0%, 100% { transform: scale(1); opacity: 0.15; }
+  50% { transform: scale(0.88); opacity: 0.08; }
 }
 @keyframes juji-pet-blink {
-  0%, 92%, 100% { height: 16rpx; }
-  94% { height: 3rpx; }
+  0%, 94%, 98%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
 }
 @keyframes guide-juji-wave {
-  0% { transform: rotate(-18deg); }
-  8% { transform: rotate(-62deg) translateY(-8rpx); }
-  16% { transform: rotate(-18deg); }
-  24% { transform: rotate(-62deg) translateY(-8rpx); }
-  32% { transform: rotate(-18deg); }
-  100% { transform: rotate(-18deg); }
+  0% { transform: rotate(-24deg); }
+  8% { transform: rotate(-72deg); }
+  16% { transform: rotate(-24deg); }
+  24% { transform: rotate(-72deg); }
+  32% { transform: rotate(-24deg); }
+  100% { transform: rotate(-24deg); }
 }
 @keyframes guide-heart-fly {
   0% { transform: translate(0, 18rpx) scale(0.6); opacity: 0; }

@@ -1,3 +1,4 @@
+const { ENV_ID } = require('./config/env')
 const { initAppTheme, applyTheme, migrateLegacyCustomTheme } = require('./utils/theme')
 const EventBus = require('./utils/eventBus')
 const { initMonitoring } = require('./utils/monitor')
@@ -21,7 +22,7 @@ App({
       return
     }
     wx.cloud.init({
-      env: 'lajiaoyou-d4g78yts61f1a841d',
+      env: ENV_ID,
       traceUser: true,
     })
     initMonitoring()

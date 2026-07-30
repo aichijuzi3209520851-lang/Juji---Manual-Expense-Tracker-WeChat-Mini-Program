@@ -42,15 +42,26 @@ Page({
   },
 
   onLoad() {
+    this._isDirty = true
+    this._hasLoaded = false
+
     // 订阅主题变更事件 — 实现热切换
     this._themeHandler = (id) => { this._applyNewTheme(id) }
-    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+    this._dataChangeHandler = () => { this._isDirty = true }
+
+    const bus = getApp().globalData.eventBus
+    bus.on('themeChanged', this._themeHandler)
+    bus.on('billChanged', this._dataChangeHandler)
+    bus.on('categoryChanged', this._dataChangeHandler)
   },
 
   onUnload() {
     // 移除事件监听防止内存泄漏
-    if (this._themeHandler) {
-      getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    const bus = getApp().globalData.eventBus
+    if (this._themeHandler) bus.off('themeChanged', this._themeHandler)
+    if (this._dataChangeHandler) {
+      bus.off('billChanged', this._dataChangeHandler)
+      bus.off('categoryChanged', this._dataChangeHandler)
     }
   },
 
@@ -64,8 +75,14 @@ Page({
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
-    this.loadOverview()
-    this.loadRecentBills()
+
+    // 只有数据初次加载或标记为脏数据时才向数据库请求，消除切 Tab 时的闪烁与请求浪费
+    if (!this._hasLoaded || this._isDirty) {
+      this._isDirty = false
+      this._hasLoaded = true
+      this.loadOverview()
+      this.loadRecentBills()
+    }
   },
 
   updateCustomTabBar() {

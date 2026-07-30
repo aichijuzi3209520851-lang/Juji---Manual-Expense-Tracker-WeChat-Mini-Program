@@ -89,6 +89,7 @@ Page({
           if (!res.result || !res.result.success) {
             throw new Error((res.result && res.result.message) || '删除失败')
           }
+          getApp().globalData.eventBus.emit('billChanged')
           wx.showToast({ title: '已删除', icon: 'success' })
           setTimeout(() => wx.navigateBack(), 800)
         } catch (err) {

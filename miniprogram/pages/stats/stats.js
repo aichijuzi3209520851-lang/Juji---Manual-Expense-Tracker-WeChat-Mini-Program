@@ -226,25 +226,42 @@ Page({
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
-    this.loadDashboard()
-    this.loadAIComments({ force: false })
+    if (!this._hasLoaded || this._isDirty) {
+      this._isDirty = false
+      this._hasLoaded = true
+      this.loadDashboard()
+      this.loadAIComments({ force: false })
+    }
   },
 
   onLoad() {
+    this._isDirty = true
+    this._hasLoaded = false
     const sys = wx.getSystemInfoSync()
     this._aiScrollStep = (sys.windowWidth || 375) * 0.83
     this.setData({ aiHintVisible: !wx.getStorageSync('juji_ai_note_swiped') })
+
     this._themeHandler = (id) => {
       applyTheme(id)
       this.setData({ themeStyle: getThemeStyleString(id) }, () => {
         this.drawTrendChart(false)
       })
     }
-    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+    this._dataChangeHandler = () => { this._isDirty = true }
+
+    const bus = getApp().globalData.eventBus
+    bus.on('themeChanged', this._themeHandler)
+    bus.on('billChanged', this._dataChangeHandler)
+    bus.on('categoryChanged', this._dataChangeHandler)
   },
 
   onUnload() {
-    if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    const bus = getApp().globalData.eventBus
+    if (this._themeHandler) bus.off('themeChanged', this._themeHandler)
+    if (this._dataChangeHandler) {
+      bus.off('billChanged', this._dataChangeHandler)
+      bus.off('categoryChanged', this._dataChangeHandler)
+    }
     this.clearTrendAnimation()
   },
 

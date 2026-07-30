@@ -29,18 +29,34 @@ Page({
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
-    await this.loadBudget()
-    this.loadHistory()
-    this.loadSuggestion()
+    if (!this._hasLoaded || this._isDirty) {
+      this._isDirty = false
+      this._hasLoaded = true
+      await this.loadBudget()
+      this.loadHistory()
+      this.loadSuggestion()
+    }
   },
 
   onLoad() {
+    this._isDirty = true
+    this._hasLoaded = false
     this._themeHandler = (id) => { applyTheme(id); this.setData({ themeStyle: getThemeStyleString(id) }) }
-    getApp().globalData.eventBus.on('themeChanged', this._themeHandler)
+    this._dataChangeHandler = () => { this._isDirty = true }
+
+    const bus = getApp().globalData.eventBus
+    bus.on('themeChanged', this._themeHandler)
+    bus.on('billChanged', this._dataChangeHandler)
+    bus.on('categoryChanged', this._dataChangeHandler)
   },
 
   onUnload() {
-    if (this._themeHandler) getApp().globalData.eventBus.off('themeChanged', this._themeHandler)
+    const bus = getApp().globalData.eventBus
+    if (this._themeHandler) bus.off('themeChanged', this._themeHandler)
+    if (this._dataChangeHandler) {
+      bus.off('billChanged', this._dataChangeHandler)
+      bus.off('categoryChanged', this._dataChangeHandler)
+    }
   },
 
   updateCustomTabBar() {
@@ -100,63 +116,75 @@ Page({
       const byCate = {}
       bills.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
       const topCategories = Object.entries(byCate)
-        .sort((a, b) => b[1] - a[1]).slice(0, 3)
-        .map(([name, amt]) => ({
-          name, emoji: CATEGORY_EMOJI[name] || '📌',
-          amount: amt.toFixed(2),
-          pct: spent ? Math.round(amt / spent * 100) : 0
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([name, amount]) => ({
+          name,
+          icon: CATEGORY_EMOJI[name] || '📌',
+          amount: amount.toFixed(2),
+          percent: spent ? Math.round((amount / spent) * 100) : 0
         }))
 
       this.setData({
-        budgetAmount, spent: spent.toFixed(2),
-        budgetInput: budgetAmount ? String(budgetAmount) : '2000',
-        percent, status, statusText, ringReady: true,
-        pace, topCategories
+        budgetAmount,
+        spent: spent.toFixed(2),
+        budgetInput: String(budgetAmount || 2000),
+        percent,
+        status,
+        statusText,
+        ringReady: true,
+        pace,
+        topCategories
       })
     } catch (err) {
       console.error('加载预算失败:', err)
     }
   },
 
-  async loadHistory() {
+  async loadSuggestion() {
+    const now = new Date()
+    const month = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
     const db = wx.cloud.database()
     const _ = db.command
-    const now = new Date()
-
-    const months = []
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-      months.push({
-        key: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`,
-        label: `${d.getMonth() + 1}月`
-      })
-    }
 
     try {
-      const { data: budgets } = await db.collection('budgets')
-        .where({ month: _.in(months.map(m => m.key)) }).get()
-
       const bills = await getAll(db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${months[0].key}-01`).and(_.lte(monthEnd(parseInt(months[5].key.slice(0,4)), parseInt(months[5].key.slice(5,7))))) }))
+        .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
 
-      const byMonth = {}
-      bills.forEach(b => { const k = b.date.slice(0,7); byMonth[k] = (byMonth[k] || 0) + b.amount })
+      const byCate = {}
+      bills.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
+      const sorted = Object.entries(byCate).sort((a, b) => b[1] - a[1])
 
-      const historyData = months.map(m => {
-        const bgt = budgets.find(b => b.month === m.key)
-        const amount = bgt ? bgt.amount : 0
-        const spent = byMonth[m.key] || 0
-        const percent = amount ? Math.round((spent / amount) * 100) : 0
-        return {
-          month: m.key,
-          monthLabel: m.label,
-          percent,
-          barPercent: Math.min(percent, 100),
-          over: percent >= 100 && amount > 0,
-          hasData: amount > 0
+      if (sorted.length === 0) {
+        this.setData({ suggestion: null })
+        return
+      }
+
+      const [topCat, topAmt] = sorted[0]
+      const total = bills.reduce((s, b) => s + b.amount, 0)
+      const ratio = total ? Math.round((topAmt / total) * 100) : 0
+
+      this.setData({
+        suggestion: {
+          category: topCat,
+          amount: topAmt.toFixed(2),
+          ratio,
+          text: `本月在「${topCat}」上已支出 ¥${topAmt.toFixed(2)}（占 ${ratio}%），建议适当关注哦 💡`
         }
-      }).filter(h => h.hasData)
+      })
+    } catch (err) {
+      console.error('加载建议失败:', err)
+    }
+  },
 
+  async loadHistory() {
+    const db = wx.cloud.database()
+    try {
+      const res = await db.collection('budgets').orderBy('month', 'desc').limit(6).get()
+      const historyData = res.data.map(b => ({
+        month: b.month,
+        amount: b.amount.toFixed(2)
+      }))
       this.setData({ historyData })
     } catch (err) {
       console.error('加载预算历史失败:', err)
@@ -183,6 +211,7 @@ Page({
         throw new Error((res.result && res.result.message) || '设置失败')
       }
       wx.showToast({ title: '预算已更新', icon: 'success' })
+      getApp().globalData.eventBus.emit('billChanged')
       this.setData({ showEditor: false, ringReady: false })
       this.loadBudget()
       this.loadHistory()
@@ -197,25 +226,5 @@ Page({
 
   closeBudgetEditor() {
     this.setData({ showEditor: false })
-  },
-
-  async loadSuggestion() {
-    if (this.data.status === 'over') return
-    const db = wx.cloud.database()
-    const _ = db.command
-    const now = new Date()
-    let total = 0, months = 0
-    for (let i = 1; i <= 3; i++) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-      const key = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
-      try {
-        const data = await getAll(db.collection('bills')
-          .where({ type: 'expense', date: _.gte(`${key}-01`).and(_.lte(monthEnd(parseInt(key.slice(0,4)), parseInt(key.slice(5,7))))) }))
-        if (data.length > 0) { total += data.reduce((s, b) => s + b.amount, 0); months++ }
-      } catch (err) { /* skip */ }
-    }
-    if (months < 1) return
-    const avg = Math.round(total / months * 0.9)
-    this.setData({ suggestion: { avg: (total / months).toFixed(0), suggest: avg } })
   }
 })

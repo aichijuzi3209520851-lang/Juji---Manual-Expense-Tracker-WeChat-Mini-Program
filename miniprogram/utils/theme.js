@@ -337,26 +337,7 @@ function resolveThemeVars(id) {
 function getThemeStyleString(themeId) {
   const id = themeId || getCurrentThemeId()
   const vars = resolveThemeVars(id)
-
-  const primary = vars['--color-primary']
-  const primaryContainer = vars['--color-primary-container']
-  const primaryLight = vars['--color-primary-light']
-  const accent = vars['--color-accent'] || primaryLight
-  const shadowDark = vars['--shadow-dark'] || 'rgba(0,0,0,0.08)'
-  const shadowLight = vars['--shadow-light'] || 'rgba(255,255,255,1)'
-
-  // 衍生 token（直接计算实际值，避免 CSS var() 在 page {} 声明时就被提前解析）
-  const derived = {
-    '--gradient-hero': `linear-gradient(135deg, ${primary} 0%, ${accent} 100%)`,
-    '--gradient-hero-soft': `linear-gradient(135deg, ${primaryContainer} 0%, ${primaryLight} 100%)`,
-    '--shadow-soft': `-8rpx -8rpx 24rpx ${shadowLight}, 8rpx 8rpx 24rpx ${shadowDark}`,
-    '--shadow-card': `-12rpx -12rpx 32rpx ${shadowLight}, 12rpx 12rpx 32rpx ${shadowDark}`,
-    '--shadow-elevated': `-16rpx -16rpx 48rpx ${shadowLight}, 16rpx 16rpx 48rpx ${shadowDark}`,
-    '--shadow-hero': `0 16rpx 40rpx ${shadowDark}`
-  }
-
-  const allVars = { ...vars, ...derived }
-  return Object.keys(allVars).map(k => `${k}:${allVars[k]}`).join(';')
+  return Object.keys(vars).map(k => `${k}:${vars[k]}`).join(';')
 }
 
 function applyTheme(themeId) {
