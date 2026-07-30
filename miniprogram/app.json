@@ -11,7 +11,7 @@
     "pages/themes/themes",
     "pages/detail/detail"
   ],
-  "__usePrivacyCheck__": false,
+  "__usePrivacyCheck__": true,
   "window": {
     "backgroundColor": "#fffaf8",
     "backgroundTextStyle": "light",

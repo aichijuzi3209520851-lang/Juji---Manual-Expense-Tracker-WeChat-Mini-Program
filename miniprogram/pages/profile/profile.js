@@ -1096,6 +1096,8 @@ Page({
           const result = clearRes.result || {}
           if (!result.success) throw new Error(result.message || '清除失败')
           wx.hideLoading()
+          getApp().globalData.eventBus.emit('billChanged')
+          getApp().globalData.eventBus.emit('categoryChanged')
           this.resetLocalProfileAfterClear()
           wx.showToast({ title: '已清除', icon: 'success' })
         } catch (err) {

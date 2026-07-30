@@ -112,14 +112,14 @@ Page({
         .get()
 
       let todayExp = 0, yestExp = 0, monthSpent = 0
-      expRes.data.forEach(b => {
+      expRes.data.filter(b => !b.isDeleted).forEach(b => {
         if (b.date === today) todayExp += b.amount
         if (b.date === yesterday) yestExp += b.amount
         if (b.date >= monthStart) monthSpent += b.amount
       })
 
       let todayInc = 0, yestInc = 0
-      incRes.data.forEach(b => {
+      incRes.data.filter(b => !b.isDeleted).forEach(b => {
         if (b.date === today) todayInc += b.amount
         if (b.date === yesterday) yestInc += b.amount
       })
@@ -161,7 +161,7 @@ Page({
         .get()
 
       const groupMap = {}
-      res.data.forEach(b => {
+      res.data.filter(b => !b.isDeleted).forEach(b => {
         const k = b.date
         if (!groupMap[k]) groupMap[k] = { date: k, items: [], net: 0 }
         groupMap[k].items.push({ ...b, icon: this.getIcon(b.category) })

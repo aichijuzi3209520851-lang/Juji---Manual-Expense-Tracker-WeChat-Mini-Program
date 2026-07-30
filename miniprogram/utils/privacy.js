@@ -1,6 +1,6 @@
 const PRIVACY_TOAST = '请先同意隐私协议'
 const PRIVACY_AGREED_KEY = 'juji_privacy_agreed'
-const PRIVACY_DEBUG_BYPASS = true
+const PRIVACY_DEBUG_BYPASS = false
 
 function initPrivacyAuthorization() {
   if (PRIVACY_DEBUG_BYPASS) return

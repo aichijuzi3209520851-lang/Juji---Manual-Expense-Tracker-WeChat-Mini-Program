@@ -80,8 +80,9 @@ Page({
       let budgetAmount = 0
       if (budgetRes.data.length > 0) budgetAmount = budgetRes.data[0].amount
 
-      const bills = await getAll(db.collection('bills')
+      const rawBills = await getAll(db.collection('bills')
         .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
+      const bills = rawBills.filter(b => !b || !b.isDeleted)
 
       let spent = 0
       bills.forEach(b => { spent += b.amount })

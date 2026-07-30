@@ -108,7 +108,13 @@ exports.main = async (event, context) => {
         if (!bill.data || bill.data._openid !== wxContext.OPENID) {
           return { success: false, message: '无权删除此账单' }
         }
-        await db.collection('bills').doc(data.billId).remove()
+        // 软删除模式：写入 isDeleted: true 与 deletedAt，满足合规与防误删
+        await db.collection('bills').doc(data.billId).update({
+          data: {
+            isDeleted: true,
+            deletedAt: new Date()
+          }
+        })
         return { success: true }
       } catch (e) {
         logFunctionError('delete', e, wxContext)

@@ -38,7 +38,7 @@ App({
     const guideFlag = wx.getStorageSync('has_seen_guide')
     this.globalData.hasSeenGuide = !!guideFlag
 
-    // Privacy agreement gate is temporarily bypassed for debug testing.
+    // 执行静默登录与用户同步
     this.silentLogin().catch(() => {})
   },
 

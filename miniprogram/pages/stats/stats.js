@@ -296,12 +296,13 @@ Page({
     const range = buildRange(this.data.rangeMode)
 
     try {
-      const data = await getAll(db.collection('bills')
+      const rawData = await getAll(db.collection('bills')
         .where({
           type: this.data.statsType,
           date: _.gte(range.start).and(_.lte(range.end))
         })
       )
+      const data = rawData.filter(b => !b || !b.isDeleted)
 
       this.applyCategoryStats(data)
       this.applyTrendStats(data, range)
