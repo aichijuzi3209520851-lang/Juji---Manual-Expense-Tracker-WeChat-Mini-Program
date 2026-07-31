@@ -13,8 +13,14 @@ function initPrivacyAuthorization() {
         title: '隐私授权',
         content: '使用相机、相册、文件或 AI 能力前，请先阅读并同意隐私协议。',
         confirmText: '去授权',
+        cancelText: '取消',
         success: res => {
-          resolvePrivacy(resolve, !!res.confirm)
+          if (res.confirm) {
+            openPrivacyAgreement()
+            resolvePrivacy(resolve, true)
+          } else {
+            resolvePrivacy(resolve, false)
+          }
         },
         fail: () => resolvePrivacy(resolve, false)
       })
@@ -44,13 +50,12 @@ async function requirePrivacyAuthorization(featureName = '') {
 }
 
 function openPrivacyAgreement() {
+  showPrivacySummary()
   if (typeof wx.openPrivacyContract === 'function') {
     wx.openPrivacyContract({
-      fail: () => showPrivacySummary()
+      fail: () => {}
     })
-    return
   }
-  showPrivacySummary()
 }
 
 function openUserAgreement() {
