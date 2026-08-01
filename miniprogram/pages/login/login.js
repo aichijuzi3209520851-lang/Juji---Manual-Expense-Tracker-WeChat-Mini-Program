@@ -38,22 +38,20 @@ Page({
   },
 
   async handleLogin() {
-    // [DEBUG] 隐私协议校验已临时禁用，便于调试时跳过该环节直接进入主功能页面
-    // if (!this.data.privacyAgreed) {
-    //   wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
-    //   return
-    // }
+    if (!this.data.privacyAgreed) {
+      wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
+      return
+    }
 
     this.setData({ loading: true })
     try {
-      // [DEBUG] 隐私授权检查已临时禁用，未勾选隐私协议时也允许直接登录
-      // const privacyOk = await requirePrivacyAuthorization('登录')
-      // if (!privacyOk) {
-      //   this.setData({ privacyAgreed: false })
-      //   wx.removeStorageSync(PRIVACY_AGREED_KEY)
-      //   return
-      // }
-      // wx.setStorageSync(PRIVACY_AGREED_KEY, true)
+      const privacyOk = await requirePrivacyAuthorization('登录')
+      if (!privacyOk) {
+        this.setData({ privacyAgreed: false })
+        wx.removeStorageSync(PRIVACY_AGREED_KEY)
+        return
+      }
+      wx.setStorageSync(PRIVACY_AGREED_KEY, true)
 
       const app = getApp()
       await app.silentLogin()
