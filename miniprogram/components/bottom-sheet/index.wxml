@@ -1,0 +1,16 @@
+<view wx:if="{{visible}}" class="sheet-root">
+  <view class="sheet-mask {{animating ? (visible ? 'is-in' : 'is-out') : ''}}" catchtap="onClose" catchtouchmove="noop"></view>
+  <view class="sheet {{animating ? (visible ? 'is-open' : 'is-close') : ''}} sheet--{{size}}" catchtap="noop" catchtouchmove="noop">
+    <view class="sheet-handle" catchtap="onClose"></view>
+    <view wx:if="{{title}}" class="sheet-header">
+      <text class="sheet-title">{{title}}</text>
+      <text class="sheet-close" catchtap="onClose">×</text>
+    </view>
+    <scroll-view class="sheet-body" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+      <slot></slot>
+    </scroll-view>
+    <view wx:if="{{showFooter}}" class="sheet-footer">
+      <slot name="footer"></slot>
+    </view>
+  </view>
+</view>

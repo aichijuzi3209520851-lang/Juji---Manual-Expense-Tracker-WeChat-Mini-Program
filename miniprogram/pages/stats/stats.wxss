@@ -354,6 +354,28 @@
   color: var(--color-text-tertiary);
   font-size: 24rpx;
 }
+.ranking-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 16rpx 0 8rpx;
+  font-size: 26rpx;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+.ranking-toggle--hover {
+  opacity: 0.7;
+}
+.ranking-toggle-arrow {
+  font-size: 32rpx;
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: rotate(90deg);
+}
+.ranking-toggle-arrow.is-up {
+  transform: rotate(-90deg);
+}
 
 .ai-section {
   margin-top: 36rpx;

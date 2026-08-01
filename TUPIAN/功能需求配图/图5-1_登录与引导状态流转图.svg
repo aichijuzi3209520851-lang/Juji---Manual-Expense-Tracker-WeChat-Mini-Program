@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1180" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 5-1  登录与引导状态流转图</text>
+<text x="1399" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Auth &amp; Guide State Machine</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="130" y="285" width="280" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="130" y="285" width="10" height="135" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="158" y="330" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">未同意隐私协议</text>
+<text x="158" y="367" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">仅显示隐私协议弹窗</text>
+<text x="158" y="394" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">不可使用功能</text>
+<rect x="500" y="285" width="280" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="500" y="285" width="10" height="135" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="528" y="330" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">已同意协议</text>
+<text x="528" y="367" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">写入 juji_privacy_agreed</text>
+<text x="528" y="394" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">准备静默登录</text>
+<rect x="870" y="285" width="280" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="870" y="285" width="10" height="135" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="898" y="330" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">静默登录中</text>
+<text x="898" y="367" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">quickstartFunctions.getOpenId</text>
+<text x="898" y="394" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">syncUserInfo()</text>
+<rect x="1240" y="285" width="280" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1240" y="285" width="10" height="135" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1268" y="330" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">判断首启</text>
+<text x="1268" y="367" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">读取 has_seen_guide</text>
+<rect x="1035" y="610" width="280" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1035" y="610" width="10" height="135" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1063" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">4 屏引导</text>
+<text x="1063" y="692" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">快 / 美 / 心 / 伴</text>
+<text x="1063" y="719" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">写入 has_seen_guide</text>
+<rect x="1415" y="610" width="280" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1415" y="610" width="10" height="135" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1443" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">首页</text>
+<text x="1443" y="692" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">进入主 Tab</text>
+<text x="1443" y="719" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">onShow 拉取数据</text>
+<rect x="610" y="820" width="280" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="820" width="10" height="135" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="638" y="865" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">退出登录</text>
+<text x="638" y="902" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">清空 globalData</text>
+<text x="638" y="929" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">跳转登录页</text>
+<line x1="420" y1="352" x2="490" y2="352" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="490,352 474,361 474,342" fill="#6b7d73"/>
+<line x1="790" y1="352" x2="860" y2="352" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="860,352 844,361 844,342" fill="#6b7d73"/>
+<line x1="1160" y1="352" x2="1230" y2="352" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1230,352 1214,361 1214,342" fill="#6b7d73"/>
+<line x1="1380" y1="430" x2="1175" y2="600" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1175,600 1180,582 1192,597" fill="#8c7bd9"/>
+<line x1="1380" y1="430" x2="1555" y2="600" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1555,600 1537,596 1550,582" fill="#27c07d"/>
+<line x1="1325" y1="677" x2="1405" y2="677" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1405,677 1389,686 1389,667" fill="#27c07d"/>
+<line x1="1555" y1="755" x2="900" y2="887" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,887 913,874 916,893" fill="#f3a33a"/>
+<line x1="602" y1="887" x2="270" y2="428" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="270,428 286,434 271,445" fill="#f3a33a"/>
+<text x="1170" y="535" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#8c7bd9">首启</text>
+<text x="1455" y="535" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">非首启</text>
+<rect x="150" y="925" width="580" height="110" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="150" y="925" width="10" height="110" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="178" y="970" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">正式版约束</text>
+<text x="178" y="1008" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">头像、照片、文件导入导出等敏感能力触发前需 </text>
+<text x="178" y="1036" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">requirePrivacyAuthorization。</text>
+<rect x="920" y="925" width="580" height="110" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="920" y="925" width="10" height="110" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="948" y="970" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">当前调试说明</text>
+<text x="948" y="1008" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">app.json 中 __usePrivacyCheck__ 暂为 false；提审前应恢复隐</text>
+<text x="948" y="1036" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">私检查。</text>
+</svg>

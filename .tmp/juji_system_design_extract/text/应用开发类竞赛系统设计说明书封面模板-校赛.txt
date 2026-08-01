@@ -1,0 +1,19 @@
+# 应用开发类竞赛系统设计说明书封面模板-校赛.docx
+
+[P][Normal] 2026年湖南省大学生计算机程序设计竞赛校级选拔赛
+[P][Normal] -----应用开发类竞赛（2026）
+[P][Normal] 系
+[P][Normal] 统
+[P][Normal] 设
+[P][Normal] 计
+[P][Normal] 说
+[P][Normal] 明
+[P][Normal] 书
+[TABLE 1]
+作品名称： | 
+作品类别： | 
+作 者： | 
+指导老师： | 
+单 位： | 
+[/TABLE]
+[P][Normal] 二零二六 年 月 日

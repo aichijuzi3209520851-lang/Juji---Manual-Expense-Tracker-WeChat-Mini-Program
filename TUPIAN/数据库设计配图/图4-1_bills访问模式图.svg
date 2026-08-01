@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1300" viewBox="0 0 1800 1300">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1300" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 4-1  bills 访问模式图</text>
+<text x="1482" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Bills Access Pattern</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="700" y="480" width="400" height="220" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="700" y="480" width="10" height="220" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="728" y="532" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="30" font-weight="700" fill="#17231d">bills 集合</text>
+<text x="728" y="574" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">核心账单数据</text>
+<text x="728" y="605" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">_openid, type, amount, category</text>
+<text x="728" y="636" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">date, note, photoUrl, mood</text>
+<text x="728" y="667" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">createdAt</text>
+<rect x="160" y="230" width="365" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="160" y="230" width="10" height="155" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="188" y="278" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">home 首页</text>
+<text x="188" y="316" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">最近账单 / 月度总支出</text>
+<text x="188" y="343" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">where _openid + date</text>
+<text x="188" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">orderBy date desc</text>
+<rect x="670" y="210" width="460" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="670" y="210" width="10" height="155" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="698" y="258" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">stats 统计页</text>
+<text x="698" y="296" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">按月/半年聚合</text>
+<text x="698" y="323" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">分类排行与趋势</text>
+<text x="698" y="350" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">where _openid + date range</text>
+<rect x="160" y="520" width="365" height="170" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="160" y="520" width="10" height="170" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="188" y="568" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">record 记账页</text>
+<text x="188" y="606" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">create / update</text>
+<text x="188" y="633" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">batchCreate &lt;= 10</text>
+<text x="188" y="660" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">客户端校验 + 服务端校验</text>
+<rect x="160" y="820" width="365" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="160" y="820" width="10" height="155" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="188" y="868" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">detail 详情页</text>
+<text x="188" y="906" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">按 _id 读取单条</text>
+<text x="188" y="933" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">编辑前用 _editBillId 桥接</text>
+<text x="188" y="960" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">删除走 bills 云函数</text>
+<rect x="1245" y="230" width="390" height="170" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1245" y="230" width="10" height="170" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1273" y="278" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">profile / dataMigration</text>
+<text x="1273" y="316" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">JSON export / import</text>
+<text x="1273" y="343" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">批量恢复 bills</text>
+<text x="1273" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">导入前剥离 _id/_openid</text>
+<rect x="1245" y="540" width="390" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1245" y="540" width="10" height="155" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1273" y="588" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">exportBills</text>
+<text x="1273" y="626" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">CSV 导出</text>
+<text x="1273" y="653" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">读取 bills + 用户昵称</text>
+<text x="1273" y="680" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">写入云存储 exports</text>
+<rect x="1245" y="850" width="390" height="145" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1245" y="850" width="10" height="145" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1273" y="898" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">云存储 bills/</text>
+<text x="1273" y="936" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">photoUrl 指向账单照片</text>
+<text x="1273" y="963" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">clearUserData 清理文件</text>
+<line x1="533" y1="307" x2="692" y2="590" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="692,590 676,581 692,572" fill="#27c07d"/>
+<line x1="1138" y1="287" x2="692" y2="590" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="692,590 699,573 709,589" fill="#27c07d"/>
+<line x1="533" y1="605" x2="692" y2="590" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="692,590 677,600 675,582" fill="#f3a33a"/>
+<line x1="533" y1="897" x2="692" y2="590" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="692,590 693,607 676,599" fill="#f3a33a"/>
+<line x1="1108" y1="590" x2="1237" y2="315" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1237,315 1239,332 1221,324" fill="#8c7bd9"/>
+<line x1="1108" y1="590" x2="1237" y2="617" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1237,617 1220,623 1223,604" fill="#5ba4cb"/>
+<line x1="1108" y1="590" x2="1237" y2="922" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1237,922 1222,911 1240,904" fill="#5ba4cb"/>
+<rect x="610" y="825" width="580" height="130" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="825" width="10" height="130" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="638" y="871" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">所有权校验</text>
+<text x="638" y="911" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">update/delete 前先读取 bills.doc(billId)，确认 _openid ===</text>
+<text x="638" y="941" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73"> OPENID 后执行。</text>
+<rect x="610" y="1010" width="580" height="145" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="1010" width="10" height="145" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="638" y="1056" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">索引建议</text>
+<text x="638" y="1094" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">idx_bills_user_date：_openid + date</text>
+<text x="638" y="1121" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">idx_bills_user_created：_openid + createdAt</text>
+<rect x="590" y="1180" width="720" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="607" y="1208" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">访问特征：高频读集中在日期范围查询，低频写统一走 bills 云函数</text>
+</svg>

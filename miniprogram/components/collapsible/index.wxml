@@ -1,0 +1,18 @@
+<view class="collapsible {{expanded ? 'is-expanded' : ''}}">
+  <view class="collapsible-head" bindtap="onToggle" hover-class="collapsible-head--hover" hover-stay-time="80">
+    <view class="collapsible-head-left">
+      <text wx:if="{{icon}}" class="collapsible-icon">{{icon}}</text>
+      <text class="collapsible-title">{{title}}</text>
+      <text wx:if="{{meta}}" class="collapsible-meta">{{meta}}</text>
+    </view>
+    <view class="collapsible-head-right">
+      <slot name="action"></slot>
+      <text class="collapsible-arrow {{expanded ? 'is-open' : ''}}">›</text>
+    </view>
+  </view>
+  <view class="collapsible-body" style="{{expanded ? 'max-height: ' + bodyMaxHeight + 'rpx;' : ''}}">
+    <view class="collapsible-body-inner">
+      <slot></slot>
+    </view>
+  </view>
+</view>

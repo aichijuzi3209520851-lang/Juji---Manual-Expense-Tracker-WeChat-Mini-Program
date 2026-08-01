@@ -21,37 +21,60 @@
     </view>
   </view>
 
-  <!-- 预算 -->
-  <view class="budget-card budget-{{budget.status}}" bindtap="goBudget">
+  <!-- 预算 chip（点击展开底部抽屉） -->
+  <view class="budget-chip budget-chip--{{budget.status}}" bindtap="openBudgetSheet" hover-class="budget-chip--hover">
+    <view class="budget-chip-dot {{budget.status === 'over' ? 'is-over' : ''}}"></view>
     <block wx:if="{{budget.status === 'unset'}}">
-      <view class="budget-row">
-        <text class="budget-label">还没设本月预算</text>
-        <text class="budget-cta">去设定 ›</text>
+      <text class="budget-chip-text">还没设本月预算</text>
+      <text class="budget-chip-cta">去设定 ›</text>
+    </block>
+    <block wx:elif="{{budget.status === 'normal'}}">
+      <text class="budget-chip-text">本月预算 · 剩 ¥{{budget.remain}} ({{budget.percent}}%)</text>
+      <text class="budget-chip-cta">详情 ›</text>
+    </block>
+    <block wx:else>
+      <text class="budget-chip-text">本月已超支 ¥{{budget.over}}</text>
+      <text class="budget-chip-cta over">详情 ›</text>
+    </block>
+  </view>
+
+  <!-- 预算详情底部抽屉 -->
+  <bottom-sheet visible="{{showBudgetSheet}}" title="本月预算" size="small" bind:close="closeBudgetSheet">
+    <block wx:if="{{budget.status === 'unset'}}">
+      <view class="budget-empty">
+        <text class="budget-empty-text">还没有设置本月预算</text>
+        <button class="budget-empty-btn" bindtap="goBudget">去设定</button>
       </view>
     </block>
     <block wx:elif="{{budget.status === 'normal'}}">
-      <view class="budget-row">
-        <text class="budget-label">本月预算</text>
-        <text class="budget-remain">剩 ¥{{budget.remain}}</text>
-      </view>
-      <view class="budget-bar"><view class="budget-fill" style="width: {{budget.percent}}%"></view></view>
-      <view class="budget-row sub">
-        <text class="budget-sub">已花 ¥{{budget.spent}}</text>
-        <text class="budget-sub">/ ¥{{budget.amount}}</text>
+      <view class="budget-detail">
+        <view class="budget-detail-row">
+          <text class="budget-detail-label">本月预算</text>
+          <text class="budget-detail-remain">剩 ¥{{budget.remain}}</text>
+        </view>
+        <view class="budget-detail-bar"><view class="budget-detail-fill" style="width: {{budget.percent}}%"></view></view>
+        <view class="budget-detail-row sub">
+          <text class="budget-detail-sub">已花 ¥{{budget.spent}}</text>
+          <text class="budget-detail-sub">/ ¥{{budget.amount}}</text>
+        </view>
+        <button class="budget-detail-btn" bindtap="goBudget">调整预算</button>
       </view>
     </block>
     <block wx:else>
-      <view class="budget-row">
-        <text class="budget-label">本月已超支</text>
-        <text class="budget-over">¥{{budget.over}}</text>
-      </view>
-      <view class="budget-bar over"><view class="budget-fill" style="width: 100%"></view></view>
-      <view class="budget-row sub">
-        <text class="budget-sub">已花 ¥{{budget.spent}}</text>
-        <text class="budget-sub">/ ¥{{budget.amount}}</text>
+      <view class="budget-detail">
+        <view class="budget-detail-row">
+          <text class="budget-detail-label">本月已超支</text>
+          <text class="budget-detail-over">¥{{budget.over}}</text>
+        </view>
+        <view class="budget-detail-bar over"><view class="budget-detail-fill" style="width: 100%"></view></view>
+        <view class="budget-detail-row sub">
+          <text class="budget-detail-sub">已花 ¥{{budget.spent}}</text>
+          <text class="budget-detail-sub">/ ¥{{budget.amount}}</text>
+        </view>
+        <button class="budget-detail-btn" bindtap="goBudget">调整预算</button>
       </view>
     </block>
-  </view>
+  </bottom-sheet>
 
   <!-- 账单（按日分组） -->
   <view class="recent-section">

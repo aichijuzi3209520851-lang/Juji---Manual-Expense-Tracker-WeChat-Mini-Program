@@ -502,113 +502,157 @@ picker { display: flex; justify-content: center; }
   font-weight: 300;
 }
 
-/* ======= 备注 ======= */
-.note-section { padding: 0 0 32rpx; }
-.note-card {
-  background: var(--color-surface);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-card);
-  padding: 28rpx 28rpx 24rpx;
-}
-.note-card-head {
+/* ======= 附加信息 chip 行（备注 / 照片 / 心情） ======= */
+.extras-row {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
   gap: 16rpx;
-  margin-bottom: 16rpx;
+  padding: 0 0 24rpx;
+  flex-wrap: wrap;
 }
-.note-label {
-  font-size: 24rpx;
-  color: var(--color-primary);
-  font-weight: 700;
-  letter-spacing: 2rpx;
-}
-.note-tools {
-  margin-top: 18rpx;
-  display: flex;
-  justify-content: flex-start;
-}
-.note-photo-trigger {
-  width: 100rpx; height: 100rpx; border-radius: 50%;
-  background: var(--gradient-hero);
-  display: inline-flex; align-items: center; justify-content: center;
-  position: relative;
-  box-shadow: -6rpx -6rpx 16rpx var(--shadow-light), 6rpx 6rpx 16rpx var(--shadow-dark);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.note-photo-trigger--hover {
-  transform: scale(0.94);
-  box-shadow: -3rpx -3rpx 8rpx var(--shadow-light), 3rpx 3rpx 8rpx var(--shadow-dark);
-}
-.note-photo-trigger.has-photo::after {
-  content: ''; position: absolute; top: 8rpx; right: 8rpx;
-  width: 18rpx; height: 18rpx; border-radius: 50%;
-  background: var(--color-income);
-  border: 3rpx solid var(--color-surface);
-  box-shadow: 0 2rpx 6rpx var(--shadow-dark);
-}
-.note-photo-icon {
-  width: 44rpx; height: 44rpx;
-  filter: brightness(0) invert(1);
-}
-.note-input {
-  width: 100%;
-  min-height: 54rpx;
-  font-size: 30rpx;
-  color: var(--color-text);
-}
-.note-placeholder { color: var(--color-text-tertiary); opacity: 0.6; }
-.photo-inline {
-  margin-top: 18rpx;
-  padding: 18rpx;
-  border-radius: var(--radius-xl);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-soft);
-  display: flex;
+.extras-chip {
+  display: inline-flex;
   align-items: center;
-  gap: 18rpx;
+  gap: 8rpx;
+  padding: 14rpx 24rpx;
+  border-radius: 999rpx;
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border);
+  min-height: 64rpx;
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  opacity: 0.7;
 }
-.photo-inline-preview {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: var(--radius-lg);
-  flex-shrink: 0;
+.extras-chip--hover {
+  transform: scale(0.96);
+  background: var(--color-primary-container);
 }
-.photo-inline-copy { flex: 1; display: flex; flex-direction: column; gap: 8rpx; }
-.photo-inline-title { font-size: 26rpx; color: var(--color-text); font-weight: 600; }
-.photo-inline-subtitle { font-size: 22rpx; color: var(--color-text-tertiary); line-height: 1.55; }
-.photo-inline-remove {
-  font-size: 24rpx;
-  color: var(--color-error);
-  font-weight: 600;
-  padding: 14rpx 0 14rpx 16rpx;
+.extras-chip.is-active {
+  opacity: 1;
+  background: var(--color-primary-container);
+  border-color: var(--color-primary);
+}
+.extras-chip-icon {
+  font-size: 30rpx;
+  line-height: 1;
+}
+.extras-chip-label {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+.extras-chip.is-active .extras-chip-label {
+  color: var(--color-primary);
 }
 
-/* ======= 心情 ======= */
-.mood-section { padding: 0 0 24rpx; }
-.mood-label {
-  font-size: 24rpx; color: var(--color-primary); font-weight: 700;
-  letter-spacing: 2rpx;
-  display: block; margin-bottom: 16rpx; padding-left: 8rpx;
+/* 备注行内展开 */
+.note-expand {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.mood-row { display: flex; gap: 12rpx; flex-wrap: wrap; }
-.mood-chip {
-  width: 76rpx; height: 76rpx; border-radius: 50%;
-  background: var(--color-surface); border: 1rpx solid var(--color-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36rpx;
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+.note-expand.is-open {
+  max-height: 200rpx;
 }
-.mood-chip.is-active {
+.note-expand-inner {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 0 0 24rpx;
+}
+.note-input {
+  flex: 1;
+  min-height: 64rpx;
+  font-size: 30rpx;
+  color: var(--color-text);
+  padding: 12rpx 20rpx;
+  background: var(--color-surface);
+  border-radius: 16rpx;
+  border: 1rpx solid var(--color-border);
+}
+.note-placeholder { color: var(--color-text-tertiary); opacity: 0.6; }
+.note-clear {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+  padding: 12rpx 16rpx;
+  flex-shrink: 0;
+}
+
+/* 照片预览 */
+.photo-preview {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 0 0 24rpx;
+}
+.photo-preview-img {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+}
+.photo-preview-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.photo-preview-action {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border);
+}
+.photo-preview-action.danger {
+  color: var(--color-error);
+}
+
+/* 心情选择抽屉内的网格 */
+.mood-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  padding: 16rpx 0 24rpx;
+  justify-content: center;
+}
+.mood-grid-item {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.mood-grid-item.is-active {
   background: var(--gradient-hero);
   border-color: transparent;
   box-shadow: 0 8rpx 18rpx var(--shadow-dark);
   transform: scale(1.1);
 }
-.mood-custom {
-  font-size: 30rpx; color: var(--color-text-tertiary);
+.mood-grid-custom {
+  font-size: 32rpx;
+  color: var(--color-text-tertiary);
 }
-.mood-custom.is-active { font-size: 36rpx; color: var(--color-on-primary); }
+.mood-grid-custom.is-active {
+  font-size: 40rpx;
+  color: var(--color-on-primary);
+}
+.mood-clear-row {
+  display: flex;
+  justify-content: center;
+  padding: 8rpx 0 16rpx;
+}
+.mood-clear-btn {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+  padding: 12rpx 32rpx;
+  border-radius: 999rpx;
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border);
+}
 
 /* ======= 保存按钮 ======= */
 .record-actions {

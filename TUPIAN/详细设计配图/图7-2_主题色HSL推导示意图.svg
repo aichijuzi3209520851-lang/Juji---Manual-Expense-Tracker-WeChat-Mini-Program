@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1200" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 7-2  主题色 HSL 推导示意图</text>
+<text x="1453" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">HSL Theme Derivation</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="120" y="310" width="360" height="170" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="120" y="310" width="10" height="170" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="148" y="359" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">输入 primary</text>
+<text x="148" y="399" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">用户选择色值</text>
+<text x="148" y="429" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">如 #27c07d</text>
+<rect x="585" y="310" width="360" height="170" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="585" y="310" width="10" height="170" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="613" y="359" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">hexToHsl()</text>
+<text x="613" y="399" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">得到 h / s / l</text>
+<text x="613" y="429" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">并进行 clamp</text>
+<rect x="1050" y="310" width="360" height="170" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1050" y="310" width="10" height="170" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1078" y="359" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">accent=h+60°</text>
+<text x="1078" y="399" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">互补偏暖/偏冷辅助色</text>
+<text x="1078" y="429" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">用于 hero 渐变</text>
+<line x1="490" y1="395" x2="575" y2="395" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="575,395 559,404 559,385" fill="#5ba4cb"/>
+<line x1="955" y1="395" x2="1040" y2="395" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1040,395 1024,404 1024,385" fill="#f3a33a"/>
+<rect x="260" y="660" width="270" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="260" y="660" width="10" height="135" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="288" y="705" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">容器色</text>
+<text x="288" y="742" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">primaryContainer</text>
+<text x="288" y="769" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">primaryLight</text>
+<line x1="765" y1="490" x2="395" y2="650" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="395,650 405,635 412,652" fill="#27c07d"/>
+<rect x="635" y="660" width="270" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="635" y="660" width="10" height="135" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="663" y="705" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">语义文字色</text>
+<text x="663" y="742" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">onPrimary</text>
+<text x="663" y="769" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">text / textSecondary</text>
+<line x1="765" y1="490" x2="770" y2="650" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="770,650 760,634 778,634" fill="#5ba4cb"/>
+<rect x="1010" y="660" width="270" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1010" y="660" width="10" height="135" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1038" y="705" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">渐变 token</text>
+<text x="1038" y="742" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">gradient-hero</text>
+<text x="1038" y="769" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">gradient-hero-soft</text>
+<line x1="1230" y1="490" x2="1145" y2="650" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1145,650 1143,632 1160,640" fill="#f3a33a"/>
+<rect x="1385" y="660" width="270" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1385" y="660" width="10" height="135" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1413" y="705" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">双阴影 token</text>
+<text x="1413" y="742" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">shadow-soft</text>
+<text x="1413" y="769" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">shadow-card / elevated</text>
+<line x1="765" y1="490" x2="1520" y2="650" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1520,650 1503,656 1506,637" fill="#8c7bd9"/>
+<ellipse cx="350" cy="950" rx="40" ry="40" fill="#27c07d"/>
+<ellipse cx="660" cy="950" rx="40" ry="40" fill="#5ba4cb"/>
+<ellipse cx="970" cy="950" rx="40" ry="40" fill="#f3a33a"/>
+<ellipse cx="1280" cy="950" rx="40" ry="40" fill="#8c7bd9"/>
+<rect x="530" y="1080" width="760" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="547" y="1108" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">实现位置：utils/theme.js generateCustomVars() 与 getThemeStyleString(</text>
+<text x="547" y="1141" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">)</text>
+</svg>

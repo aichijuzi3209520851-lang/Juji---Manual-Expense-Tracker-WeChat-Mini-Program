@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1450" viewBox="0 0 1800 1450">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1450" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 6-1  app.js 启动初始化流程图</text>
+<text x="1505" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">App Launch Flow</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="410" y="180" width="980" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="410" y="180" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="438" y="229" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">1. 检查 wx.cloud 并初始化</text>
+<text x="438" y="271" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">wx.cloud.init({ env, traceUser: true })</text>
+<circle cx="330" cy="240" r="32" fill="#27c07d" stroke="#ffffff" stroke-width="5"/>
+<text x="323" y="245" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#ffffff">1</text>
+<rect x="410" y="345" width="980" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="410" y="345" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="438" y="394" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">2. 注册全局错误监控</text>
+<text x="438" y="436" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">initMonitoring()，监听 onError / onUnhandledRejection</text>
+<circle cx="330" cy="405" r="32" fill="#27c07d" stroke="#ffffff" stroke-width="5"/>
+<text x="323" y="410" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#ffffff">2</text>
+<line x1="900" y1="308" x2="900" y2="337" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,337 890,321 909,321" fill="#6b7d73"/>
+<rect x="410" y="510" width="980" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="410" y="510" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="438" y="559" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">3. 注册隐私授权监听</text>
+<text x="438" y="601" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">initPrivacyAuthorization()</text>
+<circle cx="330" cy="570" r="32" fill="#27c07d" stroke="#ffffff" stroke-width="5"/>
+<text x="323" y="575" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#ffffff">3</text>
+<line x1="900" y1="473" x2="900" y2="502" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,502 890,486 909,486" fill="#6b7d73"/>
+<rect x="410" y="675" width="980" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="410" y="675" width="10" height="120" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="438" y="724" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">4. 迁移旧版自定义主题</text>
+<text x="438" y="766" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">migrateLegacyCustomTheme()</text>
+<circle cx="330" cy="735" r="32" fill="#f3a33a" stroke="#ffffff" stroke-width="5"/>
+<text x="323" y="740" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#ffffff">4</text>
+<line x1="900" y1="638" x2="900" y2="667" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,667 890,651 909,651" fill="#6b7d73"/>
+<rect x="410" y="840" width="980" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="410" y="840" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="438" y="889" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">5. 初始化当前主题</text>
+<text x="438" y="931" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">initAppTheme(app)，写入 globalData.currentTheme</text>
+<circle cx="330" cy="900" r="32" fill="#27c07d" stroke="#ffffff" stroke-width="5"/>
+<text x="323" y="905" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#ffffff">5</text>
+<line x1="900" y1="803" x2="900" y2="832" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,832 890,816 909,816" fill="#6b7d73"/>
+<rect x="410" y="1005" width="980" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="410" y="1005" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="438" y="1054" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">6. 读取引导页标记</text>
+<text x="438" y="1096" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Storage.has_seen_guide → globalData.hasSeenGuide</text>
+<circle cx="330" cy="1065" r="32" fill="#27c07d" stroke="#ffffff" stroke-width="5"/>
+<text x="323" y="1070" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#ffffff">6</text>
+<line x1="900" y1="968" x2="900" y2="997" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,997 890,981 909,981" fill="#6b7d73"/>
+<rect x="410" y="1170" width="980" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="410" y="1170" width="10" height="120" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="438" y="1219" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">7. 执行静默登录</text>
+<text x="438" y="1261" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">silentLogin() → quickstartFunctions.getOpenId → syncUserInfo()</text>
+<circle cx="330" cy="1230" r="32" fill="#f3a33a" stroke="#ffffff" stroke-width="5"/>
+<text x="323" y="1235" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#ffffff">7</text>
+<line x1="900" y1="1133" x2="900" y2="1162" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,1162 890,1146 909,1146" fill="#6b7d73"/>
+<rect x="80" y="220" width="210" height="190" rx="24" fill="#fff4f4" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="80" y="220" width="10" height="190" fill="#ba1a1a" stroke="#ba1a1a" stroke-width="1"/>
+<text x="108" y="266" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">异常分支</text>
+<text x="108" y="306" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">若基础库不支持 </text>
+<text x="108" y="336" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">wx.cloud：</text>
+<text x="108" y="366" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">输出错误并终止</text>
+<text x="108" y="396" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">初始化</text>
+<rect x="1450" y="1120" width="260" height="150" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1450" y="1120" width="10" height="150" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1478" y="1167" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">并发保护</text>
+<text x="1478" y="1208" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">_loginPromise 复用同</text>
+<text x="1478" y="1239" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">一个登录请求，完成</text>
+<text x="1478" y="1270" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">后置空</text>
+<line x1="1390" y1="1195" x2="1450" y2="1195" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1450,1195 1434,1204 1434,1185" fill="#5ba4cb"/>
+</svg>

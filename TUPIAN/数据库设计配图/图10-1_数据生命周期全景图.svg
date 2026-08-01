@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1380" viewBox="0 0 1800 1380">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1380" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 10-1  数据生命周期全景图</text>
+<text x="1445" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Data Lifecycle Timeline</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<line x1="280" y1="240" x2="1630" y2="240" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<circle cx="360" cy="240" r="12" fill="#27c07d"/>
+<text x="318" y="206" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#157a51">首次创建</text>
+<circle cx="640" cy="240" r="12" fill="#27c07d"/>
+<text x="598" y="206" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#157a51">日常更新</text>
+<circle cx="920" cy="240" r="12" fill="#27c07d"/>
+<text x="878" y="206" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#157a51">导出备份</text>
+<circle cx="1200" cy="240" r="12" fill="#27c07d"/>
+<text x="1158" y="206" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#157a51">清理维护</text>
+<circle cx="1480" cy="240" r="12" fill="#27c07d"/>
+<text x="1433" y="206" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#157a51">注销/重置</text>
+<rect x="60" y="310" width="185" height="95" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="60" y="310" width="10" height="95" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="88" y="352" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#17231d">users</text>
+<line x1="250" y1="355" x2="1630" y2="355" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<rect x="255" y="305" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="255" y="305" width="10" height="100" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="283" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">首次登录</text>
+<text x="283" y="379" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">syncUserInfo</text>
+<rect x="535" y="305" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="535" y="305" width="10" height="100" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="563" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">资料/主题更新</text>
+<rect x="815" y="305" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="815" y="305" width="10" height="100" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="843" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">随 JSON 数据保留</text>
+<rect x="1095" y="305" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1095" y="305" width="10" height="100" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1123" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">clearUserData 重</text>
+<text x="1123" y="375" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">置资料</text>
+<rect x="1375" y="305" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1375" y="305" width="10" height="100" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1403" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">保留文档或重置默</text>
+<text x="1403" y="375" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">认值</text>
+<rect x="60" y="465" width="185" height="95" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="60" y="465" width="10" height="95" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="88" y="507" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#17231d">bills</text>
+<line x1="250" y1="510" x2="1630" y2="510" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<rect x="255" y="460" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="255" y="460" width="10" height="100" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="283" y="500" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">记账创建</text>
+<rect x="535" y="460" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="535" y="460" width="10" height="100" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="563" y="500" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">编辑/删除账单</text>
+<rect x="815" y="460" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="815" y="460" width="10" height="100" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="843" y="500" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">JSON / CSV 导出</text>
+<rect x="1095" y="460" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1095" y="460" width="10" height="100" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1123" y="500" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">按用户删除</text>
+<rect x="1375" y="460" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1375" y="460" width="10" height="100" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1403" y="500" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">clearUserData 清</text>
+<text x="1403" y="530" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">空</text>
+<rect x="60" y="620" width="185" height="95" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="60" y="620" width="10" height="95" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="88" y="662" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#17231d">budgets</text>
+<line x1="250" y1="665" x2="1630" y2="665" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<rect x="255" y="615" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="255" y="615" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="283" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">首次设预算</text>
+<rect x="535" y="615" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="535" y="615" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="563" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">按月 upsert</text>
+<rect x="815" y="615" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="815" y="615" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="843" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">JSON 导出</text>
+<rect x="1095" y="615" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1095" y="615" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1123" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">随用户数据维护</text>
+<rect x="1375" y="615" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1375" y="615" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1403" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">clearUserData 清</text>
+<text x="1403" y="685" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">空</text>
+<rect x="60" y="775" width="185" height="95" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="60" y="775" width="10" height="95" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="88" y="817" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#17231d">ai_usage_limits</text>
+<line x1="250" y1="820" x2="1630" y2="820" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<rect x="255" y="770" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="255" y="770" width="10" height="100" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="283" y="810" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">首次调用 AI</text>
+<rect x="535" y="770" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="535" y="770" width="10" height="100" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="563" y="810" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">count 递增</text>
+<rect x="815" y="770" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="815" y="770" width="10" height="100" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="843" y="810" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">无需业务备份</text>
+<rect x="1095" y="770" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1095" y="770" width="10" height="100" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1123" y="810" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">清理过期日期</text>
+<rect x="1375" y="770" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1375" y="770" width="10" height="100" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1403" y="810" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">可按 _openid 删除</text>
+<rect x="60" y="930" width="185" height="95" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="60" y="930" width="10" height="95" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="88" y="972" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#17231d">client_logs</text>
+<line x1="250" y1="975" x2="1630" y2="975" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<rect x="255" y="925" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="255" y="925" width="10" height="100" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="283" y="965" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">异常首次上报</text>
+<rect x="535" y="925" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="535" y="925" width="10" height="100" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="563" y="965" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">持续追加</text>
+<rect x="815" y="925" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="815" y="925" width="10" height="100" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="843" y="965" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">按需排障导出</text>
+<rect x="1095" y="925" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1095" y="925" width="10" height="100" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="1123" y="965" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">建议 30 天清理</text>
+<rect x="1375" y="925" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1375" y="925" width="10" height="100" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="1403" y="965" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">可按 _openid 删除</text>
+<rect x="60" y="1085" width="185" height="95" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="60" y="1085" width="10" height="95" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="88" y="1127" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#17231d">云存储</text>
+<line x1="250" y1="1130" x2="1630" y2="1130" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<rect x="255" y="1080" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="255" y="1080" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="283" y="1120" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">上传头像/照片</text>
+<rect x="535" y="1080" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="535" y="1080" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="563" y="1120" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">替换照片/头像</text>
+<rect x="815" y="1080" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="815" y="1080" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="843" y="1120" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">exports 生成文件</text>
+<rect x="1095" y="1080" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1095" y="1080" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1123" y="1120" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">清理旧导出文件</text>
+<rect x="1375" y="1080" width="210" height="100" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1375" y="1080" width="10" height="100" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1403" y="1120" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d">删除 avatars/bills</text>
+<text x="1403" y="1150" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#17231d"> 文件</text>
+<rect x="305" y="1230" width="350" height="120" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="305" y="1230" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="333" y="1274" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">备份策略</text>
+<text x="333" y="1310" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">每周在「我的页」JSON 导出</text>
+<text x="333" y="1336" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">大版本发布前额外备份</text>
+<rect x="725" y="1230" width="350" height="120" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="725" y="1230" width="10" height="120" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="753" y="1274" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">恢复策略</text>
+<text x="753" y="1310" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">chooseMessageFile 选择 JSON</text>
+<text x="753" y="1336" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">分批导入 bills</text>
+<rect x="1145" y="1230" width="350" height="120" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1145" y="1230" width="10" height="120" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1173" y="1274" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">数据自主权</text>
+<text x="1173" y="1310" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">clearUserData 清账单/预算/文件</text>
+<text x="1173" y="1336" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">并重置 users 偏好</text>
+</svg>

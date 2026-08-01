@@ -1,0 +1,903 @@
+[
+  {
+    "file": "D:\\A\\wechat-project\\V1.1\\文档与PPT文件\\应用开发类竞赛系统设计说明书封面模板-校赛.docx",
+    "text": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\text\\应用开发类竞赛系统设计说明书封面模板-校赛.txt",
+    "paragraphs": 10,
+    "tables": 1,
+    "images": []
+  },
+  {
+    "file": "D:\\A\\wechat-project\\V1.1\\文档与PPT文件\\橘记功能需求说明书.docx",
+    "text": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\text\\橘记功能需求说明书.txt",
+    "paragraphs": 316,
+    "tables": 66,
+    "images": [
+      {
+        "source": "word/media/image1.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\138944ad60246170.png",
+        "sha16": "138944ad60246170",
+        "bytes": 149066,
+        "width": 1800,
+        "height": 1280,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image2.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\c9dffe083ca53d89.png",
+        "sha16": "c9dffe083ca53d89",
+        "bytes": 176595,
+        "width": 1800,
+        "height": 1680,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image3.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\7d50d1d183fce199.png",
+        "sha16": "7d50d1d183fce199",
+        "bytes": 104989,
+        "width": 1800,
+        "height": 1280,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image4.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\e6c2c084a542fd52.png",
+        "sha16": "e6c2c084a542fd52",
+        "bytes": 102827,
+        "width": 1800,
+        "height": 1480,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image5.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\94b3783c3a8de134.png",
+        "sha16": "94b3783c3a8de134",
+        "bytes": 102248,
+        "width": 1800,
+        "height": 1180,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image6.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\c3680d2d3d180f60.png",
+        "sha16": "c3680d2d3d180f60",
+        "bytes": 127536,
+        "width": 1800,
+        "height": 1320,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image7.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\c9603fef6c489a83.png",
+        "sha16": "c9603fef6c489a83",
+        "bytes": 101068,
+        "width": 1800,
+        "height": 1180,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image8.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\67a5a1f5ffa86810.png",
+        "sha16": "67a5a1f5ffa86810",
+        "bytes": 133932,
+        "width": 1800,
+        "height": 1360,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image9.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\01adaddec13dfa36.png",
+        "sha16": "01adaddec13dfa36",
+        "bytes": 90229,
+        "width": 1800,
+        "height": 1220,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image10.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\cf8f05b698016e2c.png",
+        "sha16": "cf8f05b698016e2c",
+        "bytes": 114564,
+        "width": 1800,
+        "height": 1240,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image11.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记功能需求说明书\\1516c2071975edd8.png",
+        "sha16": "1516c2071975edd8",
+        "bytes": 110477,
+        "width": 1800,
+        "height": 1260,
+        "format": "PNG"
+      }
+    ]
+  },
+  {
+    "file": "D:\\A\\wechat-project\\V1.1\\文档与PPT文件\\橘记数据库设计说明书.docx",
+    "text": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\text\\橘记数据库设计说明书.txt",
+    "paragraphs": 249,
+    "tables": 21,
+    "images": [
+      {
+        "source": "word/media/image1.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记数据库设计说明书\\f913ff86a9814ced.png",
+        "sha16": "f913ff86a9814ced",
+        "bytes": 161694,
+        "width": 1800,
+        "height": 1260,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image2.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记数据库设计说明书\\3b5a21d555a61c0b.png",
+        "sha16": "3b5a21d555a61c0b",
+        "bytes": 113014,
+        "width": 1800,
+        "height": 1240,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image3.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记数据库设计说明书\\32bb9e87c797980c.png",
+        "sha16": "32bb9e87c797980c",
+        "bytes": 145356,
+        "width": 1800,
+        "height": 1300,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image4.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记数据库设计说明书\\32d6cdc29b3f3e1a.png",
+        "sha16": "32d6cdc29b3f3e1a",
+        "bytes": 146859,
+        "width": 1800,
+        "height": 1360,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image5.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记数据库设计说明书\\af30467f9a69bc4c.png",
+        "sha16": "af30467f9a69bc4c",
+        "bytes": 125629,
+        "width": 1800,
+        "height": 1440,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image6.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记数据库设计说明书\\0c9a52bfd216a743.png",
+        "sha16": "0c9a52bfd216a743",
+        "bytes": 150395,
+        "width": 1800,
+        "height": 1260,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image7.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记数据库设计说明书\\b73860de7661835a.png",
+        "sha16": "b73860de7661835a",
+        "bytes": 158566,
+        "width": 1800,
+        "height": 1380,
+        "format": "PNG"
+      }
+    ]
+  },
+  {
+    "file": "D:\\A\\wechat-project\\V1.1\\文档与PPT文件\\橘记概要设计说明书.docx",
+    "text": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\text\\橘记概要设计说明书.txt",
+    "paragraphs": 250,
+    "tables": 43,
+    "images": [
+      {
+        "source": "word/media/image1.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\d16dc8b48027b578.png",
+        "sha16": "d16dc8b48027b578",
+        "bytes": 134501,
+        "width": 1800,
+        "height": 1280,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image2.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\d25b3c0116687097.png",
+        "sha16": "d25b3c0116687097",
+        "bytes": 138703,
+        "width": 1800,
+        "height": 1320,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image3.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\24b7814dae5e69a1.png",
+        "sha16": "24b7814dae5e69a1",
+        "bytes": 158897,
+        "width": 1800,
+        "height": 1320,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image4.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\c900c3f791a2ee12.png",
+        "sha16": "c900c3f791a2ee12",
+        "bytes": 137803,
+        "width": 1800,
+        "height": 1220,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image5.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\960752e9e854f1d5.png",
+        "sha16": "960752e9e854f1d5",
+        "bytes": 97526,
+        "width": 1800,
+        "height": 1180,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image6.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\0e85ada081045892.png",
+        "sha16": "0e85ada081045892",
+        "bytes": 136620,
+        "width": 1800,
+        "height": 1450,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image7.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\123dfe079b9eccb9.png",
+        "sha16": "123dfe079b9eccb9",
+        "bytes": 159411,
+        "width": 1800,
+        "height": 1540,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image8.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\4c1809857d248cf3.png",
+        "sha16": "4c1809857d248cf3",
+        "bytes": 134010,
+        "width": 1800,
+        "height": 1300,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image9.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记概要设计说明书\\b586d9613047ab78.png",
+        "sha16": "b586d9613047ab78",
+        "bytes": 131555,
+        "width": 1800,
+        "height": 1220,
+        "format": "PNG"
+      }
+    ]
+  },
+  {
+    "file": "D:\\A\\wechat-project\\V1.1\\文档与PPT文件\\橘记用户操作手册.docx",
+    "text": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\text\\橘记用户操作手册.txt",
+    "paragraphs": 162,
+    "tables": 8,
+    "images": [
+      {
+        "source": "word/media/image1.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\6d2fe69ce8db3248.png",
+        "sha16": "6d2fe69ce8db3248",
+        "bytes": 114644,
+        "width": 434,
+        "height": 936,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image2.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\eb9d1c795367d023.png",
+        "sha16": "eb9d1c795367d023",
+        "bytes": 189027,
+        "width": 447,
+        "height": 917,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image3.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\c61f744494a7f076.png",
+        "sha16": "c61f744494a7f076",
+        "bytes": 115885,
+        "width": 431,
+        "height": 917,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image4.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\5b49d2716f26a9a5.png",
+        "sha16": "5b49d2716f26a9a5",
+        "bytes": 130285,
+        "width": 432,
+        "height": 912,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image5.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\8c8cc458519955ed.png",
+        "sha16": "8c8cc458519955ed",
+        "bytes": 183096,
+        "width": 430,
+        "height": 922,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image6.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\23909fe47356f932.png",
+        "sha16": "23909fe47356f932",
+        "bytes": 58728,
+        "width": 395,
+        "height": 372,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image7.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\fa4540b18870069c.png",
+        "sha16": "fa4540b18870069c",
+        "bytes": 126306,
+        "width": 425,
+        "height": 911,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image11.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\d6a26ee182f83fe8.png",
+        "sha16": "d6a26ee182f83fe8",
+        "bytes": 93039,
+        "width": 429,
+        "height": 915,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image12.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\cf987bf0699ac1e6.png",
+        "sha16": "cf987bf0699ac1e6",
+        "bytes": 79124,
+        "width": 423,
+        "height": 908,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image13.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\f0708ca4618cf4e7.png",
+        "sha16": "f0708ca4618cf4e7",
+        "bytes": 207563,
+        "width": 421,
+        "height": 905,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image14.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\9cf6f0aa5f7b8c21.png",
+        "sha16": "9cf6f0aa5f7b8c21",
+        "bytes": 79756,
+        "width": 479,
+        "height": 352,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image15.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\fc095cd5634288a1.png",
+        "sha16": "fc095cd5634288a1",
+        "bytes": 98180,
+        "width": 428,
+        "height": 911,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image16.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\94c8ae7e9b9db594.png",
+        "sha16": "94c8ae7e9b9db594",
+        "bytes": 111006,
+        "width": 422,
+        "height": 906,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image8.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\5131b9f0c60d7abb.png",
+        "sha16": "5131b9f0c60d7abb",
+        "bytes": 113118,
+        "width": 423,
+        "height": 915,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image10.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\42e7d2066b0d7db6.png",
+        "sha16": "42e7d2066b0d7db6",
+        "bytes": 146060,
+        "width": 421,
+        "height": 907,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image9.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记用户操作手册\\2196f9a59113d9c2.png",
+        "sha16": "2196f9a59113d9c2",
+        "bytes": 171790,
+        "width": 430,
+        "height": 908,
+        "format": "PNG"
+      }
+    ]
+  },
+  {
+    "file": "D:\\A\\wechat-project\\V1.1\\文档与PPT文件\\橘记详细设计说明书.docx",
+    "text": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\text\\橘记详细设计说明书.txt",
+    "paragraphs": 240,
+    "tables": 14,
+    "images": [
+      {
+        "source": "word/media/image16.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\8fafa0017cc27a9d.png",
+        "sha16": "8fafa0017cc27a9d",
+        "bytes": 114578,
+        "width": 1269,
+        "height": 959,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image1.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\02857628e4490180.png",
+        "sha16": "02857628e4490180",
+        "bytes": 96637,
+        "width": 1269,
+        "height": 888,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image2.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\03fa5998a3412ae9.png",
+        "sha16": "03fa5998a3412ae9",
+        "bytes": 114987,
+        "width": 1800,
+        "height": 1480,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image4.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\7b05d85d31f7ca03.png",
+        "sha16": "7b05d85d31f7ca03",
+        "bytes": 95888,
+        "width": 1269,
+        "height": 874,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image5.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\8a4e2ba41311f0b1.png",
+        "sha16": "8a4e2ba41311f0b1",
+        "bytes": 73979,
+        "width": 1269,
+        "height": 832,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image6.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\502b1f81396c22f7.png",
+        "sha16": "502b1f81396c22f7",
+        "bytes": 32695,
+        "width": 212,
+        "height": 455,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image7.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\b726602d01f50bbc.png",
+        "sha16": "b726602d01f50bbc",
+        "bytes": 32497,
+        "width": 217,
+        "height": 458,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image8.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\1925fbdf4bf5d6ff.png",
+        "sha16": "1925fbdf4bf5d6ff",
+        "bytes": 30861,
+        "width": 215,
+        "height": 457,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image9.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\2e39fa5c2f58a2e0.png",
+        "sha16": "2e39fa5c2f58a2e0",
+        "bytes": 46308,
+        "width": 215,
+        "height": 465,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image10.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\86242ede0711aac4.png",
+        "sha16": "86242ede0711aac4",
+        "bytes": 189117,
+        "width": 445,
+        "height": 925,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image11.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\05100c9e3d1482d5.png",
+        "sha16": "05100c9e3d1482d5",
+        "bytes": 84672,
+        "width": 1269,
+        "height": 874,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image12.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\6d2fe69ce8db3248.png",
+        "sha16": "6d2fe69ce8db3248",
+        "bytes": 114644,
+        "width": 434,
+        "height": 936,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image13.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\d0e945348b8d9c50.png",
+        "sha16": "d0e945348b8d9c50",
+        "bytes": 113211,
+        "width": 437,
+        "height": 931,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image14.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\d0a8496ef9325cba.png",
+        "sha16": "d0a8496ef9325cba",
+        "bytes": 67120,
+        "width": 275,
+        "height": 582,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image15.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\907a46a673628dcb.png",
+        "sha16": "907a46a673628dcb",
+        "bytes": 12827,
+        "width": 100,
+        "height": 101,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image3.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\d746944cc2c75a48.png",
+        "sha16": "d746944cc2c75a48",
+        "bytes": 82048,
+        "width": 1269,
+        "height": 888,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image17.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\3978a3558878e402.png",
+        "sha16": "3978a3558878e402",
+        "bytes": 143349,
+        "width": 433,
+        "height": 925,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image18.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\743940cfdd6756aa.png",
+        "sha16": "743940cfdd6756aa",
+        "bytes": 140436,
+        "width": 1269,
+        "height": 973,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image19.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\14645619b556039b.png",
+        "sha16": "14645619b556039b",
+        "bytes": 81134,
+        "width": 1269,
+        "height": 888,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image20.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\a397c323ea1c0144.png",
+        "sha16": "a397c323ea1c0144",
+        "bytes": 80451,
+        "width": 1800,
+        "height": 1200,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image21.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\82aeb7133fcccb7b.png",
+        "sha16": "82aeb7133fcccb7b",
+        "bytes": 63589,
+        "width": 306,
+        "height": 651,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image22.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\1be38aa58349e3fa.png",
+        "sha16": "1be38aa58349e3fa",
+        "bytes": 60420,
+        "width": 304,
+        "height": 653,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image23.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\a6688ffe61eb1739.png",
+        "sha16": "a6688ffe61eb1739",
+        "bytes": 65847,
+        "width": 308,
+        "height": 654,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image24.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\6767f37e3ec3fff8.png",
+        "sha16": "6767f37e3ec3fff8",
+        "bytes": 67628,
+        "width": 305,
+        "height": 653,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image25.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\3333f7064f534f73.png",
+        "sha16": "3333f7064f534f73",
+        "bytes": 88063,
+        "width": 1269,
+        "height": 874,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image26.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\2916f48431be5ca2.png",
+        "sha16": "2916f48431be5ca2",
+        "bytes": 12150,
+        "width": 385,
+        "height": 107,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image27.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\41dd4b6ae3eb8432.png",
+        "sha16": "41dd4b6ae3eb8432",
+        "bytes": 76929,
+        "width": 1269,
+        "height": 832,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image28.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记详细设计说明书\\e9188440c36c6921.png",
+        "sha16": "e9188440c36c6921",
+        "bytes": 81125,
+        "width": 1269,
+        "height": 832,
+        "format": "PNG"
+      }
+    ]
+  },
+  {
+    "file": "D:\\A\\wechat-project\\V1.1\\文档与PPT文件\\橘记软件界面设计书.docx",
+    "text": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\text\\橘记软件界面设计书.txt",
+    "paragraphs": 372,
+    "tables": 48,
+    "images": [
+      {
+        "source": "word/media/image13.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\6d2fe69ce8db3248.png",
+        "sha16": "6d2fe69ce8db3248",
+        "bytes": 114644,
+        "width": 434,
+        "height": 936,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image1.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\d0e945348b8d9c50.png",
+        "sha16": "d0e945348b8d9c50",
+        "bytes": 113211,
+        "width": 437,
+        "height": 931,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image3.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\eae61b181da495cb.png",
+        "sha16": "eae61b181da495cb",
+        "bytes": 78311,
+        "width": 386,
+        "height": 241,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image4.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\e07cdba914510ea7.png",
+        "sha16": "e07cdba914510ea7",
+        "bytes": 78243,
+        "width": 388,
+        "height": 237,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image5.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\c10435f0037a19c1.png",
+        "sha16": "c10435f0037a19c1",
+        "bytes": 16605,
+        "width": 109,
+        "height": 122,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image6.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\907a46a673628dcb.png",
+        "sha16": "907a46a673628dcb",
+        "bytes": 12827,
+        "width": 100,
+        "height": 101,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image7.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\7c7f5b3039289102.png",
+        "sha16": "7c7f5b3039289102",
+        "bytes": 14747,
+        "width": 111,
+        "height": 105,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image8.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\ad1c9546c64194f1.png",
+        "sha16": "ad1c9546c64194f1",
+        "bytes": 159027,
+        "width": 421,
+        "height": 908,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image9.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\c19555536b9dcb81.png",
+        "sha16": "c19555536b9dcb81",
+        "bytes": 91697,
+        "width": 424,
+        "height": 909,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image10.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\d165e406e66e20f4.png",
+        "sha16": "d165e406e66e20f4",
+        "bytes": 91893,
+        "width": 428,
+        "height": 904,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image11.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\5fcdb08c02c3ea82.png",
+        "sha16": "5fcdb08c02c3ea82",
+        "bytes": 88084,
+        "width": 429,
+        "height": 913,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image12.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\85952eff77341529.png",
+        "sha16": "85952eff77341529",
+        "bytes": 126777,
+        "width": 420,
+        "height": 906,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image2.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\2916f48431be5ca2.png",
+        "sha16": "2916f48431be5ca2",
+        "bytes": 12150,
+        "width": 385,
+        "height": 107,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image14.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\6a703ae213955480.png",
+        "sha16": "6a703ae213955480",
+        "bytes": 105104,
+        "width": 431,
+        "height": 912,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image15.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\86242ede0711aac4.png",
+        "sha16": "86242ede0711aac4",
+        "bytes": 189117,
+        "width": 445,
+        "height": 925,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image16.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\e83eb40a8e8e468a.png",
+        "sha16": "e83eb40a8e8e468a",
+        "bytes": 171947,
+        "width": 428,
+        "height": 919,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image17.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\63bc45f09fa86003.png",
+        "sha16": "63bc45f09fa86003",
+        "bytes": 146449,
+        "width": 437,
+        "height": 923,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image18.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\4baa257fddc737a8.png",
+        "sha16": "4baa257fddc737a8",
+        "bytes": 71496,
+        "width": 430,
+        "height": 914,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image19.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\b32deea6b0c44bd6.png",
+        "sha16": "b32deea6b0c44bd6",
+        "bytes": 98677,
+        "width": 436,
+        "height": 918,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image20.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\9938d9be08205eef.png",
+        "sha16": "9938d9be08205eef",
+        "bytes": 204190,
+        "width": 431,
+        "height": 916,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image21.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\5220694b1b049e97.png",
+        "sha16": "5220694b1b049e97",
+        "bytes": 116773,
+        "width": 424,
+        "height": 902,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image22.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\42f6c1bbf229c043.png",
+        "sha16": "42f6c1bbf229c043",
+        "bytes": 117124,
+        "width": 420,
+        "height": 903,
+        "format": "PNG"
+      },
+      {
+        "source": "word/media/image23.png",
+        "file": "D:\\A\\wechat-project\\V1.1\\.tmp\\juji_system_design_extract\\media\\橘记软件界面设计书\\9a694394b903ebc5.png",
+        "sha16": "9a694394b903ebc5",
+        "bytes": 121648,
+        "width": 426,
+        "height": 904,
+        "format": "PNG"
+      }
+    ]
+  }
+]

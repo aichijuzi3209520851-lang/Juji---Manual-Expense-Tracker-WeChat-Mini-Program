@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1260" viewBox="0 0 1800 1260">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1260" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 2-1  数据访问架构图</text>
+<text x="1383" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Database Access Architecture</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="145" y="170" width="260" height="42" rx="21" fill="#e8f5ee" stroke="#e8f5ee" stroke-width="1"/>
+<text x="162" y="198" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">小程序端</text>
+<rect x="610" y="170" width="300" height="42" rx="21" fill="#eef7fb" stroke="#eef7fb" stroke-width="1"/>
+<text x="627" y="198" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#5ba4cb">微信云开发 SDK</text>
+<rect x="1010" y="170" width="300" height="42" rx="21" fill="#eef7fb" stroke="#eef7fb" stroke-width="1"/>
+<text x="1027" y="198" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#5ba4cb">云函数服务端</text>
+<rect x="1415" y="170" width="300" height="42" rx="21" fill="#fff7eb" stroke="#fff7eb" stroke-width="1"/>
+<text x="1432" y="198" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#f3a33a">CloudBase 资源</text>
+<rect x="110" y="255" width="330" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="110" y="255" width="10" height="135" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="138" y="303" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">读路径页面</text>
+<text x="138" y="342" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">home / stats / budget</text>
+<text x="138" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">profile / detail</text>
+<rect x="570" y="255" width="330" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="570" y="255" width="10" height="135" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="598" y="303" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">wx.cloud.database()</text>
+<text x="598" y="342" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">客户端直连读取</text>
+<text x="598" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">按 _openid 自动隔离</text>
+<rect x="1390" y="255" width="330" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1390" y="255" width="10" height="135" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1418" y="303" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">CloudBase NoSQL</text>
+<text x="1418" y="342" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">bills / budgets / users</text>
+<text x="1418" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">client_logs / ai_usage_limits</text>
+<rect x="110" y="570" width="330" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="110" y="570" width="10" height="150" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="138" y="618" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">写路径页面</text>
+<text x="138" y="657" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">record / categories / themes</text>
+<text x="138" y="685" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">profile / login</text>
+<rect x="570" y="570" width="330" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="570" y="570" width="10" height="150" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="598" y="617" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">callFunction()</text>
+<text x="598" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">wx.cloud.callFunction</text>
+<text x="598" y="682" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">写操作统一入口</text>
+<text x="598" y="709" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">不传可信 openid</text>
+<rect x="980" y="570" width="345" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="980" y="570" width="10" height="150" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1008" y="618" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">业务云函数</text>
+<text x="1008" y="657" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">quickstart / bills / budgets</text>
+<text x="1008" y="685" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">clearUserData / dataMigration</text>
+<rect x="1390" y="520" width="330" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1390" y="520" width="10" height="135" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1418" y="568" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">NoSQL 写入</text>
+<text x="1418" y="607" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">服务端校验后写集合</text>
+<text x="1418" y="635" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">create / update / delete</text>
+<rect x="1390" y="710" width="330" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1390" y="710" width="10" height="120" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1418" y="758" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">云存储</text>
+<text x="1418" y="797" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">avatars / bills / exports</text>
+<text x="1418" y="825" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">头像、照片、导出文件</text>
+<line x1="448" y1="322" x2="562" y2="322" stroke="#27c07d" stroke-width="4" stroke-linecap="round"/>
+<polygon points="562,322 546,331 546,312" fill="#27c07d"/>
+<text x="380" y="255" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">读：页面直接查询</text>
+<line x1="908" y1="322" x2="1382" y2="322" stroke="#27c07d" stroke-width="4" stroke-linecap="round"/>
+<polygon points="1382,322 1366,331 1366,312" fill="#27c07d"/>
+<text x="997" y="255" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">_openid 由数据库规则过滤</text>
+<line x1="448" y1="645" x2="562" y2="645" stroke="#f3a33a" stroke-width="4" stroke-linecap="round"/>
+<polygon points="562,645 546,654 546,635" fill="#f3a33a"/>
+<line x1="908" y1="645" x2="972" y2="645" stroke="#f3a33a" stroke-width="4" stroke-linecap="round"/>
+<polygon points="972,645 956,654 956,635" fill="#f3a33a"/>
+<line x1="1333" y1="645" x2="1382" y2="587" stroke="#27c07d" stroke-width="4" stroke-linecap="round"/>
+<polygon points="1382,587 1379,604 1364,592" fill="#27c07d"/>
+<line x1="1333" y1="645" x2="1382" y2="770" stroke="#5ba4cb" stroke-width="4" stroke-linecap="round"/>
+<polygon points="1382,770 1367,759 1385,752" fill="#5ba4cb"/>
+<text x="873" y="781" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#8c7bd9">服务端：cloud.getWXContext().OPENID</text>
+<rect x="130" y="910" width="410" height="150" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="130" y="910" width="10" height="150" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="158" y="958" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">数据库层</text>
+<text x="158" y="997" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">集合权限：仅创建者可读写</text>
+<text x="158" y="1025" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">CloudBase 自动注入 _openid</text>
+<rect x="695" y="910" width="410" height="150" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="695" y="910" width="10" height="150" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="723" y="958" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">服务端层</text>
+<text x="723" y="997" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">写操作在云函数获取 OPENID</text>
+<text x="723" y="1025" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">拒绝客户端伪造身份</text>
+<rect x="1260" y="910" width="410" height="150" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1260" y="910" width="10" height="150" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1288" y="958" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">代码层</text>
+<text x="1288" y="997" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">update/delete 前读取原文档</text>
+<text x="1288" y="1025" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">比对 _openid 后再执行</text>
+<rect x="560" y="1120" width="720" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="577" y="1148" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">访问原则：客户端高频读，服务端可信写，身份隔离贯穿全链路</text>
+</svg>

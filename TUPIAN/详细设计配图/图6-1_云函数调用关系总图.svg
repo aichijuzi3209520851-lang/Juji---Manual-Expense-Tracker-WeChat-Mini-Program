@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1380" viewBox="0 0 1800 1380">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1380" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 6-1  云函数调用关系总图</text>
+<text x="1439" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Cloud Function Call Map</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="90" y="245" width="360" height="760" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="90" y="245" width="10" height="760" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="118" y="295" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">前端页面区</text>
+<text x="118" y="338" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">login / guide</text>
+<text x="118" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">home / detail</text>
+<text x="118" y="402" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">record / categories</text>
+<text x="118" y="434" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">stats / budget</text>
+<text x="118" y="466" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">profile / themes</text>
+<rect x="590" y="205" width="620" height="845" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="590" y="205" width="10" height="845" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="618" y="255" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">CloudBase 云函数服务区</text>
+<text x="618" y="296" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">9 个核心业务云函数，统一承接登录、记账、预算、AI、安全和</text>
+<text x="618" y="326" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">数据管理能力</text>
+<rect x="1360" y="245" width="350" height="760" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1360" y="245" width="10" height="760" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1388" y="295" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">外部能力区</text>
+<rect x="650" y="370" width="250" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="650" y="370" width="10" height="150" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="678" y="413" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#17231d">基础与账单服务</text>
+<text x="678" y="450" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">quickstartFunctions</text>
+<text x="678" y="477" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">bills</text>
+<text x="678" y="504" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">budgets</text>
+<rect x="650" y="610" width="250" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="650" y="610" width="10" height="150" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="678" y="653" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#17231d">AI 服务</text>
+<text x="678" y="690" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">aiChat</text>
+<text x="678" y="717" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">aiPoster</text>
+<rect x="650" y="810" width="250" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="650" y="810" width="10" height="150" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="678" y="853" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#17231d">数据管理服务</text>
+<text x="678" y="890" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">exportBills</text>
+<text x="678" y="917" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">dataMigration</text>
+<text x="678" y="944" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">clearUserData</text>
+<rect x="930" y="610" width="250" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="930" y="610" width="10" height="150" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="958" y="653" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="700" fill="#17231d">安全审核服务</text>
+<text x="958" y="690" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">contentSafety</text>
+<rect x="1410" y="390" width="250" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1410" y="390" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1438" y="434" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">NoSQL</text>
+<text x="1438" y="470" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">bills / budgets / users</text>
+<text x="1438" y="496" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">ai_usage_limits / </text>
+<text x="1438" y="522" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">client_logs</text>
+<rect x="1410" y="575" width="250" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1410" y="575" width="10" height="120" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1438" y="619" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">云存储</text>
+<text x="1438" y="655" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">头像 / 照片 / 导出文件</text>
+<rect x="1410" y="760" width="250" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1410" y="760" width="10" height="120" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1438" y="804" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">混元大模型</text>
+<text x="1438" y="840" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">hunyuan-v3 / </text>
+<text x="1438" y="866" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">hy3-preview</text>
+<rect x="1410" y="945" width="250" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1410" y="945" width="10" height="120" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="1438" y="989" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">内容安全</text>
+<text x="1438" y="1025" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">msgSecCheck v2</text>
+<line x1="460" y1="625" x2="580" y2="627" stroke="#5ba4cb" stroke-width="4" stroke-linecap="round"/>
+<polygon points="580,627 564,636 564,617" fill="#5ba4cb"/>
+<line x1="1220" y1="627" x2="1350" y2="625" stroke="#f3a33a" stroke-width="4" stroke-linecap="round"/>
+<polygon points="1350,625 1334,634 1334,615" fill="#f3a33a"/>
+<line x1="910" y1="445" x2="1400" y2="450" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1400,450 1384,459 1384,440" fill="#27c07d"/>
+<line x1="910" y1="685" x2="1400" y2="820" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1400,820 1382,824 1387,806" fill="#8c7bd9"/>
+<line x1="910" y1="885" x2="1400" y2="450" stroke="#27c07d" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1400,450 1394,467 1382,453" fill="#27c07d"/>
+<line x1="910" y1="885" x2="1400" y2="635" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1400,635 1390,650 1382,633" fill="#5ba4cb"/>
+<line x1="1190" y1="685" x2="1400" y2="1005" stroke="#d98787" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1400,1005 1383,997 1399,987" fill="#d98787"/>
+<rect x="175" y="1075" width="340" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="192" y="1103" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">调用入口：</text>
+<text x="192" y="1136" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">wx.cloud.callFunction()</text>
+<rect x="685" y="1125" width="690" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="702" y="1153" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">服务端统一获取 OPENID、校验参数、过滤敏感内容、执行业务写入</text>
+<rect x="485" y="1260" width="820" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="502" y="1288" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">说明：空占位 generateImage-WtU3mJ 不计入核心业务云函数</text>
+</svg>

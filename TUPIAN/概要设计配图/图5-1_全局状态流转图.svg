@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1220" viewBox="0 0 1800 1220">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1220" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 5-1  全局状态流转图</text>
+<text x="1483" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Runtime State Flow</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="110" y="230" width="390" height="560" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="110" y="230" width="10" height="560" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="138" y="277" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">globalData（内存）</text>
+<text x="138" y="320" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">openid</text>
+<text x="138" y="353" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">userInfo</text>
+<text x="138" y="386" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">currentTheme</text>
+<text x="138" y="419" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">eventBus</text>
+<text x="138" y="452" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">_loginPromise</text>
+<text x="138" y="485" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">_editBillId</text>
+<rect x="610" y="230" width="390" height="560" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="230" width="10" height="560" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="638" y="277" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">wx.Storage（本地持久化）</text>
+<text x="638" y="320" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">theme / user_themes</text>
+<text x="638" y="353" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">has_seen_guide</text>
+<text x="638" y="386" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">juji_ai_* periodKey 缓存</text>
+<text x="638" y="419" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">juji_profile_title_*</text>
+<text x="638" y="452" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">juji_heatmap_color</text>
+<rect x="1110" y="230" width="390" height="560" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1110" y="230" width="10" height="560" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1138" y="277" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">云数据库（服务端）</text>
+<text x="1138" y="320" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">users.theme / customCategories</text>
+<text x="1138" y="353" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">bills / budgets</text>
+<text x="1138" y="386" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">ai_usage_limits</text>
+<text x="1138" y="419" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="400" fill="#6b7d73">client_logs</text>
+<text x="135" y="857" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">应用运行期快速读写；退出登录后</text>
+<text x="135" y="892" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">清空登录态</text>
+<text x="635" y="857" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">跨页面、跨启动保留；用于主题、</text>
+<text x="635" y="892" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">缓存与引导</text>
+<text x="1135" y="857" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">云端事实来源；按 _openid 隔离</text>
+<line x1="805" y1="215" x2="310" y2="215" stroke="#5ba4cb" stroke-width="4" stroke-linecap="round"/>
+<polygon points="310,215 325,205 325,224" fill="#5ba4cb"/>
+<text x="467" y="202" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#5ba4cb">启动读取 theme / guide 标记</text>
+<line x1="310" y1="930" x2="805" y2="930" stroke="#27c07d" stroke-width="4" stroke-linecap="round"/>
+<polygon points="805,930 789,939 789,920" fill="#27c07d"/>
+<text x="428" y="917" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#157a51">主题切换写入 Storage，并 emit themeChanged</text>
+<line x1="1000" y1="420" x2="1110" y2="420" stroke="#f3a33a" stroke-width="4" stroke-linecap="round"/>
+<polygon points="1110,420 1094,429 1094,410" fill="#f3a33a"/>
+<text x="985" y="382" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#f3a33a">同步 users.theme</text>
+<line x1="1110" y1="680" x2="1000" y2="680" stroke="#8c7bd9" stroke-width="4" stroke-linecap="round"/>
+<polygon points="1000,680 1015,670 1015,689" fill="#8c7bd9"/>
+<text x="880" y="662" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#8c7bd9">AI 用量 / 称号 / 账单数据回读</text>
+<rect x="145" y="560" width="300" height="135" rx="24" fill="#fff6f6" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="145" y="560" width="10" height="135" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="173" y="604" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">编辑账单桥接</text>
+<text x="173" y="642" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">Detail → Record</text>
+<text x="173" y="670" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">_editBillId + switchTab</text>
+<rect x="640" y="1035" width="620" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="657" y="1063" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">状态设计目标：内存负责运行态，本地缓存负责体验，云端负责数</text>
+<text x="657" y="1096" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">据事实</text>
+</svg>

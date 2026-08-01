@@ -1,0 +1,833 @@
+# 橘记软件界面设计书.docx
+
+[P][Normal] 2026年湖南省大学生计算机程序设计竞赛校级选拔赛
+[P][Normal] -----应用开发类竞赛（2026）
+[P][Normal] 软
+[P][Normal] 件
+[P][Normal] 界
+[P][Normal] 面
+[P][Normal] 设
+[P][Normal] 计
+[P][Normal] 书
+[TABLE 1]
+作品名称： | 橘记(JuJI)—— 混元AI大模型驱动的对话式智能记账与消费洞察小程序
+作品类别： | 移动终端开发类
+作 者： | 梁承伟 李俊怡 邓泽楷
+指导老师： | 李翠红 胡瑶
+单 位： | 湖南信息学院
+[/TABLE]
+[P][Normal] 二零二六 年 六月 十日
+[P][Normal] 目 录
+[P][toc 1] 第1章 引言 5
+[P][toc 2] 1.1 编写目的 5
+[P][toc 2] 1.2 文档范围 5
+[P][toc 2] 1.3 设计工具与环境 5
+[P][toc 2] 1.4 读者对象 6
+[P][toc 2] 1.5 参考资料 6
+[P][toc 1] 第2章 设计理念与品牌基调 7
+[P][toc 2] 2.1 设计理念 7
+[P][toc 2] 2.2 品牌吉祥物「小橘」 7
+[P][toc 2] 2.3 视觉风格定位 8
+[P][toc 2] 2.4 主题策略 9
+[P][toc 1] 第3章 视觉设计规范（Design Token体系） 11
+[P][toc 2] 3.1 颜色体系 11
+[P][toc 2] 3.2 渐变体系 12
+[P][toc 2] 3.3 阴影体系（Neumorphic） 13
+[P][toc 2] 3.4 字体体系 13
+[P][toc 2] 3.5 圆角体系 15
+[P][toc 2] 3.6 间距体系 15
+[P][toc 2] 3.7 inline-style注入技术说明 16
+[P][toc 1] 第4章 界面布局规范 17
+[P][toc 2] 4.1 屏幕基准 17
+[P][toc 2] 4.2 页面区域划分 17
+[P][toc 2] 4.3 内容边距 17
+[P][toc 2] 4.4 卡片设计 18
+[P][toc 2] 4.5 底部安全区 18
+[P][toc 1] 第5章 自定义组件设计规范 19
+[P][toc 2] 5.1 自定义TabBar 19
+[P][toc 2] 5.2 渐变Hero卡 20
+[P][toc 2] 5.3 Neumorphic 3D药丸收支切换 20
+[P][toc 2] 5.4 分类网格 21
+[P][toc 2] 5.5 Neumorphic 3D相机按钮 21
+[P][toc 2] 5.6 进度环 22
+[P][toc 2] 5.7 胶囊指示器 22
+[P][toc 2] 5.8 「小橘」AI吉祥物 22
+[P][toc 1] 第6章 各页面界面规格 24
+[P][toc 2] 6.1 登录页（login） 24
+[P][toc 2] 6.2 引导页（guide） 25
+[P][toc 2] 6.3 首页（home） 26
+[P][toc 2] 6.4 统计页（stats） 28
+[P][toc 2] 6.5 记账页（record） 29
+[P][toc 2] 6.6 预算页（budget） 30
+[P][toc 2] 6.7 我的页（profile） 32
+[P][toc 2] 6.8 分类管理页（categories）与主题设置页（themes） 33
+[P][toc 2] 6.9 账单详情页（detail） 34
+[P][toc 1] 第7章 交互行为规范 37
+[P][toc 2] 7.1 导航交互 37
+[P][toc 2] 7.2 手势交互表 37
+[P][toc 2] 7.3 主题切换交互 38
+[P][toc 2] 7.4 AI交互规范 38
+[P][toc 2] 7.5 反馈提示 39
+[P][toc 1] 第8章 响应式适配与辅助功能 40
+[P][toc 2] 8.1 rpx响应式适配 40
+[P][toc 2] 8.2 深色模式 40
+[P][toc 2] 8.3 无障碍辅助功能 41
+[P][toc 1] 附录A Design Token完整清单 42
+[P][toc 2] A.1 颜色Token（15个核心 + 10个辅助） 42
+[P][toc 2] A.2 渐变Token（2个） 43
+[P][toc 2] A.3 阴影Token（6个） 43
+[P][toc 2] A.4 字体Token（18个） 43
+[P][toc 2] A.5 圆角与间距Token（11个） 44
+[P][toc 1] 附录B 页面跳转关系图 45
+[P][toc 2] B.1 页面跳转关系表 45
+[P][Heading 1] 第1章 引言
+[P][Heading 2] 1.1 编写目的
+[P][Normal] 本文档为橘记（Juji）微信小程序的软件界面设计书，旨在提供完整的界面视觉规范与交互行为准则，为UI实现、设计评审、开发验收提供统一的设计依据。
+[P][Normal] 文档覆盖v1.1.0版本全部10个页面及共用设计系统，包含颜色体系、字体规范、组件规格、页面布局、交互行为、响应式适配等完整设计语言，确保产品在不同主题与设备下保持一致的视觉品质。
+[P][Heading 2] 1.2 文档范围
+[P][Normal] 本文档适用于橘记微信小程序v1.1.0版本，涵盖以下范围：
+[P][List Bullet] 10个页面界面规格：登录、引导、首页、统计、记账、预算、我的、分类管理、主题设置、账单详情
+[P][List Bullet] 共用设计系统：Design Token体系（颜色、渐变、阴影、字体、圆角、间距）
+[P][List Bullet] 8个自定义组件：TabBar、Hero卡、收支切换、分类网格、相机按钮、进度环、胶囊指示器、小橘吉祥物
+[P][List Bullet] 交互行为规范：导航、手势、主题切换、AI交互、反馈提示
+[P][List Bullet] 响应式适配与无障碍辅助功能
+[P][Heading 2] 1.3 设计工具与环境
+[P][Normal] 表1-1 设计工具与环境
+[TABLE 2]
+项目 | 规格
+开发框架 | 原生微信小程序（WXML + WXSS + JS）
+像素单位 | rpx（responsive pixel），750rpx = 屏幕宽度
+屏幕基准 | iPhone 6/7/8 逻辑分辨率 375x667px，750x1334rpx
+样式语言 | WXSS（CSS子集，支持var()、flex、grid）
+模板语言 | WXML（HTML子集，支持条件/循环渲染）
+设计工具 | Figma设计稿 + 微信开发者工具实机预览
+[/TABLE]
+[P][Heading 2] 1.4 读者对象
+[P][List Bullet] 评审专家：
+[P][Normal] 了解设计决策依据，评估界面规范的完整性与合理性。
+[P][List Bullet] UI设计师：
+[P][Normal] 获取完整的设计Token值、组件规格、配色规则，用于Figma设计稿维护。
+[P][List Bullet] 前端开发：
+[P][Normal] 依据rpx尺寸、CSS变量名、交互行为描述进行WXML/WXSS编码实现。
+[P][Heading 2] 1.5 参考资料
+[P][List Bullet] 微信小程序设计规范（https://developers.weixin.qq.com/miniprogram/design/）
+[P][List Bullet] Material Design 3（https://m3.material.io/）
+[P][List Bullet] Apple Human Interface Guidelines（https://developer.apple.com/design/human-interface-guidelines/）
+[P][List Bullet] GB/T 8567-2006《计算机软件文档编制规范》
+[P][Heading 1] 第2章 设计理念与品牌基调
+[P][Heading 2] 2.1 设计理念
+[P][Normal] 橘记的界面设计遵循以下四条核心原则，贯穿所有页面与组件的设计决策：
+[P][Normal] 克制即美
+[P][Normal] 界面元素精简、留白充足，拒绝信息过载。每一个视觉元素都必须承担明确的功能或情感职责，无装饰性冗余。通过限制颜色数量（单主色驱动）、统一圆角体系（40rpx主卡片）、克制阴影层次（三级Neumorphic），营造安静、整洁的记账氛围，让用户专注于数字本身。
+[P][Normal] 温度优先
+[P][Normal] 作为一款记账工具，橘记拒绝冰冷的表格与数字堆砌。通过品牌吉祥物「小橘」的4种动画（idle呼吸、wave招手、jump跳跃、heart爱心）提供情感陪伴，AI评论以温暖口吻解读消费趋势，主题色支持用户自定义（8色调色板+5个自命名），让每个人拥有专属的"记账空间"。
+[P][Normal] 主题即品牌
+[P][Normal] 采用单主色驱动的HSL推导机制，仅需用户提供一个hex色值，即可自动生成60+个CSS变量，包括渐变、阴影、表面色阶等派生token。这一机制确保橘记在任何主题色下都保持视觉一致性，同时让"换主题"成为用户粘性的来源。
+[P][Normal] 动效有意义
+[P][Normal] 所有动画服务于明确的交互意图：小橘idle动画（2.6s呼吸循环）暗示陪伴感，收支切换滑块（0.3s过渡）确认操作反馈，胶囊指示器（0.4s dot扩展）指示当前状态，引导页smoothUp（0.8s交错入场）营造仪式感。不存在纯装饰性动画，所有动效时长控制在0.3s-2.6s范围内。
+[P][Heading 2] 2.2 品牌吉祥物「小橘」
+[P][Normal] 「小橘」是橘记的品牌吉祥物，完全由纯CSS绘制的拟人化橘子形象，不依赖任何外部图片资源。固定配色方案确保跨主题一致性。
+[P][Normal] 配色规格：
+[P][Normal] 表2-1 小橘配色规格
+[TABLE 3]
+部位 | 颜色值 | 说明
+身体 body | #f7a628 | 暖橙色，线性渐变 165deg 到 #e88d17
+叶子 leaf | #3a7d2b | 绿色，线性渐变 135deg 到 #6fc63f
+腮红 cheek | #f7a0a4 | 粉色椭圆，20rpx x 14rpx
+轮廓 outline | #2d1f0d | 深棕色描边，6rpx（身体）/5rpx（叶子/手臂）
+投影 shadow | rgba(48,38,31,0.16) | 112rpx x 16rpx 椭圆，blur(1rpx)
+[/TABLE]
+[P][Normal] 动画系统：
+[P][Normal] 表2-2 小橘动画系统
+[TABLE 4]
+动画名称 | 时长 | 触发方式 | 描述
+juji-pet-idle | 2.6s ease-in-out infinite | 默认常驻 | 垂直呼吸浮动，translateY 0->-4rpx
+juji-pet-blink | 4.6s steps(1) infinite | 默认常驻 | 眼睛眨眼，高度16rpx->3rpx（92-94%帧）
+juji-pet-wave | 0.38s ease-in-out x3 | 交互触发 | 右臂招手，rotate -18deg->-62deg
+juji-pet-jump | 0.7s ease both | 交互触发 | 整体跳跃，translateY -26rpx + scale 1.04
+[/TABLE]
+[P][Normal] 尺寸规格：容器150rpx x 142rpx，身体94rpx x 90rpx（border-radius:50%），叶子38rpx x 26rpx，眼睛16rpx x 16rpx，嘴巴18rpx x 12rpx，手臂17rpx x 36rpx，脚24rpx x 18rpx。
+[P][Heading 2] 2.3 视觉风格定位
+[P][Normal] 橘记的视觉风格定位在"小红书x Apple Wallet"的交汇处：兼具小红书的温暖质感与Apple Wallet的克制秩序。
+[P][Normal] 核心视觉特征：
+[P][List Bullet] 卡片式架构：
+[P][Normal] 所有内容以卡片为单元组织，40rpx圆角+Neumorphic双侧阴影+白色/半透明背景，营造浮动层叠感。
+[P][List Bullet] 渐变Hero区：
+[P][Normal] 页面顶部使用primary->accent 135度跨色相渐变，作为品牌识别的核心视觉锚点。
+[P][List Bullet] 大数字排版：
+[P][Normal] 金额数字使用DIN Alternate字体，display级96rpx+font-weight 800，确保扫一眼即可获取关键信息。
+[P][List Bullet] 毛玻璃质感：
+[P][Normal] TabBar、弹窗等浮层使用backdrop-filter:blur(24rpx)+rgba半透明背景，与底层内容形成层次感。
+[P][List Bullet] Neumorphic阴影：
+[P][Normal] 采用双侧阴影系统（左上亮光+右下暗影），根据主题色着色（如薄荷主题阴影带绿色调），实现柔和的3D浮雕效果。
+[P][Normal] 图2-1：视觉风格情绪板
+[P][Heading 2] 2.4 主题策略
+[P][Normal] 橘记采用"单主色驱动"的主题策略：用户提供一个主色hex值，系统通过HSL色彩空间推导出完整的60+个CSS变量。
+[P][Normal] 4套预设主题：
+[P][Normal] 表2-3 预设主题一览
+[TABLE 5]
+主题ID | 名称 | 主色 primary | 强调色 accent | 背景色 bg | 特点
+mint | 薄荷 | #27c07d | #5ba4cb | #f2faf6 | 默认主题，清新活力
+fresh | 清新 | #785655 | #6a7855 | #fcf6f5 | 温暖大地色系
+skyBlue | 蓝天白云 | #38bdf8 | #7e69cf | #eef8ff | 清爽蓝紫渐变
+dark | 深夜 | #d4a574 | #a8c986 | #1e1e24 | 深色模式，暖光琥珀
+[/TABLE]
+[P][Normal] 8色调色板（用户自定义主题可选色）：
+[P][Normal] 表2-4 8色调色板
+[TABLE 6]
+色名 | HEX | 色名 | HEX
+樱花粉 | #fb7299 | 蜜桃橙 | #fb923c
+柠檬黄 | #facc15 | 青葱绿 | #4ade80
+蒂芙尼蓝 | #22d3ee | 鸢尾紫 | #a78bfa
+玫瑰金 | #f43f5e | 晴空蓝 | #60a5fa
+[/TABLE]
+[P][Normal] 用户自定义主题最多支持5个（MAX_USER_THEMES=5），每个自定义主题支持自命名。HSL推导规则：accent=(primaryHue+60)%360；primary-container通过饱和度-15%、亮度+22%推导；surface系列表面色使用25-30%饱和度、86-97%亮度的低饱和暖色。
+[P][Heading 1] 第3章 视觉设计规范（Design Token体系）
+[P][Normal] 橘记采用Design Token（设计变量）体系，将所有视觉属性抽象为可复用的CSS自定义属性（Custom Properties），通过单一入口getThemeStyleString()注入inline-style，实现主题即时切换。
+[P][Heading 2] 3.1 颜色体系
+[P][Normal] 颜色体系基于单主色推导机制：用户选择一个主色（primary），系统自动推导出强调色（accent=primary色相+60度）、容器色、表面色阶、文字色阶等15个核心颜色token。
+[P][Normal] 核心颜色Token表（以薄荷主题#27c07d为例）：
+[P][Normal] 表3-1 颜色Token体系（15个核心变量）
+[TABLE 7]
+变量名 | 用途 | 薄荷示例值 | 推导规则
+--color-primary | 主色/按钮/高亮 | #27c07d | 用户指定
+--color-accent | 强调色/渐变终点 | #5ba4cb | (primaryHue+60)%360
+--color-primary-container | 主色容器/徽标背景 | #a8e6c5 | sat-15, light+22
+--color-primary-light | 浅主色/柔和背景 | #7dd4a8 | sat-8, light+12
+--color-on-primary | 主色上的文字 | #ffffff | lightness>65->dark else white
+--color-secondary | 辅助色 | #1f8c66 | same hue, light-15
+--color-secondary-container | 辅助色容器 | #b8e0d0 | sat-12, light+20
+--color-tertiary | 第三色/成功/收入 | #20b07a | sat-5, light-8
+--color-tertiary-container | 第三色容器 | #b4dcc8 | sat-20, light+22
+--color-bg | 页面背景 | #f2faf6 | hsl(h, 25, 97)
+--color-surface | 卡片表面 | #ffffff | 固定白色
+--color-text | 主文字 | #0f1f17 | hsl(h, 25, 14)
+--color-text-secondary | 次要文字 | #3d5c4c | hsl(h, 18, 38)
+--color-text-tertiary | 辅助文字 | #7a9e8e | hsl(h, 12, 58)
+--color-border | 边框线 | #c5ded3 | hsl(h, 18, 84)
+[/TABLE]
+[P][Normal] 辅助颜色Token：
+[P][Normal] 表3-2 辅助颜色Token
+[TABLE 8]
+变量名 | 用途 | 说明
+--color-surface-low | 低层表面 | lightness 96%
+--color-surface-container | 容器表面 | lightness 94%
+--color-surface-high | 高层表面 | lightness 92%
+--color-surface-highest | 最高层表面 | lightness 89%
+--color-surface-dim | 暗淡表面 | lightness 86%
+--color-error | 错误色 | #ba1a1a
+--color-error-container | 错误容器 | #ffdad6
+--color-income | 收入色 | #16a34a / #4b6458（fresh）
+--color-income-light | 收入浅色 | #bbf7d0 / #c0dbcc
+--color-warning | 警告色 | #d97706 / #6c5a59
+[/TABLE]
+[P][Heading 2] 3.2 渐变体系
+[P][Normal] 渐变体系定义了2个核心渐变token，均在getThemeStyleString()中以字面值注入（不使用var()引用）。
+[P][Normal] 表3-3 渐变Token
+[TABLE 9]
+变量名 | 值 | 使用场景
+--gradient-hero | linear-gradient(135deg, {primary} 0%, {accent} 100%) | Hero卡背景、记账页顶部
+--gradient-hero-soft | linear-gradient(135deg, {primaryContainer} 0%, {primaryLight} 100%) | 柔和背景、引导页光球
+[/TABLE]
+[P][Normal] 薄荷主题示例：gradient-hero=linear-gradient(135deg,#27c07d 0%,#5ba4cb 100%)；gradient-hero-soft=linear-gradient(135deg,#a8e6c5 0%,#7dd4a8 100%)。
+[P][Heading 2] 3.3 阴影体系（Neumorphic）
+[P][Normal] Neumorphic（新拟态）阴影体系采用双侧阴影原理：左上方向亮色阴影（模拟光源高光）+右下方向暗色阴影（模拟物体投影），两个阴影颜色均根据主题色调着色，营造柔和的3D浮雕效果。
+[P][Normal] 阴影基础色变量：
+[P][Normal] 表3-4 阴影基础色
+[TABLE 10]
+变量名 | 说明 | 薄荷主题值
+shadow-light | 亮侧阴影（高光） | rgba(255, 255, 255, 1)
+shadow-dark | 暗侧阴影（投影） | rgba(39, 192, 125, 0.15)（主题色调着色）
+[/TABLE]
+[P][Normal] 阴影Token层级：
+[P][Normal] 表3-5 阴影Token层级（4级）
+[TABLE 11]
+变量名 | 偏移/模糊 | 使用场景
+shadow-soft | -8rpx -8rpx 24rpx / 8rpx 8rpx 24rpx | 轻量卡片、输入框
+shadow-card | -12rpx -12rpx 32rpx / 12rpx 12rpx 32rpx | 标准卡片（首页/统计/预算）
+shadow-elevated | -16rpx -16rpx 48rpx / 16rpx 16rpx 48rpx | 弹窗、浮层
+shadow-hero | 0 16rpx 40rpx（仅暗侧） | Hero卡投影
+[/TABLE]
+[P][Heading 2] 3.4 字体体系
+[P][Normal] 字体族声明：
+[P][Normal] 表3-6 字体族声明
+[TABLE 12]
+变量名 | 字体栈 | 用途
+font-numeric | DIN Alternate, Helvetica Neue, Helvetica, -apple-system, PingFang SC, sans-serif | 金额数字、统计数字
+font-body | -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, sans-serif | 正文文字、标题
+[/TABLE]
+[P][Normal] 字号体系（8级）：
+[P][Normal] 表3-7 字号体系（8级）
+[TABLE 13]
+级别 | 变量名 | rpx值 | 换算px | 用途
+Display | font-size-display | 96rpx | ~48px | 记账页核心金额数字
+H1 | font-size-h1 | 52rpx | ~26px | 首页/预算/统计核心数字
+H2 | font-size-h2 | 44rpx | ~22px | 足迹卡数字、进度环中心
+H3 | font-size-h3 | 36rpx | ~18px | 三级标题、卡片标题
+Body | font-size-body | 28rpx | ~14px | 正文内容
+Regular | font-size-regular | 26rpx | ~13px | 分类名称、列表文字
+Small | font-size-small | 22rpx | ~11px | 辅助标签、单位文字
+Tiny | font-size-tiny | 20rpx | ~10px | 最小标签、脚注
+[/TABLE]
+[P][Normal] 字重体系（5级）：
+[P][Normal] 表3-8 字重体系（5级）
+[TABLE 14]
+级别 | 变量名 | 值 | 用途
+Black | font-weight-black | 800 | 金额大数字（display）
+Bold | font-weight-bold | 700 | 标题、强调数字
+Semibold | font-weight-semibold | 600 | 副标题、活跃状态标签
+Medium | font-weight-medium | 500 | 普通标签、按钮文字
+Regular | font-weight-regular | 400 | 正文内容
+[/TABLE]
+[P][Normal] 行高体系（3级）：line-height-tight:1.1（数字/标题）、line-height-normal:1.4（正文）、line-height-relaxed:1.6（长文段落）。
+[P][Heading 2] 3.5 圆角体系
+[P][Normal] 表3-9 圆角体系（6级）
+[TABLE 15]
+变量名 | 值 | 适用场景
+radius-sm | 8rpx | 小元素：标签、徽章
+radius-md | 16rpx | 次级元素：输入框、小按钮
+radius-lg | 24rpx | 中等元素：TabBar图标容器、按钮
+radius-xl | 32rpx | 大元素：TabBar外壳、底部弹窗
+radius-2xl | 40rpx | 主卡片：首页卡、统计卡、预算卡
+radius-full | 9999rpx | 药丸形：收支切换滑块、胶囊指示器、圆形按钮
+[/TABLE]
+[P][Heading 2] 3.6 间距体系
+[P][Normal] 间距体系基于8rpx基础单元，提供5级标准间距：
+[P][Normal] 表3-10 间距体系（5级）
+[TABLE 16]
+变量名 | 值 | 用途
+space-xs | 8rpx | 紧凑间距：图标与文字之间
+space-sm | 16rpx | 列表行间距、卡片内小间距
+space-md | 24rpx | 卡片间间距、TabBar内边距
+space-lg | 32rpx | 页面水平边距、卡片内边距
+space-xl | 40rpx | 大区块间距、卡片内大padding
+[/TABLE]
+[P][Heading 2] 3.7 inline-style注入技术说明
+[P][Normal] 微信小程序的CSS变量存在解析期定值问题：在page{}选择器中声明的CSS变量（如page{color-primary:#27c07d;}），会在WXSS解析时被立即计算并固化，后续通过父元素inline-style覆盖的var()引用不会动态响应变化。
+[P][Normal] 解决方案：getThemeStyleString()函数在运行时计算所有60+个CSS变量的字面值（literal values），拼接为一个inline-style字符串（如"--color-primary:#27c07d;--gradient-hero:linear-gradient(135deg,#27c07d,#5ba4cb);..."），通过WXML的style="{{themeStyle}}"直接注入到页面最外层view元素上。这样所有子元素通过var()引用时，直接读取到的是已注入的字面值，而非page{}中的解析期定值。
+[P][Normal] 派生token（渐变、阴影）必须在getThemeStyleString()中以字面值计算，不能使用var()引用其他变量——因为inline-style的var()解析顺序是层叠的，字面值注入可以保证正确的计算顺序。
+[P][Heading 1] 第4章 界面布局规范
+[P][Heading 2] 4.1 屏幕基准
+[P][Normal] 橘记基于750rpx屏幕宽度进行设计，所有尺寸均以rpx为单位。微信开发者工具会自动将rpx值根据实际屏幕宽度进行缩放。
+[P][Normal] 底部安全区处理：使用CSS环境变量env(safe-area-inset-bottom)适配iPhone X及后续刘海屏/灵动岛机型的底部安全区域，确保TabBar和操作按钮不被系统手势区遮挡。
+[P][Heading 2] 4.2 页面区域划分
+[P][Normal] 每个页面从上到下分为三个核心区域：
+[P][Normal] 表4-1 页面三大区域
+[TABLE 17]
+区域 | 位置 | 视觉特征 | 内容
+渐变Hero区 | 页面顶部 | primary->accent 135deg渐变背景，--shadow-hero投影 | 今日/昨日数据、月份选择器、用户头像
+内容主区 | 页面中部 | color-bg背景，卡片式布局 | 账单列表、统计图表、预算进度、分类网格
+TabBar浮层 | 页面底部 | backdrop-filter: blur(24rpx) 毛玻璃，fixed定位 | 5列导航（首页/统计/记账/预算/我的）
+[/TABLE]
+[P][Heading 2] 4.3 内容边距
+[P][Normal] 表4-2 内容边距规范
+[TABLE 18]
+区域 | 边距规格 | 变量/值
+页面水平边距 | 左右各32rpx | space-lg: 32rpx
+卡片内边距 | 上下左右各32-40rpx | space-lg ~ --space-xl
+列表行间距 | 16-24rpx | space-sm ~ --space-md
+标题与内容间距 | 12-16rpx | 8-12pt
+[/TABLE]
+[P][Heading 2] 4.4 卡片设计
+[P][Normal] 卡片是橘记界面的核心布局单元，统一规格如下：
+[P][Normal] 表4-3 卡片设计规范
+[TABLE 19]
+属性 | 值 | 说明
+背景色 | color-surface (#ffffff) | 白色/深色模式下为 #27272e
+圆角 | 40rpx (--radius-2xl) | 主卡片统一圆角
+阴影 | shadow-card（双侧Neumorphic） | 12rpx -12rpx 32rpx light + 12rpx 12rpx 32rpx dark
+内边距 | 32rpx (--space-lg) | 卡片内容与边框的间距
+外边距 | 0 32rpx（水平） | 卡片与页面边缘的间距
+边框 | 无 | 不使用border，完全靠阴影分层
+[/TABLE]
+[P][Heading 2] 4.5 底部安全区
+[P][Normal] TabBar采用fixed定位浮动于页面底部，使用env(safe-area-inset-bottom)适配异形屏。TabBar外壳高度约120rpx（不含安全区延伸），通过padding-bottom:calc(20rpx+env(safe-area-inset-bottom))确保内容不被遮挡。
+[P][Normal] 图4-1：页面通用布局示意图
+[P][Heading 1] 第5章 自定义组件设计规范
+[P][Normal] 橘记包含8个核心自定义组件，以下逐一描述其功能、视觉规格、状态与属性。
+[P][Heading 2] 5.1 自定义TabBar
+[P][Normal] 功能描述：5列毛玻璃浮动导航栏，中间"记一笔"按钮凸起，承载5个Tab页面的快速切换。
+[P][Normal] 表5-1 自定义TabBar属性表
+[TABLE 20]
+属性 | 值 | 说明
+网格布局 | grid: 1fr 1fr 1.24fr 1fr 1fr | 中间列略宽，容纳凸起按钮
+外壳圆角 | 36rpx | radius-xl级别
+毛玻璃效果 | backdrop-filter: blur(24rpx) | 半透明背景 rgba(255,255,255,0.84)
+投影 | 0 24rpx 46rpx rgba(0,0,0,0.10) | 底部大面积投影，营造浮层感
+高光线 | ::before pseudo-element | 顶部1rpx rgba(255,255,255,0.72) 分隔线
+图标容器 | 76rpx x 76rpx, border-radius: 26rpx | active时背景色--color-primary-container
+图标尺寸 | 46rpx x 46rpx | SVG矢量图标，主色/灰色双态
+标签字体 | font-size: 21rpx, font-weight: 500 | inactive: --color-text-tertiary; active: --color-primary + 600
+中间按钮 | 100rpx x 100rpx, border-radius: 30rpx | translateY(-20rpx)凸起，background: --color-primary-container
+中间"+"号 | font-size: 58rpx, font-weight: 300 | color: --color-primary
+安全区 | padding-bottom: calc(20rpx + env(safe-area-inset-bottom)) | 适配异形屏
+[/TABLE]
+[P][Normal] 状态定义：
+[P][List Bullet] inactive：图标容器灰色背景，标签--color-text-tertiary
+[P][List Bullet] active：图标容器--color-primary-container背景+elevated阴影，标签--color-primary+font-weight:600，整体translateY(-6rpx)上移
+[P][List Bullet] 中间按钮pressed：translateY(-4rpx)scale(1.02)微弹
+[P][Heading 2] 5.2 渐变Hero卡
+[P][Normal] 功能描述：页面顶部的核心信息展示区，使用跨色相渐变背景，承载今日/昨日消费数据或月份统计。
+[P][Normal] 表5-2 渐变Hero卡属性表
+[TABLE 21]
+属性 | 值 | 说明
+渐变方向 | 135deg（左上->右下） | gradient-hero
+渐变色 | primary -> accent | 如薄荷: #27c07d -> #5ba4cb
+圆角 | 40rpx (--radius-2xl) | 与标准卡片一致
+投影 | --shadow-hero: 0 16rpx 40rpx dark | 仅暗侧投影，营造悬浮感
+内边距 | 40rpx (--space-xl) | 大内边距，内容不拥挤
+数字字体 | DIN Alternate, 96rpx, weight 800 | font-hero 组合声明
+文字颜色 | --color-on-primary | 确保渐变背景上的可读性
+[/TABLE]
+[P][Heading 2] 5.3 Neumorphic 3D药丸收支切换
+[P][Normal] 功能描述：记账页和统计页的收入/支出模式切换组件，毛玻璃背景+白底滑块在两个选项间滑动。
+[P][Normal] 表5-3 收支切换组件属性表
+[TABLE 22]
+属性 | 值 | 说明
+容器 | 毛玻璃背景 | backdrop-filter: blur(24rpx), border-radius: 9999rpx
+滑块 | 白底圆角 | background: #ffffff, border-radius: 9999rpx, --shadow-soft
+过渡 | transition 0.3s cubic-bezier() | 滑块位置平滑切换
+文字 | 26rpx, font-weight: 600 | active: --color-primary, inactive: --color-text-tertiary
+高度 | 约72rpx | 紧凑型药丸尺寸
+[/TABLE]
+[P][Normal] 图5-2：收支切换组件截图
+[P][Heading 2] 5.4 分类网格
+[P][Normal] 功能描述：记账页的消费类别选择网格，5列布局，每格显示emoji图标+类别名称。
+[P][Normal] 表5-4 分类网格属性表
+[TABLE 23]
+属性 | 值 | 说明
+布局 | grid 5列 | 每列等宽，间距8-16rpx
+格子尺寸 | 约120rpx x 120rpx | 包含emoji + 文字
+emoji大小 | 48rpx | 居中显示
+文字 | 20rpx, --color-text-secondary | 单行，超长截断
+active状态 | background: --color-primary-container | 主色浅背景 + 主色边框
+长按操作 | longpress触发删除 | 仅自定义分类可删除，预设分类不可删除
+[/TABLE]
+[P][Heading 2] 5.5 Neumorphic 3D相机按钮
+[P][Normal] 功能描述：记账页的拍照记账快捷按钮，圆形Neumorphic风格。
+[P][Normal] 表5-5 相机按钮属性表
+[TABLE 24]
+属性 | 值 | 说明
+尺寸 | 100rpx x 100rpx | 大圆形按钮
+形状 | border-radius: 50% | 正圆形
+背景 | linear-gradient(135deg, primary, accent) | 复用--gradient-hero
+投影 | --shadow-card 双侧Neumorphic | 3D浮雕效果
+图标 | 白色相机SVG | 居中，40rpx x 40rpx
+交互 | tap触发拍照/相册选择 | 需先调用privacy授权
+[/TABLE]
+[P][Heading 2] 5.6 进度环
+[P][Normal] 功能描述：预算页的消费进度可视化，使用CSS conic-gradient实现圆环进度。
+[P][Normal] 表5-6 进度环属性表
+[TABLE 25]
+属性 | 值 | 说明
+尺寸 | 280rpx x 280rpx | 居中大圆环
+实现 | conic-gradient | CSS锥形渐变，非canvas/SVG
+正常色 | var(--gradient-hero) | 主色到强调色渐变
+超支色 | var(--color-error) #ba1a1a | 红色警示
+中心文字 | 44rpx (--font-size-h2) | 已消费金额 / 预算总额
+背景环 | --color-surface-container | 浅灰色底环
+[/TABLE]
+[P][Heading 2] 5.7 胶囊指示器
+[P][Normal] 功能描述：引导页Swiper的页面指示器，由一组dot组成，当前页dot扩展为胶囊形。
+[P][Normal] 表5-7 胶囊指示器属性表
+[TABLE 26]
+属性 | 值 | 说明
+dot默认 | 12rpx x 12rpx, border-radius: 50% | 圆形，--color-text-tertiary
+dot active | 48rpx x 12rpx, border-radius: 9999rpx | 胶囊形，--color-primary
+过渡 | transition: 0.4s cubic-bezier() | 宽度平滑扩展/收缩
+间距 | 8rpx | dot之间的间距
+位置 | 页面底部居中 | 距底边约80rpx
+[/TABLE]
+[P][Heading 2] 5.8 「小橘」AI吉祥物
+[P][Normal] 功能描述：橘记的品牌吉祥物，纯CSS绘制的拟人化橘子角色，出现在首页、引导页第4屏、我的页面及AI聊天弹窗中。
+[P][Normal] 表5-8 小橘吉祥物属性表
+[TABLE 27]
+属性 | 值 | 说明
+容器尺寸 | 150rpx x 142rpx | 引导页scale(1.7)放大
+身体 | 94rpx x 90rpx, border-radius: 50% | gradient(165deg, #f7a628, #e88d17), border: 6rpx solid #2d1f0d
+叶子 | 38rpx x 26rpx, rotate(16deg) | gradient(135deg, #6fc63f, #3a7d2b)
+腮红 | 20rpx x 14rpx, border-radius: 50% | #f7a0a4 对称分布
+眼睛 | 16rpx x 16rpx, border-radius: 50% | #2d1f0d, inset高光 rgba(255,255,255,0.95)
+嘴巴 | 18rpx x 12rpx | border仅bottom+left+right, border-radius: 0 0 16rpx 16rpx
+手臂 | 17rpx x 36rpx | gradient(180deg, #f7a628, #e88d17)
+脚 | 24rpx x 18rpx | 同手臂渐变
+idle动画 | 2.6s ease-in-out infinite | translateY(0->-4rpx) 呼吸浮动
+blink动画 | 4.6s steps(1) infinite | 眼睛高度 16rpx->3rpx（92-94%帧）
+wave动画 | 0.38s ease-in-out x3 | 右臂rotate(-18deg->-62deg) 招手
+jump动画 | 0.7s ease both | 整体translateY(-26rpx) + scale(1.04)
+[/TABLE]
+[P][Normal] 图5-3：小橘动画截图
+[P][Heading 1] 第6章 各页面界面规格
+[P][Normal] 本章逐一描述橘记全部10个页面的功能定位、布局结构、关键元素规格与交互行为。
+[P][Heading 2] 6.1 登录页（login）
+[P][Normal] 功能定位：首次打开小程序时的静默登录页面，引导用户授权并进入主界面。
+[P][Normal] 布局描述：全屏柔光渐变背景（--gradient-hero-soft），中央浮动SVG图标组合（橘子元素），下方依次为App Logo（橘记文字）、App副标题（"一颗橘子，陪你记账"）、微信一键登录按钮、隐私协议勾选区。
+[P][Normal] 表6-1 登录页关键元素规格
+[TABLE 28]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+柔光渐变背景 | 全屏 | 750rpx x 全高 | --gradient-hero-soft 柔和渐变 | 静态 | 背景层
+SVG图标组 | 居中偏上 | 约200rpx x 200rpx | 橘子相关SVG元素浮动排列 | 浮动动画 | 装饰元素
+App Logo | 居中 | 自动 | "橘记"文字 + 橙色图标 | 静态 | 品牌标识
+副标题 | Logo下方 | 自动 | "一颗橘子，陪你记账" | 静态 | 品牌标语
+登录按钮 | 居中偏下 | 600rpx x 96rpx, r-full | 渐变背景 #FF8C00->#FFB800 | tap->silentLogin() | 主操作
+隐私协议 | 底部 | 70%宽 | 勾选框 + 协议链接文字 | tap勾选/tap链接 | 合规必须
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] 仅在用户未同意隐私协议时展示此页面，同意后后续打开直接进入首页
+[P][List Bullet] 登录按钮依赖wx.cloud.callFunction获取openid，失败时toast提示
+[P][List Bullet] 隐私协议勾选框必须选中后登录按钮才可点击
+[P][Normal] 图6-1：登录页截图
+[P][Heading 2] 6.2 引导页（guide）
+[P][Normal] 功能定位：首次安装后的4屏引导Swiper，向用户传达产品核心价值并在最后一屏展示小橘吉祥物。
+[P][Normal] 布局描述：全屏Swiper组件，4个子页面分别对应"快/美/心/伴"四个主题。每屏使用弥散光背景（ambient-orb mesh gradient + backdrop-filter: blur(24px)毛玻璃球300rpx），大字汉字水印650rpx作为背景装饰，前景内容通过smoothUp动画（0.8s交错入场）依次呈现。底部胶囊指示器（dot 12rpx->active 48rpx）+ CTA按钮。
+[P][Normal] 表6-2 引导页关键元素规格
+[TABLE 29]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+Swiper容器 | 全屏 | 750rpx x 全高 | vertical=false, circular=false | 横向滑动切换 | 4屏引导
+弥散光背景 | 全屏底层 | 300rpx球体x2+ | mesh gradient + blur(24px) | ambientFloat漂浮 | 氛围层
+汉字水印 | 居中偏后 | 650rpx | 超大字, opacity 0.06 | 静态 | 装饰/品牌
+CTA按钮 | 底部居中 | 70%宽 x 96rpx, r-full | gradient(#FF8C00->#FFB800) | tap->关闭引导,跳首页 | 第4屏
+胶囊指示器 | 底部居中 | dot 12rpx->48rpx | --color-primary active | 跟随Swiper | 状态指示
+小橘吉祥物 | 第4屏居中 | scale(1.7)放大 | 纯CSS绘制, auto-wave动画 | idle+wave+heart | 品牌展示
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] 第1屏"快"：极速记账理念，橘子emoji在玻璃球中浮动
+[P][List Bullet] 第2屏"美"：高颜值设计，调色板emoji
+[P][List Bullet] 第3屏"心"：AI智能分析，信封emoji
+[P][List Bullet] 第4屏"伴"：小橘自我介绍+CTA按钮"开启记账之旅"，小橘自动执行guide-juji-wave（2.8s循环）+guide-heart-fly（2.6s循环）
+[P][List Bullet] CTA按钮点击后设置guideShown标志位，后续启动不再展示
+[P][Normal] 图6-2：引导页截图
+[P][Heading 2] 6.3 首页（home）
+[P][Normal] 功能定位：用户打开小程序的主界面，展示今日/昨日消费概览、预算进度与近期账单流水。
+[P][Normal] 布局描述：渐变Hero卡（today/yesterday双数字对比+小橘吉祥物浮动在Hero区右上角）->预算进度条（三态：未设置/正常/超支）->账单流水区（按日分组，day-header日期+bill-row列表，每行含emoji图标/分类/备注/金额）。
+[P][Normal] 表6-3 首页关键元素规格
+[TABLE 30]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+Hero卡 | 顶部 | 全宽-64rpx, 高约320rpx | gradient-hero背景, 40rpx圆角 | 展示今日/昨日消费 | 核心信息区
+今日金额 | Hero卡左侧 | 96rpx DIN Alternate, weight 800 | --color-on-primary | 大数字展示 | 首屏焦点
+昨日金额 | Hero卡右侧偏下 | 52rpx DIN Alternate, weight 700 | rgba(255,255,255,0.7) | 对比参考 | 次要数字
+小橘吉祥物 | Hero区右上角 | 150rpx x 142rpx | 纯CSS, idle动画 | idle呼吸浮动 | 品牌陪伴
+预算进度条 | Hero卡下方 | 全宽-64rpx, 高24rpx | 三态: unset/normal/overspent | 动态宽度填充 | 预算状态
+账单流水区 | 中部以下 | 全宽-64rpx | 按日分组列表 | tap->详情页, longpress->编辑 | 历史记录
+日期分组头 | 每组顶部 | 全宽 | 22rpx, --color-text-tertiary | 日期+星期 | 分组标识
+账单行 | 列表项 | 全宽, 高约88rpx | 左侧emoji+分类+备注, 右侧金额 | tap->详情页 | 单笔账单
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] Hero区同时展示今日和昨日消费，大数字96rpx确保一眼获取关键信息
+[P][List Bullet] 预算进度条三态：未设置时显示"设置预算"引导；正常时进度条随消费比例填充；超支时变为红色(--color-error)
+[P][List Bullet] 账单列表支持下拉刷新，数据通过dbPager分页加载（20条/页）
+[P][List Bullet] 账单行tap跳转详情页，longpress弹出编辑选项
+[P][Normal] 图6-3：首页截图
+[P][Heading 2] 6.4 统计页（stats）
+[P][Normal] 功能定位：消费数据可视化分析页面，提供甜甜圈图、月度趋势、AI智能评论。
+[P][Normal] 布局描述：月份选择器（左右箭头切换月份）->收支segment切换（药丸形）->甜甜圈图（纯CSS conic-gradient实现）->6月趋势图->AI评论卡片x3（streaming渲染，逐条展示）。
+[P][Normal] 表6-4 统计页关键元素规格
+[TABLE 31]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+月份选择器 | Hero区顶部 | 全宽-64rpx | 左右箭头 + 月份文字 | tap切换月份 | 时间维度
+收支Segment | 月份下方 | 药丸形72rpx高 | 毛玻璃+白底滑块, transition 0.3s | tap切换收支统计 | 维度切换
+数据卡片 | 内容区顶部 | 300rpx x 300rpx | conic-gradient CSS实现 | 静态展示 | 分类占比
+6月趋势图 | 数据卡片下方 | 全宽-64rpx | 折线图 | 展示近6个月趋势 | 时间趋势
+AI评论卡片 | 底部 | 全宽-64rpx, 3张 | streaming逐字渲染 | AI分析消费趋势 | 智能洞察
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] 月份选择器支持左右箭头切换，数据实时刷新
+[P][List Bullet] 收支segment切换时，数据卡片和趋势图同步更新
+[P][List Bullet] AI评论通过wx.cloud.extend.AI.streamText()流式渲染，首次加载时逐字显示，有1s间隔控制
+[P][List Bullet] AI评论按period key缓存，同月同类型不重复请求
+[P][Normal] 图6-4：统计页截图
+[P][Heading 2] 6.5 记账页（record）
+[P][Normal] 功能定位：核心记账操作页面，用户在此输入金额、选择分类、记录备注。
+[P][Normal] 布局描述：顶部渐变Hero区（大字金额96rpx+收支药丸切换）->分类网格（5列emoji+名称）->日期选择器->备注输入->底部快捷栏（日期快捷+相机按钮）。编辑模式时从globalData._editBillId加载已有账单。
+[P][Normal] 表6-5 记账页关键元素规格
+[TABLE 32]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+金额显示 | Hero区居中 | 96rpx DIN Alternate, weight 800 | --color-on-primary | 数字键盘输入 | 核心输入
+收支切换 | 金额上方 | 药丸形72rpx | 毛玻璃+滑块, transition 0.3s | tap切换收入/支出 | 模式切换
+分类网格 | Hero区下方 | 5列grid, 120rpx x 120rpx/格 | emoji 48rpx + 文字20rpx | tap选择分类 | 类别选择
+日期选择 | 网格下方 | 全宽-64rpx | 日期picker组件 | tap展开选择器 | 时间记录
+备注输入 | 日期下方 | 全宽-64rpx, 高88rpx | textarea, 无边框 | 输入备注文字 | 补充信息
+相机按钮 | 底部右侧 | 100rpx圆形 | gradient-hero背景 + 白色相机SVG | tap->拍照/选择照片 | 图片记账
+保存按钮 | 底部居中 | 全宽-64rpx, 96rpx高 | gradient-hero背景, r-full | tap->保存账单 | 主操作
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] 从首页/TabBar进入时为新建模式，从详情页通过globalData._editBillId桥接进入时为编辑模式
+[P][List Bullet] 保存时调用bills云函数进行服务端校验（金额范围、分类有效性、500条/日上限）
+[P][List Bullet] 相机按钮需先调用requirePrivacyAuthorization("拍照记账")获取隐私授权
+[P][List Bullet] 保存成功后跳转首页，首页onShow自动刷新数据
+[P][Normal] 图6-5：记账页截图
+[P][Heading 2] 6.6 预算页（budget）
+[P][Normal] 功能定位：月度预算管理页面，展示消费进度、消费节奏、达成率与分类排行。
+[P][Normal] 布局描述：进度环（conic-gradient圆环，中心显示已消费/总预算）->消费节奏卡（4格：日均/剩余天/日均预算/剩余预算）->6月达成率统计->Top3消费分类排行。
+[P][Normal] 表6-6 预算页关键元素规格
+[TABLE 33]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+进度环 | 顶部居中 | 280rpx x 280rpx | conic-gradient圆环, 超支红色 | 静态展示进度 | 核心可视化
+环中心文字 | 环内居中 | 44rpx DIN Alternate | 已消费金额/预算总额 | 静态 | 数据展示
+消费节奏卡 | 进度环下方 | 全宽-64rpx, 4格grid | 卡片布局, 每格含数值+标签 | 静态 | 节奏分析
+达成率 | 节奏卡下方 | 全宽-64rpx | 百分比数字+6月趋势 | 静态 | 长期统计
+Top3分类 | 底部 | 全宽-64rpx | 排行列表, emoji+分类+金额 | 静态 | 消费结构
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] 预算未设置时显示引导卡片，点击进入预算设置（调用budgets云函数upsert）
+[P][List Bullet] 消费超支时进度环变为--color-error红色，节奏卡显示负值红色提示
+[P][List Bullet] 每月预算独立存储（一个month文档），支持历史月份查看
+[P][Normal] 图6-6：预算页截图
+[P][Heading 2] 6.7 我的页（profile）
+[P][Normal] 功能定位：个人中心页面，承载用户资料、记账足迹、AI功能入口、个性化设置与数据管理。
+[P][Normal] 布局描述：渐变Hero区（头像+昵称+性别标签+小橘吉祥物）->记账足迹卡（记账天数/累计笔数/今日AI称号，数字定高60rpx flex-end对齐）->个人资料区（生日/星座/职业）->记账打卡热力图->个性化设置（自定义分类/主题切换）->数据与隐私（导入导出/隐私协议/注销）->底部footer。
+[P][Normal] 表6-7 我的页关键元素规格
+[TABLE 34]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+Hero区 | 顶部 | 全宽, 高约300rpx | gradient-hero背景 | 展示头像+昵称+性别 | 用户信息
+头像 | Hero区左侧 | 120rpx x 120rpx, r-50% | 圆角, 支持自定义上传 | tap->更换头像 | 个性化
+小橘吉祥物 | Hero区右上角 | 150rpx x 142rpx | 纯CSS, idle+wave+heart | tap触发jump | 品牌陪伴
+足迹卡 | Hero下方 | 全宽-64rpx | 3列数字: 天数/笔数/称号 | 数字60rpx flex-end对齐 | 成就展示
+AI称号 | 足迹卡右侧 | 22rpx | daily AI title, 带emoji | tap->查看称号弹窗 | 每日AI
+热力图 | 打卡区 | 全宽-64rpx | 日历网格, 主题色阶 | 展示记账活跃度 | 习惯养成
+菜单列表 | 设置区 | 全宽-64rpx | cell列表, 左图标+标题+箭头 | tap->对应功能页 | 功能入口
+AI信件弹窗 | 浮层 | 全宽-128rpx | 信纸横线纹理 #FFFAF0 | AI手写信件展示 | 情感功能
+小橘聊天弹窗 | 浮层 | 全宽-64rpx | ai-chat-modal, 毛玻璃背景 | 对话式交互 | AI助手
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] 头像点击触发隐私授权->wx.chooseMedia拍照/选择->上传云存储->更新users文档
+[P][List Bullet] 小橘吉祥物点击依次触发wave->jump->heart动画，随机展示bubble气泡文字
+[P][List Bullet] AI信件通过aiPoster云函数生成，展示在信纸风格弹窗中（55rpx行距横线纹理）
+[P][List Bullet] 小橘聊天弹窗（ai-chat-modal）支持8条消息x300字上限，包含bill草稿卡片系统
+[P][List Bullet] 数据导出支持CSV（exportBills云函数）和JSON（dataMigration云函数）两种格式
+[P][Normal] 图6-7：我的页截图
+[P][Heading 2] 6.8 分类管理页（categories）与主题设置页（themes）
+[P][Normal] 6.8.1 分类管理页（categories）
+[P][Normal] 功能定位：管理消费分类的增删改页面，支持预设分类与自定义分类。
+[P][Normal] 表6-8 分类管理页关键元素规格
+[TABLE 35]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+预设分类区 | 上部 | 全宽-64rpx | 5列网格, emoji+名称 | 仅可编辑名称,不可删除 | 系统分类
+自定义分类区 | 下部 | 全宽-64rpx | 5列网格, 长按删除 | tap添加, longpress删除 | 用户分类
+添加按钮 | 网格末尾 | 120rpx x 120rpx | 虚线边框 + "+"号 | tap->弹出输入框 | 新增入口
+[/TABLE]
+[P][List Bullet] 预设分类不可删除，仅可修改显示名称
+[P][List Bullet] 自定义分类支持长按删除，删除后本地storage和users文档同步更新
+[P][List Bullet] 分类数据存储在users.customCategories字段中
+[P][Normal] 6.8.2 主题设置页（themes）
+[P][Normal] 功能定位：主题预览与切换页面，支持预设主题和用户自定义主题。
+[P][Normal] 表6-9 主题设置页关键元素规格
+[TABLE 36]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+预设主题区 | 上部 | 全宽-64rpx | 4个主题卡片 grid 2x2 | tap切换主题 | mint/fresh/skyBlue/dark
+调色板 | 中部 | 全宽-64rpx | 8色圆形色块 | tap选择主色 | 自定义主题入口
+自定义主题区 | 下部 | 全宽-64rpx | 已创建主题列表 | tap应用/长按删除 | 最多5个
+主题命名 | 弹窗 | 输入框 | 支持自命名 | 输入后确认 | 个性化
+[/TABLE]
+[P][List Bullet] 切换主题时通过EventBus emit("themeChanged")通知所有页面即时更新
+[P][List Bullet] getThemeStyleString()计算新的inline-style字符串，各页面onShow时读取
+[P][List Bullet] 自定义主题存储在wx.setStorageSync("user_themes")数组中，最多5个
+[P][Normal] 图6-8：分类管理与主题设置页截图
+[P][Heading 2] 6.9 账单详情页（detail）
+[P][Normal] 功能定位：单笔账单的详细信息展示页，采用手账便签风格，营造温馨的记录感。
+[P][Normal] 布局描述：手账便签风格卡片，包含拍立得照片框（如有拍照）、心情印章（emoji）、金额大字、分类标签、日期时间、信纸横线纹理备注区、底部编辑/删除操作按钮。
+[P][Normal] 表6-10 账单详情页关键元素规格
+[TABLE 37]
+元素名称 | 位置 | 尺寸(rpx) | 视觉样式 | 交互行为 | 备注
+拍立得照片框 | 顶部居中 | 约400rpx x 300rpx | 白色边框8rpx, 微旋转正负3度, shadow-card | 点击可查看大图 | 照片展示
+心情印章 | 照片下方居中 | 64rpx x 64rpx | emoji图标, 背景--color-primary-container | 静态展示 | 情绪记录
+金额 | 印章下方 | 96rpx DIN Alternate, weight 800 | --color-text 主色 | 大数字展示 | 核心信息
+分类标签 | 金额下方 | 胶囊形 | --color-primary-container背景 | 静态 | 分类标识
+日期时间 | 标签下方 | 26rpx, --color-text-secondary | YYYY-MM-DD HH:mm | 静态 | 时间信息
+备注区 | 下方 | 全宽-64rpx | 信纸横线纹理(repeating-linear-gradient, 55rpx行距) | 展示备注内容 | 手账风格
+操作栏 | 底部 | 全宽-64rpx, 88rpx高 | 编辑按钮 + 删除按钮 | tap->编辑/删除 | 操作入口
+[/TABLE]
+[P][Normal] 交互说明：
+[P][List Bullet] 照片框使用拍立得风格（白色宽边框+微旋转+投影），点击可全屏预览
+[P][List Bullet] 备注区使用信纸横线纹理（#FFFAF0背景+repeating-linear-gradient横线，55rpx行距），营造手账氛围
+[P][List Bullet] 编辑按钮设置globalData._editBillId后wx.switchTab跳转记账页
+[P][List Bullet] 删除按钮二次确认后调用bills云函数删除，成功后返回上一页
+[P][Normal] 图6-9：账单详情页截图
+[P][Heading 1] 第7章 交互行为规范
+[P][Heading 2] 7.1 导航交互
+[P][Normal] 橘记的页面导航遵循微信小程序原生路由机制，通过wx.switchTab()和wx.navigateTo()两种方式实现页面跳转。
+[P][Normal] Tab页面跳转（switchTab）：
+[P][Normal] 首页/统计/记账/预算/我的五个Tab页面之间使用wx.switchTab()跳转，该API不支持传递参数。因此编辑账单流程采用globalData._editBillId桥接机制：详情页设置globalData._editBillId=billId->switchTab到记账页->记账页onShow检测到editBillId->加载账单进入编辑模式->保存后清空editBillId。
+[P][Normal] 子页面跳转（navigateTo）：
+[P][Normal] 详情页、分类管理页、主题设置页等非Tab页面使用wx.navigateTo()跳转，支持url参数传递（如/detail/detail?id=xxx）。
+[P][Normal] 表7-1 导航交互方式
+[TABLE 38]
+跳转方式 | 适用场景 | 参数传递 | 示例
+wx.switchTab | Tab页面之间 | 不支持参数，使用globalData桥接 | 首页<->统计/记账/预算/我的
+wx.navigateTo | Tab页->子页面 | url query参数 | 我的->分类管理/主题设置/详情
+wx.navigateBack | 子页面返回 | 无 | 详情页->首页
+globalData._editBillId | 编辑账单桥接 | billId字符串 | 详情页->记账页(编辑模式)
+[/TABLE]
+[P][Heading 2] 7.2 手势交互表
+[P][Normal] 表7-2 手势交互定义
+[TABLE 39]
+手势 | 触发方式 | 适用场景 | 反馈
+tap | 单指轻触 | 按钮点击、列表项选择、Tab切换 | 按钮缩放/颜色变化、页面跳转
+longpress | 长按0.5s | 账单行编辑、自定义分类删除 | 弹出操作菜单/确认弹窗
+swipe | 水平滑动 | 引导页Swiper切换、月份切换 | 页面平滑滑动，胶囊指示器更新
+scroll | 垂直滚动 | 首页账单列表、统计图表 | 下拉刷新、触底加载更多
+[/TABLE]
+[P][Heading 2] 7.3 主题切换交互
+[P][Normal] 主题切换采用EventBus发布-订阅模式实现即时响应，无需重启小程序：
+[P][Normal] 流程：用户在主题设置页选择新主题->调用getThemeStyleString(themeId)计算新的inline-style字符串->将themeId写入wx.setStorageSync("theme")->通过eventBus.emit("themeChanged")广播事件->所有已注册的页面监听器_onThemeChanged被触发->各页面重新读取themeStyle并setData({themeStyle:newStyle})->WXML重新渲染，所有var()引用自动更新。
+[P][Normal] 每个页面在onLoad注册监听、onUnload注销监听，确保无内存泄漏。
+[P][Heading 2] 7.4 AI交互规范
+[P][Normal] 橘记包含三类AI交互，均使用腾讯混元大模型（hunyuan-v3）：
+[P][Normal] 表7-3 AI交互规范表
+[TABLE 40]
+AI功能 | 触发方式 | 等待体验 | 成功反馈 | 失败处理
+对话记账 | 用户在小橘聊天弹窗输入消息 | typing指示器（opacity 0.5-1脉冲） | AI回复文字 + bill草稿卡片（可一键添加） | 返回固定fallback回复"让我想想..."
+AI信件 | 我的页->AI信件入口 | 加载动画（脉冲呼吸） | 信纸风格弹窗展示完整信件 | 返回默认安慰信件模板
+AI评论 | 切换统计月份时自动触发 | streaming逐字渲染，1s间隔429退避 | 3张评论卡片逐条展示 | 使用缓存的上一次评论或跳过
+[/TABLE]
+[P][Normal] AI限流机制：
+[P][List Bullet] profileLetter（AI信件）：30次/天，ai_usage_limits集合计数
+[P][List Bullet] profileTitle（每日称号）：8次/天，ai_usage_limits集合计数
+[P][List Bullet] aiChat（小橘聊天）：8条消息x300字符上限
+[P][List Bullet] stats AI comments：客户端缓存，同月份同类型不重复请求
+[P][List Bullet] 所有AI输出经过contentSafety双重校验（本地regex BLOCK_PATTERNS + wx.security.msgSecCheck v2）
+[P][Heading 2] 7.5 反馈提示
+[P][Normal] 表7-4 反馈提示规范
+[TABLE 41]
+场景 | 提示方式 | 时长 | icon | 示例
+操作成功 | wx.showToast | 2000ms | success | "保存成功"、"已删除"
+操作失败 | wx.showToast | 2000ms | none | "网络异常，请重试"
+数据为空 | 页面内空态插画+文字 | 常驻 | 无 | "还没有记账记录，去记一笔吧"
+加载中 | wx.showLoading | 直到完成 | loading | "加载中..."
+确认操作 | wx.showModal | 等待用户 | warning | "确定删除该账单？此操作不可恢复"
+[/TABLE]
+[P][Heading 1] 第8章 响应式适配与辅助功能
+[P][Heading 2] 8.1 rpx响应式适配
+[P][Normal] 橘记全面使用rpx（responsive pixel）作为尺寸单位，以750rpx为屏幕宽度基准。微信运行时会自动根据实际设备屏幕宽度进行等比缩放：在375pt逻辑宽度的设备（iPhone 6/7/8）上1rpx=0.5px，在414pt设备（iPhone 14 Pro Max）上1rpx约等于0.45px。
+[P][Normal] 所有布局均采用flex/grid自适应，不使用固定px值。百分比宽度（如CTA按钮70%宽）配合max-width约束，确保在不同宽度的安卓设备上也不会过度拉伸。
+[P][Heading 2] 8.2 深色模式
+[P][Normal] 橘记的深色模式采用"深夜"主题（dark），而非跟随系统暗色模式。用户在主题设置页手动切换到dark主题即可启用。
+[P][Normal] 表8-1 浅色/深色模式对比
+[TABLE 42]
+属性 | 浅色主题（如mint） | 深色主题（dark）
+背景 --color-bg | #f2faf6（浅绿白） | #1e1e24（深灰蓝）
+表面 --color-surface | #ffffff | #27272e
+文字 --color-text | #0f1f17（深色） | #f0eee9（浅色）
+主色 --color-primary | #27c07d | #d4a574（暖琥珀）
+阴影 --shadow-dark | rgba(39,192,125,0.15) | rgba(0,0,0,0.6)
+阴影 --shadow-light | rgba(255,255,255,1) | rgba(255,255,255,0.08)
+[/TABLE]
+[P][Normal] 图8-1：四套主题对比图
+[P][Heading 2] 8.3 无障碍辅助功能
+[P][List Bullet] 触摸目标尺寸：
+[P][Normal] 所有可交互元素的触摸热区不低于88rpx x 88rpx（约44pt），符合WCAG 2.1 AA标准的最小触摸目标尺寸要求。TabBar图标容器76rpx + 间距扩展至106rpx最小高度。
+[P][List Bullet] 色彩对比度：
+[P][Normal] 文字色--color-text（#0f1f17等深色）在--color-bg（#f2faf6等浅色）背景上的对比度均>7:1（AAA级）。次要文字--color-text-secondary在表面上的对比度>4.5:1（AA级）。主色上的文字--color-on-primary根据主色亮度自动切换黑白（lightness>65时用深色文字）。
+[P][List Bullet] 语义化标签：
+[P][Normal] 关键交互元素添加aria-label属性（如"记一笔"按钮、"删除账单"按钮），辅助屏幕阅读器识别元素功能。
+[P][List Bullet] 降级方案：
+[P][Normal] 毛玻璃效果backdrop-filter在低端设备上可能不生效，已提供纯色半透明背景fallback（rgba(255,255,255,0.84)）。CSS动画在不支持的设备上静默降级，不影响功能。
+[P][Heading 1] 附录A Design Token完整清单
+[P][Normal] 以下汇总橘记全部60+个CSS自定义属性，按5组分类列出。
+[P][Heading 2] A.1 颜色Token（15个核心 + 10个辅助）
+[P][Normal] 表A-1 颜色Token清单
+[TABLE 43]
+序号 | 变量名 | 默认值 | 类别
+1 | --color-primary | #785655 | 主色
+2 | --color-primary-container | #f7cac9 | 主色容器
+3 | --color-primary-light | #eed7d4 | 浅主色
+4 | --color-on-primary | #ffffff | 主色上文字
+5 | --color-secondary | #6c5a59 | 辅助色
+6 | --color-secondary-container | #f4e3e0 | 辅助色容器
+7 | --color-tertiary | #4b6458 | 第三色
+8 | --color-tertiary-container | #c0dbcc | 第三色容器
+9 | --color-error | #ba1a1a | 错误色
+10 | --color-error-container | #ffdad6 | 错误容器
+11 | --color-bg | #fffaf8 | 页面背景
+12 | --color-surface | #ffffff | 卡片表面
+13 | --color-surface-low | #fdf5f3 | 低层表面
+14 | --color-surface-container | #f8efed | 容器表面
+15 | --color-surface-high | #f3eae8 | 高层表面
+16 | --color-surface-highest | #ece2df | 最高层表面
+17 | --color-surface-dim | #e7ddda | 暗淡表面
+18 | --color-text | #1e1b1a | 主文字
+19 | --color-text-secondary | #5b4d4a | 次要文字
+20 | --color-text-tertiary | #938481 | 辅助文字
+21 | --color-text-on-primary | #ffffff | 主色上文字
+22 | --color-border | #e4d5d3 | 边框色
+23 | --color-outline | #938481 | 轮廓色
+24 | --color-income | #4b6458 | 收入色
+25 | --color-income-light | #c0dbcc | 收入浅色
+[/TABLE]
+[P][Heading 2] A.2 渐变Token（2个）
+[P][Normal] 表A-2 渐变Token清单
+[TABLE 44]
+序号 | 变量名 | 值
+1 | --gradient-hero | linear-gradient(135deg, primary 0%, accent 100%)
+2 | --gradient-hero-soft | linear-gradient(135deg, primaryContainer 0%, primaryLight 100%)
+[/TABLE]
+[P][Heading 2] A.3 阴影Token（6个）
+[P][Normal] 表A-3 阴影Token清单
+[TABLE 45]
+序号 | 变量名 | 值模板
+1 | --shadow-light | rgba(255,255,255,1) / 浅色主题; rgba(255,255,255,0.08) / 深色
+2 | --shadow-dark | rgba(primary,0.15) / 浅色主题; rgba(0,0,0,0.6) / 深色
+3 | --shadow-soft | -8rpx -8rpx 24rpx light, 8rpx 8rpx 24rpx dark
+4 | --shadow-card | -12rpx -12rpx 32rpx light, 12rpx 12rpx 32rpx dark
+5 | --shadow-elevated | -16rpx -16rpx 48rpx light, 16rpx 16rpx 48rpx dark
+6 | --shadow-hero | 0 16rpx 40rpx dark
+[/TABLE]
+[P][Heading 2] A.4 字体Token（18个）
+[P][Normal] 表A-4 字体Token清单
+[TABLE 46]
+序号 | 变量名 | 值 | 类别
+1 | --font-numeric | DIN Alternate, Helvetica Neue, PingFang SC, sans-serif | 字体族
+2 | --font-body | -apple-system, BlinkMacSystemFont, PingFang SC, sans-serif | 字体族
+3 | --font-size-display | 96rpx | 字号
+4 | --font-size-h1 | 52rpx | 字号
+5 | --font-size-h2 | 44rpx | 字号
+6 | --font-size-h3 | 36rpx | 字号
+7 | --font-size-body | 28rpx | 字号
+8 | --font-size-regular | 26rpx | 字号
+9 | --font-size-small | 22rpx | 字号
+10 | --font-size-tiny | 20rpx | 字号
+11 | --font-weight-black | 800 | 字重
+12 | --font-weight-bold | 700 | 字重
+13 | --font-weight-semibold | 600 | 字重
+14 | --font-weight-medium | 500 | 字重
+15 | --font-weight-regular | 400 | 字重
+16 | --line-height-tight | 1.1 | 行高
+17 | --line-height-normal | 1.4 | 行高
+18 | --line-height-relaxed | 1.6 | 行高
+[/TABLE]
+[P][Heading 2] A.5 圆角与间距Token（11个）
+[P][Normal] 表A-5 圆角与间距Token清单
+[TABLE 47]
+序号 | 变量名 | 值 | 类别
+1 | --radius-sm | 8rpx | 圆角
+2 | --radius-md | 16rpx | 圆角
+3 | --radius-lg | 24rpx | 圆角
+4 | --radius-xl | 32rpx | 圆角
+5 | --radius-2xl | 40rpx | 圆角
+6 | --radius-full | 9999rpx | 圆角
+7 | --space-xs | 8rpx | 间距
+8 | --space-sm | 16rpx | 间距
+9 | --space-md | 24rpx | 间距
+10 | --space-lg | 32rpx | 间距
+11 | --space-xl | 40rpx | 间距
+[/TABLE]
+[P][Heading 1] 附录B 页面跳转关系图
+[P][Heading 2] B.1 页面跳转关系表
+[P][Normal] 表B-1 页面跳转关系表
+[TABLE 48]
+源页面 | 目标页面 | 跳转方式 | 触发条件
+登录页 | 首页 | wx.switchTab | 静默登录成功 + 隐私协议已同意
+登录页 | 引导页 | wx.redirectTo | 首次打开（guideShown=false）
+引导页 | 首页 | wx.switchTab | CTA按钮点击（"开启记账之旅"）
+首页 | 详情页 | wx.navigateTo | tap账单行
+首页 | 记账页 | wx.switchTab | TabBar"记一笔"按钮
+首页 | 预算页 | wx.switchTab | 预算进度条tap
+统计页 | 详情页 | wx.navigateTo | tap图表数据点
+记账页 | 首页 | wx.switchTab | 账单保存成功后
+预算页 | 预算设置 | wx.navigateTo | 未设置预算时tap引导
+我的页 | 分类管理 | wx.navigateTo | 菜单tap"分类管理"
+我的页 | 主题设置 | wx.navigateTo | 菜单tap"主题设置"
+我的页 | 详情页 | wx.navigateTo | AI称号弹窗tap
+详情页 | 记账页 | wx.switchTab | 编辑按钮（通过globalData._editBillId桥接）
+详情页 | 上一页 | wx.navigateBack | 删除后返回
+[/TABLE]

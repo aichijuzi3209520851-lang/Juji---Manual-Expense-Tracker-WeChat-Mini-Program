@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1220" viewBox="0 0 1800 1220">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1220" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 9-1  内容安全双层架构图</text>
+<text x="1405" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Content Safety Architecture</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="455" y="190" width="890" height="175" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="455" y="190" width="10" height="175" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="483" y="240" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">用户文本输入</text>
+<text x="483" y="283" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">备注 / 自定义分类 / 心情 / AI 对话</text>
+<rect x="455" y="400" width="890" height="175" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="455" y="400" width="10" height="175" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="483" y="450" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">第一层：本地正则</text>
+<text x="483" y="493" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">BLOCK_PATTERNS 快速拦截</text>
+<text x="483" y="525" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">赌博、色情、毒品、枪爆、诈骗、自伤、暴恐</text>
+<line x1="900" y1="375" x2="900" y2="390" stroke="#6b7d73" stroke-width="4" stroke-linecap="round"/>
+<polygon points="900,390 890,374 909,374" fill="#6b7d73"/>
+<rect x="455" y="610" width="890" height="175" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="455" y="610" width="10" height="175" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="483" y="660" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">第二层：云端审核</text>
+<text x="483" y="703" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">contentSafety 云函数调用</text>
+<text x="483" y="735" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">security.msgSecCheck v2</text>
+<line x1="900" y1="585" x2="900" y2="600" stroke="#6b7d73" stroke-width="4" stroke-linecap="round"/>
+<polygon points="900,600 890,584 909,584" fill="#6b7d73"/>
+<rect x="455" y="820" width="890" height="175" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="455" y="820" width="10" height="175" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="483" y="870" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">结果处理</text>
+<text x="483" y="913" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">通过：继续业务流程</text>
+<text x="483" y="945" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">拦截：toast 提示或 FALLBACK_REPLY</text>
+<text x="483" y="977" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">异常：本地兜底，不阻塞主流程</text>
+<line x1="900" y1="795" x2="900" y2="810" stroke="#6b7d73" stroke-width="4" stroke-linecap="round"/>
+<polygon points="900,810 890,794 909,794" fill="#6b7d73"/>
+<rect x="115" y="350" width="250" height="520" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="115" y="350" width="10" height="520" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="143" y="397" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">客户端部署</text>
+<text x="143" y="438" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">record/profile 输入前</text>
+<text x="143" y="469" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">检查</text>
+<text x="143" y="500" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">contentSafety.js</text>
+<text x="143" y="531" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">ensureSafeText()</text>
+<text x="143" y="562" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">checkText()</text>
+<rect x="1435" y="350" width="250" height="520" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1435" y="350" width="10" height="520" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1463" y="397" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">云端冗余部署</text>
+<text x="1463" y="438" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">contentSafety 云函</text>
+<text x="1463" y="469" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">数</text>
+<text x="1463" y="500" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">aiChat 云函数</text>
+<text x="1463" y="531" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">aiPoster 云函数</text>
+<text x="1463" y="562" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">三处均含 </text>
+<text x="1463" y="593" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">BLOCK_PATTERNS</text>
+<line x1="365" y1="610" x2="455" y2="465" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="455,465 454,482 438,473" fill="#27c07d"/>
+<line x1="1345" y1="610" x2="1435" y2="610" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1435,610 1419,619 1419,600" fill="#f3a33a"/>
+<rect x="615" y="1045" width="700" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="632" y="1073" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">设计目的：快速拦截明显违规内容，同时用微信语义审核补足隐晦风险</text>
+</svg>

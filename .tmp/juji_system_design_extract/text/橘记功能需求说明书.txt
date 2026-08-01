@@ -1,0 +1,820 @@
+# 橘记功能需求说明书.docx
+
+[P][Normal] 2026年湖南省大学生计算机程序设计竞赛校级选拔赛
+[P][Normal] -----应用开发类竞赛（2026）
+[P][Normal] 功
+[P][Normal] 能
+[P][Normal] 需
+[P][Normal] 求
+[P][Normal] 说
+[P][Normal] 明
+[P][Normal] 书
+[TABLE 1]
+作品名称： | 橘记(JuJI)—— 混元AI大模型驱动的对话式智能记账与消费洞察小程序
+作品类别： | 移动终端开发类
+作 者： | 梁承伟 李俊怡 邓泽楷
+指导老师： | 李翠红 胡瑶
+单 位： | 湖南信息学院
+[/TABLE]
+[P][Normal] 二零二六 年 六月 十日
+[P][Normal] 目 录
+[P][toc 1] 第 1 章 引言 6
+[P][toc 2] 1.1 编写目的 6
+[P][toc 2] 1.2 文档范围 6
+[P][toc 2] 1.3 读者对象 6
+[P][toc 2] 1.4 术语与缩略语 7
+[P][toc 2] 1.5 参考标准 7
+[P][toc 1] 第 2 章 项目综述 8
+[P][toc 2] 2.1 产品定位与目标 8
+[P][toc 2] 2.2 用户画像与角色 8
+[P][toc 2] 2.3 运行环境约束 8
+[P][toc 2] 2.4 总体约束与假设 9
+[P][toc 2] 2.5 需求优先级说明 9
+[P][toc 1] 第 3 章 总体功能结构 10
+[P][toc 2] 3.1 功能模块总览 10
+[P][toc 2] 3.2 功能清单总表 10
+[P][toc 2] 3.3 功能优先级分布 11
+[P][toc 1] 第 4 章 用户角色与用例模型 12
+[P][toc 2] 4.1 参与者定义 12
+[P][toc 2] 4.2 核心用例列表 12
+[P][toc 2] 4.3 典型用例规约 13
+[P][toc 3] 4.3.1 UC-01 自然语言对话记账 13
+[P][toc 3] 4.3.2 UC-02 手动新增账单 13
+[P][toc 3] 4.3.3 UC-03 月度消费复盘 14
+[P][toc 1] 第 5 章 详细功能需求 15
+[P][toc 2] 5.1 登录与引导模块（AUTH） 15
+[P][toc 2] 5.2 记账模块（REC） 17
+[P][toc 2] 5.3 首页仪表盘模块（HOME） 20
+[P][toc 2] 5.4 统计分析模块（STAT） 22
+[P][toc 2] 5.5 预算管理模块（BUD） 25
+[P][toc 2] 5.6 个人中心模块（PROF） 27
+[P][toc 2] 5.7 AI 智能中枢模块（AI · 创新亮点） 30
+[P][toc 2] 5.8 主题系统模块（THEME） 33
+[P][toc 1] 第 6 章 数据需求 35
+[P][toc 2] 6.1 数据实体清单 35
+[P][toc 2] 6.2 数据约束需求 35
+[P][toc 2] 6.3 数据权限需求 36
+[P][toc 2] 6.4 数据生命周期需求 36
+[P][toc 1] 第 7 章 外部接口需求 37
+[P][toc 2] 7.1 用户界面需求 37
+[P][toc 2] 7.2 软件接口需求 37
+[P][toc 2] 7.3 通信接口需求 37
+[P][toc 2] 7.4 硬件接口需求 37
+[P][toc 1] 第 8 章 非功能性需求 39
+[P][toc 2] 8.1 性能需求 39
+[P][toc 2] 8.2 安全需求 39
+[P][toc 2] 8.3 隐私合规需求 39
+[P][toc 2] 8.4 可用性需求 40
+[P][toc 2] 8.5 可维护性需求 40
+[P][toc 2] 8.6 兼容性需求 40
+[P][toc 1] 第 9 章 需求优先级与验收标准 41
+[P][toc 2] 9.1 优先级矩阵 41
+[P][toc 2] 9.2 验收准则 42
+[P][toc 2] 9.3 需求追溯说明 42
+[P][toc 1] 附录 A 功能需求索引表 43
+[P][toc 1] 附录 B 术语表 45
+[P][Heading 1] 第 1 章 引言
+[P][Heading 2] 1.1 编写目的
+[P][Normal] 本文档为《橘记（Juji）微信小程序功能需求说明书》，面向计算机程序设计竞赛评审专家、产品团队与开发团队，旨在清晰界定橘记 v1.1.0 的功能需求基线。本文档作为系统开发、测试与验收的核心依据，确保每条功能需求可追溯、可验证。
+[P][Normal] 本文档依据 GB/T 9385-2008《计算机软件需求规格说明规范》（兼顾 IEEE 830 体例）编写，聚焦于"系统必须做什么"——以带编号的功能需求条目（FR-ID）为核心，配用例、业务规则、验收标准与优先级，区别于《详细设计说明书》的"怎么实现"。
+[P][Heading 2] 1.2 文档范围
+[P][Normal] 本文档覆盖橘记微信小程序 v1.1.0 的全部功能性与非功能性需求，包括：
+[P][List Bullet] 登录引导、记账、首页、统计、预算、个人中心、AI 智能、主题系统、安全隐私共 9 大模块的全部功能需求
+[P][List Bullet] 数据需求、外部接口需求、非功能性需求
+[P][List Bullet] 需求优先级矩阵与验收标准
+[P][Normal] 本文档不包含具体实现方案，实现细节参见《橘记微信小程序详细设计说明书》。
+[P][Heading 2] 1.3 读者对象
+[P][Normal] 表 1-1：文档读者与关注重点
+[TABLE 2]
+读者角色 | 关注重点
+竞赛评审专家 | 功能完整性、创新性、AI 融合深度、文档规范性
+产品经理 | 功能需求全貌、优先级、验收标准
+开发工程师 | 功能边界、业务规则、异常处理
+测试工程师 | 验收标准、测试用例覆盖、边界条件
+[/TABLE]
+[P][Heading 2] 1.4 术语与缩略语
+[P][Normal] 表 1-2：术语与缩略语
+[TABLE 3]
+术语/缩略语 | 含义
+CloudBase | 腾讯云开发 Serverless 平台，提供数据库、云函数、云存储
+Serverless | 无服务器架构，按调用计费，无需运维
+云函数 | CloudBase 中的 Serverless 计算单元，Node.js 16.13 运行环境
+openid | 微信用户在该小程序下的唯一标识，由 wx.login 获取
+混元大模型 | 腾讯 AI 大语言模型（hunyuan-v3 / hy3-preview），用于对话记账与 AI 评论
+FR | Functional Requirement，功能需求
+NFR | Non-Functional Requirement，非功能性需求
+UC | Use Case，用例
+M (Must) | 必须实现，核心功能
+S (Should) | 应该实现，重要功能
+C (Could) | 可选实现，锦上添花
+rpx | 微信小程序响应式像素单位
+msgSecCheck | 微信内容安全审核接口 v2
+[/TABLE]
+[P][Heading 2] 1.5 参考标准
+[P][Normal] 本文档编写遵循以下标准与规范：
+[P][List Bullet] GB/T 9385-2008《计算机软件需求规格说明规范》
+[P][List Bullet] GB/T 8567-2006《计算机软件文档编制规范》
+[P][List Bullet] IEEE 830-1998《Recommended Practice for Software Requirements Specifications》
+[P][List Bullet] 《微信小程序运营规范》
+[P][List Bullet] 《中华人民共和国个人信息保护法》
+[P][Heading 1] 第 2 章 项目综述
+[P][Heading 2] 2.1 产品定位与目标
+[P][Normal] 橘记（Juji）是一款大模型驱动的对话式智能记账微信小程序，核心理念为"打开即记、记完就走"。区别于传统记账应用的手动录入模式，橘记通过接入腾讯混元大模型，支持用户以自然语言口述消费内容，AI 自动解析为结构化账单，大幅降低记账门槛。
+[P][Normal] 产品定位为个人消费习惯养成工具，面向希望轻松记录日常开支、了解消费结构、建立预算意识的年轻用户群体。产品通过 AI 俏皮评论、个性化主题、每日消费称号等功能增强趣味性与粘性。
+[P][Heading 2] 2.2 用户画像与角色
+[P][Normal] 橘记为单一 C 端产品，无管理员后台。系统角色定义如下：
+[P][Normal] 表 2-1：用户角色定义
+[TABLE 4]
+角色 | 状态描述 | 权限差异
+游客 | 未登录或未同意隐私协议 | 不可使用任何功能，仅见隐私协议弹窗
+已登录用户 | 已完成微信静默登录且同意隐私协议 | 全部功能：记账、统计、预算、AI、主题、导出、清除等
+[/TABLE]
+[P][Heading 2] 2.3 运行环境约束
+[P][Normal] 表 2-2：运行环境约束
+[TABLE 5]
+环境项 | 规格
+客户端 | 微信客户端（iOS / Android）
+基础库 | ≥ 3.16.0
+云函数运行时 | Node.js 16.13
+CloudBase 环境 | ap-shanghai（上海），个人版
+AI 模型 | 混元 hunyuan-v3 / hy3-preview
+数据库 | CloudBase 云数据库（NoSQL）
+页面数 | 10 个
+云函数数 | 9 个
+数据库集合 | 5 个（bills/budgets/users/ai_usage_limits/client_logs）
+[/TABLE]
+[P][Heading 2] 2.4 总体约束与假设
+[P][List Bullet] 依赖微信登录体系（wx.login），不支持手机号/邮箱注册
+[P][List Bullet] 依赖混元大模型 Token 配额（来自"小程序成长计划 1 亿 Token"）
+[P][List Bullet] 系统运行需要网络连接，不支持离线模式
+[P][List Bullet] 用户数据通过 openid 实现单用户隔离，无跨用户数据访问
+[P][List Bullet] 天气功能依赖腾讯位置服务 key（TENCENT_LBS_KEY），当前已下线
+[P][Heading 2] 2.5 需求优先级说明
+[P][Normal] 表 2-3：需求优先级定义
+[TABLE 6]
+优先级 | 代号 | 定义 | 验收要求
+必须 | M (Must) | 系统核心功能，缺失则产品无法使用 | 必须全部通过验收
+应该 | S (Should) | 重要功能，显著影响用户体验 | 应通过验收
+可选 | C (Could) | 增强功能，锦上添花 | 建议通过验收
+[/TABLE]
+[P][Heading 1] 第 3 章 总体功能结构
+[P][Heading 2] 3.1 功能模块总览
+[P][Normal] 橘记系统由 7 大核心功能模块和 2 个横切关注点组成，各模块职责如下：
+[P][Normal] 表 3-1：功能模块总览
+[TABLE 7]
+模块代号 | 模块名称 | 核心职责
+AUTH | 登录与引导 | 微信静默登录、隐私协议门禁、首次启动引导
+REC | 记账 | 账单增删改查、分类管理、收支切换、防抖限流
+HOME | 首页仪表盘 | 今日/昨日消费概览、预算进度、账单流水
+STAT | 统计分析 | 收支占比、趋势图、AI 评论
+BUD | 预算管理 | 月预算设置、进度环、消费节奏、Top3 分类
+PROF | 个人中心 | 头像昵称、记账足迹、AI 信件/称号、数据导入导出
+AI | AI 智能中枢 | 对话式记账、小橘聊天、内容安全
+THEME | 主题系统 | 4 套预设主题、自定义调色板、用户主题 CRUD
+SEC | 安全隐私 | 内容安全审核、隐私授权守卫、异常监控
+[/TABLE]
+[P][Heading 2] 3.2 功能清单总表
+[P][Normal] 以下为橘记全部功能需求清单，作为全文需求索引：
+[P][Normal] 表 3-2：功能需求清单总表
+[TABLE 8]
+需求编号 | 需求名称 | 所属模块 | 优先级
+FR-AUTH-01 | 微信静默登录 | AUTH | M
+FR-AUTH-02 | 隐私协议门禁 | AUTH | M
+FR-AUTH-03 | 首启 4 屏引导 | AUTH | S
+FR-AUTH-04 | 退出登录 | AUTH | S
+FR-REC-01 | 新增账单 | REC | M
+FR-REC-02 | 编辑账单 | REC | M
+FR-REC-03 | 删除账单 | REC | M
+FR-REC-04 | 收支模式切换 | REC | M
+FR-REC-05 | 自创分类 | REC | S
+FR-REC-06 | 删除自定义分类 | REC | S
+FR-REC-07 | 心情/照片/备注录入 | REC | S
+FR-REC-08 | 日期选择 | REC | M
+FR-REC-09 | 频率限制 | REC | M
+FR-HOME-01 | 今日/昨日消费概览 | HOME | M
+FR-HOME-02 | 预算进度条 | HOME | M
+FR-HOME-03 | 账单流水按日分组 | HOME | M
+FR-HOME-04 | 季节标签 | HOME | C
+FR-HOME-05 | 账单长按删除/进详情 | HOME | M
+FR-STAT-01 | 月份切换 | STAT | M
+FR-STAT-02 | 收支 segment 切换 | STAT | M
+FR-STAT-03 | 分类占比甜甜圈图 | STAT | M
+FR-STAT-04 | 6 月收支趋势图 | STAT | S
+FR-STAT-05 | AI 俏皮评论 | STAT | S
+FR-BUD-01 | 设置/修改月预算 | BUD | M
+FR-BUD-02 | 预算进度环 | BUD | M
+FR-BUD-03 | 6 月达成率历史 | BUD | S
+FR-BUD-04 | 消费节奏卡 | BUD | S
+FR-BUD-05 | Top3 消费分类 | BUD | S
+FR-BUD-06 | 未设预算空态 | BUD | S
+FR-PROF-01 | 头像/昵称编辑 | PROF | M
+FR-PROF-02 | 性别设置 | PROF | S
+FR-PROF-03 | 记账足迹 | PROF | S
+FR-PROF-04 | AI 信件生成 | PROF | S
+FR-PROF-05 | 每日消费称号 | PROF | C
+FR-PROF-06 | JSON 数据导出 | PROF | M
+FR-PROF-07 | JSON 数据导入 | PROF | S
+FR-PROF-08 | 账户数据清除 | PROF | S
+FR-AI-01 | 对话式记账解析 | AI | M
+FR-AI-02 | 待确认账单卡 | AI | M
+FR-AI-03 | 新分类勾选创建 | AI | S
+FR-AI-04 | 批量写入 | AI | M
+FR-AI-05 | 小橘聊天闲聊 | AI | S
+FR-AI-06 | 内容安全兜底 | AI | M
+FR-THEME-01 | 切换 4 套预设主题 | THEME | S
+FR-THEME-02 | 自定义调色板取色 | THEME | C
+FR-THEME-03 | 用户命名主题 CRUD | THEME | C
+FR-THEME-04 | 主题即时生效 | THEME | M
+FR-SEC-01 | 内容安全审核 | SEC | M
+FR-SEC-02 | 隐私授权守卫 | SEC | M
+FR-SEC-03 | 异常监控上报 | SEC | S
+[/TABLE]
+[P][Heading 2] 3.3 功能优先级分布
+[P][Normal] 全部功能需求共 50 条，其中：必须（M）26 条、应该（S）20 条、可选（C）4 条。
+[P][Heading 1] 第 4 章 用户角色与用例模型
+[P][Heading 2] 4.1 参与者定义
+[P][Normal] 系统参与者分为两类：
+[P][List Bullet] 用户（User）：主参与者——已完成微信登录且同意隐私协议的终端用户，通过微信客户端与系统交互，使用全部功能。
+[P][List Bullet] 外部系统参与者：
+[P][List Bullet] 微信登录服务：提供 wx.login 静默登录能力，返回 openid/session_key
+[P][List Bullet] 混元大模型（hy3-preview）：提供自然语言解析与对话能力
+[P][List Bullet] CloudBase 云存储/数据库：提供持久化存储与数据访问
+[P][Heading 2] 4.2 核心用例列表
+[P][Normal] 表 4-1：核心用例列表
+[TABLE 9]
+用例编号 | 用例名 | 参与者 | 简述
+UC-01 | 自然语言对话记账 | 用户 | 口述消费内容，AI 解析为账单并确认写入
+UC-02 | 手动新增账单 | 用户 | 手动填写金额、分类、日期等信息创建账单
+UC-03 | 月度消费复盘 | 用户 | 查看当月收支统计、甜甜圈图、趋势图、AI 评论
+UC-04 | 设置月度预算 | 用户 | 设定当月消费预算，查看进度与消费节奏
+UC-05 | 导出账单数据 | 用户 | 将全部账单导出为 JSON 文件并分享
+UC-06 | 管理个人主题 | 用户 | 切换/创建/删除个性化主题配色
+UC-07 | AI 信件与称号 | 用户 | 生成个性化 AI 信件和每日消费称号
+UC-08 | 小橘闲聊 | 用户 | 与 AI 助手"小橘"进行日常对话
+[/TABLE]
+[P][Heading 2] 4.3 典型用例规约
+[P][Heading 3] 4.3.1 UC-01 自然语言对话记账
+[P][Normal] 前置条件：用户已登录且同意隐私协议，处于对话记账界面。
+[P][Normal] 基本流程：
+[P][List Bullet] 用户在输入框口述消费内容，如"中午吃饭 18、冰红茶 4、电费 40"
+[P][List Bullet] 系统调用 aiChat 云函数，将文本 + 当前分类列表 + 今日日期发送至混元大模型
+[P][List Bullet] AI 返回结构化 JSON：{intent: "bill_parse", reply: "...", bills: [...]}
+[P][List Bullet] 系统展示待确认账单卡，每笔显示分类标签、金额、备注，新分类默认未勾选
+[P][List Bullet] 用户可编辑金额/备注、勾选新分类、删除不需要的行
+[P][List Bullet] 用户点击确认，系统调用 bills.batchCreate 写入云端数据库
+[P][Normal] 备选流程：
+[P][List Bullet] 用户点击取消，清空待确认卡，返回对话界面
+[P][List Bullet] 用户修改某笔金额后确认，以修改后的值写入
+[P][Normal] 异常流程：
+[P][List Bullet] AI 返回非 bill_parse intent，展示回复文字而非账单卡
+[P][List Bullet] 网络异常或 429 限流，展示固定兜底提示语
+[P][List Bullet] 内容安全拦截，展示安全提示而非账单
+[P][Normal] 后置条件：账单写入 bills 集合，首页与统计页数据同步更新。
+[P][Heading 3] 4.3.2 UC-02 手动新增账单
+[P][Normal] 前置条件：用户已登录，进入记账页面。
+[P][Normal] 基本流程：
+[P][List Bullet] 用户选择支出/收入模式
+[P][List Bullet] 用户点击分类网格中的分类图标
+[P][List Bullet] 用户输入金额（数字键盘），可选填写备注、选择日期、拍照、选心情
+[P][List Bullet] 用户点击保存，前端校验通过后调用 bills.create 云函数
+[P][List Bullet] 云函数二次校验后写入 bills 集合，返回成功
+[P][Normal] 异常流程：
+[P][List Bullet] 金额为空或超出范围（> 99999999.99），前端提示
+[P][List Bullet] 3s 内重复提交，按钮置灰防抖
+[P][List Bullet] 单日超过 500 笔，提示次日再试
+[P][Normal] 后置条件：新账单出现在首页流水列表中。
+[P][Heading 3] 4.3.3 UC-03 月度消费复盘
+[P][Normal] 前置条件：用户已登录，进入统计页面。
+[P][Normal] 基本流程：
+[P][List Bullet] 系统加载当月 bills 数据，计算分类占比
+[P][List Bullet] 展示甜甜圈图（Top 8 分类）和收支总额
+[P][List Bullet] 展示近 6 个月收支趋势图（纯 CSS 柱状图，当前月高亮）
+[P][List Bullet] 系统调用 wx.cloud.extend.AI.streamText() 生成 3 条 AI 俏皮评论
+[P][List Bullet] 评论串行执行，每条间隔 1s，通过 periodKey 缓存避免重复生成
+[P][List Bullet] 异常流程：
+[P][List Bullet] AI 返回 429，指数退避重试
+[P][List Bullet] AI 全部失败，不写缓存，下次进入重新生成
+[P][Normal] 后置条件：用户完成月度消费回顾。
+[P][Normal] 图4-1：系统用例图
+[P][Normal] 图4-2：对话记账用例活动图
+[P][Heading 1] 第 5 章 详细功能需求
+[P][Normal] 本章是说明书主体。每个模块下每条功能需求用三线表呈现 10 个固定字段，确保需求可追溯、可验收。
+[P][Heading 2] 5.1 登录与引导模块
+[P][Normal] 登录与引导模块负责用户身份验证与首次使用引导，是系统所有功能的入口门禁。模块需确保未同意隐私协议的用户无法使用任何功能，同时通过引导页帮助新用户快速了解产品核心价值。
+[P][Normal] 表 1：微信静默登录
+[TABLE 10]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则 | 验收标准
+FR-AUTH-01 | 微信静默登录 | M | 用户打开小程序 | 微信 login code | 调用 quickstartFunctions 云函数获取 openid；通过 _loginPromise 去重，确保并发调用共享一次登录往返 | globalData.openid 写入，用户信息同步 | 仅在 juji_privacy_agreed 存储后才调用 silentLogin；_loginPromise 确保同一请求去重 | 用户无感知完成登录，globalData.openid 有效
+[/TABLE]
+[P][Normal] 表02：隐私协议门禁
+[TABLE 11]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-AUTH-02 | 隐私协议门禁 | M | 用户首次打开或未同意协议时 | 用户点击同意 | 弹出隐私协议弹窗（__usePrivacyCheck__）；同意后写入 juji_privacy_agreed；触发 silentLogin | 协议状态持久化 | wx.onNeedPrivacyAuthorization 注册；requirePrivacyAuthorization 在所有隐私敏感 API 前调用
+[/TABLE]
+[P][Normal] 表 3：首启 4 屏引导
+[TABLE 12]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则 | 异常处理 | 验收标准
+FR-AUTH-03 | 首启 4 屏引导 | S | 首次启动且已同意协议 | 用户滑动浏览引导页 | 展示 4 屏引导页（快/美/心/伴），swiper 组件实现；has_seen_guide 标志控制仅首启显示 | 引导完成标记写入 storage | 4 屏内容固定，不可跳过第一页 | storage 写入失败不影响正常流程 | 新用户看到引导，老用户直接进首页
+[/TABLE]
+[P][Normal] 表 4：退出登录
+[TABLE 13]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则 | 异常处理 | 验收标准
+FR-AUTH-04 | 退出登录 | S | 用户在个人中心点击退出 | 确认退出 | 清除 globalData 全局状态（openid/userInfo），跳转登录页；云端数据保留不删除 | 回到登录页 | 符合微信审核 3.5.5 条款；云端 bills/budgets 保留 | 退出异常时强制跳转 | 退出后需重新登录才能使用功能
+[/TABLE]
+[P][Normal] 图5-1：登录与引导状态流转图
+[P][Heading 2] 5.2 记账模块（REC）
+[P][Normal] 记账模块是橘记的核心功能，支持手动记账与分类管理。模块实现完整的收支记录流程，包含前端校验、云函数二次校验、防抖限流等多层保护机制。
+[P][Normal] 表 FR-REC-01：新增账单
+[TABLE 14]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-01 | 新增账单 | M | 用户在记账页点击保存 | type, amount, category, date, note, photoUrl, mood | 前端 validate.js 校验 → bills.create 云函数二次校验 → 写入 bills 集合 | 账单记录写入成功 | type∈{expense,income}；amount>0 且 ≤99999999.99；category≤20 字非空；date=YYYY-MM-DD；note≤200 字
+[/TABLE]
+[P][Normal] 表2：编辑账单
+[TABLE 15]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-02 | 编辑账单 | M | 用户在详情页点击编辑 | billId（通过 globalData._editBillId 传递） | Detail 页设置 _editBillId → switchTab 到 Record 页 → onShow 检测并加载账单 → 修改后保存 | 更新后的账单 | switchTab 不支持传参，通过 globalData 桥接；保存后清除 _editBillId
+[/TABLE]
+[P][Normal] 表3：删除账单
+[TABLE 16]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则 | 异常处理 | 验收标准
+FR-REC-03 | 删除账单 | M | 用户在详情页或流水列表长按 | billId | 二次确认弹窗 → 调用 bills.delete 云函数 → 删除云端记录 + 关联照片 | 删除成功，列表刷新 | 必须二次确认；同时删除云存储中的 photoUrl 文件 | 删除失败提示用户 | 账单从列表和统计中消失
+[/TABLE]
+[P][Normal] 表 FR-REC-04：收支模式切换
+[TABLE 17]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-04 | 收支模式切换 | M | 用户在记账页切换支出/收入 | 模式选择 | 切换 type 标志，动态加载对应分类网格（支出 8 类 / 收入 6 类） | 分类列表更新 | 支出预设 8 类：餐饮/交通/购物/娱乐/学习/日用/医疗/其他；收入 6 类：工资/兼职/理财/红包/退款/其他
+[/TABLE]
+[P][Normal] 表5：自创分类
+[TABLE 18]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-05 | 自创分类 | S | 用户点击"+"添加分类 | 分类名称 + emoji 图标 | 名称≤10 字 + emoji≤2 字校验 → 写入 users.customCategories（{name, icon}） | 新分类出现在分类网格中 | 名称不可与已有分类重复；名称和 emoji 长度限制
+[/TABLE]
+[P][Normal] 表 FR-REC-06：删除自定义分类
+[TABLE 19]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-06 | 删除自定义分类 | S | 用户长按自定义分类 | category id | 二次确认 → 从 customCategories 中移除 → 该分类下账单自动归入"其他" | 分类删除，账单分类重归 | 仅限自定义分类可删除，预设分类不可删
+[/TABLE]
+[P][Normal] 表 FR-REC-07：心情/照片/备注录入
+[TABLE 20]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-07 | 心情/照片/备注录入 | S | 用户在记账页选择附加信息 | mood emoji, photoUrl, note text | 照片通过 chooseImage → compressImage → 云存储上传；备注≤200 字；心情为预设 emoji 选择 | 附加信息保存至 bill 记录 | photoUrl 须 cloud:// 前缀；note≤200 字
+[/TABLE]
+[P][Normal] 表 FR-REC-08：日期选择
+[TABLE 21]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-08 | 日期选择 | M | 用户在记账页点击日期 | date 选择 | 日期选择器，默认当天；格式 YYYY-MM-DD | 日期字段写入账单 | 不可选择未来日期；格式必须 YYYY-MM-DD
+[/TABLE]
+[P][Normal] 表 FR-REC-09：频率限制
+[TABLE 22]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-REC-09 | 频率限制 | M | 用户频繁操作 | — | rateLimiter.js 实现：保存按钮 3s 防抖 + 单日 500 笔上限 | 超频操作被拦截 | 3s 内不可重复提交；单日不可超过 500 笔
+[/TABLE]
+[P][Normal] 图5-2：记账主流程图
+[P][Heading 2] 5.3 首页仪表盘模块（HOME）
+[P][Normal] 首页仪表盘为用户打开小程序后的第一视图，提供今日/昨日消费概览、预算进度、账单流水等核心信息的快速展示，数据在每次 onShow 时拉取确保实时性。
+[P][Normal] 表 FR-HOME-01：今日/昨日消费概览
+[TABLE 23]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-HOME-01 | 今日/昨日消费概览 | M | 用户进入首页 | — | hero 卡片展示今日消费总额与昨日消费总额双数字，数据从 bills 集合实时查询 | 今日/昨日消费金额 | 金额以元为单位，保留两位小数；无数据时显示 0.00
+[/TABLE]
+[P][Normal] 表 FR-HOME-02：预算进度条
+[TABLE 24]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-HOME-02 | 预算进度条 | M | 用户进入首页 | — | 展示预算使用进度条，三态显示：未设预算时引导设置、正常时蓝色、超支时红色 | 进度条视觉状态 | 三态：未设（灰色引导态）/ 正常（蓝色）/ 超支（红色 + 超支提示）
+[/TABLE]
+[P][Normal] 表 FR-HOME-03：账单流水按日分组
+[TABLE 25]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-HOME-03 | 账单流水按日分组 | M | 用户进入首页 | — | 近 30 条账单按日期分组展示，每组显示日期 + 周几 + 当日净额（收入-支出） | 分组账单列表 | 每组含日期标题行和账单明细行；净额正数为绿色，负数为红色
+[/TABLE]
+[P][Normal] 表 FR-HOME-04：季节标签
+[TABLE 26]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-HOME-04 | 季节标签 | C | 根据当前月份 | — | 根据月份自动显示对应季节标签（春/夏/秋/冬），纯装饰性 | 季节标签文字 | 3-5 月春、6-8 月夏、9-11 月秋、12-2 月冬
+[/TABLE]
+[P][Normal] 表 FR-HOME-05：账单长按删除/进详情
+[TABLE 27]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-HOME-05 | 账单长按删除/进详情 | M | 用户长按或点击账单行 | billId | 长按弹出删除确认；点击进入详情页（Detail 页） | 删除操作或页面跳转 | 长按触发删除需二次确认；点击跳转 wx.navigateTo 到 Detail 页
+[/TABLE]
+[P][Heading 2] 5.4 统计分析模块（STAT）
+[P][Normal] 统计分析模块提供月度收支可视化与 AI 智能评论，帮助用户直观了解消费结构与趋势。模块包含消费收入数据卡片、6 月趋势图与 AI 俏皮评论三大功能区。
+[P][Normal] 表 FR-STAT-01：月份切换
+[TABLE 28]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-STAT-01 | 月份切换 | M | 用户点击月份选择器 | month 参数 | 切换查询月份，重新加载该月 bills 数据并更新图表 | 图表与数据更新 | 默认显示当月；不可选择未来月份
+[/TABLE]
+[P][Normal] 表 FR-STAT-02：收支 segment 切换
+[TABLE 29]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-STAT-02 | 收支 segment 切换 | M | 用户切换支出/收入标签 | type 参数 | 切换统计维度，重新计算对应类型的分类占比与趋势 | 图表更新为对应类型数据 | 支出/收入独立统计
+[/TABLE]
+[P][Normal] 表 FR-STAT-03：分类占比甜甜圈图
+[TABLE 30]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-STAT-03 | 分类占比甜甜圈图 | M | 进入统计页 | — | 纯 CSS 实现甜甜圈图，展示 Top 8 分类占比，图例标注分类名与金额 | 甜甜圈图 + 图例 | Top 8 分类按金额降序；其余归入"其他"；纯 CSS 实现（非 Canvas）
+[/TABLE]
+[P][Normal] 表 FR-STAT-04：6 月收支趋势图
+[TABLE 31]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-STAT-04 | 6 月收支趋势图 | S | 进入统计页 | — | 纯 CSS 柱状图展示近 6 个月收支趋势，当前月高亮显示 | 6 月趋势柱状图 | 纯 CSS 实现；当前月高亮；月份标签正确
+[/TABLE]
+[P][Normal] 表 FR-STAT-05：AI 俏皮评论
+[TABLE 32]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-STAT-05 | AI 俏皮评论 | S | 进入统计页 | periodKey（月/周/昨日标识） | 调用 wx.cloud.extend.AI.createModel("hunyuan-v3").streamText()；串行执行 3 条，每条间隔 1s；periodKey 缓存避免重复生成 | 3 条 AI 评论文字 | 模型 hy3-preview；temperature 0.2；串行 +1s 间隔；429 指数退避；periodKey 缓存
+[/TABLE]
+[P][Normal] 【待插图 图5-3：统计页数据可视化示意】
+[P][Heading 2] 5.5 预算管理模块（BUD）
+[P][Normal] 预算管理模块帮助用户设定月度消费目标，通过可视化进度环、消费节奏卡、Top3 分类等功能引导用户合理消费。预算数据按月存储，每月份一条记录。
+[P][Normal] 表 FR-BUD-01：设置/修改月预算
+[TABLE 33]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-BUD-01 | 设置/修改月预算 | M | 用户在预算页输入预算金额 | amount（预算金额） | 调用 budgets 云函数，按月 upsert（一月一条文档）；amount>0 且 ≤999999 | 预算记录写入/更新 | 按月 upsert（month 字段为 YYYY-MM）；amount>0 且 ≤999999
+[/TABLE]
+[P][Normal] 表 FR-BUD-02：预算进度环
+[TABLE 34]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-BUD-02 | 预算进度环 | M | 进入预算页 | — | SVG/Canvas 进度环展示已消费/预算总额比例，中心显示剩余金额 | 进度环视觉 + 金额数字 | 进度环颜色随使用比例变化；中心显示剩余金额
+[/TABLE]
+[P][Normal] 表 FR-BUD-03：6 月达成率历史
+[TABLE 35]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-BUD-03 | 6 月达成率历史 | S | 进入预算页 | — | 展示近 6 个月的预算达成率（消费/预算 × 100%） | 达成率列表/图表 | 每月一条达成率记录；超 100% 标红
+[/TABLE]
+[P][Normal] 表 FR-BUD-04：消费节奏卡
+[TABLE 36]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-BUD-04 | 消费节奏卡 | S | 进入预算页 | — | 展示日均预算、今日消费、剩余天数、建议日均消费 | 节奏卡四组数字 | 日均预算 = 预算总额 / 当月天数；建议日均 = 剩余预算 / 剩余天数
+[/TABLE]
+[P][Normal] 表 FR-BUD-05：Top3 消费分类
+[TABLE 37]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-BUD-05 | Top3 消费分类 | S | 进入预算页 | — | 展示当月消费金额最高的 3 个分类及占比 | Top3 分类列表 | 按金额降序取前 3
+[/TABLE]
+[P][Normal] 表 FR-BUD-06：未设预算空态
+[TABLE 38]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-BUD-06 | 未设预算空态 | S | 未设预算时进入预算页 | — | 展示引导空态页面，提示用户设置月度预算 | 空态引导 UI | 含设置入口按钮
+[/TABLE]
+[P][Heading 2] 5.6 个人中心模块（PROF）
+[P][Normal] 个人中心模块集成用户资料管理、记账足迹、AI 生成内容、数据导入导出与账户清除等功能。涉及隐私的操作均需前置隐私授权守卫。
+[P][Normal] 表 FR-PROF-01：头像/昵称编辑
+[TABLE 39]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-01 | 头像/昵称编辑 | M | 用户在个人中心点击头像/昵称 | 新头像图片 / 新昵称文本 | 头像：editImage→compressImage→云存储上传→getTempFileURL；昵称：直接更新 users 集合 | 资料更新成功 | 头像需 privacy 授权；昵称不可为空
+[/TABLE]
+[P][Normal] 表 FR-PROF-02：性别设置
+[TABLE 40]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-02 | 性别设置 | S | 用户在个人中心选择性别 | gender 值 | 更新 users 集合 gender 字段 | 设置成功 | 可选值：male/female/unset
+[/TABLE]
+[P][Normal] 表 FR-PROF-03：记账足迹
+[TABLE 41]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-03 | 记账足迹 | S | 用户在个人中心查看足迹 | — | 展示记账天数、总笔数、总金额等统计信息 | 足迹统计数据 | 数据从 bills 集合实时聚合
+[/TABLE]
+[P][Normal] 表 FR-PROF-04：AI 信件生成
+[TABLE 42]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-04 | AI 信件生成 | S | 用户点击生成信件 | — | 调用 aiPoster 云函数，基于用户当月消费数据生成 150-180 字个性化信件；ai_usage_limits 记录每日使用次数 | AI 信件文字 | 150-180 字限；30 次/日限额；失败返回固定兜底信件
+[/TABLE]
+[P][Normal] 表 FR-PROF-05：每日消费称号
+[TABLE 43]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-05 | 每日消费称号 | C | 用户点击查看称号 | — | 调用 aiPoster 云函数生成当日消费称号；8 次/日限额 | 称号文字 + 弹窗展示 | 8 次/日限额；ai_usage_limits 计数
+[/TABLE]
+[P][Normal] 表 FR-PROF-06：JSON 数据导出
+[TABLE 44]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-06 | JSON 数据导出 | M | 用户点击导出数据 | — | 需 privacy 授权 → dataMigration 云函数导出全部 bills → wx.getFileSystemManager().writeFile → shareFileMessage 分享 | JSON 文件发送到微信聊天 | 需 privacy 授权前置；导出全部 bills 数据
+[/TABLE]
+[P][Normal] 表 FR-PROF-07：JSON 数据导入
+[TABLE 45]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-07 | JSON 数据导入 | S | 用户通过微信聊天选择 JSON 文件 | chooseMessageFile 选择的 JSON 文件 | 解析 JSON → dataMigration 云函数分批写入（20 条/批） | 导入成功提示 | 需 privacy 授权；分批 20 条避免超时
+[/TABLE]
+[P][Normal] 表 FR-PROF-08：账户数据清除
+[TABLE 46]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-PROF-08 | 账户数据清除 | S | 用户点击清除数据 | — | 二次确认 → clearUserData 云函数（服务端按 _openid 删除 bills/budgets/文件 + 重置 users） | 数据清除成功 | 需 privacy 授权；服务端执行，不可逆
+[/TABLE]
+[P][Heading 2] 5.7 AI 智能中枢模块（AI · 创新亮点）
+[P][Normal] AI 智能中枢是橘记的差异化核心功能，通过接入腾讯混元大模型实现自然语言对话记账与智能闲聊。本模块是评审加分项，需最详细展开。
+[P][Normal] 表 FR-AI-01：对话式记账解析
+[TABLE 47]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-AI-01 | 对话式记账解析 | M | 用户在对话框输入自然语言 | 自然语言文本 + 当前分类列表 + 今日日期 | 调用 aiChat 云函数 → 混元 generateText（temperature 0.2）→ 返回 {intent, reply, bills}；三级容错解析：剥 ```json``` 包裹→截取 {…}→JSON.parse 失败回退闲聊 | 结构化账单数组 bills[] | 单消息≤8 条×300 字；解析账单≤10 笔；分类优先映射已有分类；新分类默认不勾→归"其他"+备注原词
+[/TABLE]
+[P][Normal] 表 FR-AI-02：待确认账单卡
+[TABLE 48]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-AI-02 | 待确认账单卡 | M | AI 解析返回 bills 数组 | bills[] 结构化数据 | 逐笔展示卡片：分类标签（可点选切换）、金额输入框、备注输入框、删除按钮、新分类勾选框 | 待确认账单卡 UI | 每笔独立卡片；新分类默认未勾选；金额可编辑
+[/TABLE]
+[P][Normal] 表 FR-AI-03：新分类勾选创建
+[TABLE 49]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-AI-03 | 新分类勾选创建 | S | 用户勾选新分类复选框 | isNewCategory 标志 | 勾选后该笔账单的分类将被创建为 customCategories 新条目（默认 emoji 🍊 或 🏷️） | 新分类创建成功 | 默认 emoji 🍊/🏷️；分类名取 AI 返回的原始分类词
+[/TABLE]
+[P][Normal] 表 FR-AI-04：批量写入
+[TABLE 50]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-AI-04 | 批量写入 | M | 用户点击确认 | 已确认的 bills[] | 调用 bills.batchCreate 云函数批量写入（绕开 3s 节流） | 全部账单写入成功 | 使用 batchCreate 绕开 rateLimiter 3s 防抖限制
+[/TABLE]
+[P][Normal] 表 FR-AI-05：小橘聊天闲聊
+[TABLE 51]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-AI-05 | 小橘聊天闲聊 | S | 用户发送非记账类消息 | 自然语言文本 | 调用 aiChat 云函数，intent 为 chat，返回 AI 回复文字 | AI 回复文字 | 单消息≤300 字；可回答天气问题（需 TENCENT_LBS_KEY）
+[/TABLE]
+[P][Normal] 表 FR-AI-06：内容安全兜底
+[TABLE 52]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-AI-06 | 内容安全兜底 | M | 所有 AI 输入/输出 | 用户文本 + AI 回复 | 双层审核：本地正则 BLOCK_PATTERNS（7 类：赌博/色情/毒品/武器/诈骗/自残/恐怖）+ wx.cloud.openapi.security.msgSecCheck v2 | 安全/拦截结果 | BLOCK_PATTERNS 7 类 + 2500 字长度上限；本地正则先过滤，再调 msgSecCheck
+[/TABLE]
+[P][Normal] 图5-4：对话式记账需求场景图（核心）
+[P][Normal] 图5-5：待确认账单卡界面示意
+[P][Heading 2] 5.8 主题系统模块（THEME）
+[P][Normal] 主题系统模块提供个性化视觉体验，支持 4 套预设主题与用户自定义主题，通过 CSS 变量注入实现全应用即时换肤。
+[P][Normal] 表 FR-THEME-01：切换 4 套预设主题
+[TABLE 53]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-THEME-01 | 切换 4 套预设主题 | S | 用户在主题页选择预设主题 | themeId | 切换至对应主题，通过 getThemeStyleString() 注入 60+ CSS 变量到最外层 view 的 style 属性 | 全应用主题切换 | 4 套预设：清爽薄荷/温馨玫瑰/夜猫子/蓝天白云；切换经 EventBus themeChanged 广播
+[/TABLE]
+[P][Normal] 表 FR-THEME-02：自定义调色板取色
+[TABLE 54]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-THEME-02 | 自定义调色板取色 | C | 用户进入自定义主题 | 8 色值 | 提供 8 色调色板选择器，用户逐一选色 | 自定义配色方案 | 8 色覆盖主色/辅色/强调色/浅色/背景等
+[/TABLE]
+[P][Normal] 表 FR-THEME-03：用户命名主题 CRUD
+[TABLE 55]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则
+FR-THEME-03 | 用户命名主题 CRUD | C | 用户创建/切换/删除命名主题 | themeName + 配色方案 | 支持创建（≤5 个命名主题）、切换、长按删除；存储在 users 集合 | 主题 CRUD 成功 | 最多 5 个命名主题；支持创建/切换/长按删除
+[/TABLE]
+[P][Normal] 表 FR-THEME-04：主题即时生效
+[TABLE 56]
+需求编号 | 需求名称 | 优先级 | 触发条件 | 输入 | 处理逻辑 | 输出 | 业务规则 | 异常处理 | 验收标准
+FR-THEME-04 | 主题即时生效 | M | 主题切换操作 | themeChanged 事件 | EventBus 广播 themeChanged → 各页面 onShow 中 _onThemeChanged 监听 → applyTheme() + setData({themeStyle}) | 全应用主题即时更新 | 所有页面均注册 themeChanged 监听；onShow 中重新应用主题 | 某页面监听失败不影响其他页面 | 切换后所有页面即时更新，无需重启
+[/TABLE]
+[P][Heading 1] 第 6 章 数据需求
+[P][Heading 2] 6.1 数据实体清单
+[P][Normal] 橘记系统需持久化以下 5 类数据实体：
+[P][Normal] 表 6-1：数据实体清单
+[TABLE 57]
+实体名称 | 集合名 | 主要职责 | 存储位置
+账单 | bills | 记录每笔收支的完整信息 | CloudBase 云数据库
+预算 | budgets | 存储每月预算设置（一月一条） | CloudBase 云数据库
+用户资料 | users | 存储昵称、头像、自定义分类、主题等 | CloudBase 云数据库
+AI 用量 | ai_usage_limits | 按日按功能记录 AI 调用次数 | CloudBase 云数据库
+客户端日志 | client_logs | 存储客户端异常监控报告 | CloudBase 云数据库
+[/TABLE]
+[P][Heading 2] 6.2 数据约束需求
+[P][Normal] 表 6-2：数据约束需求
+[TABLE 58]
+实体 | 关键字段 | 约束
+bills | amount | 数值型，> 0 且 ≤ 99999999.99，保留两位小数
+bills | type | 枚举：expense | income
+bills | category | 字符串，≤ 20 字，非空
+bills | date | 字符串，格式 YYYY-MM-DD
+bills | note | 字符串，≤ 200 字
+bills | photoUrl | 云存储路径，cloud:// 前缀
+budgets | month | 字符串，格式 YYYY-MM，唯一（每用户每月一条）
+budgets | amount | 数值型，> 0 且 ≤ 999999
+users | nickname | 字符串，非空
+users | customCategories | 数组，每项 {name: ≤10 字, icon: ≤2 字 emoji}
+ai_usage_limits | doc id | 格式 openid_date_feature，每日每功能计数
+client_logs | message | 截断存储，防止超大日志
+[/TABLE]
+[P][Heading 2] 6.3 数据权限需求
+[P][Normal] 所有 5 个集合均配置为"仅创建者可读写"安全规则。用户数据通过 _openid 实现隔离，任何用户只能访问自己创建的数据文档。云函数中通过 event.userInfo.openid 获取调用者身份，执行所有权校验。
+[P][Heading 2] 6.4 数据生命周期需求
+[P][List Bullet] 备份：支持通过 dataMigration 云函数导出全部数据为 JSON 文件
+[P][List Bullet] 导入：支持通过 chooseMessageFile 导入 JSON 格式历史数据，分批 20 条写入
+[P][List Bullet] 导出：支持 CSV 格式导出（exportBills 云函数）至云存储并分享
+[P][List Bullet] 清除：clearUserData 云函数按 _openid 删除全部 bills/budgets/文件并重置 users
+[P][List Bullet] 日志：client_logs 建议定期清理 30 天前的日志数据
+[P][Normal] 图6-1：数据实体关系图
+[P][Heading 1] 第 7 章 外部接口需求
+[P][Heading 2] 7.1 用户界面需求
+[P][List Bullet] 橘记共 10 个页面 + 自定义毛玻璃 TabBar（5 列），界面设计遵循以下约束：
+[P][List Bullet] 所有页面最外层 view 必须绑定 style="{{themeStyle}}" 注入 60+ CSS 变量
+[P][List Bullet] 使用 rpx 响应式单位适配不同屏幕尺寸
+[P][List Bullet] 自定义 TabBar 为毛玻璃效果，5 列分布（首页/统计/记账/预算/个人）
+[P][List Bullet] 全局设计语言：新拟态（Neumorphic）风格，圆角卡片、双阴影系统
+[P][Heading 2] 7.2 软件接口需求
+[P][Normal] 表 7-1：外部软件接口清单
+[TABLE 59]
+接口名称 | 提供方 | 用途 | 调用方式
+微信登录 API | 微信平台 | 获取用户 openid | wx.login → quickstartFunctions 云函数
+混元大模型 API | 腾讯 AI | 自然语言解析与对话 | wx.cloud.extend.AI / aiChat 云函数
+CloudBase 数据库 | 腾讯云 | 数据 CRUD | wx.cloud.database()
+CloudBase 云存储 | 腾讯云 | 文件上传下载 | wx.cloud.uploadFile / getTempFileURL
+CloudBase 云函数 | 腾讯云 | 服务端逻辑 | wx.cloud.callFunction()
+内容安全 msgSecCheck | 微信平台 | 文本安全审核 | wx.cloud.openapi.security.msgSecCheck v2
+[/TABLE]
+[P][Heading 2] 7.3 通信接口需求
+[P][List Bullet] 所有通信通过 HTTPS 加密传输
+[P][List Bullet] 云函数调用使用 wx.cloud.callFunction()，支持同步与异步模式
+[P][List Bullet] AI 流式响应使用 wx.cloud.extend.AI 的 streamText() 方法
+[P][List Bullet] 客户端与云函数间通过 JSON 格式交换数据
+[P][Heading 2] 7.4 硬件接口需求
+[P][Normal] 橘记涉及以下设备硬件接口：
+[P][List Bullet] 相机：用于头像拍摄和账单拍照，需 wx.chooseMedia 授权
+[P][List Bullet] 相册：用于头像选择和账单照片选取，需相册读取权限
+[P][List Bullet] 定位（可选）：天气功能需要，需 getLocation 授权，需
+[P][List Bullet] TENCENT_LBS_KEY 环境变量
+[P][Normal] 图7-1：系统外部接口上下文图
+[P][Heading 1] 第 8 章 非功能性需求
+[P][Heading 2] 8.1 性能需求
+[P][Normal] 表 8-1：性能需求
+[TABLE 60]
+编号 | 需求描述 | 度量指标
+NFR-PERF-01 | 页面首次加载响应 | ≤ 2s（WiFi 环境）
+NFR-PERF-02 | AI 对话解析时延 | ≤ 5s（含模型推理）
+NFR-PERF-03 | 账单列表分页加载 | dbPager getAll() 自动分页，每页 ≤ 20 条
+NFR-PERF-04 | 组件按需加载 | lazyCodeLoading: requiredComponents
+NFR-PERF-05 | 读写分离降负载 | 客户端直读数据库，写操作经云函数
+[/TABLE]
+[P][Heading 2] 8.2 安全需求
+[P][Normal] 表 8-2：安全需求
+[TABLE 61]
+编号 | 需求描述 | 度量指标
+NFR-SEC-01 | openid 服务端获取 | 客户端不可直接获取 openid，通过云函数
+NFR-SEC-02 | 数据权限隔离 | 所有集合"仅创建者可读写"，_openid 隔离
+NFR-SEC-03 | 内容安全双层审核 | 本地正则 BLOCK_PATTERNS + msgSecCheck v2
+NFR-SEC-04 | 写操作所有权校验 | 云函数校验操作者 openid 与数据所有者一致
+[/TABLE]
+[P][Heading 2] 8.3 隐私合规需求
+[P][Normal] 表 8-3：隐私合规需求
+[TABLE 62]
+编号 | 需求描述 | 度量指标
+NFR-PRIV-01 | __usePrivacyCheck__ 开启 | 隐私授权弹窗机制已启用
+NFR-PRIV-02 | 隐私敏感 API 前置授权 | 相机/相册/文件/定位 API 前调用 requirePrivacyAuthorization
+NFR-PRIV-03 | 协议入口可查 | 个人中心提供隐私协议查看入口
+NFR-PRIV-04 | 未授权降级 | 拒绝授权时功能降级，不崩溃
+[/TABLE]
+[P][Heading 2] 8.4 可用性需求
+[P][Normal] 表 8-4：可用性需求
+[TABLE 63]
+编号 | 需求描述 | 度量指标
+NFR-USAB-01 | AI 失败统一回退 | FALLBACK_REPLY 固定回复
+NFR-USAB-02 | 天气无 LBS key 降级 | 不展示天气信息，不报错
+NFR-USAB-03 | 头像加载失败 fallback | 展示默认头像
+NFR-USAB-04 | 空态页面引导 | 各模块无数据时展示引导页
+[/TABLE]
+[P][Heading 2] 8.5 可维护性需求
+[P][List Bullet] 采用微信原生 quad-file 结构（.wxml / .wxss / .js / .json），标准清晰
+[P][List Bullet] utils/ 目录解耦工具函数（theme、eventBus、rateLimiter、validate 等）
+[P][List Bullet] 纯 JS 实现，无 TypeScript，无构建工具，降低维护门槛
+[P][List Bullet] 云函数独立部署，每个函数职责单一
+[P][Heading 2] 8.6 兼容性需求
+[P][List Bullet] 基础库 ≥ 3.16.0
+[P][List Bullet] 支持 iOS 和 Android 双平台
+[P][List Bullet] 不支持小程序 IDE 预览以外的 Web 端
+[P][Heading 1] 第 9 章 需求优先级与验收标准
+[P][Heading 2] 9.1 优先级矩阵
+[P][Normal] 以下汇总全部功能需求的优先级与实现状态：
+[P][Normal] 表 9-1：需求优先级矩阵
+[TABLE 64]
+需求编号 | 需求名称 | 优先级 | 实现状态
+FR-AUTH-01 | 微信静默登录 | M | 已实现
+FR-AUTH-02 | 隐私协议门禁 | M | 已实现
+FR-AUTH-03 | 首启 4 屏引导 | S | 已实现
+FR-AUTH-04 | 退出登录 | S | 已实现
+FR-REC-01 | 新增账单 | M | 已实现
+FR-REC-02 | 编辑账单 | M | 已实现
+FR-REC-03 | 删除账单 | M | 已实现
+FR-REC-04 | 收支模式切换 | M | 已实现
+FR-REC-05 | 自创分类 | S | 已实现
+FR-REC-06 | 删除自定义分类 | S | 已实现
+FR-REC-07 | 心情/照片/备注录入 | S | 已实现
+FR-REC-08 | 日期选择 | M | 已实现
+FR-REC-09 | 频率限制 | M | 已实现
+FR-HOME-01 | 今日/昨日消费概览 | M | 已实现
+FR-HOME-02 | 预算进度条 | M | 已实现
+FR-HOME-03 | 账单流水按日分组 | M | 已实现
+FR-HOME-04 | 季节标签 | C | 已实现
+FR-HOME-05 | 账单长按删除/进详情 | M | 已实现
+FR-STAT-01 | 月份切换 | M | 已实现
+FR-STAT-02 | 收支 segment 切换 | M | 已实现
+FR-STAT-03 | 分类占比甜甜圈图 | M | 已实现
+FR-STAT-04 | 6 月收支趋势图 | S | 已实现
+FR-STAT-05 | AI 俏皮评论 | S | 已实现
+FR-BUD-01 | 设置/修改月预算 | M | 已实现
+FR-BUD-02 | 预算进度环 | M | 已实现
+FR-BUD-03 | 6 月达成率历史 | S | 已实现
+FR-BUD-04 | 消费节奏卡 | S | 已实现
+FR-BUD-05 | Top3 消费分类 | S | 已实现
+FR-BUD-06 | 未设预算空态 | S | 已实现
+FR-PROF-01 | 头像/昵称编辑 | M | 已实现
+FR-PROF-02 | 性别设置 | S | 已实现
+FR-PROF-03 | 记账足迹 | S | 已实现
+FR-PROF-04 | AI 信件生成 | S | 已实现
+FR-PROF-05 | 每日消费称号 | C | 已实现
+FR-PROF-06 | JSON 数据导出 | M | 已实现
+FR-PROF-07 | JSON 数据导入 | S | 已实现
+FR-PROF-08 | 账户数据清除 | S | 已实现
+FR-AI-01 | 对话式记账解析 | M | 已实现
+FR-AI-02 | 待确认账单卡 | M | 已实现
+FR-AI-03 | 新分类勾选创建 | S | 已实现
+FR-AI-04 | 批量写入 | M | 已实现
+FR-AI-05 | 小橘聊天闲聊 | S | 已实现
+FR-AI-06 | 内容安全兜底 | M | 已实现
+FR-THEME-01 | 切换 4 套预设主题 | S | 已实现
+FR-THEME-02 | 自定义调色板取色 | C | 已实现
+FR-THEME-03 | 用户命名主题 CRUD | C | 已实现
+FR-THEME-04 | 主题即时生效 | M | 已实现
+FR-SEC-01 | 内容安全审核 | M | 已实现
+FR-SEC-02 | 隐私授权守卫 | M | 已实现
+FR-SEC-03 | 异常监控上报 | S | 已实现
+[/TABLE]
+[P][Heading 2] 9.2 验收准则
+[P][Normal] 功能验收：
+[P][List Bullet] 所有 M 级（Must）需求的验收标准必须全部通过
+[P][List Bullet] S 级（Should）需求的验收标准应全部通过
+[P][List Bullet] C 级（Could）需求建议通过
+[P][Normal] 非功能验收：
+[P][List Bullet] 性能指标：页面加载 ≤ 2s，AI 解析 ≤ 5s
+[P][List Bullet] 安全指标：双层内容安全审核正常工作，数据隔离有效
+[P][List Bullet] 隐私指标：隐私授权守卫覆盖所有敏感 API
+[P][Heading 2] 9.3 需求追溯说明
+[P][Normal] 每条功能需求（FR 编号）与以下文档形成追溯关系：
+[P][List Bullet] 功能模块 → 第 3 章功能清单总表
+[P][List Bullet] 用例 → 第 4 章用例模型
+[P][List Bullet] 实现细节 → 《橘记微信小程序详细设计说明书》对应章节
+[P][List Bullet] 测试用例 → 后续《测试计划》
+[P][Heading 1] 附录 A 功能需求索引表
+[P][Normal] 以下为全部 FR 编号的快速检索索引：
+[P][Normal] 附录表 A-1：功能需求索引
+[TABLE 65]
+需求编号 | 需求名称 | 模块 | 优先级 | 所在章节
+FR-AUTH-01 | 微信静默登录 | AUTH | M | 
+FR-AUTH-02 | 隐私协议门禁 | AUTH | M | 
+FR-AUTH-03 | 首启 4 屏引导 | AUTH | S | 
+FR-AUTH-04 | 退出登录 | AUTH | S | 
+FR-REC-01 | 新增账单 | REC | M | 
+FR-REC-02 | 编辑账单 | REC | M | 
+FR-REC-03 | 删除账单 | REC | M | 
+FR-REC-04 | 收支模式切换 | REC | M | 
+FR-REC-05 | 自创分类 | REC | S | 
+FR-REC-06 | 删除自定义分类 | REC | S | 
+FR-REC-07 | 心情/照片/备注录入 | REC | S | 
+FR-REC-08 | 日期选择 | REC | M | 
+FR-REC-09 | 频率限制 | REC | M | 
+FR-HOME-01 | 今日/昨日消费概览 | HOME | M | 
+FR-HOME-02 | 预算进度条 | HOME | M | 
+FR-HOME-03 | 账单流水按日分组 | HOME | M | 
+FR-HOME-04 | 季节标签 | HOME | C | 
+FR-HOME-05 | 账单长按删除/进详情 | HOME | M | 
+FR-STAT-01 | 月份切换 | STAT | M | 
+FR-STAT-02 | 收支 segment 切换 | STAT | M | 
+FR-STAT-03 | 分类占比甜甜圈图 | STAT | M | 
+FR-STAT-04 | 6 月收支趋势图 | STAT | S | 
+FR-STAT-05 | AI 俏皮评论 | STAT | S | 
+FR-BUD-01 | 设置/修改月预算 | BUD | M | 
+FR-BUD-02 | 预算进度环 | BUD | M | 
+FR-BUD-03 | 6 月达成率历史 | BUD | S | 
+FR-BUD-04 | 消费节奏卡 | BUD | S | 
+FR-BUD-05 | Top3 消费分类 | BUD | S | 
+FR-BUD-06 | 未设预算空态 | BUD | S | 
+FR-PROF-01 | 头像/昵称编辑 | PROF | M | 
+FR-PROF-02 | 性别设置 | PROF | S | 
+FR-PROF-03 | 记账足迹 | PROF | S | 
+FR-PROF-04 | AI 信件生成 | PROF | S | 
+FR-PROF-05 | 每日消费称号 | PROF | C | 
+FR-PROF-06 | JSON 数据导出 | PROF | M | 
+FR-PROF-07 | JSON 数据导入 | PROF | S | 
+FR-PROF-08 | 账户数据清除 | PROF | S | 
+FR-AI-01 | 对话式记账解析 | AI | M | 
+FR-AI-02 | 待确认账单卡 | AI | M | 
+FR-AI-03 | 新分类勾选创建 | AI | S | 
+FR-AI-04 | 批量写入 | AI | M | 
+FR-AI-05 | 小橘聊天闲聊 | AI | S | 
+FR-AI-06 | 内容安全兜底 | AI | M | 
+FR-THEME-01 | 切换 4 套预设主题 | THEME | S | 
+FR-THEME-02 | 自定义调色板取色 | THEME | C | 
+FR-THEME-03 | 用户命名主题 CRUD | THEME | C | 
+FR-THEME-04 | 主题即时生效 | THEME | M | 
+FR-SEC-01 | 内容安全审核 | SEC | M | 
+FR-SEC-02 | 隐私授权守卫 | SEC | M | 
+FR-SEC-03 | 异常监控上报 | SEC | S | 
+[/TABLE]
+[P][Heading 1] 附录 B 术语表
+[P][Normal] 附录表 B-1：术语表
+[TABLE 66]
+术语/缩略语 | 含义
+FR | Functional Requirement，功能需求
+NFR | Non-Functional Requirement，非功能性需求
+UC | Use Case，用例
+M (Must) | 必须实现，核心功能
+S (Should) | 应该实现，重要功能
+C (Could) | 可选实现，锦上添花
+CloudBase | 腾讯云开发 Serverless 平台
+Serverless | 无服务器架构
+openid | 微信用户唯一标识
+混元大模型 | 腾讯 AI 大语言模型（hunyuan-v3）
+rpx | 微信小程序响应式像素单位
+msgSecCheck | 微信内容安全审核接口 v2
+BLOCK_PATTERNS | 本地内容安全正则规则集
+EventBus | 事件总线，用于跨页面通信
+TOC | Table of Contents，目录
+[/TABLE]

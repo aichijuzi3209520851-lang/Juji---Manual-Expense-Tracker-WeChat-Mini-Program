@@ -38,7 +38,8 @@ Page({
     groupedBills: [],
     overviewFailed: false,
     season: SEASONS[new Date().getMonth()],
-    themeStyle: getThemeStyleString()
+    themeStyle: getThemeStyleString(),
+    showBudgetSheet: false
   },
 
   onLoad() {
@@ -193,7 +194,16 @@ Page({
   },
 
   goBudget() {
+    this.setData({ showBudgetSheet: false })
     wx.switchTab({ url: '/pages/budget/budget' })
+  },
+
+  openBudgetSheet() {
+    this.setData({ showBudgetSheet: true })
+  },
+
+  closeBudgetSheet() {
+    this.setData({ showBudgetSheet: false })
   },
 
   openDetail(e) {

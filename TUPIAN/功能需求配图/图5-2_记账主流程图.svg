@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1320" viewBox="0 0 1800 1320">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1320" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 5-2  记账主流程图</text>
+<text x="1403" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Manual Billing Main Process</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="610" y="170" width="580" height="105" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="170" width="10" height="105" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="638" y="217" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">进入记账页</text>
+<text x="638" y="256" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">record onShow</text>
+<text x="638" y="284" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">加载主题和分类</text>
+<rect x="610" y="325" width="580" height="105" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="325" width="10" height="105" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="638" y="372" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">选择收支模式</text>
+<text x="638" y="411" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">expense / income</text>
+<text x="638" y="439" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">动态切换分类网格</text>
+<rect x="610" y="480" width="580" height="105" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="480" width="10" height="105" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="638" y="527" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">填写账单信息</text>
+<text x="638" y="566" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">金额、分类、日期</text>
+<text x="638" y="594" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">备注、照片、心情</text>
+<rect x="610" y="635" width="580" height="105" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="635" width="10" height="105" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="638" y="682" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">前端校验</text>
+<text x="638" y="721" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">validateBill()</text>
+<text x="638" y="749" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">金额/日期/备注/照片格式</text>
+<rect x="610" y="790" width="580" height="105" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="790" width="10" height="105" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="638" y="837" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">频率限制</text>
+<text x="638" y="876" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">3s 防抖</text>
+<text x="638" y="904" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">500 笔/日</text>
+<rect x="610" y="945" width="580" height="105" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="945" width="10" height="105" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="638" y="992" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">云函数校验</text>
+<text x="638" y="1031" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">bills.create/update</text>
+<text x="638" y="1059" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">服务端二次校验</text>
+<rect x="610" y="1100" width="580" height="105" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="610" y="1100" width="10" height="105" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="638" y="1147" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">写入 bills</text>
+<text x="638" y="1186" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">返回成功</text>
+<text x="638" y="1214" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">首页和统计刷新</text>
+<line x1="900" y1="285" x2="900" y2="315" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,315 890,299 909,299" fill="#6b7d73"/>
+<line x1="900" y1="440" x2="900" y2="470" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,470 890,454 909,454" fill="#6b7d73"/>
+<line x1="900" y1="595" x2="900" y2="625" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,625 890,609 909,609" fill="#6b7d73"/>
+<line x1="900" y1="750" x2="900" y2="780" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,780 890,764 909,764" fill="#6b7d73"/>
+<line x1="900" y1="905" x2="900" y2="935" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,935 890,919 909,919" fill="#6b7d73"/>
+<line x1="900" y1="1060" x2="900" y2="1090" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,1090 890,1074 909,1074" fill="#6b7d73"/>
+<rect x="135" y="595" width="330" height="130" rx="24" fill="#fff6f6" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="135" y="595" width="10" height="130" fill="#ba1a1a" stroke="#ba1a1a" stroke-width="1"/>
+<text x="163" y="641" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">校验失败</text>
+<text x="163" y="680" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">Toast 提示</text>
+<text x="163" y="708" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">留在当前页面修改</text>
+<rect x="1335" y="595" width="330" height="130" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1335" y="595" width="10" height="130" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1363" y="641" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">提交受限</text>
+<text x="1363" y="680" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">3s 内重复提交</text>
+<text x="1363" y="708" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">或超过 500 笔/日</text>
+<rect x="1335" y="910" width="330" height="130" rx="24" fill="#fff6f6" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1335" y="910" width="10" height="130" fill="#ba1a1a" stroke="#ba1a1a" stroke-width="1"/>
+<text x="1363" y="956" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">云端失败</text>
+<text x="1363" y="995" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">金额/分类/照片非法</text>
+<text x="1363" y="1023" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">或无权限修改</text>
+<line x1="600" y1="687" x2="473" y2="660" stroke="#ba1a1a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="473,660 489,653 486,672" fill="#ba1a1a"/>
+<line x1="1200" y1="842" x2="1327" y2="660" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1327,660 1325,677 1310,667" fill="#f3a33a"/>
+<line x1="1200" y1="997" x2="1327" y2="975" stroke="#ba1a1a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1327,975 1313,986 1310,968" fill="#ba1a1a"/>
+<rect x="540" y="1210" width="720" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="557" y="1238" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">关键保护：前端体验校验 + 云函数可信校验 + 所有权校验</text>
+</svg>

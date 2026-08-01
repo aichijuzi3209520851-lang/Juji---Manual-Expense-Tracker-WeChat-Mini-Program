@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1480" viewBox="0 0 1800 1480">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1480" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 3-1  功能模块结构图</text>
+<text x="1447" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Functional Module Map</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="690" y="175" width="420" height="120" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="690" y="175" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="718" y="231" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">橘记 Juji</text>
+<text x="718" y="275" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">对话式智能记账小程序</text>
+<line x1="900" y1="305" x2="275" y2="375" stroke="#5ba4cb" stroke-width="2" stroke-linecap="round"/>
+<polygon points="275,375 289,363 291,382" fill="#5ba4cb"/>
+<line x1="900" y1="305" x2="685" y2="375" stroke="#27c07d" stroke-width="2" stroke-linecap="round"/>
+<polygon points="685,375 696,361 702,379" fill="#27c07d"/>
+<line x1="900" y1="305" x2="1095" y2="375" stroke="#f3a33a" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1095,375 1077,378 1083,360" fill="#f3a33a"/>
+<line x1="900" y1="305" x2="1505" y2="375" stroke="#5ba4cb" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1505,375 1488,382 1490,363" fill="#5ba4cb"/>
+<line x1="900" y1="305" x2="275" y2="810" stroke="#f3a33a" stroke-width="2" stroke-linecap="round"/>
+<polygon points="275,810 281,793 292,807" fill="#f3a33a"/>
+<line x1="900" y1="305" x2="685" y2="810" stroke="#8c7bd9" stroke-width="2" stroke-linecap="round"/>
+<polygon points="685,810 682,792 699,799" fill="#8c7bd9"/>
+<line x1="900" y1="305" x2="1095" y2="810" stroke="#8c7bd9" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1095,810 1080,799 1098,792" fill="#8c7bd9"/>
+<line x1="900" y1="305" x2="1505" y2="810" stroke="#d98787" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1505,810 1487,807 1499,792" fill="#d98787"/>
+<rect x="110" y="385" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="110" y="385" width="10" height="185" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="138" y="432" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">登录与引导</text>
+<text x="138" y="471" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：login / guide</text>
+<text x="138" y="499" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">函数：quickstartFunctions</text>
+<rect x="520" y="385" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="520" y="385" width="10" height="185" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="548" y="432" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">首页仪表盘</text>
+<text x="548" y="471" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：home / detail</text>
+<text x="548" y="499" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">函数：bills(delete)</text>
+<rect x="930" y="385" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="930" y="385" width="10" height="185" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="958" y="432" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">手动记账</text>
+<text x="958" y="471" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：record / categories</text>
+<text x="958" y="499" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">函数：bills(create/update)</text>
+<rect x="1340" y="385" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1340" y="385" width="10" height="185" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1368" y="432" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">统计复盘</text>
+<text x="1368" y="471" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：stats</text>
+<text x="1368" y="499" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">AI 评论 + periodKey 缓存</text>
+<rect x="110" y="820" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="110" y="820" width="10" height="185" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="138" y="867" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">预算管理</text>
+<text x="138" y="906" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：budget</text>
+<text x="138" y="934" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">函数：budgets upsert</text>
+<rect x="520" y="820" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="520" y="820" width="10" height="185" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="548" y="867" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">个人中心</text>
+<text x="548" y="906" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：profile</text>
+<text x="548" y="934" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">aiPoster / exportBills</text>
+<text x="548" y="962" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">dataMigration / clearUserData</text>
+<rect x="930" y="820" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="930" y="820" width="10" height="185" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="958" y="867" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">AI 智能中枢</text>
+<text x="958" y="906" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：profile / stats / record</text>
+<text x="958" y="934" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">函数：aiChat / aiPoster</text>
+<rect x="1340" y="820" width="330" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1340" y="820" width="10" height="185" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="1368" y="867" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">主题系统</text>
+<text x="1368" y="906" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">页面：themes + custom-tab-bar</text>
+<text x="1368" y="934" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">theme.js / eventBus</text>
+<rect x="710" y="1210" width="380" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="710" y="1210" width="10" height="130" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="738" y="1258" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">横切关注点</text>
+<text x="738" y="1298" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">隐私授权 / 内容安全</text>
+<text x="738" y="1328" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">服务端 OPENID / client_logs</text>
+<line x1="900" y1="305" x2="900" y2="1200" stroke="#27c07d" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 8"/>
+<polygon points="900,1200 890,1184 909,1184" fill="#27c07d"/>
+<rect x="520" y="1390" width="760" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="537" y="1418" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">结构说明：功能模块覆盖用户路径，安全、主题和 AI 能力贯穿多页面</text>
+</svg>

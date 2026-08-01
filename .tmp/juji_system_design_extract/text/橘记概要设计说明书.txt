@@ -1,0 +1,607 @@
+# 橘记概要设计说明书.docx
+
+[P][Normal] 2026年湖南省大学生计算机程序设计竞赛校级选拔赛
+[P][Normal] -----应用开发类竞赛（2026）
+[P][Normal] 概
+[P][Normal] 要
+[P][Normal] 设
+[P][Normal] 计
+[P][Normal] 说
+[P][Normal] 明
+[P][Normal] 书
+[TABLE 1]
+作品名称： | 橘记(JuJI)—— 混元AI大模型驱动的对话式智能记账与消费洞察小程序
+作品类别： | 移动终端开发类
+作 者： | 梁承伟 李俊怡 邓泽楷
+指导老师： | 李翠红 胡瑶
+单 位： | 湖南信息学院
+[/TABLE]
+[P][Normal] 二零二六 年 六月 十日
+[P][Normal] 目 录
+[P][toc 1] 第 1 章 引言 6
+[P][toc 2] 1.1 编写目的 6
+[P][toc 2] 1.2 文档范围 6
+[P][toc 2] 1.3 文档关系 6
+[P][toc 2] 1.4 术语与缩略语 6
+[P][toc 2] 1.5 参考标准 7
+[P][toc 1] 第 2 章 总体设计 8
+[P][toc 2] 2.1 设计目标与原则 8
+[P][toc 2] 2.2 系统架构总览 8
+[P][toc 2] 2.3 前后端分离边界 8
+[P][toc 2] 2.4 关键设计决策 9
+[P][toc 1] 第 3 章 前端模块结构设计 10
+[P][toc 2] 3.1 模块划分总图说明 10
+[P][toc 2] 3.2 页面模块说明 11
+[P][toc 2] 3.3 工具模块接口设计 11
+[P][toc 2] 3.4 模块间依赖关系 13
+[P][toc 1] 第 4 章 云函数服务模块设计 15
+[P][toc 2] 4.1 云函数模块总览 15
+[P][toc 2] 4.2 接口设计规范 15
+[P][toc 2] 4.3 核心云函数接口规格 16
+[P][toc 2] 4.4 云函数共用机制 18
+[P][toc 1] 第 5 章 全局数据结构设计 20
+[P][toc 2] 5.1 全局运行时数据结构 20
+[P][toc 2] 5.2 数据库概要结构 21
+[P][toc 2] 5.3 主题数据结构 21
+[P][toc 1] 第 6 章 运行设计 23
+[P][toc 2] 6.1 启动与初始化流程 23
+[P][toc 2] 6.2 页面生命周期规范 23
+[P][toc 2] 6.3 主要业务流程 23
+[P][toc 2] 6.4 并发与去重机制 24
+[P][toc 2] 6.5 缓存机制 24
+[P][toc 1] 第 7 章 接口设计（模块间接口汇总） 26
+[P][toc 2] 7.1 前端-云函数接口汇总表 26
+[P][toc 2] 7.2 工具模块对外接口汇总表 26
+[P][toc 2] 7.3 EventBus 事件接口表 27
+[P][toc 2] 7.4 外部系统接口 27
+[P][toc 1] 第 8 章 出错处理设计 28
+[P][toc 2] 8.1 错误分类 28
+[P][toc 2] 8.2 降级策略汇总 29
+[P][toc 2] 8.3 监控与上报设计 29
+[P][toc 1] 第 9 章 安全设计 29
+[P][toc 2] 9.1 身份与权限架构 29
+[P][toc 2] 9.2 内容安全架构 29
+[P][toc 2] 9.3 隐私合规架构 30
+[P][toc 2] 9.4 数据安全 30
+[P][toc 1] 第 10 章 性能与可扩展性设计 32
+[P][toc 2] 10.1 性能设计策略 32
+[P][toc 2] 10.2 可扩展性设计 32
+[P][toc 2] 10.3 约束与局限 32
+[P][toc 1] 附录 A 模块划分汇总表 33
+[P][Heading 1] 第 1 章 引言
+[P][Heading 2] 1.1 编写目的
+[P][Normal] 本文档为《橘记（Juji）微信小程序概要设计说明书》，描述橘记系统的整体架构设计方案，作为详细设计与编码的顶层依据。文档面向计算机程序设计竞赛评审专家与开发团队，阐述系统的分层架构、模块划分、接口设计、数据结构、运行机制与安全策略。
+[P][Heading 2] 1.2 文档范围
+[P][Normal] 本文档覆盖橘记 v1.1.0 的以下设计内容：
+[P][List Bullet] 系统五层架构设计与分层职责
+[P][List Bullet] 前端模块划分与模块间接口
+[P][List Bullet] 云函数服务模块接口规格
+[P][List Bullet] 全局数据结构（运行时 + 数据库概要）
+[P][List Bullet] 运行设计、出错处理、安全设计、性能设计
+[P][Normal] 本文档不包含具体函数实现细节，详见《橘记微信小程序详细设计说明书》。
+[P][Heading 2] 1.3 文档关系
+[P][Normal] 表 1-1：文档体系关系
+[TABLE 2]
+文档名称 | 核心问题 | 输入 | 输出
+《功能需求说明书》 | 系统必须做什么 | 用户需求 | FR 条目 + 验收标准
+《概要设计说明书》（本文档） | 系统整体如何分解 | FR 条目 | 模块划分 + 接口 + 数据结构
+《详细设计说明书》 | 每个模块内部如何实现 | 模块接口 | 算法 + API 参数 + 库表字段
+[/TABLE]
+[P][Heading 2] 1.4 术语与缩略语
+[P][Normal] 表 1-2：术语表
+[TABLE 3]
+术语 | 含义
+CloudBase | 腾讯云开发 Serverless 平台
+Serverless | 无服务器架构，按调用计费
+云函数 | CloudBase 中的 Serverless 计算单元
+openid | 微信用户唯一标识
+Design Token | 设计令牌，CSS 变量驱动的主题系统
+EventBus | 事件总线，跨页面通信机制
+WXML/WXSS | 微信小程序模板/样式文件
+TabBar | 底部导航栏组件
+rpx | 响应式像素单位
+模块 | 具有明确职责边界的代码单元
+接口 | 模块间约定的调用契约
+[/TABLE]
+[P][Heading 2] 1.5 参考标准
+[P][List Bullet] GB/T 8567-2006《计算机软件文档编制规范》
+[P][List Bullet] GB/T 9385-2008《计算机软件需求规格说明规范》
+[P][List Bullet] 《微信小程序开发文档》
+[P][List Bullet] 《腾讯云 CloudBase 开发文档》
+[P][Heading 1] 第 2 章 总体设计
+[P][Heading 2] 2.1 设计目标与原则
+[P][Normal] 橘记系统设计遵循以下五项核心原则：
+[P][Normal] 表 2-1：设计原则
+[TABLE 4]
+原则 | 说明 | 实现方式
+读写分离 | 读操作客户端直连数据库，写操作经云函数校验 | 读：wx.cloud.database()；写：wx.cloud.callFunction()
+服务端校验 | 所有写操作在云函数中二次校验 | bills/budgets 云函数各有 validate() 镜像逻辑
+权限隔离 | 用户数据通过 openid 实现完全隔离 | 集合"仅创建者可读写"，云函数校验 _openid
+AI 优先降级 | AI 服务异常时优雅降级，不崩溃 | FALLBACK_REPLY 固定回复；429 指数退避
+隐私前置 | 所有敏感操作先完成隐私授权 | requirePrivacyAuthorization 守卫 5 类操作
+[/TABLE]
+[P][Heading 2] 2.2 系统架构总览
+[P][Normal] 橘记采用经典五层架构，各层职责与包含组件如下：
+[P][Normal] 表 2-2：五层架构
+[TABLE 5]
+层级 | 职责 | 包含组件 | 对外依赖
+表现层 | UI 渲染、用户交互、主题注入 | 10 个页面 WXML/WXSS、自定义 TabBar | 微信客户端渲染引擎
+逻辑层 | 业务逻辑、事件处理、状态管理 | 10 个页面 JS、Component JS | 表现层 + 工具层
+工具层 | 横切关注点：主题/限流/校验/隐私/监控等 | 9 个 utils 模块 | 逻辑层调用
+服务层 | 服务端校验、AI 代理、数据聚合 | 9 个云函数 | CloudBase 运行时 + 外部 API
+数据层 | 持久化存储与文件管理 | 5 个 NoSQL 集合 + 云存储 + 混元大模型 | CloudBase 基础设施
+[/TABLE]
+[P][Heading 2] 2.3 前后端分离边界
+[P][Normal] 客户端（微信小程序）与服务端（CloudBase 云函数）职责边界如下：
+[P][Normal] 表 2-3：前后端职责边界
+[TABLE 6]
+职责域 | 归属 | 说明
+UI 渲染与主题 | 客户端 | WXML/WXSS + inline-style 主题注入 + EventBus
+事件处理与本地缓存 | 客户端 | wx.setStorageSync / getStorageSync
+AI 流式消费 | 客户端 | wx.cloud.extend.AI.streamText() 客户端直连
+身份校验 | 服务端 | cloud.getWXContext() 获取 openid
+数据校验与写入 | 服务端 | 云函数 validate() + NoSQL 写入
+AI 代理 | 服务端 | aiChat/aiPoster 云函数调用混元模型
+内容安全 | 双端 | 客户端本地正则 + 云端 msgSecCheck v2
+[/TABLE]
+[P][Heading 2] 2.4 关键设计决策
+[P][Normal] 表 2-4：关键设计决策
+[TABLE 7]
+决策 | 方案 | 备选方案 | 选择理由
+跨端框架 | 原生微信小程序 | Taro / uni-app | 无构建依赖、性能最优、团队熟悉
+后端架构 | CloudBase Serverless | 自建 Node.js 后端 | 免运维、弹性伸缩、微信生态深度集成
+主题注入 | inline-style 注入 60+ 变量 | CSS var() 继承 | 微信 page{} 解析期定值不响应 inline 覆盖
+TabBar 参数传递 | globalData._editBillId 桥接 | 路由参数 | wx.switchTab 不支持传参
+[/TABLE]
+[P][Normal] 图2-1：橘记系统五层架构图
+[P][Heading 1] 第 3 章 前端模块结构设计
+[P][Heading 2] 3.1 模块划分总图说明
+[P][Normal] 橘记前端按职责划分为 4 类模块：
+[P][List Bullet] 页面模块（10 个）：login、guide、home、stats、record、budget、profile、categories、themes、detail
+[P][List Bullet] 组件模块（1 个）：custom-tab-bar（毛玻璃浮动导航栏）
+[P][List Bullet] 工具模块（9 个）：theme / eventBus / rateLimiter / validate / privacy / contentSafety / monitor / dbPager / profileHelpers
+[P][List Bullet] 配置模块：app.js（入口）/ app.json（路由）/ app.wxss（全局 CSS 变量）
+[P][Heading 2] 3.2 页面模块说明
+[P][Normal] 表 3-1：页面模块说明
+[TABLE 8]
+名称 | 路径 | 依赖工具 | 调用云函数
+登录 | pages/login/login | privacy, theme | quickstartFunctions
+引导 | pages/guide/guide | theme | —
+首页 | pages/home/home | theme, dbPager | —
+统计 | pages/stats/stats | theme | —（AI 流式直连）
+记账 | pages/record/record | validate, rateLimiter, contentSafety, privacy, theme | bills
+预算 | pages/budget/budget | theme | budgets
+个人 | pages/profile/profile | contentSafety, privacy, dbPager, theme, profileHelpers | aiPoster, dataMigration, clearUserData
+分类 | pages/categories/categories | theme | —
+主题 | pages/themes/themes | theme, eventBus | —
+详情 | pages/detail/detail | theme | bills
+[/TABLE]
+[P][Heading 2] 3.3 工具模块接口设计
+[P][Normal] 以下为 9 个 utils 模块的核心对外接口：
+[P][Normal] theme.js — 主题管理
+[P][Normal] 表 3-2：theme.js 接口
+[TABLE 9]
+函数名 | 参数 | 返回值 | 调用方
+applyTheme() | — | — | 所有页面 onShow
+getThemeStyleString() | — | String（CSS 变量 inline 值） | 所有页面 setData
+initAppTheme() | — | — | app.js onLaunch
+migrateLegacyCustomTheme() | — | — | app.js onLaunch
+getUserThemeById(id) | themeId: String | Theme 对象 | null | themes 页面
+[/TABLE]
+[P][Normal] eventBus.js — 事件总线
+[P][Normal] 表 3-3：eventBus.js 接口
+[TABLE 10]
+函数名 | 参数 | 返回值 | 调用方
+on(event, handler) | event: String, handler: Function | — | 各页面 onLoad
+off(event, handler) | event: String, handler: Function | — | 各页面 onUnload
+emit(event, data) | event: String, data: any | — | 主题切换操作
+[/TABLE]
+[P][Normal] rateLimiter.js — 频率限制
+[P][Normal] 表 3-4：rateLimiter.js 接口
+[TABLE 11]
+函数名 | 参数 | 返回值 | 调用方
+canSaveBill() | — | Boolean | record 页保存按钮
+canLoadStats() | — | Boolean | stats 页查询
+checkDailyLimit() | — | Boolean | record 页（500 笔/日）
+[/TABLE]
+[P][Normal] validate.js — 数据校验
+[P][Normal] 表 3-5：validate.js 接口
+[TABLE 12]
+函数名 | 参数 | 返回值 | 调用方
+validateBill(data) | 账单对象 | {valid, errors} | record, aiChat
+validateBudget(data) | 预算对象 | {valid, errors} | budget 页
+[/TABLE]
+[P][Normal] privacy.js — 隐私授权
+[P][Normal] 表 3-6：privacy.js 接口
+[TABLE 13]
+函数名 | 参数 | 返回值 | 调用方
+initPrivacyAuthorization() | — | — | app.js onLaunch
+requirePrivacyAuthorization(feature) | feature: String | Promise<void> | 头像/导出/导入/清除/位置
+[/TABLE]
+[P][Normal] contentSafety.js — 内容安全
+[P][Normal] 表 3-7：contentSafety.js 接口
+[TABLE 14]
+函数名 | 参数 | 返回值 | 调用方
+checkText(text) | text: String | {safe, reason} | record, profile
+ensureSafeText(text) | text: String | String（清洗后） | AI 输入
+localCheckText(text) | text: String | Boolean | 快速前置过滤
+[/TABLE]
+[P][Normal] monitor.js — 异常监控
+[P][Normal] 表 3-8：monitor.js 接口
+[TABLE 15]
+函数名 | 参数 | 返回值 | 调用方
+initMonitoring() | — | — | app.js onLaunch（幂等）
+reportClientError(error) | error: Error | — | wx.onError / onUnhandledRejection
+[/TABLE]
+[P][Normal] dbPager.js — 分页查询
+[P][Normal] 表 3-9：dbPager.js 接口
+[TABLE 16]
+函数名 | 参数 | 返回值 | 调用方
+getAll(collection, query) | collection: String, query: Object | Array | profile（足迹统计）
+[/TABLE]
+[P][Normal] profileHelpers.js — 个人中心辅助
+[P][Normal] 表 3-10：profileHelpers.js 接口
+[TABLE 17]
+函数名/常量 | 参数 | 返回值 | 调用方
+getZodiac(gender) | gender: String | String（星座） | profile 页
+resolveThemeName(id) | themeId: String | String（主题名） | profile 页
+CATEGORY_EMOJI | — | Object（分类 emoji 映射） | record, stats
+GENDERS | — | Array（性别选项） | profile 页
+[/TABLE]
+[P][Heading 2] 3.4 模块间依赖关系
+[P][Normal] 主要依赖关系如下：
+[P][List Bullet] profile 页依赖：contentSafety / privacy / dbPager / theme / profileHelpers（依赖最多的页面）
+[P][List Bullet] record 页依赖：validate / rateLimiter / contentSafety / privacy / theme
+[P][List Bullet] home/stats/budget 页面均依赖 theme，无其他工具依赖
+[P][List Bullet] 所有页面依赖 theme，在 onShow 中调用 applyTheme() + getThemeStyleString()
+[P][List Bullet] 所有 tab 页面在 onShow 中调用 updateCustomTabBar() 同步 TabBar 选中态
+[P][List Bullet] theme.js 被所有页面依赖；eventBus.js 被所有 tab 页面依赖
+[P][Normal] 图3-1：前端模块依赖关系图
+[P][Heading 1] 第 4 章 云函数服务模块设计
+[P][Heading 2] 4.1 云函数模块总览
+[P][Normal] 表 4-1：云函数模块总览
+[TABLE 18]
+云函数名称 | 运行时 | 职责 | 被调用方
+quickstartFunctions | Node.js 16.13 | 获取 openid + 用户信息同步 | login 页
+bills | Node.js 16.13 | 账单 CRUD + 服务端校验 | record, detail, home
+budgets | Node.js 16.13 | 预算 upsert + 校验 | budget 页
+exportBills | Node.js 16.13 | CSV 导出至云存储 | profile 页
+dataMigration | Node.js 16.13 | JSON 导出/批量导入 | profile 页
+clearUserData | Node.js 16.13 | 删除全部用户数据 | profile 页
+aiPoster | Node.js 16.13 | AI 信件 + 每日称号生成 | profile 页
+aiChat | Node.js 16.13 | 对话式记账解析 + 闲聊 | record（对话）/ profile（小橘）
+contentSafety | Node.js 16.13 | 文本安全审核 | 前端直接调用
+[/TABLE]
+[P][Heading 2] 4.2 接口设计规范
+[P][Normal] 所有云函数遵循统一接口约定：
+[P][Normal] 表 4-2：接口设计规范
+[TABLE 19]
+约定项 | 格式 | 说明
+入参 | {action, data} | action 标识操作类型，data 为业务数据
+返回值 | {success, [message], [data]} | success: Boolean；失败时含 message
+OPENID 获取 | cloud.getWXContext().OPENID | 服务端获取，不信任客户端传入
+所有权校验 | _openid 匹配检查 | 所有写操作校验数据所有者身份
+[/TABLE]
+[P][Heading 2] 4.3 核心云函数接口规格
+[P][Normal] quickstartFunctions
+[P][Normal] 表 4-3：quickstartFunctions 接口
+[TABLE 20]
+接口编号 | 接口名称 | 提供方 | 调用方 | 传入参数 | 返回值 | 调用时机 | 
+CF-AUTH-01 | getOpenId | quickstartFunctions | login 页 | code（wx.login） | {openid, userInfo} | 首次打开/登录 | 
+[/TABLE]
+[P][Normal] bills（4 个 action）
+[P][Normal] 表 4-4：bills 接口
+[TABLE 21]
+接口编号 | 接口名称 | 提供方 | 调用方 | 传入参数 | 返回值 | 调用时机
+CF-BILL-01 | create | bills | record 页 | type,amount,category,date,note,photoUrl,mood | {success, billId} | 保存新账单
+CF-BILL-02 | update | bills | record（编辑） | billId + 更新字段 | {success} | 编辑账单
+CF-BILL-03 | delete | bills | detail/home | billId | {success} | 删除账单
+CF-BILL-04 | batchCreate | bills | record（对话记账） | bills[]（≤10 笔） | {success, count} | AI 解析后批量写入
+[/TABLE]
+[P][Normal] bills.create 校验规则：type∈{expense,income}；amount>0 且 ≤99999999.99；category≤20 字非空；date=YYYY-MM-DD；note≤200 字；photoUrl 须 cloud:// 前缀。batchCreate 绕开 rateLimiter 3s 防抖限制，≤10 笔/次。
+[P][Normal] budgets
+[P][Normal] 表 4-5：budgets 接口
+[TABLE 22]
+接口编号 | 接口名称 | 提供方 | 调用方 | 传入参数 | 返回值 | 调用时机 | 错误处理
+CF-BUD-01 | upsert | budgets | budget 页 | month(YYYY-MM), amount | {success} | 设置/修改月预算 | amount>0 且 ≤999999
+[/TABLE]
+[P][Normal] aiChat
+[P][Normal] 表 4-6：aiChat 接口
+[TABLE 23]
+接口编号 | 接口名称 | 提供方 | 调用方 | 传入参数 | 返回值 | 调用时机 | 错误处理
+CF-AI-01 | main | aiChat | record（对话）/ profile（小橘） | message, categories[], today | {intent, reply, bills[]} | 对话记账/闲聊 | 三级容错解析 → 回退闲聊
+[/TABLE]
+[P][Normal] aiChat 使用混元 hy3-preview 模型，temperature=0.2，返回 {intent, reply, bills}。三级容错：剥 json 包裹 → 截取 {...} → JSON.parse 失败回退闲聊。
+[P][Normal] aiPoster
+[P][Normal] 表 4-7：aiPoster 接口
+[TABLE 24]
+接口编号 | 接口名称 | 提供方 | 调用方 | 传入参数 | 返回值 | 调用时机 | 错误处理
+CF-AI-02 | letter | aiPoster | profile 页 | — | {text} | 生成 AI 信件 | 失败返回兜底信件
+CF-AI-03 | title | aiPoster | profile 页 | — | {title} | 生成每日称号 | 失败返回默认称号
+[/TABLE]
+[P][Normal] profileLetter 限额 30 次/日；profileTitle 限额 8 次/日。均通过 ai_usage_limits 集合计数。
+[P][Normal] contentSafety
+[P][Normal] 表 4-8：contentSafety 接口
+[TABLE 25]
+接口编号 | 接口名称 | 提供方 | 调用方 | 传入参数 | 返回值 | 调用时机 | 错误处理
+CF-SEC-01 | check | contentSafety | 前端 | text | {safe, reason} | 文本安全审核 | 云端失败降级为本地正则
+[/TABLE]
+[P][Normal] 其他云函数
+[P][Normal] 表 4-9：其他云函数接口
+[TABLE 26]
+接口编号 | 云函数 | 调用方 | 核心功能 | 特殊约束
+CF-DM-01 | dataMigration (export) | profile | 导出全部 bills 为 JSON | —
+CF-DM-02 | dataMigration (import) | profile | 分批 20 条写入 bills | 需 privacy 授权
+CF-CLR-01 | clearUserData | profile | 按 _openid 删除全部数据 | 无客户端参数，防越权
+CF-EXP-01 | exportBills | profile | CSV 导出至云存储 | —
+[/TABLE]
+[P][Heading 2] 4.4 云函数共用机制
+[P][Normal] 内容安全机制：本地正则 BLOCK_PATTERNS（7 类：赌博/色情/毒品/枪爆/诈骗/自伤/暴恐）+ 云端 msgSecCheck v2，4 处同步部署（client/contentSafety/aiChat/aiPoster），修改任一处须同步其他 3 处。
+[P][Normal] AI 用量限流：ai_usage_limits 集合，doc id = openid_date_feature，按日按功能计数。profileLetter 30 次/日，profileTitle 8 次/日。
+[P][Normal] 服务端校验：bills 和 budgets 云函数各自包含 validate() 镜像逻辑，与客户端 validate.js 校验规则一致。变更校验规则时须同步修改客户端与服务端两处。
+[P][Normal] 图4-1：云函数调用关系图
+[P][Heading 1] 第 5 章 全局数据结构设计
+[P][Heading 2] 5.1 全局运行时数据结构
+[P][Normal] 5.1.1 globalData 结构
+[P][Normal] 表 5-1：globalData 字段
+[TABLE 27]
+字段 | 类型 | 用途 | 生命周期
+openid | String | 用户唯一标识 | 登录时赋值，退出时清空
+userInfo | Object | 用户资料（昵称/头像/性别等） | 登录时赋值，退出时清空
+currentTheme | String | 当前主题 ID | 启动时初始化，切换时更新
+eventBus | EventBus | 事件总线实例 | 应用生命周期
+_editBillId | String | null | 待编辑账单 ID（switchTab 桥接） | 设置→跳转→读取→清空
+_loginPromise | Promise | null | 登录去重单例 | 请求中保持，完成/失败后清空
+[/TABLE]
+[P][Normal] _loginPromise 去重机制：多个页面并发调用 silentLogin() 时，共享同一个 Promise 实例，避免重复网络请求。登录完成或失败后置 null，下次调用重新创建。
+[P][Normal] _editBillId 桥接设计：wx.switchTab 不支持传参，Detail 页设置 _editBillId 后跳转 Record 页，Record 的 onShow 检测并加载对应账单。
+[P][Normal] 5.1.2 Storage 键值表
+[P][Normal] 表 5-2：Storage 键值表
+[TABLE 28]
+键名 | 类型 | 用途 | 生命周期
+juji_privacy_agreed | Boolean | 隐私协议同意标志 | 主动清除时失效
+has_seen_guide | Boolean | 引导页已浏览标志 | 永久
+daily_limit_*_日期 | Number | 每日 AI 用量计数 | 次日自动失效
+juji_profile_title_* | String | 称号缓存 | 次日失效
+periodKey 缓存 | Object | AI 评论缓存（按月） | 永不主动失效
+[/TABLE]
+[P][Normal] 5.1.3 EventBus 事件表
+[P][Normal] 表 5-3：EventBus 事件表
+[TABLE 29]
+事件名 | 发布方 | 订阅方 | 触发时机 | 载荷
+themeChanged | 主题切换操作 | 所有 tab 页面 + profile | 用户切换/创建/删除主题 | 无（各页面自行读取最新主题）
+[/TABLE]
+[P][Heading 2] 5.2 数据库概要结构
+[P][Normal] 表 5-4：数据库概要结构
+[TABLE 30]
+集合名 | 权限 | 核心字段 | 设计要点
+bills | 仅创建者可读写 | type, amount, category, date, note, photoUrl, mood, createdAt, _openid | 核心业务数据，每条为一笔收支
+budgets | 仅创建者可读写 | month(YYYY-MM), amount, createdAt, _openid | 一月一条 upsert 设计，month 为逻辑唯一键
+users | 仅创建者可读写 | nickname, avatarUrl, gender, customCategories[], theme, budgetDefault | customCategories 为内嵌数组，最多用户自定义分类
+ai_usage_limits | 仅创建者可读写 | _id = openid_date_feature, count | doc id 自然唯一，无需额外索引
+client_logs | 仅创建者可读写 | type, message, stack, route, createdAt | 截断存储，建议定期清理 30 天前
+[/TABLE]
+[P][Heading 2] 5.3 主题数据结构
+[P][Normal] Design Token 体系：单一主色（primary hex）→ HSL 转换 → accent = primary.hue + 60° → 衍生 60+ CSS 变量（--shadow-light / --shadow-dark / --gradient-hero / --shadow-card 等）。
+[P][Normal] 预设主题：4 套固定配色对象（清爽薄荷/温馨玫瑰/夜猫子/蓝天白云），包含 primary/secondary/accent/light/bg 五色键。
+[P][Normal] 用户自定义主题：users 集合 theme 字段存储用户创建的命名主题（最多 5 个），每个包含 id/name/colors。
+[P][Normal] 旧版迁移：initAppTheme() 中 migrateLegacyCustomTheme() 将旧版 custom_theme_color（单一色值）迁移为新版 user_themes 结构。
+[P][Normal] 图5-1：全局状态流转图
+[P][Normal] 图5-2：数据库集合间逻辑关系图
+[P][Heading 1] 第 6 章 运行设计
+[P][Heading 2] 6.1 启动与初始化流程
+[P][Normal] app.js onLaunch 执行 7 步有序初始化序列：
+[P][Normal] 表 6-1：启动初始化流程
+[TABLE 31]
+步骤 | 操作 | 目的 | 依赖
+1 | wx.cloud.init() | 初始化 CloudBase 环境 | 无
+2 | initMonitoring() | 注册全局错误监控（幂等） | 无
+3 | initPrivacyAuthorization() | 注册隐私授权监听 | 无
+4 | migrateLegacyCustomTheme() | 迁移旧版主题数据 | Storage 可用
+5 | initAppTheme() | 初始化当前主题 | Storage 可用
+6 | 读 has_seen_guide | 判断是否需要展示引导 | Storage 可用
+7 | 检查 juji_privacy_agreed → silentLogin() | 已同意隐私时自动登录 | 步骤 3 完成
+[/TABLE]
+[P][Heading 2] 6.2 页面生命周期规范
+[P][Normal] 每个页面必须遵守四步生命周期模式：
+[P][Normal] 表 6-2：页面生命周期规范
+[TABLE 32]
+生命周期 | 操作 | 目的
+onLoad | eventBus.on("themeChanged", handler) | 订阅主题变更事件
+onShow | 拉取数据 + applyTheme() + setData({themeStyle}) + updateCustomTabBar() | 每次显示时刷新数据与主题
+（中间） | 用户交互、业务逻辑 | —
+onUnload | eventBus.off("themeChanged", handler) | 取消订阅，防止内存泄漏
+[/TABLE]
+[P][Normal] 在 onShow 而非 onLoad 拉取数据，确保每次从其他页面切回时数据刷新（如从记账页返回首页，新账单立即出现）。
+[P][Heading 2] 6.3 主要业务流程
+[P][Normal] 账单写入链路：
+[P][Normal] 用户触发保存 → rateLimiter.canSaveBill() 3s 防抖检查 → validate.js 前端校验 → wx.cloud.callFunction("bills", {action:"create"}) → 云函数服务端 validate() → NoSQL 写入 bills 集合 → 返回成功 → 前端刷新列表。
+[P][Normal] 对话记账链路：
+[P][Normal] 用户口述消费 → aiChat 云函数（传入 categories[] + today）→ 混元 generateText（temperature=0.2）→ 三级容错解析 → 返回 {intent, reply, bills[]} → 渲染待确认账单卡 → 用户编辑/确认 → bills.batchCreate 批量写入。
+[P][Normal] 主题切换链路：
+[P][Normal] 用户选色 → getThemeStyleString() 计算 60+ CSS 变量 → inline-style 注入页面最外层 view → EventBus.emit("themeChanged") → 所有 tab 页面 onShow 重新应用主题 → TabBar 同步更新。
+[P][Heading 2] 6.4 并发与去重机制
+[P][Normal] 表 6-3：并发与去重机制
+[TABLE 33]
+机制 | 实现方式 | 设计目的
+silentLogin 去重 | _loginPromise 单例（内存 Promise） | 多页面并发登录共享一次网络请求
+保存防抖 | rateLimiter 3s 内存 Map | 防止用户快速重复提交（冷启动重置）
+AI 评论串行 | stats 页三张卡片串行 + 1s 间隔 + 429 退避 | 避免混元 API 并发限流
+[/TABLE]
+[P][Heading 2] 6.5 缓存机制
+[P][Normal] 表 6-4：缓存机制
+[TABLE 34]
+缓存内容 | 存储位置 | Key 格式 | 失效策略 | 命中行为
+AI 评论 | wx.Storage | periodKey（月标识） | 永不主动失效 | 直接展示缓存，不调用 AI
+AI 用量计数 | wx.Storage | daily_limit_*_日期 | 次日自动失效 | 超限提示明日再来
+隐私协议标志 | wx.Storage | juji_privacy_agreed | 主动清除时失效 | 已同意则跳过弹窗
+[/TABLE]
+[P][Normal] 图6-1：app.js 启动初始化流程图
+[P][Normal] 图6-2：对话记账运行流程图
+[P][Heading 1] 第 7 章 接口设计（模块间接口汇总）
+[P][Heading 2] 7.1 前端-云函数接口汇总表
+[P][Normal] 表 7-1：前端-云函数接口汇总
+[TABLE 35]
+调用方页面 | 云函数名 | action | 调用场景
+login 页 | quickstartFunctions | getOpenId | 登录时获取 openid
+record 页 | bills | create | 保存新账单
+record 页 | bills | update | 编辑账单（经 _editBillId）
+record 页 | bills | batchCreate | AI 对话记账批量写入
+detail 页 | bills | delete | 删除账单
+home 页 | bills | delete | 长按删除账单
+budget 页 | budgets | upsert | 设置/修改月预算
+profile 页 | aiPoster | letter | 生成 AI 信件
+profile 页 | aiPoster | title | 生成每日称号
+profile 页 | dataMigration | export | JSON 数据导出
+profile 页 | dataMigration | import | JSON 数据导入（分批 20）
+profile 页 | clearUserData | main | 清除全部用户数据
+profile 页 | exportBills | export | CSV 导出至云存储
+record（对话） | aiChat | main | 对话式记账解析
+profile（小橘） | aiChat | main | 闲聊对话
+前端各处 | contentSafety | check | 文本安全审核
+[/TABLE]
+[P][Heading 2] 7.2 工具模块对外接口汇总表
+[P][Normal] 表 7-2：工具模块接口汇总
+[TABLE 36]
+模块名 | 函数名/常量 | 用途
+theme.js | applyTheme | 应用当前主题到页面
+theme.js | getThemeStyleString | 生成 inline-style CSS 变量字符串
+theme.js | initAppTheme | 初始化应用主题
+theme.js | getUserThemeById | 按 ID 获取用户自定义主题
+eventBus.js | on / off / emit | 事件订阅/取消/发布
+rateLimiter.js | canSaveBill | 3s 防抖检查
+rateLimiter.js | canLoadStats | 统计查询防抖
+rateLimiter.js | checkDailyLimit | 500 笔/日限额检查
+validate.js | validateBill | 账单数据校验
+validate.js | validateBudget | 预算数据校验
+privacy.js | requirePrivacyAuthorization | 隐私授权前置守卫
+contentSafety.js | checkText | 文本安全检查
+contentSafety.js | localCheckText | 本地正则快速过滤
+monitor.js | initMonitoring | 初始化全局错误监控
+monitor.js | reportClientError | 上报客户端异常
+dbPager.js | getAll | 分页拉取全部记录
+profileHelpers.js | getZodiac | 获取星座
+profileHelpers.js | resolveThemeName | 解析主题名称
+profileHelpers.js | CATEGORY_EMOJI | 分类 emoji 映射常量
+[/TABLE]
+[P][Heading 2] 7.3 EventBus 事件接口表
+[P][Normal] 表 7-3：EventBus 事件接口
+[TABLE 37]
+事件名 | 发布方 | 订阅方 | 触发条件 | 载荷
+themeChanged | 主题切换操作 | 所有 tab 页面 + profile | 用户切换/创建/删除主题 | 无
+[/TABLE]
+[P][Heading 2] 7.4 外部系统接口
+[P][Normal] 表 7-4：外部系统接口
+[TABLE 38]
+外部系统 | 接口类型 | 调用方式 | 用途
+微信登录 | SDK API | wx.login() | 获取 code → 换取 openid
+CloudBase 数据库 | SDK API | wx.cloud.database() | 客户端直读
+CloudBase 云函数 | SDK API | wx.cloud.callFunction() | 服务端写操作
+CloudBase 云存储 | SDK API | wx.cloud.uploadFile() | 文件上传
+混元大模型 | SDK API | wx.cloud.extend.AI.createModel() | AI 流式对话
+内容安全 | 开放 API | wx.cloud.openapi.security.msgSecCheck | 文本审核
+[/TABLE]
+[P][Normal] 图7-1：系统接口总体关系图
+[P][Heading 1] 第 8 章 出错处理设计
+[P][Heading 2] 8.1 错误分类
+[P][Normal] 表 8-1：错误分类
+[TABLE 39]
+错误类别 | 来源 | 严重度 | 处理策略
+用户输入校验错误 | 前端 validate.js | 低 | toast 提示具体错误，不上报
+云函数调用失败 | 网络/超时 | 中 | catch 捕获，toast 提示，不影响主流程
+AI 服务错误 | 混元 429/5xx | 中 | 429 指数退避重试；5xx 返回 FALLBACK_REPLY
+运行时异常 | JS Error | 高 | wx.onError 捕获，写 client_logs，toast 提示
+未处理 Promise 拒绝 | 异步异常 | 高 | wx.onUnhandledRejection 捕获，写 client_logs
+[/TABLE]
+[P][Heading 2] 8.2 降级策略汇总
+[P][Normal] 表 8-2：降级策略汇总
+[TABLE 40]
+场景 | 正常路径 | 降级路径 | 触发条件
+AI 评论失败 | streamText 生成评论 | 不写缓存，下次重新生成 | 429 / 5xx / 超时
+AI 对话失败 | 返回解析账单 | 返回 FALLBACK_REPLY 闲聊 | 模型异常 / 审核拦截
+头像加载失败 | 显示用户头像 | 显示默认头像 | URL 无效 / 网络异常
+天气 LBS key 缺失 | 显示天气信息 | 不显示天气，不报错 | TENCENT_LBS_KEY 未配置
+隐私未授权 | 正常使用敏感功能 | 功能降级，不崩溃 | 用户拒绝授权
+网络离线 | 正常请求 | 本地缓存数据展示 | 无网络连接
+[/TABLE]
+[P][Heading 2] 8.3 监控与上报设计
+[P][Normal] monitor.js 通过 initMonitoring()（幂等，_inited 标志）注册 wx.onError 和 wx.onUnhandledRejection 全局钩子，捕获的异常截断至 500 字符后写入 client_logs 集合。
+[P][Normal] 日志字段：type / message / stack（截断）/ route（当前页面路径）/ createdAt。建议运维策略：定期清理 30 天前的日志数据。
+[P][Heading 1] 第 9 章 安全设计
+[P][Heading 2] 9.1 身份与权限架构
+[P][Normal] 三层权限防线：
+[P][List Bullet] 身份获取：第一层：openid 由服务端 cloud.getWXContext() 获取，不信任客户端传入
+[P][List Bullet] 数据隔离：第二层：所有集合配置"仅创建者可读写"安全规则
+[P][List Bullet] 所有权校验：第三层：云函数中校验操作者 _openid 与数据所有者匹配
+[P][Heading 2] 9.2 内容安全架构
+[P][Normal] 双层内容安全模型：
+[P][List Bullet] 本地正则：第一层：本地正则 BLOCK_PATTERNS（7 类：赌博/色情/毒品/枪爆/诈骗/自伤/暴恐），<1ms，零网络开销，快速拦截明显违规内容
+[P][List Bullet] 云端审核：第二层：云端 msgSecCheck v2，语义级检测，异步执行，处理本地正则无法识别的隐晦违规
+[P][Normal] 4 处冗余部署：client 客户端 / contentSafety 云函数 / aiChat 云函数 / aiPoster 云函数。刻意冗余设计减少单点绕过风险——修改任一处 BLOCK_PATTERNS 须同步其余 3 处。
+[P][Heading 2] 9.3 隐私合规架构
+[P][Normal] 两级隐私防线：
+[P][List Bullet] 第一级：__usePrivacyCheck__ 全局开关 + juji_privacy_agreed 登录门禁（app.json 配置）
+[P][List Bullet] 第二级：requirePrivacyAuthorization(featureName) 按需守卫，覆盖 5 类敏感操作：相机/相册/文件/定位/数据导出
+[P][Heading 2] 9.4 数据安全
+[P][List Bullet] 用户数据完全隔离（_openid），任何用户只能访问自己的数据
+[P][List Bullet] 数据自主权：支持导出全部数据（JSON）和一键清除（clearUserData）
+[P][List Bullet] clearUserData 服务端按 _openid 作用域执行，无客户端参数传入，防止越权删除
+[P][Normal] 图9-1：内容安全双层架构图
+[P][Heading 1] 第 10 章 性能与可扩展性设计
+[P][Heading 2] 10.1 性能设计策略
+[P][Normal] 表 10-1：性能设计策略
+[TABLE 41]
+策略名 | 设计手段 | 预期效果
+读写分离 | 读操作客户端直连数据库，0 云函数开销 | 减少 50% 云函数调用
+分页拉取 | dbPager.js getAll，默认 20 条/页 | 绕过 20 条查询上限，支持大数据量
+AI 缓存 | periodKey Storage 缓存 | 命中不调用 AI，节省 Token 配额
+流式渲染 | streamText 客户端边生成边渲染 | 用户感知延迟降低
+按需加载 | lazyCodeLoading: requiredComponents | 首屏加载体积减少
+合并 setData | 批量更新减少渲染通信 | 页面渲染性能提升
+[/TABLE]
+[P][Heading 2] 10.2 可扩展性设计
+[P][Normal] 分类可扩展：预设 8 类支出 + 6 类收入，用户可通过 FR-REC-05 自创分类，存储在 users.customCategories 内嵌数组中。
+[P][Normal] 主题可扩展：4 套预设主题 + 用户命名主题 CRUD（最多 5 个），支持 8 色自定义调色板。
+[P][Normal] AI 模型可扩展：模型 ID（hunyuan-v3 / hy3-preview）常量化为字符串常量，替换时只需在 CloudBase 控制台启用目标模型并修改常量值。
+[P][Heading 2] 10.3 约束与局限
+[P][Normal] 表 10-2：约束与局限
+[TABLE 42]
+局限 | 说明 | 影响范围
+单用户无多端同步 | 本地 Storage 不同设备不同步 | 主题/引导标志/缓存
+AI JSON 输出稳定性 | 无强制 JSON 模式，依赖 prompt 约束 + temperature=0.2 | 对话记账解析准确率
+天气功能依赖第三方 | 需 TENCENT_LBS_KEY，当前已下线降级 | 小橘聊天天气问答
+[/TABLE]
+[P][Heading 1] 附录 A 模块划分汇总表
+[P][Normal] 附录表 A-1：模块划分汇总
+[TABLE 43]
+模块名 | 类型 | 路径 | 职责 | 依赖模块
+login | 页面 | pages/login/login | 微信静默登录 | privacy, theme
+guide | 页面 | pages/guide/guide | 首启引导 | theme
+home | 页面 | pages/home/home | 消费概览 | theme, dbPager
+stats | 页面 | pages/stats/stats | 统计分析 | theme
+record | 页面 | pages/record/record | 账单录入 | validate, rateLimiter, contentSafety, privacy, theme
+budget | 页面 | pages/budget/budget | 预算管理 | theme
+profile | 页面 | pages/profile/profile | 个人中心 | contentSafety, privacy, dbPager, theme, profileHelpers
+categories | 页面 | pages/categories/categories | 分类管理 | theme
+themes | 页面 | pages/themes/themes | 主题管理 | theme, eventBus
+detail | 页面 | pages/detail/detail | 账单详情 | theme
+custom-tab-bar | 组件 | custom-tab-bar/ | 毛玻璃导航栏 | —
+theme.js | 工具 | utils/theme.js | 主题管理 | —
+eventBus.js | 工具 | utils/eventBus.js | 事件总线 | —
+rateLimiter.js | 工具 | utils/rateLimiter.js | 频率限制 | —
+validate.js | 工具 | utils/validate.js | 数据校验 | —
+privacy.js | 工具 | utils/privacy.js | 隐私授权 | —
+contentSafety.js | 工具 | utils/contentSafety.js | 内容安全 | —
+monitor.js | 工具 | utils/monitor.js | 异常监控 | —
+dbPager.js | 工具 | utils/dbPager.js | 分页查询 | —
+profileHelpers.js | 工具 | utils/profileHelpers.js | 个人辅助 | theme
+quickstartFunctions | 云函数 | cloudfunctions/quickstartFunctions | 登录 | —
+bills | 云函数 | cloudfunctions/bills | 账单 CRUD | —
+budgets | 云函数 | cloudfunctions/budgets | 预算 upsert | —
+exportBills | 云函数 | cloudfunctions/exportBills | CSV 导出 | —
+dataMigration | 云函数 | cloudfunctions/dataMigration | JSON 导入导出 | —
+clearUserData | 云函数 | cloudfunctions/clearUserData | 清除数据 | —
+aiPoster | 云函数 | cloudfunctions/aiPoster | AI 信件/称号 | —
+aiChat | 云函数 | cloudfunctions/aiChat | AI 对话 | —
+contentSafety cf | 云函数 | cloudfunctions/contentSafety | 安全审核 | —
+[/TABLE]

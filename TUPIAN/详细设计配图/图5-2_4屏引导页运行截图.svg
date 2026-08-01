@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1220" viewBox="0 0 1800 1220">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1220" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 5-2  4 屏引导页运行截图</text>
+<text x="1472" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Onboarding Screens</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="120" y="200" width="300" height="720" rx="48" fill="#111111" stroke="#111111" stroke-width="1" filter="url(#shadow)"/>
+<rect x="148" y="238" width="244" height="644" rx="34" fill="#f7fbf8" stroke="#f7fbf8" stroke-width="1"/>
+<rect x="232" y="220" width="76" height="8" rx="4" fill="#2d2d2d" stroke="#2d2d2d" stroke-width="1"/>
+<text x="217" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="92" font-weight="700" fill="#dceee5">快</text>
+<ellipse cx="270" cy="445" rx="52" ry="52" fill="#ffffff" stroke="#d9e4de" stroke-width="2"/>
+<circle cx="270" cy="445" r="34" fill="#f3a33a" stroke="#ffffff" stroke-width="4"/>
+<line x1="208" y1="431" x2="236" y2="431" stroke="#f3a33a" stroke-width="5" stroke-linecap="round"/>
+<line x1="198" y1="449" x2="234" y2="449" stroke="#f3a33a" stroke-width="5" stroke-linecap="round"/>
+<line x1="216" y1="467" x2="242" y2="467" stroke="#f3a33a" stroke-width="5" stroke-linecap="round"/>
+<circle cx="280" cy="437" r="7" fill="#ffffff"/>
+<text x="189" y="591" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">极速，毫无负担</text>
+<text x="191" y="644" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">打开即记，三步搞定。</text>
+<text x="236" y="970" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#27c07d">第 1 屏</text>
+<rect x="530" y="200" width="300" height="720" rx="48" fill="#111111" stroke="#111111" stroke-width="1" filter="url(#shadow)"/>
+<rect x="558" y="238" width="244" height="644" rx="34" fill="#f7fbf8" stroke="#f7fbf8" stroke-width="1"/>
+<rect x="642" y="220" width="76" height="8" rx="4" fill="#2d2d2d" stroke="#2d2d2d" stroke-width="1"/>
+<text x="627" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="92" font-weight="700" fill="#dceee5">美</text>
+<ellipse cx="680" cy="445" rx="52" ry="52" fill="#ffffff" stroke="#d9e4de" stroke-width="2"/>
+<circle cx="660" cy="437" r="18" fill="#d98787" stroke="#ffffff" stroke-width="3"/>
+<circle cx="688" cy="425" r="18" fill="#5ba4cb" stroke="#ffffff" stroke-width="3"/>
+<circle cx="700" cy="455" r="18" fill="#f3a33a" stroke="#ffffff" stroke-width="3"/>
+<circle cx="672" cy="465" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="3"/>
+<circle cx="680" cy="445" r="32" fill="#ffffff" stroke="#d9e4de" stroke-width="2"/>
+<text x="599" y="591" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">高颜值，会呼吸</text>
+<text x="593" y="644" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">空间计算美学，专属光影</text>
+<text x="657" y="672" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">质感。</text>
+<text x="646" y="970" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#5ba4cb">第 2 屏</text>
+<rect x="940" y="200" width="300" height="720" rx="48" fill="#111111" stroke="#111111" stroke-width="1" filter="url(#shadow)"/>
+<rect x="968" y="238" width="244" height="644" rx="34" fill="#f7fbf8" stroke="#f7fbf8" stroke-width="1"/>
+<rect x="1052" y="220" width="76" height="8" rx="4" fill="#2d2d2d" stroke="#2d2d2d" stroke-width="1"/>
+<text x="1037" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="92" font-weight="700" fill="#dceee5">心</text>
+<ellipse cx="1090" cy="445" rx="52" ry="52" fill="#ffffff" stroke="#d9e4de" stroke-width="2"/>
+<rect x="1048" y="417" width="84" height="56" rx="10" fill="#ffffff" stroke="#8c7bd9" stroke-width="3"/>
+<line x1="1048" y1="417" x2="1090" y2="453" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<line x1="1132" y1="417" x2="1090" y2="453" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<line x1="1048" y1="473" x2="1085" y2="445" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<line x1="1132" y1="473" x2="1095" y2="445" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<text x="1009" y="591" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">懂账单，更懂你</text>
+<text x="1003" y="644" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">小橘写下专属温情信件。</text>
+<text x="1056" y="970" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#8c7bd9">第 3 屏</text>
+<rect x="1350" y="200" width="300" height="720" rx="48" fill="#111111" stroke="#111111" stroke-width="1" filter="url(#shadow)"/>
+<rect x="1378" y="238" width="244" height="644" rx="34" fill="#f7fbf8" stroke="#f7fbf8" stroke-width="1"/>
+<rect x="1462" y="220" width="76" height="8" rx="4" fill="#2d2d2d" stroke="#2d2d2d" stroke-width="1"/>
+<text x="1447" y="370" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="92" font-weight="700" fill="#dceee5">伴</text>
+<ellipse cx="1500" cy="445" rx="52" ry="52" fill="#ffffff" stroke="#d9e4de" stroke-width="2"/>
+<ellipse cx="1501.0" cy="442.6" rx="28.8" ry="30.6" fill="#f7a531" stroke="#e08118" stroke-width="2"/>
+<ellipse cx="1506.4" cy="411.1" rx="12.600000000000001" ry="9.9" fill="#27c07d" stroke="#157a51" stroke-width="2"/>
+<ellipse cx="1490.2" cy="438.1" rx="3.6" ry="3.6" fill="#14231d"/>
+<ellipse cx="1511.8" cy="438.1" rx="3.6" ry="3.6" fill="#14231d"/>
+<path d="M 1490.2 450.7 Q 1501.0 460.6 1511.8 450.7" fill="none" stroke="#7a3f10" stroke-width="2" stroke-linecap="round"/>
+<line x1="1472" y1="448" x2="1453" y2="435" stroke="#e08118" stroke-width="3" stroke-linecap="round"/>
+<line x1="1529" y1="448" x2="1550" y2="430" stroke="#e08118" stroke-width="3" stroke-linecap="round"/>
+<line x1="1485" y1="471" x2="1475" y2="485" stroke="#e08118" stroke-width="3" stroke-linecap="round"/>
+<line x1="1516" y1="471" x2="1526" y2="485" stroke="#e08118" stroke-width="3" stroke-linecap="round"/>
+<text x="1419" y="591" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">认识一下，小橘</text>
+<text x="1413" y="644" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">说一句消费，小橘帮你记</text>
+<text x="1477" y="672" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">好账。</text>
+<rect x="1412" y="758" width="176" height="48" rx="24" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1440" y="786" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="700" fill="#ffffff">开启记账之旅</text>
+<text x="1466" y="970" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#f3a33a">第 4 屏</text>
+<rect x="470" y="1110" width="860" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="487" y="1138" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">运行逻辑：swiper 切屏 + 动效重触发 + 完成后写入 guide_done</text>
+</svg>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1240" viewBox="0 0 1800 1240">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1240" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 3-1  数据模型实体关系图</text>
+<text x="1417" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">NoSQL Entity Relationship</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="685" y="500" width="430" height="190" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="685" y="500" width="10" height="190" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="713" y="552" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="30" font-weight="700" fill="#17231d">users / _openid</text>
+<text x="713" y="594" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">用户根文档</text>
+<text x="713" y="625" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">nickname, avatarUrl, gender</text>
+<text x="713" y="656" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">customCategories[], theme</text>
+<text x="713" y="687" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">budgetDefault</text>
+<rect x="1195" y="230" width="440" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1195" y="230" width="10" height="185" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1223" y="278" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">bills</text>
+<text x="1223" y="317" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">type, amount, category, date</text>
+<text x="1223" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">note, photoUrl, mood</text>
+<text x="1223" y="373" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">createdAt</text>
+<rect x="1195" y="805" width="440" height="160" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1195" y="805" width="10" height="160" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1223" y="853" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">budgets</text>
+<text x="1223" y="892" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">month(YYYY-MM), amount</text>
+<text x="1223" y="920" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">createdAt, updatedAt</text>
+<text x="1223" y="948" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">一用户一月一条</text>
+<rect x="165" y="805" width="460" height="185" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="165" y="805" width="10" height="185" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="193" y="853" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">ai_usage_limits</text>
+<text x="193" y="892" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">_id = openid_date_feature</text>
+<text x="193" y="920" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">date, feature, count, limit</text>
+<text x="193" y="948" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">createdAt, updatedAt</text>
+<rect x="165" y="230" width="460" height="165" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="165" y="230" width="10" height="165" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="193" y="278" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">client_logs</text>
+<text x="193" y="317" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">type, message, stack</text>
+<text x="193" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">route, createdAt</text>
+<text x="193" y="373" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">前端异常监控</text>
+<line x1="1115" y1="555" x2="1195" y2="322" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1195,322 1198,339 1181,333" fill="#f3a33a"/>
+<text x="1124" y="438" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#f3a33a">账单归属</text>
+<line x1="1115" y1="655" x2="1195" y2="885" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1195,885 1181,873 1198,867" fill="#5ba4cb"/>
+<text x="1124" y="770" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#5ba4cb">预算归属</text>
+<line x1="685" y1="655" x2="625" y2="897" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="625,897 619,879 637,884" fill="#8c7bd9"/>
+<text x="629" y="776" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#8c7bd9">AI 限流</text>
+<line x1="685" y1="555" x2="625" y2="312" stroke="#d98787" stroke-width="3" stroke-linecap="round"/>
+<polygon points="625,312 637,324 619,329" fill="#d98787"/>
+<text x="624" y="433" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="700" fill="#d98787">异常日志</text>
+<rect x="635" y="230" width="530" height="115" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="635" y="230" width="10" height="115" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="663" y="276" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">逻辑关联键</text>
+<text x="663" y="316" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">所有集合通过 _openid 归属于同一微信用户；数据库</text>
+<text x="663" y="346" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">层不使用 JOIN。</text>
+<rect x="200" y="1030" width="390" height="120" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="200" y="1030" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="228" y="1076" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">内嵌文档</text>
+<text x="228" y="1115" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">users.customCategories[]</text>
+<text x="228" y="1143" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">小规模列表随用户档案读取</text>
+<rect x="705" y="1030" width="390" height="120" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="705" y="1030" width="10" height="120" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="733" y="1076" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">幂等计数器</text>
+<text x="733" y="1115" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">ai_usage_limits._id</text>
+<text x="733" y="1143" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">openid_date_feature</text>
+<rect x="1210" y="1030" width="390" height="120" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1210" y="1030" width="10" height="120" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1238" y="1076" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">月份归档</text>
+<text x="1238" y="1115" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">budgets.month</text>
+<text x="1238" y="1143" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">按月 upsert 防重复</text>
+</svg>

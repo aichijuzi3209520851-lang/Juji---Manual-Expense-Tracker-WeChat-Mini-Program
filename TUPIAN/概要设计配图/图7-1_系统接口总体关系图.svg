@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1300" viewBox="0 0 1800 1300">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1300" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 7-1  系统接口总体关系图</text>
+<text x="1463" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">System Interface Map</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="80" y="180" width="480" height="930" rx="30" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2"/>
+<text x="245" y="235" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="30" font-weight="700" fill="#157a51">前端模块区</text>
+<rect x="660" y="180" width="480" height="930" rx="30" fill="#eef7fb" stroke="#d9e4de" stroke-width="2"/>
+<text x="820" y="235" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="30" font-weight="700" fill="#5ba4cb">云函数服务区</text>
+<rect x="1240" y="180" width="480" height="930" rx="30" fill="#fff7eb" stroke="#d9e4de" stroke-width="2"/>
+<text x="1415" y="235" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="30" font-weight="700" fill="#f3a33a">外部系统区</text>
+<rect x="125" y="300" width="390" height="165" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="125" y="300" width="10" height="165" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="153" y="348" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">页面层</text>
+<text x="153" y="387" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">login / guide / home / stats</text>
+<text x="153" y="415" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">record / budget / profile</text>
+<text x="153" y="443" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">categories / themes / detail</text>
+<rect x="125" y="510" width="390" height="165" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="125" y="510" width="10" height="165" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="153" y="558" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">组件层</text>
+<text x="153" y="597" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">custom-tab-bar</text>
+<rect x="125" y="720" width="390" height="165" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="125" y="720" width="10" height="165" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="153" y="768" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">工具层</text>
+<text x="153" y="807" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">theme / eventBus / validate</text>
+<text x="153" y="835" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">rateLimiter / privacy</text>
+<text x="153" y="863" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">contentSafety / monitor / dbPager</text>
+<rect x="705" y="300" width="390" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="705" y="300" width="10" height="155" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="733" y="348" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">认证与写入</text>
+<text x="733" y="387" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">quickstartFunctions</text>
+<text x="733" y="415" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">bills / budgets</text>
+<rect x="705" y="510" width="390" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="705" y="510" width="10" height="155" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="733" y="558" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">AI 服务</text>
+<text x="733" y="597" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">aiChat / aiPoster</text>
+<rect x="705" y="720" width="390" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="705" y="720" width="10" height="155" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="733" y="768" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">数据工具</text>
+<text x="733" y="807" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">dataMigration / exportBills</text>
+<text x="733" y="835" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">clearUserData / contentSafety</text>
+<rect x="1285" y="300" width="390" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1285" y="300" width="10" height="155" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1313" y="348" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">微信 SDK</text>
+<text x="1313" y="387" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">wx.login / wx.cloud.database</text>
+<text x="1313" y="415" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">wx.cloud.callFunction</text>
+<rect x="1285" y="510" width="390" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1285" y="510" width="10" height="155" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1313" y="558" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">CloudBase</text>
+<text x="1313" y="597" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">NoSQL 数据库 / 云存储</text>
+<text x="1313" y="625" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">云函数运行时</text>
+<rect x="1285" y="720" width="390" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1285" y="720" width="10" height="155" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1313" y="768" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">AI 与审核</text>
+<text x="1313" y="807" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">混元 hy3-preview</text>
+<text x="1313" y="835" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">security.msgSecCheck v2</text>
+<line x1="520" y1="382" x2="697" y2="377" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,377 681,386 681,368" fill="#6b7d73"/>
+<line x1="520" y1="382" x2="697" y2="587" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,587 679,581 694,569" fill="#6b7d73"/>
+<line x1="520" y1="382" x2="697" y2="797" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,797 682,786 699,779" fill="#6b7d73"/>
+<line x1="520" y1="592" x2="697" y2="377" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,377 694,394 679,382" fill="#6b7d73"/>
+<line x1="520" y1="592" x2="697" y2="587" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,587 681,596 681,578" fill="#6b7d73"/>
+<line x1="520" y1="592" x2="697" y2="797" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,797 679,791 694,779" fill="#6b7d73"/>
+<line x1="520" y1="802" x2="697" y2="377" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,377 699,394 682,387" fill="#6b7d73"/>
+<line x1="520" y1="802" x2="697" y2="587" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,587 694,604 679,592" fill="#6b7d73"/>
+<line x1="520" y1="802" x2="697" y2="797" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="697,797 681,806 681,788" fill="#6b7d73"/>
+<line x1="1100" y1="377" x2="1277" y2="377" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,377 1261,386 1261,367" fill="#6b7d73"/>
+<line x1="1100" y1="377" x2="1277" y2="587" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,587 1259,581 1274,569" fill="#6b7d73"/>
+<line x1="1100" y1="377" x2="1277" y2="797" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,797 1262,786 1279,779" fill="#6b7d73"/>
+<line x1="1100" y1="587" x2="1277" y2="377" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,377 1274,394 1259,382" fill="#6b7d73"/>
+<line x1="1100" y1="587" x2="1277" y2="587" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,587 1261,596 1261,577" fill="#6b7d73"/>
+<line x1="1100" y1="587" x2="1277" y2="797" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,797 1259,791 1274,779" fill="#6b7d73"/>
+<line x1="1100" y1="797" x2="1277" y2="377" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,377 1279,394 1262,387" fill="#6b7d73"/>
+<line x1="1100" y1="797" x2="1277" y2="587" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,587 1274,604 1259,592" fill="#6b7d73"/>
+<line x1="1100" y1="797" x2="1277" y2="797" stroke="#6b7d73" stroke-width="2" stroke-linecap="round"/>
+<polygon points="1277,797 1261,806 1261,787" fill="#6b7d73"/>
+<rect x="260" y="1030" width="440" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="277" y="1058" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">客户端直读数据库，写操作走云函数</text>
+<rect x="830" y="1030" width="500" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="847" y="1058" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#5ba4cb">服务端获取 OPENID，不信任客户端身份参数</text>
+<rect x="1280" y="1030" width="430" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="1297" y="1058" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#f3a33a">AI、内容安全、存储均由 CloudBase 统一</text>
+<text x="1297" y="1091" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#f3a33a">承载</text>
+</svg>

@@ -203,6 +203,7 @@ Page({
     statsType: 'expense',
     totalAmount: '0.00',
     legendData: [],
+    showRankingAll: false,
     trendData: [],
     trendAxisLabels: [],
     trendCanvasWidth: CHART_SIZES.month.width,
@@ -539,6 +540,10 @@ Page({
       wx.setStorageSync('juji_ai_note_swiped', true)
     }
     if (Object.keys(next).length) this.setData(next)
+  },
+
+  toggleRankingAll() {
+    this.setData({ showRankingAll: !this.data.showRankingAll })
   },
 
   showAINoteFull(e) {

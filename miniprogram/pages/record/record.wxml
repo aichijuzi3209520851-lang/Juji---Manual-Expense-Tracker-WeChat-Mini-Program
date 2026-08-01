@@ -68,41 +68,52 @@
     </view>
   </view>
 
-  <!-- 备注（可选） -->
-  <view class="note-section">
-    <view class="note-card {{showNoteInput ? 'expanded' : ''}}">
-      <view class="note-card-head">
-        <text class="note-label">备注</text>
-      </view>
-      <input class="note-input" value="{{note}}" placeholder="添加备注…" placeholder-class="note-placeholder" bindinput="onNoteInput" bindfocus="onNoteFocus" bindblur="onNoteBlur" maxlength="200" />
-      <view class="note-tools">
-        <view class="note-photo-trigger {{photoUrl ? 'has-photo' : ''}}" bindtap="choosePhoto" hover-class="note-photo-trigger--hover">
-          <image class="note-photo-icon" src="/images/record/camera.svg" mode="aspectFit" />
-        </view>
-      </view>
+  <!-- 附加信息 chip 行（备注 / 照片 / 心情，默认折叠） -->
+  <view class="extras-row">
+    <view class="extras-chip {{note ? 'is-active' : ''}}" bindtap="toggleNoteExpand" hover-class="extras-chip--hover">
+      <text class="extras-chip-icon">💬</text>
+      <text class="extras-chip-label">{{note ? '备注' : '加备注'}}</text>
     </view>
-
-    <view class="photo-inline" wx:if="{{photoUrl}}">
-      <image class="photo-inline-preview" src="{{photoUrl}}" mode="aspectFill" bindtap="previewPhoto" />
-      <view class="photo-inline-copy">
-        <text class="photo-inline-title">已添加照片</text>
-        <text class="photo-inline-subtitle">点击预览，或重新选择一张更合适的图片</text>
-      </view>
-      <view class="photo-inline-remove" bindtap="removePhoto">移除</view>
+    <view class="extras-chip {{photoUrl ? 'is-active' : ''}}" bindtap="choosePhoto" hover-class="extras-chip--hover">
+      <text class="extras-chip-icon">📷</text>
+      <text class="extras-chip-label">{{photoUrl ? '已拍照' : '拍照'}}</text>
+    </view>
+    <view class="extras-chip {{mood ? 'is-active' : ''}}" bindtap="openMoodSheet" hover-class="extras-chip--hover">
+      <text class="extras-chip-icon">{{mood || '😊'}}</text>
+      <text class="extras-chip-label">{{mood ? '心情' : '心情'}}</text>
     </view>
   </view>
 
-  <!-- 心情（可选） -->
-  <view class="mood-section">
-    <text class="mood-label">心情（可选）</text>
-    <view class="mood-row">
-      <view wx:for="{{presetMoods}}" wx:key="*this" class="mood-chip {{mood === item ? 'is-active' : ''}}" data-emoji="{{item}}" bindtap="selectMood">{{item}}</view>
-      <view class="mood-chip mood-custom {{isCustomMood ? 'is-active' : ''}}" bindtap="pickCustomMood">
+  <!-- 备注行内展开 -->
+  <view class="note-expand {{noteExpanded ? 'is-open' : ''}}">
+    <view class="note-expand-inner">
+      <input class="note-input" value="{{note}}" placeholder="添加备注…" placeholder-class="note-placeholder" bindinput="onNoteInput" maxlength="200" />
+      <view wx:if="{{note}}" class="note-clear" bindtap="clearNote">清除</view>
+    </view>
+  </view>
+
+  <!-- 照片预览（已选时展示） -->
+  <view class="photo-preview" wx:if="{{photoUrl}}">
+    <image class="photo-preview-img" src="{{photoUrl}}" mode="aspectFill" bindtap="previewPhoto" />
+    <view class="photo-preview-actions">
+      <view class="photo-preview-action" bindtap="choosePhoto">重选</view>
+      <view class="photo-preview-action danger" bindtap="removePhoto">移除</view>
+    </view>
+  </view>
+
+  <!-- 心情选择底部抽屉 -->
+  <bottom-sheet visible="{{showMoodSheet}}" title="记录心情（可选）" size="small" bind:close="closeMoodSheet">
+    <view class="mood-grid">
+      <view wx:for="{{presetMoods}}" wx:key="*this" class="mood-grid-item {{mood === item ? 'is-active' : ''}}" data-emoji="{{item}}" bindtap="selectMood">{{item}}</view>
+      <view class="mood-grid-item mood-grid-custom {{isCustomMood ? 'is-active' : ''}}" bindtap="pickCustomMood">
         <text wx:if="{{!isCustomMood}}">+</text>
         <text wx:else>{{mood}}</text>
       </view>
     </view>
-  </view>
+    <view wx:if="{{mood}}" class="mood-clear-row">
+      <view class="mood-clear-btn" bindtap="clearMood">清除当前心情</view>
+    </view>
+  </bottom-sheet>
 
   <!-- 操作按钮区 -->
   <view class="record-actions">

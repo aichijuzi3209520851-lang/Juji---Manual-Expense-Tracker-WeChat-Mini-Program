@@ -1,0 +1,371 @@
+# 橘记详细设计说明书.docx
+
+[P][Normal] 2026年湖南省大学生计算机程序设计竞赛校级选拔赛
+[P][Normal] -----应用开发类竞赛（2026）
+[P][Normal] 详
+[P][Normal] 细
+[P][Normal] 设
+[P][Normal] 计
+[P][Normal] 说
+[P][Normal] 明
+[P][Normal] 书
+[TABLE 1]
+作品名称： | 橘记(JuJI)—— 混元AI大模型驱动的对话式智能记账与消费洞察小程序
+作品类别： | 移动终端开发类
+作 者： | 梁承伟 李俊怡 邓泽楷
+指导老师： | 李翠红 胡瑶
+单 位： | 湖南信息学院
+[/TABLE]
+[P][Normal] 二零二六 年 六月 十日
+[P][TOC 标题1] 目录
+[P][toc 1] 第 1 章 引言 6
+[P][toc 2] 1.1 编写目的 6
+[P][toc 2] 1.2 项目背景 6
+[P][toc 2] 1.3 术语与缩略语 6
+[P][toc 2] 1.4 参考标准与资料 7
+[P][toc 1] 第 2 章 系统概述 8
+[P][toc 2] 2.1 系统目标与设计理念 8
+[P][toc 2] 2.2 目标用户与典型场景 8
+[P][toc 2] 2.3 技术架构选型 8
+[P][toc 2] 2.4 运行环境 9
+[P][toc 1] 第 3 章 总体设计 11
+[P][toc 2] 3.1 系统分层结构 11
+[P][toc 2] 3.2 功能模块划分 11
+[P][toc 2] 3.3 数据流设计 12
+[P][toc 2] 3.4 状态管理机制 13
+[P][toc 1] 第 4 章 数据库设计 14
+[P][toc 2] 4.1 设计原则 14
+[P][toc 2] 4.2 集合详表 14
+[P][toc 2] 4.3 关键设计说明 15
+[P][toc 1] 第 5 章 详细功能模块设计 16
+[P][toc 2] 5.1 登录与引导模块 16
+[P][toc 2] 5.2 记账模块 17
+[P][toc 2] 5.3 首页仪表盘模块 19
+[P][toc 2] 5.4 统计分析模块 19
+[P][toc 2] 5.5 预算管理模块 20
+[P][toc 2] 5.6 个人中心模块 20
+[P][toc 2] 5.7 AI 智能中枢模块 21
+[P][toc 3] 5.7.1 对话式记账 21
+[P][toc 3] 5.7.2 AI 信件与每日称号 22
+[P][toc 3] 5.7.3 统计页 AI 评论 22
+[P][toc 1] 第 6 章 接口设计 24
+[P][toc 2] 6.1 接口设计约定 24
+[P][toc 2] 6.2 云函数接口详表 24
+[P][toc 1] 第 7 章 关键算法与核心机制设计 27
+[P][toc 2] 7.1 自然语言记账解析算法 27
+[P][toc 2] 7.2 主题色 Design Token 推导算法 27
+[P][toc 2] 7.3 频率限制与配额机制 28
+[P][toc 2] 7.4 大数据量分页拉取 28
+[P][toc 1] 第 8 章 界面与视觉设计 29
+[P][toc 2] 8.1 设计语言 29
+[P][toc 2] 8.2 Design Token 设计体系 29
+[P][toc 2] 8.3 主题系统 29
+[P][toc 2] 8.4 自定义 TabBar 30
+[P][toc 2] 8.5 字体系统 31
+[P][toc 1] 第 9 章 安全与隐私设计 32
+[P][toc 2] 9.1 身份与权限 32
+[P][toc 2] 9.2 隐私合规 32
+[P][toc 2] 9.3 内容安全机制 32
+[P][toc 2] 9.4 异常监控 33
+[P][toc 2] 9.5 数据自主权 33
+[P][toc 1] 第 10 章 非功能性设计 34
+[P][toc 2] 10.1 性能设计 34
+[P][toc 2] 10.2 可维护性设计 34
+[P][toc 2] 10.3 可扩展性设计 34
+[P][toc 2] 10.4 兼容性与降级 34
+[P][toc 1] 第 11 章 部署与运维设计 36
+[P][toc 2] 11.1 部署流程 36
+[P][toc 2] 11.2 监控与日志 37
+[P][toc 2] 11.3 数据备份与恢复 37
+[P][toc 2] 11.4 灾难恢复预案 37
+[P][toc 1] 第 12 章 总结与展望 38
+[P][toc 2] 12.1 工作总结 38
+[P][toc 2] 12.2 创新点 38
+[P][toc 2] 12.3 不足与展望 38
+[P][toc 1] 附录 A 项目目录结构 39
+[P][toc 1] 附录 B 数据字典 40
+[P][Heading 1] 第 1 章 引言
+[P][Heading 2] 1.1 编写目的
+[P][Normal] 本说明书面向计算机程序设计竞赛评审、项目开发者和后续维护人员，说明橘记微信小程序在功能、架构、数据、接口、安全、界面与部署方面的详细设计。文档以 GB/T 8567《计算机软件文档编制规范》中“详细设计说明书”的体例为参考，重点呈现系统的工程可实现性、端云协同设计和对话式 AI 记账创新点。
+[P][Normal] 本文档不是需求宣传材料，而是开发与答辩均可使用的技术说明。各章节尽量使用可核验的项目事实，包括原生微信小程序框架、CloudBase Serverless 后端、5 个数据库集合、9 个核心云函数、10 个小程序页面、Design Token 主题系统和混元大模型接入方式。
+[P][Heading 2] 1.2 项目背景
+[P][Normal] 橘记是一款“大模型驱动的对话式智能记账微信小程序”，定位于个人消费习惯养成。传统记账产品常见问题是录入成本高、复盘反馈弱、用户坚持周期短；橘记以“打开即记、记完就走”为基本体验，用原生小程序降低入口成本，用 AI 对话降低录入门槛，用情感化视觉和“小橘”陪伴强化持续使用动机。
+[P][Normal] 项目当前版本为 v1.1.0。前端采用原生微信小程序 WXML/WXSS/JS，不使用 Taro、uni-app 等跨端框架；后端采用腾讯云 CloudBase Serverless；AI 能力基于腾讯混元 hunyuan-v3，并使用 hy3-preview 模型能力。
+[P][Heading 2] 1.3 术语与缩略语
+[P][Caption] 表 1-1 术语与缩略语表
+[TABLE 2]
+术语 | 英文/标识 | 说明
+CloudBase | Tencent CloudBase | 腾讯云开发平台，提供云函数、云数据库、云存储、AI 扩展等能力。
+Serverless | Serverless | 免服务器运维的后端模式，开发者按函数与资源使用量部署业务逻辑。
+云函数 | Cloud Function | 运行在 CloudBase 上的 Node.js 服务端函数，用于校验、写入、导出、AI 调用等。
+openid | OPENID | 微信侧为当前用户生成的唯一身份标识，服务端通过 cloud.getWXContext().OPENID 获取。
+Design Token | Token | 将颜色、渐变、阴影、字体等视觉参数抽象为可推导变量的设计系统机制。
+混元大模型 | hunyuan-v3 / hy3-preview | 腾讯混元文本模型，橘记用于 AI 评论、AI 信件、聊天助手和对话记账解析。
+WXML/WXSS | WXML / WXSS | 微信小程序页面结构与样式语言，对应 Web 中 HTML/CSS 的角色。
+TabBar | custom-tab-bar | 底部主导航。橘记使用自定义毛玻璃 TabBar，并将中间记账按钮设计为凸起入口。
+EventBus | utils/eventBus.js | 轻量发布订阅机制，主要用于 themeChanged 等跨页面事件。
+msgSecCheck | security.msgSecCheck v2 | 微信内容安全接口，用于文本合规审核。
+[/TABLE]
+[P][Heading 2] 1.4 参考标准与资料
+[P][Normal] 本文档参考 GB/T 8567《计算机软件文档编制规范》的文档组织方式，结合微信小程序开发规范、腾讯云 CloudBase 文档、腾讯混元接入说明以及 ECMA-376 Office Open XML 文件格式规范进行编制。对于未在标准中细化的小程序工程实践，本文以当前仓库的 README、AGENTS/CLAUDE 工程说明和实际目录结构为依据。
+[P][Heading 1] 第 2 章 系统概述
+[P][Heading 2] 2.1 系统目标与设计理念
+[P][Normal] 橘记的系统目标是为个人用户提供低负担、可持续、可复盘的记账体验。产品理念可以概括为“打开即记、记完就走”：核心流程尽量短，数据反馈尽量直观，AI 帮助用户把自然语言转为结构化账单，主题系统和小橘助手则提升长期使用的情感连接。
+[P][Normal] 在功能层面，系统覆盖日常账单录入、首页仪表盘、统计分析、预算管控、个人中心、分类与主题管理、数据导出导入、AI 智能中枢等场景；在工程层面，系统保持纯原生小程序结构，不引入构建链，便于通过微信开发者工具直接开发、部署和答辩演示。
+[P][Heading 2] 2.2 目标用户与典型场景
+[P][Normal] 目标用户主要包括学生和年轻职场人。学生侧重每日小额支出记录、月末复盘与预算提醒；年轻职场人侧重工资、兼职、理财、日常消费的快速记录和统计反馈。典型场景包括日常即时记账、月底复盘、预算管控、对话式快速补记、账单照片留存以及数据备份迁移。
+[P][Heading 2] 2.3 技术架构选型
+[P][Caption] 表 2-1 技术架构选型表
+[TABLE 3]
+层次 | 选型 | 说明
+前端层 | 原生微信小程序 | 使用 WXML/WXSS/JS 和 Page/Component 构造器，直接调用 wx.* 与 wx.cloud.* API。
+服务层 | CloudBase Serverless | 以云函数承载写入校验、导出导入、账号清除、AI 信件、聊天和内容安全审核。
+数据层 | CloudBase NoSQL + 云存储 | NoSQL 存账单、预算、用户、AI 限流、日志；云存储保存账单照片、头像、导出文件。
+AI 能力 | 腾讯混元 hunyuan-v3 / hy3-preview | 统计页流式评论、AI 信件、每日称号、小橘聊天和对话式记账解析。
+工程形态 | 无构建链纯 JS | 根目录无 package.json，无 CLI 构建测试命令，开发部署依赖微信开发者工具。
+[/TABLE]
+[P][Normal] 选择 Serverless 的主要原因是免运维、按量使用、与微信生态原生集成，并能让参赛项目专注于产品流程与端云协同设计，而不是服务器购买、部署、扩缩容和数据库运维。
+[P][Caption] 图 2-1 橘记系统总体架构图
+[P][Heading 2] 2.4 运行环境
+[P][Caption] 表 2-2 运行环境与规模信息
+[TABLE 4]
+项目 | 取值 | 说明
+小程序基础库 | 3.16.0 | 当前项目 app.json 与工程说明采用的基础库版本。
+云函数运行时 | Nodejs16.13 | CloudBase 云函数运行环境。
+CloudBase 地域 | ap-shanghai | 上海地域，个人版环境。
+页面数量 | 10 个页面 | login、guide、home、stats、record、budget、profile、categories、themes、detail。
+核心云函数 | 9 个 | quickstartFunctions、bills、budgets、exportBills、dataMigration、clearUserData、aiPoster、aiChat、contentSafety。
+数据库集合 | 5 个 | bills、budgets、users、ai_usage_limits、client_logs。
+前端 utils | 9 个 | theme、eventBus、rateLimiter、validate、privacy、contentSafety、monitor、dbPager、profileHelpers。
+[/TABLE]
+[P][Heading 1] 第 3 章 总体设计
+[P][Heading 2] 3.1 系统分层结构
+[P][Normal] 橘记采用“表现层—逻辑层—工具层—服务层—数据层”的分层结构。表现层由 WXML/WXSS 与自定义组件承担，负责页面结构、视觉表现和交互反馈；逻辑层由 Page/Component JS 组织页面状态与生命周期；工具层以 utils 模块沉淀主题、校验、隐私授权、内容安全、分页和监控；服务层由 CloudBase 云函数承载写入、导出、AI 和安全复检；数据层由 NoSQL 集合、云存储和混元模型组成。
+[P][Normal] 该分层使读写路径保持清晰：读取可由客户端通过 wx.cloud.database() 直接完成，写入统一经云函数做服务端校验和所有权检查。AI 调用根据能力差异分为客户端流式和云函数服务端两类，避免把所有 AI 逻辑塞进同一个层次。
+[P][Heading 2] 3.2 功能模块划分
+[P][Caption] 表 3-1 功能模块划分表
+[TABLE 5]
+模块 | 涉及页面/组件 | 职责
+登录引导 | login、guide、app.js | 完成隐私授权、静默登录、首次引导和进入首页的入口控制。
+记账 | record、detail、categories、bills | 完成收支录入、编辑、删除、自定义分类、照片、心情和批量写入。
+首页仪表盘 | home、dbPager、budgets | 展示当天/昨天消费、预算进度、季节标签和近期流水。
+统计分析 | stats、AI streamText | 完成分类占比、趋势图、周期评论和缓存控制。
+预算管理 | budget、budgets | 按月 upsert 预算，展示进度环、节奏卡和历史达成率。
+个人中心 | profile、dataMigration、clearUserData | 管理头像昵称、足迹、AI 信件、导出导入、退出与数据清除。
+AI 智能中枢 | aiChat、aiPoster、contentSafety | 承载小橘聊天、对话式记账、AI 信件、每日称号和内容安全。
+[/TABLE]
+[P][Caption] 图 3-1 功能模块结构图
+[P][Heading 2] 3.3 数据流设计
+[P][Normal] 系统采用读写分离的工程策略。读取路径优先走客户端 wx.cloud.database()，例如首页、统计、预算页在 onShow 阶段拉取集合数据；当需要全量拉取时，通过 utils/dbPager.js 循环 skip/limit 绕过单次 20 条查询上限。写入路径统一使用 wx.cloud.callFunction()，由云函数做二次校验、所有权判断和安全过滤。
+[P][Normal] 账单编辑存在一个微信小程序导航限制：wx.switchTab() 不能携带参数。项目通过 getApp().globalData._editBillId 在详情页与记账页之间桥接编辑状态。详情页写入 _editBillId 后切换到 record，record 的 onShow 检测该字段并进入编辑模式，保存后清空该字段。
+[P][Caption] 图 3-2 核心数据流时序图
+[P][Heading 2] 3.4 状态管理机制
+[P][Normal] 系统未引入 Redux、MobX 等状态管理库，而是使用三种机制组合。第一，getApp().globalData 保存 openid、userInfo、currentTheme、eventBus、_editBillId、_loginPromise 等全局状态，其中 _loginPromise 用于 silentLogin 去重。第二，wx.setStorageSync / wx.getStorageSync 持久化主题、引导标识、AI 缓存和每日限制等轻量状态。第三，utils/eventBus.js 提供跨页面事件，主要事件为 themeChanged。
+[P][Heading 1] 第 4 章 数据库设计
+[P][Heading 2] 4.1 设计原则
+[P][Normal] 橘记使用 CloudBase 文档型 NoSQL 数据库。NoSQL 本身不强制 Schema，但系统在文档层面约定字段结构，并在客户端 validate.js 与服务端云函数 validate() 中进行输入校验。所有集合均采用“仅创建者可读写”权限策略，以 _openid 作为用户数据隔离边界。
+[P][Normal] 数据库设计遵循四个原则：账单记录保持扁平化便于分页和统计；预算按月唯一 upsert；用户自定义分类内嵌在 users.customCategories 中减少额外集合；AI 调用限流以 openid + 日期 + 功能 组成文档 ID，便于原子计数和按日复位。
+[P][Heading 2] 4.2 集合详表
+[P][Caption] 表 4-1 数据库集合设计
+[TABLE 6]
+集合 | 核心字段 | 用途 | 权限/约束
+bills | type, amount, category, date, note, photoUrl, mood, createdAt | 保存收入/支出账单及照片、心情、备注等记录。 | 仅创建者可读写；写入需通过 bills 云函数校验。
+budgets | month, amount, createdAt | 保存每月预算，一个用户一个月份一条记录。 | 仅创建者可读写；按 month upsert。
+users | nickname, avatarUrl, gender, customCategories, theme, budgetDefault | 保存用户资料、主题和自定义分类。 | 仅创建者可读写；customCategories 内嵌 {name, icon}。
+ai_usage_limits | docId=openid_date_feature, count, updatedAt | 记录 AI 信件、称号等每日功能调用次数。 | 按 openid-日期-功能计数；profileLetter 30/日，profileTitle 8/日。
+client_logs | type, message, stack, route, createdAt | 保存前端异常监控截断日志。 | 由 monitor.js 写入，用于排查 onError/onUnhandledRejection。
+[/TABLE]
+[P][Caption] 图 4-1 数据库集合关系图
+[P][Heading 2] 4.3 关键设计说明
+[P][Normal] bills 集合是系统统计和流水展示的主数据源。amount 必须大于 0 且不超过 9999999.99，type 只能为 expense 或 income，date 使用 YYYY-MM-DD 字符串，photoUrl 如存在必须为 cloud:// 前缀。budgets 集合通过 month 字段表达月份维度，重复设置预算时更新原文档而非新增文档。
+[P][Normal] users.customCategories 以数组形式保存自定义分类，避免为较小规模个人数据额外建立分类集合。ai_usage_limits 使用 openid_date_feature 作为文档 ID，能直接表达“某用户在某日对某功能的调用次数”，便于云函数在一次查询中完成额度判断。
+[P][Heading 1] 第 5 章 详细功能模块设计
+[P][Heading 2] 5.1 登录与引导模块
+[P][Normal] 登录与引导模块负责应用首次进入的身份建立、隐私授权和使用心智引导。app.js onLaunch 的主要顺序为 cloud.init、initMonitoring、initPrivacyAuthorization、migrateLegacyCustomTheme、initAppTheme、读取引导标识，并在用户同意隐私协议后执行 silentLogin。silentLogin 通过 quickstartFunctions 获取 openid，并使用 _loginPromise 避免并发重复登录。
+[P][Normal] 新手引导为 4 屏滑动页面，用户看过一次后通过 has_seen_guide 标识避免重复出现。第 4 屏“遇见小橘”以吉祥物招手和发射爱心介绍对话记账，配合 CSS 毛玻璃悬浮球和水印汉字形成轻量情感化引导。
+[P][Caption] 图 5-1 登录与引导流程图
+[P][Caption] 图 5-2 4 屏引导页运行截图
+[P][Heading 2] 5.2 记账模块
+[P][Normal] 记账模块是系统的主入口之一，支持收入/支出双模式滑块、96rpx 大数字金额输入、预设分类网格、自创分类、日期 picker、心情 emoji、备注和照片上传。预设支出分类包括餐饮、交通、购物、娱乐、学习、日用、医疗、其他；预设收入分类包括工资、兼职、理财、红包、退款、其他。自定义分类保存于 users.customCategories，名称最长 10 字，emoji 最长 2 字。
+[P][Normal] 保存链路采用双重校验。客户端先通过 utils/validate.js 校验 type、amount、category、date、note、photoUrl 等字段，再通过 utils/rateLimiter.js 的 canSaveBill() 执行 3000ms 防抖和单日 500 笔限制；云端 bills 函数再次执行 validate()，并在 update/delete 时按 _openid 校验所有权。对话式记账的批量写入复用 bills.batchCreate，单次最多 10 笔。
+[P][Caption] 图 5-3 记账页运行截图
+[P][Caption] 图 5-4 记账数据校验流程图
+[P][Heading 2] 5.3 首页仪表盘模块
+[P][Normal] 首页在 onShow 阶段拉取账单和预算数据，向用户展示今天/昨天消费双数字、预算进度条、季节标签和近 30 条账单流水。预算进度条具有未设预算引导、正常进度、超支红色三态；流水按日期分组，支持点击进入详情，长按删除时触发二次确认。
+[P][Normal] 首页视觉采用主色到 accent 的跨色相渐变 hero 卡，强化“本日消费状态”的第一眼反馈。账单流水采用按日聚合，既能快速扫描近期消费，也能降低单条流水堆叠造成的信息压力。
+[P][Caption] 图 5-5 首页仪表盘运行截图
+[P][Heading 2] 5.4 统计分析模块
+[P][Normal] 统计页围绕“月度复盘”组织信息。页面包含渐变 hero 月份选择器、收入/支出数据卡片、月收支趋势折线图和 AI 俏皮评论卡片。趋势图使用纯 CSS 渲染，当前月以渐变高亮。
+[P][Normal] 统计页 AI 评论采用 wx.cloud.extend.AI.createModel('hunyuan-v3').streamText()，模型能力为 hy3-preview。客户端按昨日、上周、上月三个 periodKey 串行请求，并设置 1s 间隔、429 退避和缓存策略；失败不写缓存，允许用户再次触发。
+[P][Caption] 图 5-6 统计页运行截图
+[P][Heading 2] 5.5 预算管理模块
+[P][Normal] 预算页负责帮助用户理解当月消费节奏。页面包含渐变 hero 进度环、6 个月预算达成率历史条形图、消费节奏卡和“钱去哪了”Top 3 分类。消费节奏卡计算日均预算、今日消费、剩余天数和建议日均，为用户提供可操作的预算反馈。
+[P][Normal] 预算设置通过底部滑入面板完成，写入 budgets 云函数。预算以 month 为唯一维度，一个月一条记录，通过 upsert 防止重复预算文档。未设置预算时页面展示空态引导，而不是空白图表。
+[TABLE 7]
+〖待插图 图 5-7：预算页运行截图〗——（在此用浅灰底纹/边框框出，提示后续替换为真实图片） 图片说明：展示预算进度环、历史达成率、消费节奏卡和 Top 3 分类。 建议形式：微信开发者工具截图。
+[/TABLE]
+[P][Caption] 图 5-7 预算页运行截图
+[P][Heading 2] 5.6 个人中心模块
+[P][Normal] 个人中心聚合账号资料、AI 能力、数据迁移和账号安全操作。头像和昵称支持在线编辑，头像处理链路为 editImage 裁剪、compressImage 压缩、云存储上传、getTempFileURL 回显。记账足迹卡展示记账天数、累计笔数和最爱分类，可触发 AI 专属信件。
+[P][Normal] 个人中心所有隐私敏感操作均由 requirePrivacyAuthorization 守卫，包括头像相机/相册、文件导入、数据导出和账号数据清除。JSON 导出通过 dataMigration 云函数查询全量数据，前端 writeFile 写入本地后 shareFileMessage 分享；账号清除通过 clearUserData 云函数按 _openid 删除 bills/budgets/文件并重置 users。
+[P][Caption] 图 5-8 个人中心运行截图
+[P][Caption] 图 5-9 小橘吉祥物形象图
+[P][Heading 2] 5.7 AI 智能中枢模块
+[P][Heading 3] 5.7.1 对话式记账
+[P][Normal] 对话式记账是橘记的核心创新。用户向“小橘”输入自然语言，例如“中午吃饭18，买了瓶4元冰红茶，交了电费40”，aiChat 云函数调用 hy3-preview，让模型输出结构化 JSON {intent, reply, bills}。云函数对模型返回进行容错解析，并对金额、日期、分类、备注、安全词等进行服务端清洗，最终将待确认账单卡返回前端。
+[P][Normal] 前端并不直接写入 AI 解析结果，而是渲染“待确认账单卡”，允许用户编辑金额、备注、删除行，并对非预设分类决定是否新建。新分类默认不勾选；不勾选时归入“其他”并在备注中保留原词，勾选后写入 users.customCategories。用户确认后调用 bills.batchCreate 批量写入，单次最多 10 笔。
+[P][Heading 3] 5.7.2 AI 信件与每日称号
+[P][Normal] aiPoster 云函数基于用户足迹数据生成 AI 信件和每日消费称号。该功能通过 ai_usage_limits 按 openid、日期、功能限制调用次数，其中 profileLetter 每日 30 次，profileTitle 每日 8 次。失败时返回兜底文案，避免用户看到空状态或异常堆栈。
+[P][Heading 3] 5.7.3 统计页 AI 评论
+[P][Normal] 统计页 AI 评论与个人中心 AI 信件路径不同：统计页采用客户端流式 streamText，以 periodKey 缓存昨日、上周、上月三张评论卡；个人中心的信件与称号则由云函数服务端生成并计入 ai_usage_limits。二者形成“即时复盘”和“陪伴激励”两类 AI 体验。
+[P][Caption] 图 5-10 对话式记账端云协同流程图
+[P][Caption] 图 5-11 待确认账单卡运行截图
+[P][Heading 1] 第 6 章 接口设计
+[P][Heading 2] 6.1 接口设计约定
+[P][Normal] 橘记云函数统一通过 wx.cloud.callFunction() 调用，入参通常包含 action 与 data，返回结构以 {success, ...} 为基础。身份信息不信任客户端传入，云函数通过 cloud.getWXContext().OPENID 获取当前调用者 openid，并基于该 openid 进行数据作用域限制。
+[P][Normal] 接口错误设计遵循“可恢复、可提示、不泄露实现细节”的原则：字段校验错误返回明确提示，所有权不匹配返回失败而不是暴露目标数据，AI 和内容安全异常返回固定兜底文案或提示，避免把模型异常、SDK 堆栈或安全审核细节直接暴露给用户。
+[P][Heading 2] 6.2 云函数接口详表
+[P][Caption] 表 6-1 核心云函数接口设计
+[TABLE 8]
+云函数 | 主要 action/能力 | 入参要点 | 出参要点 | 校验与失败处理
+quickstartFunctions | getOpenId / user sync | 无敏感客户端身份入参 | openid、用户初始化结果 | 服务端取 OPENID；失败返回登录失败提示。
+bills | create/delete/update/batchCreate | type、amount、category、date、note、photoUrl、mood；batchCreate 为 bills 数组 | {success, id} 或 {success, created, total, results} | type 限定 expense/income；amount>0 且 <=9999999.99；category 非空且 <=10；note<=500；photoUrl 必须 cloud://。
+budgets | upsert | month、amount | {success, id, updated} | month 唯一；amount>0；按 _openid 与 month 查找后新增或更新。
+exportBills | CSV 导出 | 时间范围、类型过滤等 | 云存储文件 ID 或下载信息 | 只导出当前 openid 数据；失败提示稍后重试。
+dataMigration | export/import | export 无需传入用户身份；import 接收清洗后的 JSON 批次 | 导出 JSON 或导入统计 | 导入按批 20 条写入，校验来源和字段。
+clearUserData | 账号数据清除 | 无需客户端传入 openid | {success, deletedCounts} | 服务端按 _openid 删除 bills/budgets/文件并重置 users。
+aiPoster | AI 信件 / 每日称号 | 足迹摘要、功能标识 | letter/title/fallback | ai_usage_limits 限流；内容安全；失败返回 FALLBACK_REPLY。
+aiChat | 聊天 / 对话记账解析 | messages、categories、today、可选天气上下文 | {intent, reply, bills} | 8 条 × 300 字；temperature 0.2；账单 <=10；本地正则 + msgSecCheck。
+contentSafety | 文本审核 | text、scene | {success, pass, reason} | BLOCK_PATTERNS 快速拦截，msgSecCheck v2 复检。
+[/TABLE]
+[P][Normal] 其中 bills 与 aiChat 是系统最核心的两个接口：前者承载手动和 AI 批量记账的最终写入，后者承载自然语言到结构化账单的转换。二者通过服务端校验与待确认卡衔接，避免 AI 直接越权写库。
+[P][Caption] 图 6-1 云函数调用关系总图
+[P][Heading 1] 第 7 章 关键算法与核心机制设计
+[P][Heading 2] 7.1 自然语言记账解析算法
+[P][Normal] 自然语言记账解析的目标是把用户口语输入转换为多条账单。算法由意图判断、结构化抽取、服务端清洗和前端确认四步组成。aiChat 云函数将 categories 和 today 作为上下文传给模型，要求模型返回 {intent, reply, bills}；服务端再对 bills 逐条补日期、映射分类、过滤安全词、限制金额大于 0，并约束单次解析不超过 10 笔。
+[TABLE 9]
+parseAiReply(raw): text = removeMarkdownCodeFence(raw) jsonText = sliceFromFirstLeftBraceToLastRightBrace(text) try: obj = JSON.parse(jsonText) return normalizeBills(obj.bills, categories, today) catch: return { intent: "chat", reply: FALLBACK_REPLY, bills: [] }
+[/TABLE]
+[P][Normal] 容错解析分三层：先剥离 ```json 代码块包裹；再截取首个 { 到最后一个 } 之间的内容；最终 JSON.parse 失败时回退普通聊天，而不是把异常暴露给用户。该设计提高了模型输出不稳定时的可用性。
+[P][Caption] 图 7-1 对话记账解析三级容错流程图
+[P][Heading 2] 7.2 主题色 Design Token 推导算法
+[P][Normal] 主题系统以单一主色为起点，通过 HSL 转换派生 accent、container、light、on-primary、gradient、shadow 等 60+ token。accent 采用 primary.h + 60°，形成跨色相渐变，避免页面只呈现单一色相。由于微信小程序 page{} 中声明的 CSS var() 在解析期定值，衍生 token 不能依赖运行时继承，因此 getThemeStyleString() 会把 --gradient-hero、--shadow-card 等 token 计算为字面值，并以内联 style 注入每页最外层 view。
+[P][Caption] 图 7-2 主题色 HSL 推导示意图
+[P][Heading 2] 7.3 频率限制与配额机制
+[P][Normal] 频率限制分前端和云端两层。前端 utils/rateLimiter.js 使用内存节流实现账单保存 3s 防抖，并记录单日 500 笔上限，避免用户误触或网络抖动造成重复写入。云端 ai_usage_limits 使用 openid_date_feature 文档 ID 按日按功能计数，profileLetter 为 30/日，profileTitle 为 8/日，防止 AI 功能被高频调用消耗额度。
+[P][Heading 2] 7.4 大数据量分页拉取
+[P][Normal] CloudBase 客户端查询存在单次返回上限。utils/dbPager.js 的 getAll() 通过循环 skip/limit 分页拉取，使导出、统计和全量复盘场景能够绕过单次 20 条限制。该机制对外暴露统一函数，调用方无需关心底层分页细节。
+[P][Heading 1] 第 8 章 界面与视觉设计
+[P][Heading 2] 8.1 设计语言
+[P][Normal] 橘记界面采用小红书 / Apple Wallet 风格：渐变 hero 卡、40rpx 大圆角、Neumorphic 拟物阴影和跨色相渐变构成主要视觉识别。记账工具本身偏高频，因此页面不使用过度营销式表达，而是在关键入口上强化大数字、柔和背景、明确层级和低打扰反馈。
+[P][Normal] 小橘吉祥物承担情感化陪伴角色，但不替代功能主流程。它主要出现在引导页、个人中心和 AI 聊天入口中，使 AI 能力被用户理解为可对话的助手，而不是隐藏在按钮背后的算法。
+[P][Heading 2] 8.2 Design Token 设计体系
+[P][Caption] 表 8-1 Design Token 代表变量
+[TABLE 10]
+类别 | 代表 token | 说明
+颜色 | --color-primary, --color-accent, --color-bg, --color-surface | 定义主色、跨色相强调色、页面背景和卡片表面。
+语义色 | --color-income, --color-error, --color-warning | 表达收入、错误、警告等业务语义。
+渐变 | --gradient-hero, --gradient-hero-soft | 用于首页、统计、预算、个人中心的 hero 区域。
+阴影 | --shadow-light, --shadow-dark, --shadow-card | 构成 Neumorphic 双阴影层次。
+字体 | --font-numeric, --font-size-display, --font-weight-black | 服务金额、大数字和正文层级。
+[/TABLE]
+[P][Heading 2] 8.3 主题系统
+[P][Normal] 系统提供清爽薄荷、温馨玫瑰、夜猫子、蓝天白云 4 套预设主题，并提供 8 色自定义调色板。用户可保存最多 5 个命名主题，支持创建、切换和长按删除。主题生命周期为 onLoad 订阅 themeChanged、onShow applyTheme 并注入 themeStyle、onUnload 解绑事件。
+[P][Caption] 图 8-1 四套预设主题对比图
+[P][Caption] 图 8-2 Design Token 体系层级图
+[P][Heading 2] 8.4 自定义 TabBar
+[P][Normal] 橘记使用自定义 TabBar 代替系统默认 TabBar。TabBar 为 5 列结构，中间记账按钮凸起，整体采用毛玻璃悬浮视觉。每个 tab 页面在 onShow 中调用 updateCustomTabBar()，通过 getTabBar().updateSelected() 同步当前高亮，确保跨 tab 切换时状态一致。
+[P][Caption] 图 8-3 自定义 TabBar 截图
+[P][Heading 2] 8.5 字体系统
+[P][Normal] 小程序端字体系统包含 8 级字号和 5 级字重，数字专属字体族使用 DIN Alternate / Helvetica Neue。记账金额使用 96rpx display 级字号，首页和预算核心数字使用 h1/h2 层级，正文使用 28rpx，辅助标签使用 22rpx。Word 文档排版则采用中文正文宋体小四、标题黑体、代码和数字等宽字体，以保证打印与评审阅读的一致性。
+[P][Heading 1] 第 9 章 安全与隐私设计
+[P][Heading 2] 9.1 身份与权限
+[P][Normal] 用户身份以 openid 为核心。客户端不传入可信身份，服务端通过 cloud.getWXContext().OPENID 获取调用者，并在 delete/update/clear 等写操作中按 _openid 校验数据所有权。数据库集合权限均设置为“仅创建者可读写”，形成数据库权限与云函数校验的双重约束。
+[P][Heading 2] 9.2 隐私合规
+[P][Normal] app.json 开启 __usePrivacyCheck__。登录前置条件为用户已在本地存储 juji_privacy_agreed；相机、相册、文件选择、位置、导出、导入和清除账号等敏感操作必须通过 utils/privacy.js 的 requirePrivacyAuthorization(featureName) 守卫。该设计把隐私授权从单个页面逻辑中抽出，减少遗漏。
+[P][Heading 2] 9.3 内容安全机制
+[P][Normal] 内容安全采用本地正则和微信安全接口双层机制。BLOCK_PATTERNS 覆盖赌博、色情、毒品、枪爆、诈骗、自伤、暴恐等风险词，先在客户端、contentSafety 云函数、aiChat 和 aiPoster 中快速拦截；复杂场景再调用 wx.cloud.openapi.security.msgSecCheck v2 复检。
+[P][Caption] 图 9-1 内容安全双层审核流程图
+[P][Heading 2] 9.4 异常监控
+[P][Normal] utils/monitor.js 在 app.js onLaunch 中初始化，监听 wx.onError 与 wx.onUnhandledRejection，并将截断后的 type、message、stack、route、createdAt 写入 client_logs 集合。监控初始化具备幂等性，适合应用启动时调用一次。
+[P][Heading 2] 9.5 数据自主权
+[P][Normal] 橘记提供 JSON 导出、JSON 导入和一键清除能力。导出由 dataMigration 云函数查询当前 openid 数据并清理内部字段；导入通过 chooseMessageFile 选择 JSON 后批量写入；清除由 clearUserData 云函数服务端按 _openid 删除账单、预算和文件并重置用户资料。
+[P][Heading 1] 第 10 章 非功能性设计
+[P][Heading 2] 10.1 性能设计
+[P][Normal] 系统性能优化围绕小程序端响应速度、云函数调用成本和 AI 等待体验展开。读取路径尽量客户端直连数据库，降低云函数压力；写入路径集中到云函数，保证校验质量；统计页 AI 采用 periodKey 缓存、串行调用、1s 间隔和 429 退避；页面渲染中合并 setData，app.json 开启 lazyCodeLoading: requiredComponents。
+[P][Heading 2] 10.2 可维护性设计
+[P][Normal] 项目保持微信小程序标准四文件结构，页面由 .wxml、.wxss、.js、.json 组成，不引入 TypeScript 或构建链。通用能力下沉到 utils 工具层，包括 theme、eventBus、rateLimiter、validate、privacy、contentSafety、monitor、dbPager、profileHelpers。这样的组织方式便于微信开发者工具直接定位问题。
+[P][Heading 2] 10.3 可扩展性设计
+[P][Normal] 云函数按业务解耦，账单、预算、导出、迁移、清除、AI 信件、AI 聊天和内容安全互不强耦合。主题系统支持用户命名主题 CRUD，自定义分类也独立于预设分类，可为后续 OCR 票据识别、多账本、预算智能建议等功能预留扩展空间。
+[P][Heading 2] 10.4 兼容性与降级
+[P][Normal] 系统为可选能力设计降级路径。天气能力依赖 TENCENT_LBS_KEY，缺失时 aiChat 对天气问题降级回答；AI 模型失败时统一返回 FALLBACK_REPLY 或兜底信件；头像加载失败使用默认头像；未设置预算显示空态引导。该策略保证局部外部依赖故障不会破坏核心记账流程。
+[P][Caption] 表 10-1 非功能性机制汇总
+[TABLE 11]
+目标 | 设计机制 | 关键参数
+减少误触写入 | rateLimiter 防抖 | 账单保存 3000ms；单日 500 笔
+降低数据库查询限制影响 | dbPager 分页 | 循环 skip/limit 绕过单次 20 条上限
+AI 成本可控 | periodKey 缓存 + ai_usage_limits | profileLetter 30/日；profileTitle 8/日
+维护简单 | 纯 JS + 标准四文件 | 无根目录 package.json，无构建脚本
+兼容外部失败 | FALLBACK_REPLY 与空态 | AI、天气、头像、预算均有降级展示
+[/TABLE]
+[P][Heading 1] 第 11 章 部署与运维设计
+[P][Heading 2] 11.1 部署流程
+[P][Normal] 部署通过微信开发者工具完成。项目导入时填写 AppID，前端不需要 npm install 或构建命令；云函数逐个右键上传并部署，选择“云端安装依赖”；数据库创建 bills、budgets、users、ai_usage_limits、client_logs 五个集合并设置“仅创建者可读写”。
+[P][Caption] 表 11-1 部署步骤
+[TABLE 12]
+步骤 | 操作 | 说明
+1 | 导入微信开发者工具 | 使用项目 AppID，AppID 在正式文档中可脱敏展示。
+2 | 部署 9 个核心云函数 | quickstartFunctions、bills、budgets、exportBills、dataMigration、clearUserData、aiPoster、aiChat、contentSafety。
+3 | 创建 5 个数据库集合 | bills、budgets、users、ai_usage_limits、client_logs。
+4 | 设置数据库权限 | 全部设置为仅创建者可读写。
+5 | 开通混元大模型 | 通过小程序成长计划获取 1 亿 Token，并在 CloudBase AI+ 中接入 hunyuan-v3。
+6 | 可选配置 LBS key | 如需天气能力，为 aiChat 云函数配置 TENCENT_LBS_KEY。
+[/TABLE]
+[P][Caption] 图 11-1 部署流程图
+[P][Heading 2] 11.2 监控与日志
+[P][Normal] 前端异常由 client_logs 集合记录，云函数侧采用 [function] action failed 的日志格式输出失败信息。答辩或上线前应重点检查 bills、aiChat、dataMigration、clearUserData 的日志，因为这些函数分别对应核心写入、AI 解析、数据迁移和危险操作。
+[P][Heading 2] 11.3 数据备份与恢复
+[P][Normal] 建议用户每周执行一次 JSON 导出，并在大版本升级前额外导出备份。导入前应校验 JSON 来源、字段结构和金额日期格式，导入过程按批次写入并返回统计结果，避免大文件一次性写入导致超时。
+[P][Heading 2] 11.4 灾难恢复预案
+[P][Normal] 当云函数部署失败时，优先回滚最近一次稳定云函数；当数据库误删或迁移失败时，使用用户导出的 JSON 重新导入；当 AI 服务不可用时，保留手动记账和统计基本功能，以 FALLBACK_REPLY 兜底 AI 文案。
+[P][Heading 1] 第 12 章 总结与展望
+[P][Heading 2] 12.1 工作总结
+[P][Normal] 橘记以对话式 AI 记账为核心创新，在原生微信小程序、CloudBase Serverless、NoSQL 数据模型、Design Token 主题系统和隐私安全机制之间建立了较完整的端云协同方案。系统既覆盖传统记账的录入、统计、预算和导出导入，也通过“小橘”聊天、AI 信件和统计评论提高用户复盘与坚持的意愿。
+[P][Heading 2] 12.2 创新点
+[P][Normal] 第一，对话式记账降低了结构化录入门槛，用户以自然语言描述多笔消费后，系统通过 AI 提取、前端确认和批量写入完成账单生成。第二，情感化 AI 陪伴把记账从冷冰冰的表单变成可互动的习惯养成工具。第三，单主色驱动的 Design Token 体系让多个页面保持视觉一致，并支持用户主题自定义。
+[P][Heading 2] 12.3 不足与展望
+[P][Normal] 当前系统仍有可扩展空间，包括 OCR 票据识别、多账本协作、预算智能建议、模型 JSON 稳定性持续优化、更多数据可视化和更完善的自动化测试。后续迭代应在保持“打开即记、记完就走”的前提下逐步增强智能化能力，避免功能复杂化反向提高用户使用成本。
+[P][Heading 1] 附录 A 项目目录结构
+[P][Normal] 项目位于 V1.1 目录下。前端根目录为 miniprogram，后端目录为 cloudfunctions。根目录无 package.json，不依赖 CLI 构建流程。
+[TABLE 13]
+V1.1/ ├── miniprogram/ # 小程序前端 │ ├── app.js # CloudBase 初始化、监控、隐私、主题迁移、登录 │ ├── app.json # 10 路由、自定义 TabBar、隐私检查、lazyCodeLoading │ ├── app.wxss # 全局 Design Token 与通用样式 │ ├── custom-tab-bar/ # 自定义毛玻璃 TabBar │ ├── pages/ │ │ ├── login/ # 登录页 │ │ ├── guide/ # 4 屏新手引导 │ │ ├── home/ # 首页仪表盘 │ │ ├── stats/ # 统计分析 │ │ ├── record/ # 记账页 │ │ ├── budget/ # 预算页 │ │ ├── profile/ # 我的页 │ │ ├── categories/ # 分类管理 │ │ ├── themes/ # 主题管理 │ │ └── detail/ # 账单详情 │ ├── utils/ │ │ ├── theme.js # 主题 token 推导与注入 │ │ ├── eventBus.js # 跨页面事件 │ │ ├── rateLimiter.js # 防抖与日上限 │ │ ├── validate.js # 输入校验 │ │ ├── privacy.js # 隐私授权 │ │ ├── contentSafety.js # 内容安全 │ │ ├── monitor.js # 异常监控 │ │ ├── dbPager.js # 分页拉取 │ │ └── profileHelpers.js # 我的页辅助逻辑 │ └── images/ # 登录、记账、TabBar 等素材 └── cloudfunctions/ # CloudBase 云函数 ├── quickstartFunctions/ # 登录获取 openid ├── bills/ # 账单 CRUD 与 batchCreate ├── budgets/ # 预算 upsert ├── exportBills/ # CSV 导出 ├── dataMigration/ # JSON 导出/导入 ├── clearUserData/ # 清除当前用户数据 ├── aiPoster/ # AI 信件与每日称号 ├── aiChat/ # 小橘聊天与对话记账 └── contentSafety/ # 文本安全审核
+[/TABLE]
+[P][Heading 1] 附录 B 数据字典
+[P][Caption] 表 B-1 数据字典汇总
+[TABLE 14]
+集合 | 字段 | 类型 | 必填 | 说明
+bills | type | String | 是 | 账单类型：expense 或 income。
+bills | amount | Number | 是 | 金额，>0 且 <=9999999.99。
+bills | category | String | 是 | 分类名称，非空且不超过 10 字。
+bills | date | String | 是 | 账单日期，YYYY-MM-DD。
+bills | note | String | 否 | 备注，不超过 500 字。
+bills | photoUrl | String | 否 | 账单照片云存储地址，cloud:// 前缀。
+bills | mood | String | 否 | 心情 emoji 或自定义文本。
+bills | createdAt | Date | 是 | 创建时间。
+budgets | month | String | 是 | 预算月份，YYYY-MM。
+budgets | amount | Number | 是 | 预算金额。
+budgets | createdAt | Date | 是 | 创建或更新时间。
+users | nickname | String | 否 | 用户昵称。
+users | avatarUrl | String | 否 | 头像临时或云存储地址。
+users | gender | String/Number | 否 | 用户性别设置。
+users | customCategories | Array | 否 | 自定义分类数组，元素为 {name, icon}。
+users | theme | String/Object | 否 | 当前主题或用户主题配置。
+users | budgetDefault | Number | 否 | 默认预算。
+ai_usage_limits | docId | String | 是 | openid_date_feature。
+ai_usage_limits | count | Number | 是 | 当日功能调用次数。
+client_logs | type | String | 是 | 错误类型，如 onError。
+client_logs | message | String | 是 | 截断后的错误信息。
+client_logs | stack | String | 否 | 截断后的堆栈。
+client_logs | route | String | 否 | 当前页面路由。
+client_logs | createdAt | Date | 是 | 记录时间。
+[/TABLE]

@@ -1,0 +1,476 @@
+# 橘记数据库设计说明书.docx
+
+[P][Normal] 2026年湖南省大学生计算机程序设计竞赛校级选拔赛
+[P][Normal] -----应用开发类竞赛（2026）
+[P][Normal] 数
+[P][Normal] 据
+[P][Normal] 库
+[P][Normal] 设
+[P][Normal] 计
+[P][Normal] 说
+[P][Normal] 明
+[P][Normal] 书
+[TABLE 1]
+作品名称： | 橘记(JuJI)—— 混元AI大模型驱动的对话式智能记账与消费洞察小程序
+作品类别： | 移动终端开发类
+作 者： | 梁承伟 李俊怡 邓泽楷
+指导老师： | 李翠红 胡瑶
+单 位： | 湖南信息学院
+[/TABLE]
+[P][Normal] 二零二六 年 六月 十日
+[P][Normal] 目 录
+[P][Heading 1] 第 1 章 引言
+[P][Heading 2] 1.1 编写目的
+[P][Normal] 本文档全面描述橘记（Juji）微信小程序 v1.1.0 的数据库设计方案，作为开发实现、数据维护与安全审查的权威依据。文档聚焦 CloudBase 文档型 NoSQL（MongoDB 兼容）数据库的设计决策、字段规范、访问模式、权限模型与数据生命周期管理。
+[P][Heading 2] 1.2 文档范围
+[P][Normal] 本文档覆盖以下内容：
+[P][List Bullet] 数据库选型决策与运行环境配置
+[P][List Bullet] 5 个集合（bills/budgets/users/ai_usage_limits/client_logs）的完整字段字典
+[P][List Bullet] 各集合的校验规则、访问模式与索引建议
+[P][List Bullet] 数据权限模型（三层防线）
+[P][List Bullet] 数据生命周期、备份恢复与迁移策略
+[P][Normal] 本文档不包含前端 UI 逻辑与云函数业务代码，详见《详细设计说明书》。
+[P][Heading 2] 1.3 读者对象
+[P][Normal] 表 1-1：读者与关注重点
+[TABLE 2]
+读者角色 | 关注重点
+竞赛评审专家 | 数据模型合理性、安全设计完备性
+后端开发者 | 字段字典、校验规则、访问模式
+数据管理员 | 数据生命周期、备份恢复策略
+安全审计人员 | 权限模型、数据隔离机制
+[/TABLE]
+[P][Heading 2] 1.4 术语与缩略语
+[P][Normal] 表 1-2：术语表
+[TABLE 3]
+术语 | 含义
+CloudBase | 腾讯云开发 Serverless 平台，提供 NoSQL 数据库
+NoSQL | 非关系型数据库，本文档特指文档型数据库
+集合（Collection） | CloudBase 中的数据表等价概念
+文档（Document） | 集合中的一条记录，JSON 格式
+_id | 文档唯一标识，CloudBase 自动或手动指定
+_openid | 用户唯一标识，由微信登录注入
+upsert | 先查后写：存在则更新，不存在则插入
+CRUD | 增删改查（Create/Read/Update/Delete）
+TTL | Time To Live，数据自动过期机制
+[/TABLE]
+[P][Heading 2] 1.5 参考资料
+[P][List Bullet] 《腾讯云 CloudBase 数据库开发文档》
+[P][List Bullet] MongoDB 文档规范
+[P][List Bullet] GB/T 14571-2015《软件文档管理指南》
+[P][List Bullet] 《中华人民共和国个人信息保护法》
+[P][Heading 1] 第 2 章 数据库选型与环境
+[P][Heading 2] 2.1 选型决策
+[P][Normal] 橘记选择 CloudBase 文档型 NoSQL 而非关系型数据库，基于以下对比分析：
+[P][Normal] 表 2-1：数据库选型对比
+[TABLE 4]
+对比维度 | 文档型 NoSQL | 关系型数据库 | 橘记适配性
+Schema 灵活性 | 动态 Schema，字段可随时增减 | 固定 Schema，变更需 ALTER TABLE | NoSQL 更适合快速迭代
+微信生态集成 | 原生集成，_openid 自动注入 | 需额外开发登录对接 | NoSQL 集成成本为零
+运维成本 | Serverless，免运维 | 需管理服务器、备份、扩容 | NoSQL 适合个人开发者
+查询复杂度 | 支持基础聚合，无 JOIN | 复杂 JOIN、事务 | 橘记无跨表 JOIN 需求
+[/TABLE]
+[P][Normal] 选择 CloudBase 文档型 NoSQL 的四条核心理由：
+[P][List Bullet] 无需自建和运维数据库服务器，按量计费
+[P][List Bullet] 与微信小程序云开发原生集成，_openid 自动注入
+[P][List Bullet] 文档结构适合账单、用户偏好等半结构化数据的快速迭代
+[P][List Bullet] Serverless 按量计费，适合个人开发者与竞赛项目
+[P][Heading 2] 2.2 运行环境
+[P][Normal] 表 2-2：运行环境配置
+[TABLE 5]
+配置项 | 值
+CloudBase 环境 ID | lajiaoyou-d4g78yts61f1a841d
+地域 | ap-shanghai（上海）
+套餐 | 个人版
+基础库版本要求 | ≥ 3.16.0
+云函数运行时 | Node.js 16.13
+客户端 SDK | wx.cloud（微信小程序内置）
+读取方式 | 客户端 wx.cloud.database() 直连
+写入方式 | wx.cloud.callFunction() 经云函数服务端
+[/TABLE]
+[P][Heading 2] 2.3 数据隔离机制
+[P][Normal] 橘记通过三层机制确保用户数据完全隔离：
+[P][List Bullet] 第一层（数据库层）：数据库安全规则：所有 5 个集合配置为"仅创建者可读写"，CloudBase 在数据库层强制过滤，每个用户只能查询和修改 _openid 等于自身 openid 的文档
+[P][List Bullet] 第二层（服务端）：云函数 OPENID 服务端获取：写操作在云函数中通过 cloud.getWXContext().OPENID 获取身份，不信任客户端传入的 openid
+[P][List Bullet] 第三层（代码层）：写操作显式所有权校验：bills.delete/update 操作在执行前查询文档 _openid 并与服务端 openid 比对，不匹配则拒绝
+[P][Normal] 图2-1：数据访问架构图
+[P][Heading 1] 第 3 章 数据模型总览
+[P][Heading 2] 3.1 集合清单
+[P][Normal] 表 3-1：集合清单
+[TABLE 6]
+集合名 | 主要用途 | 文档数量级 | 权限 | 与用户的关系
+bills | 存储全部收支账单 | 每用户数百至数千条 | 仅创建者可读写 | 通过 _openid 归属用户
+budgets | 存储每月预算设置 | 每用户每月一条，低量 | 仅创建者可读写 | 通过 _openid 归属用户
+users | 存储用户档案与偏好 | 每用户一条 | 仅创建者可读写 | 用户数据的根节点
+ai_usage_limits | AI 接口按日限流 | 每用户每功能每天一条 | 仅创建者可读写 | 通过 _openid 归属用户
+client_logs | 前端异常日志 | 按错误频率 | 仅创建者可读写 | 通过 _openid 归属用户
+[/TABLE]
+[P][Heading 2] 3.2 实体关系说明
+[P][Normal] 5 个集合之间的逻辑关系：所有集合以 _openid 作为逻辑外键关联到用户。bills 与 users 通过 _openid 和 users.customCategories 产生间接关系（分类名须在用户分类列表中存在）。budgets 与 bills 在业务层面共同服务于预算进度计算，但数据库层无直接关联字段。ai_usage_limits 和 client_logs 均为 users 的附属功能集合。
+[P][Heading 2] 3.3 设计模式说明
+[P][Normal] 橘记采用三种 NoSQL 设计模式：
+[P][List Bullet] 内嵌文档（Embedded Document）：users.customCategories 内嵌分类数组，避免跨集合查询。数量级小（数十条以内），与用户档案一同读取
+[P][List Bullet] 基于 ID 构造的幂等计数器：ai_usage_limits 用 openid_date_feature 作为 _id，实现按日按功能的幂等限流计数器
+[P][List Bullet] 一对一月份归档：budgets 一月一条，用 month 字段定位，通过 upsert 防重复，原子性保证
+[P][Normal] 图3-1：数据模型实体关系图
+[P][Heading 1] 第 4 章 bills 集合详细设计
+[P][Normal] bills 是橘记最核心的集合，承载所有账单数据。预计每用户数十至数千条文档，访问特点为高频读（首页/统计按日期范围查）、低频写（每次记账）、偶尔删改。
+[P][Heading 2] 4.1 完整字段字典
+[P][Normal] 表 4-1：bills 字段字典
+[TABLE 7]
+字段名 | 数据类型 | 必填 | 默认值 | 取值约束 | 字段说明
+_id | String | 是 | 自动生成 | CloudBase 自动分配 | 文档唯一标识
+_openid | String | 是 | 系统注入 | CloudBase 自动注入 | 用户唯一标识
+type | String | 是 | 无 | expense | income | 收支类型
+amount | Number | 是 | 无 | > 0 且 ≤ 99999999.99 | 金额（元）
+category | String | 是 | 无 | ≤ 20 字，非空 | 消费分类
+date | String | 是 | 无 | YYYY-MM-DD 格式 | 消费日期
+note | String | 否 | "" | ≤ 200 字 | 备注
+photoUrl | String | 否 | "" | cloud:// 前缀或空 | 照片地址
+mood | String | 否 | "" | 预设 emoji | 心情
+createdAt | Date | 是 | 当前时间 | — | 创建时间
+updatedAt | Date | 否 | — | 编辑时写入 | 更新时间
+[/TABLE]
+[P][Heading 2] 4.2 校验规则
+[P][Normal] 表 4-2：bills 校验规则
+[TABLE 8]
+字段名 | 客户端校验规则 | 服务端校验规则
+type | ∈ {expense, income} | 同客户端 + 类型检查
+amount | > 0 且 ≤ 99999999.99 | 同客户端 + Number 类型检查
+category | ≤ 20 字非空 | 同客户端
+date | YYYY-MM-DD 格式且合法日期 | 同客户端
+note | ≤ 200 字 | 同客户端
+photoUrl | cloud:// 前缀或空字符串 | 同客户端
+[/TABLE]
+[P][Heading 2] 4.3 访问模式分析
+[P][Normal] 表 4-3：bills 访问模式
+[TABLE 9]
+操作 | 调用方 | 查询条件 | 写入字段 | 频率估计
+首页查最近账单 | home 页 | _openid + date 范围，按 date 倒序 | — | 高频（每次进入首页）
+统计页按月聚合 | stats 页 | _openid + date 范围 | — | 中频（切换月份时）
+对话记账批量写入 | bills 云函数 | — | 全部字段 × ≤10 笔 | 低频
+单条创建 | bills 云函数 | — | 全部字段 | 低频
+编辑更新 | bills 云函数 | _id | 变更字段 | 低频
+删除 | bills 云函数 | _id + _openid 所有权校验 | — | 低频
+全量导出 | dataMigration | _openid，dbPager 分页 | — | 极低频
+[/TABLE]
+[P][Heading 2] 4.4 索引建议
+[P][Normal] 表 4-4：bills 索引建议
+[TABLE 10]
+索引名 | 索引字段 | 类型 | 用途
+idx_bills_user_date | _openid + date | 复合索引 | 首页/统计最常用查询
+idx_bills_user_created | _openid + createdAt | 复合索引 | 按创建时间倒序查近期
+_id（默认） | _id | 主键索引 | update/delete 按 _id 定位
+[/TABLE]
+[P][Heading 2] 4.5 典型文档示例
+[P][Normal] bills 集合典型文档：
+[P][Normal] {
+[P][Normal] "_id": "b9f3a2c1-xxxx",
+[P][Normal] "_openid": "oABC123def456",
+[P][Normal] "type": "expense",
+[P][Normal] "amount": 18.50,
+[P][Normal] "category": "餐饮",
+[P][Normal] "date": "2026-06-11",
+[P][Normal] "note": "中午食堂",
+[P][Normal] "photoUrl": "",
+[P][Normal] "mood": "😊",
+[P][Normal] "createdAt": "2026-06-11T12:30:00Z"
+[P][Normal] }
+[P][Normal] 图4-1：bills 集合访问模式图
+[P][Heading 1] 第 5 章 budgets 集合详细设计
+[P][Normal] budgets 集合存储用户每月预算金额。设计决策为"一月一条 upsert"——每月仅保存一条最新预算文档，通过 upsert 操作避免历史记录膨胀，同时保留月度历史（近 6 条）用于达成率图表。
+[P][Heading 2] 5.1 完整字段字典
+[P][Normal] 表 5-1：budgets 字段字典
+[TABLE 11]
+字段名 | 数据类型 | 必填 | 默认值 | 取值约束 | 字段说明 | 设计备注
+_id | String | 是 | 自动生成 | CloudBase 自动分配 | 文档唯一标识 | 用于定位特定预算记录
+_openid | String | 是 | 系统注入 | CloudBase 自动注入 | 用户唯一标识 | 数据隔离核心字段
+month | String | 是 | 无 | YYYY-MM 格式 | 预算月份 | 字符串便于字典序排序和范围查询
+amount | Number | 是 | 无 | > 0 且 ≤ 999999 | 预算金额（元） | Number 类型便于比较和计算
+createdAt | Date | 是 | 当前时间 | — | 首次创建时间 | 区分首次设置与后续修改
+updatedAt | Date | 否 | — | 修改时写入 | 最后修改时间 | 用于追踪修改历史
+[/TABLE]
+[P][Heading 2] 5.2 Upsert 操作逻辑
+[P][Normal] budgets 云函数的 upsert 流程：
+[P][List Bullet] 构造查询条件：{ _openid: OPENID, month: "YYYY-MM" }
+[P][List Bullet] 执行 upsert：若文档存在则更新 amount + updatedAt；若不存在则插入新文档（含 createdAt）
+[P][List Bullet] 选择 upsert 而非先 delete 再 insert 的原因：原子性保证，避免并发竞态导致数据丢失
+[P][Heading 2] 5.3 访问模式分析
+[P][Normal] 表 5-2：budgets 访问模式
+[TABLE 12]
+操作 | 调用方 | 查询条件 | 返回字段 | 频率估计
+查当月预算 | budget 页 | _openid + month = 当月 | amount | 中频（进入预算页）
+查近 6 条历史 | budget 页 | _openid，按 month 倒序 limit 6 | month, amount | 中频
+upsert 设置预算 | budgets 云函数 | _openid + month | — | 低频
+[/TABLE]
+[P][Heading 2] 5.4 典型文档示例
+[P][Normal] budgets 集合典型文档：
+[P][Normal] {
+[P][Normal] "_id": "bud_a1b2c3",
+[P][Normal] "_openid": "oABC123def456",
+[P][Normal] "month": "2026-06",
+[P][Normal] "amount": 3000,
+[P][Normal] "createdAt": "2026-06-01T00:00:00Z",
+[P][Normal] "updatedAt": "2026-06-05T14:30:00Z"
+[P][Normal] }
+[P][Heading 1] 第 6 章 users 集合详细设计
+[P][Normal] users 是橘记数据模型的"根节点"，所有其他集合通过 _openid 逻辑关联到 users。每个 _openid 对应唯一一条文档（逻辑"一对一"），用户档案、自定义分类、主题偏好均内嵌在此集合中。
+[P][Heading 2] 6.1 完整字段字典
+[P][Normal] 表 6-1：users 字段字典
+[TABLE 13]
+字段名 | 数据类型 | 必填 | 默认值 | 取值约束 | 字段说明
+_id | String | 是 | 自动生成 | CloudBase 自动分配 | 文档唯一标识
+_openid | String | 是 | 系统注入 | CloudBase 自动注入 | 用户唯一标识
+nickname | String | 否 | "" | ≤ 20 字 | 用户昵称
+avatarUrl | String | 否 | "" | cloud:// 或空 | 头像地址
+gender | String | 否 | "" | male | female | "" | 性别
+birthday | String | 否 | "" | YYYY-MM-DD | 生日
+occupation | String | 否 | "" | ≤ 20 字 | 职业
+customCategories | Array | 否 | [] | [{name: ≤10字, icon: ≤2字emoji}] | 自定义分类
+theme | String | 否 | "mint" | 预设 ID 或 user_themes[].id | 当前主题 ID
+user_themes | Array | 否 | [] | [{id, name, primaryColor, createdAt}]，最多 5 条 | 用户自定义主题
+budgetDefault | Number | 否 | 2000 | > 0 | 默认预算金额
+createdAt | Date | 是 | 当前时间 | — | 账号创建时间
+lastLoginAt | Date | 否 | — | 登录时更新 | 最后登录时间
+[/TABLE]
+[P][Heading 2] 6.2 内嵌 vs 引用设计决策
+[P][Normal] 将 customCategories 和 user_themes 内嵌在 users 文档而非独立集合的理由：
+[P][List Bullet] 数量级小：分类最多数十条，主题最多 5 条，内嵌不影响文档大小
+[P][List Bullet] 与用户档案一同读取：profile 页一次查询获取全部信息，无需联查
+[P][List Bullet] CloudBase NoSQL 不支持 JOIN，内嵌是正确的 NoSQL 设计模式
+[P][Heading 2] 6.3 写操作来源
+[P][Normal] 表 6-2：users 写操作来源
+[TABLE 14]
+操作来源 | 更新字段 | 触发时机
+app.js syncUserInfo() | nickname, avatarUrl, createdAt, lastLoginAt | 登录成功
+profile 页 | nickname, avatarUrl, gender, birthday, occupation | 用户编辑资料
+record/categories 页 | customCategories | 用户增删自定义分类
+themes 页 | theme, user_themes | 用户切换/创建/删除主题
+clearUserData 云函数 | 全部字段（除 _id/_openid） | 用户清除数据
+[/TABLE]
+[P][Heading 2] 6.4 典型文档示例
+[P][Normal] users 集合典型文档：
+[P][Normal] {
+[P][Normal] "_id": "usr_xyz789",
+[P][Normal] "_openid": "oABC123def456",
+[P][Normal] "nickname": "小明",
+[P][Normal] "avatarUrl": "cloud://xxx/avatar.jpg",
+[P][Normal] "gender": "male",
+[P][Normal] "customCategories": [
+[P][Normal] {"name": "猫粮", "icon": "🐱"},
+[P][Normal] {"name": "健身", "icon": "💪"}
+[P][Normal] ],
+[P][Normal] "theme": "custom_01",
+[P][Normal] "user_themes": [
+[P][Normal] {"id": "custom_01", "name": "我的主题", "primaryColor": "#FF6B35", "createdAt": "2026-05-01"}
+[P][Normal] ],
+[P][Normal] "budgetDefault": 3000,
+[P][Normal] "createdAt": "2026-01-15T08:00:00Z",
+[P][Normal] "lastLoginAt": "2026-06-11T09:00:00Z"
+[P][Normal] }
+[P][Normal] 图6-1：users 集合内嵌结构示意图
+[P][Heading 1] 第 7 章 ai_usage_limits 集合详细设计
+[P][Normal] ai_usage_limits 是一个计数器集合，核心设计亮点是用文档 _id 的拼接格式（openid_date_feature）实现幂等限流计数器，每用户每功能每天最多 2 条文档（profileLetter + profileTitle），数据量级极低。
+[P][Heading 2] 7.1 _id 拼接设计详解
+[P][Normal] _id = `${openid}_${date}_${feature}` 的设计意图：
+[P][List Bullet] 唯一性：同一用户同一天同一功能的限流文档 _id 唯一，天然避免重复创建
+[P][List Bullet] 幂等 upsert：aiPoster 云函数直接用 _id 定位文档，有则读取 count，无则 upsert 初始化，无需先 findOne 再决定 insert/update
+[P][List Bullet] 自动过期：旧日期文档可通过定期清理删除，_id 中编码了日期信息便于识别
+[P][Normal] 对比方案：若用普通自动 _id + 查询 openid+date+feature 三字段，会多一次查询且存在并发竞态。_id 拼接方案在数据库层面就保证了唯一性。
+[P][Heading 2] 7.2 完整字段字典
+[P][Normal] 表 7-1：ai_usage_limits 字段字典
+[TABLE 15]
+字段名 | 数据类型 | 必填 | 默认值 | 取值约束 | 设计备注
+_id | String | 是 | 手动构造 | openid_date_feature 格式 | 拼接格式是本集合设计核心
+date | String | 是 | 无 | YYYY-MM-DD | 冗余存储便于查询和清理
+feature | String | 是 | 无 | profileLetter | profileTitle | 枚举值对应 AI 功能类型
+count | Number | 是 | 0 | ≥ 0 | 使用 db.command.inc(1) 递增
+limit | Number | 是 | 无 | 30 或 8 | profileLetter=30，profileTitle=8
+createdAt | Date | 是 | 当前时间 | — | —
+updatedAt | Date | 否 | — | 递增时更新 | —
+[/TABLE]
+[P][Heading 2] 7.3 限流逻辑
+[P][Normal] 限流检查流程：
+[P][List Bullet] 构造 docId = `${openid}_${dateKey}_${feature}`
+[P][List Bullet] 查询该文档
+[P][List Bullet] 若文档不存在 → 初始化（count=0, limit 按 feature 设定）
+[P][List Bullet] 若 count ≥ limit → 返回"配额已用完"
+[P][List Bullet] 否则 → db.command.inc(1) 递增 count → 更新 updatedAt → 调用 AI 接口
+[P][Heading 2] 7.4 典型文档示例
+[P][Normal] ai_usage_limits 集合示例：
+[P][Normal] // profileLetter 限额 30 次/日
+[P][Normal] {
+[P][Normal] "_id": "oABC123_2026-06-11_profileLetter",
+[P][Normal] "date": "2026-06-11",
+[P][Normal] "feature": "profileLetter",
+[P][Normal] "count": 5,
+[P][Normal] "limit": 30,
+[P][Normal] "createdAt": "2026-06-11T08:00:00Z",
+[P][Normal] "updatedAt": "2026-06-11T15:30:00Z"
+[P][Normal] }
+[P][Normal] // profileTitle 限额 8 次/日
+[P][Normal] {
+[P][Normal] "_id": "oABC123_2026-06-11_profileTitle",
+[P][Normal] "date": "2026-06-11",
+[P][Normal] "feature": "profileTitle",
+[P][Normal] "count": 2,
+[P][Normal] "limit": 8,
+[P][Normal] "createdAt": "2026-06-11T08:00:00Z",
+[P][Normal] "updatedAt": "2026-06-11T12:00:00Z"
+[P][Normal] }
+[P][Normal] 图7-1：ai_usage_limits 幂等限流流程图
+[P][Heading 1] 第 8 章 client_logs 集合详细设计
+[P][Normal] client_logs 是运维支撑集合，记录前端运行时异常，由 monitor.js 通过 wx.onError/wx.onUnhandledRejection 自动上报。设计重点是数据截断策略（防止单条文档过大）和清理策略（防止无限增长）。
+[P][Heading 2] 8.1 完整字段字典
+[P][Normal] 表 8-1：client_logs 字段字典
+[TABLE 16]
+字段名 | 数据类型 | 必填 | 默认值 | 取值约束 | 字段说明 | 设计备注
+_id | String | 是 | 自动生成 | CloudBase 自动分配 | 文档唯一标识 | —
+_openid | String | 是 | 系统注入 | CloudBase 自动注入 | 用户标识 | —
+type | String | 是 | 无 | runtime_error | unhandled_rejection | 错误类型 | 两种类型对应两种全局钩子
+message | String | 是 | 无 | 截断至 500 字符 | 错误信息 | 防单条文档过大
+stack | String | 否 | "" | 截断至 500 字符 | 错误堆栈 | 可选，辅助定位问题
+route | String | 否 | "" | 页面路径 | 发生错误的页面 | 可选，便于定位问题来源
+createdAt | Date | 是 | 当前时间 | — | 上报时间 | 用于按时间排序和清理
+[/TABLE]
+[P][Heading 2] 8.2 上报机制
+[P][Normal] monitor.js 通过 initMonitoring()（幂等，_inited 标志防重复注册）在 app.js onLaunch 中调用一次，注册 wx.onError（捕获运行时 JS 错误）和 wx.onUnhandledRejection（捕获未处理 Promise 拒绝）全局钩子。上报为"尽力而为"——上报失败不影响主流程。
+[P][Heading 2] 8.3 数据清理策略
+[P][Normal] CloudBase 文档数据库不支持 TTL 索引（与 MongoDB 不同），client_logs 需手动清理。建议运维策略：
+[P][List Bullet] 每月在 CloudBase 控制台按 createdAt < 30 天前条件批量删除
+[P][List Bullet] 大版本发布后检查是否有高频异常
+[P][List Bullet] ai_usage_limits 旧日期文档也可定期清理（date < 30 天前）
+[P][Heading 2] 8.4 典型文档示例
+[P][Normal] client_logs 集合示例：
+[P][Normal] {
+[P][Normal] "_id": "log_pqr456",
+[P][Normal] "_openid": "oABC123def456",
+[P][Normal] "type": "runtime_error",
+[P][Normal] "message": "TypeError: Cannot read property 'map' of undefined",
+[P][Normal] "stack": "at home.js:123:45 ...",
+[P][Normal] "route": "pages/home/home",
+[P][Normal] "createdAt": "2026-06-11T10:30:00Z"
+[P][Normal] }
+[P][Heading 1] 第 9 章 数据权限模型
+[P][Heading 2] 9.1 权限层次
+[P][Normal] 表 9-1：三层权限防线
+[TABLE 17]
+层次名 | 实现位置 | 保障内容 | 局限性
+数据库安全规则 | CloudBase 控制台 | 集合级别"仅创建者可读写" | 仅限基础权限控制
+云函数 OPENID | 云函数服务端 | 服务端获取 openid，防客户端伪造 | 依赖云函数正确实现
+代码级所有权校验 | bills 云函数 | delete/update 前校验 _openid 匹配 | 需要开发者显式编码
+[/TABLE]
+[P][Heading 2] 9.2 各集合权限配置
+[P][Normal] 表 9-2：各集合权限配置
+[TABLE 18]
+集合名 | 读权限 | 写权限 | 备注
+bills | 仅创建者 | 仅创建者 | 核心业务数据
+budgets | 仅创建者 | 仅创建者 | 预算数据
+users | 仅创建者 | 仅创建者 | 用户档案
+ai_usage_limits | 仅创建者 | 仅创建者 | 限流计数器
+client_logs | 仅创建者 | 仅创建者 | 异常日志
+[/TABLE]
+[P][Heading 2] 9.3 写操作权限校验流程
+[P][Normal] 以 bills.delete 为例的三步校验：
+[P][List Bullet] cloud.getWXContext().OPENID 获取服务端 openid（不可伪造）
+[P][List Bullet] db.collection("bills").doc(billId).get() 查询文档
+[P][List Bullet] 校验文档._openid === 服务端 openid，不一致则返回"无权操作"并终止
+[P][Normal] 为何不在数据库规则直接拒绝而要在代码中再做一次校验：提供明确的错误信息，方便日志追踪和用户提示。
+[P][Heading 2] 9.4 数据自主权保障
+[P][List Bullet] 导出：dataMigration 全量导出 JSON（清除 _openid/_id 等内部字段后导出）
+[P][List Bullet] 导入：dataMigration 分批写入（每批 20 条），前端清洗内部字段
+[P][List Bullet] 一键清除：clearUserData 按 _openid 删除全部 bills/budgets/文件并重置 users（无客户端参数参与，服务端自主作用域）
+[P][Normal] 图9-1：数据权限三层防线示意图
+[P][Heading 1] 第 10 章 数据生命周期与维护
+[P][Heading 2] 10.1 各集合数据生命周期
+[P][Normal] 表 10-1：数据生命周期
+[TABLE 19]
+集合名 | 创建时机 | 更新时机 | 删除时机 | 数据量控制
+bills | 记账写入 | 编辑账单 | 用户删除 / clearUserData | 每用户数百至数千条
+budgets | 首次设预算 | 修改预算 | clearUserData | 每用户每月一条
+users | 首次登录 syncUserInfo | 资料编辑 / 主题切换 | clearUserData 重置（不删文档） | 每用户一条
+ai_usage_limits | 首次调用 AI 功能 | count 递增 | 手动清理过期文档 | 每用户每天最多 2 条
+client_logs | 前端异常上报 | — | 手动清理 30 天前 | 按异常频率，建议定期清理
+[/TABLE]
+[P][Heading 2] 10.2 数据备份策略
+[P][Normal] v1.1.0 备份方案：用户在"我的"页手动触发 JSON 导出（dataMigration 全量导出→writeFile→shareFileMessage）。建议每周导出一次，大版本发布前必须额外导出一次。
+[P][Normal] 局限性：依赖用户主动操作，无自动备份。未来可扩展方向：定时云函数自动备份至云存储。
+[P][Heading 2] 10.3 数据恢复流程
+[P][Normal] 从 JSON 备份文件恢复步骤：chooseMessageFile 选取备份文件 → 前端解析清洗（去除 _id/_openid/createdAt 等内部字段）→ dataMigration 分批写入（每批 20 条）→ 验证首页/统计数量和金额。
+[P][Heading 2] 10.4 账户注销与数据清除
+[P][Normal] clearUserData 云函数操作范围（PAGE_SIZE=100，MAX_RECORDS=20000，FILE_BATCH_SIZE=50）：
+[P][List Bullet] 分页查询全部 bills（分批删，防超时）
+[P][List Bullet] 分页查询全部 budgets（分批删）
+[P][List Bullet] 收集所有 photoUrl 和 avatarUrl，批量删云存储文件（每批 50 个）
+[P][List Bullet] 重置 users 文档（清空档案字段，保留文档本身——下次登录仍能 syncUserInfo）
+[P][Normal] 图10-1：数据生命周期全景图
+[P][Heading 1] 第 11 章 数据迁移设计
+[P][Heading 2] 11.1 旧版主题数据迁移
+[P][Normal] v1.0.x 使用 custom_theme_color（单一色值）存储自定义主题，v1.1.0 升级为命名主题 CRUD 系统（user_themes 数组）。migrateLegacyCustomTheme() 在 app.js onLaunch 第 4 步执行迁移：
+[P][List Bullet] 检测 users.theme === "custom" 且存在 users.custom_theme_color
+[P][List Bullet] 从 custom_theme_color 构造一条 user_themes 记录（自动生成 id/name）
+[P][List Bullet] 将 theme 更新为新 user_themes 的 id
+[P][List Bullet] 删除旧 custom_theme_color 字段
+[P][Heading 2] 11.2 JSON 数据导入兼容性
+[P][Normal] dataMigration import 对旧格式 JSON 的处理：前端解析后清洗内部字段（_id/_openid/createdAt），只保留业务字段再写入。允许 category 字段存在已删除的自定义分类名（按 bills 校验规则，category ≤20 字非空即可通过）。
+[P][Heading 2] 11.3 未来版本扩展预留
+[P][List Bullet] bills 集合可加 tags 数组字段（多标签支持）
+[P][List Bullet] users 可加 budgetCategories 字段（分类预算，当前未实现）
+[P][List Bullet] ai_usage_limits 可扩展新 feature 值而无需改集合结构
+[P][Heading 1] 附录 A 字段命名规范
+[P][Normal] 附录表 A-1：字段命名规范
+[TABLE 20]
+规则 | 示例 | 说明
+camelCase 命名 | customCategories, photoUrl | 字段名使用驼峰命名法
+时间字段以 At 结尾 | createdAt, updatedAt, lastLoginAt | 区分创建与更新时间
+云平台注入字段下划线前缀 | _id, _openid | CloudBase 自动注入
+布尔标志存 Storage 不存数据库 | juji_privacy_agreed, has_seen_guide | 频繁读写，适合客户端缓存
+枚举值用小写字符串 | expense, income, male, female | 统一风格，便于校验
+[/TABLE]
+[P][Heading 1] 附录 B 完整字段汇总表（数据字典）
+[P][Normal] 以下汇总全部 5 个集合所有字段：
+[P][Normal] 附录表 B-1：完整字段汇总
+[TABLE 21]
+集合 | 字段名 | 类型 | 必填 | 默认值 | 约束/说明
+bills | _id | String | 是 | 自动 | 文档标识
+bills | _openid | String | 是 | 系统注入 | 用户标识
+bills | type | String | 是 | — | expense/income
+bills | amount | Number | 是 | — | >0, ≤99999999.99
+bills | category | String | 是 | — | ≤20 字
+bills | date | String | 是 | — | YYYY-MM-DD
+bills | note | String | 否 | "" | ≤200 字
+bills | photoUrl | String | 否 | "" | cloud:// 前缀
+bills | mood | String | 否 | "" | emoji
+bills | createdAt | Date | 是 | 当前时间 | —
+bills | updatedAt | Date | 否 | — | 编辑时
+budgets | _id | String | 是 | 自动 | 文档标识
+budgets | _openid | String | 是 | 系统注入 | 用户标识
+budgets | month | String | 是 | — | YYYY-MM
+budgets | amount | Number | 是 | — | >0, ≤999999
+budgets | createdAt | Date | 是 | 当前时间 | —
+budgets | updatedAt | Date | 否 | — | 修改时
+users | _id | String | 是 | 自动 | 文档标识
+users | _openid | String | 是 | 系统注入 | 用户标识
+users | nickname | String | 否 | "" | ≤20 字
+users | avatarUrl | String | 否 | "" | cloud:// 或空
+users | gender | String | 否 | "" | male/female/""
+users | customCategories | Array | 否 | [] | [{name,icon}]
+users | theme | String | 否 | "mint" | 主题 ID
+users | user_themes | Array | 否 | [] | 最多 5 条
+users | budgetDefault | Number | 否 | 2000 | >0
+users | createdAt | Date | 是 | 当前时间 | —
+users | lastLoginAt | Date | 否 | — | 登录时
+ai_usage_limits | _id | String | 是 | 手动构造 | openid_date_feature
+ai_usage_limits | date | String | 是 | — | YYYY-MM-DD
+ai_usage_limits | feature | String | 是 | — | 枚举
+ai_usage_limits | count | Number | 是 | 0 | ≥0
+ai_usage_limits | limit | Number | 是 | — | 30/8
+ai_usage_limits | createdAt | Date | 是 | 当前时间 | —
+ai_usage_limits | updatedAt | Date | 否 | — | 递增时
+client_logs | _id | String | 是 | 自动 | 文档标识
+client_logs | _openid | String | 是 | 系统注入 | 用户标识
+client_logs | type | String | 是 | — | runtime_error/...
+client_logs | message | String | 是 | — | ≤500 字符
+client_logs | stack | String | 否 | "" | ≤500 字符
+client_logs | route | String | 否 | "" | 页面路径
+client_logs | createdAt | Date | 是 | 当前时间 | —
+[/TABLE]

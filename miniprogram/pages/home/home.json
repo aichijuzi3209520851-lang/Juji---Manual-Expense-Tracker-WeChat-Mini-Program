@@ -1,1 +1,6 @@
-{"navigationBarTitleText":"橘记","usingComponents":{}}
+{
+  "navigationBarTitleText": "橘记",
+  "usingComponents": {
+    "bottom-sheet": "/components/bottom-sheet/index"
+  }
+}

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1360" viewBox="0 0 1800 1360">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1360" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 6-1  users 集合内嵌结构示意图</text>
+<text x="1418" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Users Document Structure</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="130" y="255" width="410" height="185" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="130" y="255" width="10" height="185" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="158" y="305" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="28" font-weight="700" fill="#17231d">users 文档</text>
+<text x="158" y="347" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">_id, _openid</text>
+<text x="158" y="378" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">createdAt, lastLoginAt</text>
+<text x="158" y="409" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">用户数据根节点</text>
+<rect x="700" y="195" width="390" height="200" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="700" y="195" width="10" height="200" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="728" y="242" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">基础资料字段</text>
+<text x="728" y="283" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">nickname</text>
+<text x="728" y="314" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">avatarUrl</text>
+<text x="728" y="345" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">gender / birthday / occupation</text>
+<text x="728" y="376" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">budgetDefault</text>
+<rect x="700" y="485" width="390" height="260" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="700" y="485" width="10" height="260" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="728" y="532" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">customCategories[]</text>
+<text x="728" y="572" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">[</text>
+<text x="728" y="602" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">  { name: '咖啡', icon: 'coffee' },</text>
+<text x="728" y="632" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">  { name: '宠物', icon: 'pet' }</text>
+<text x="728" y="662" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">]</text>
+<text x="728" y="692" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">小规模内嵌，随用户读取</text>
+<rect x="700" y="835" width="390" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="700" y="835" width="10" height="150" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="728" y="882" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">theme</text>
+<text x="728" y="922" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">当前主题 id</text>
+<text x="728" y="952" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">mint / sunset / ocean / forest</text>
+<text x="728" y="982" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">或本地自定义主题 id</text>
+<rect x="1215" y="835" width="390" height="155" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1215" y="835" width="10" height="155" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1243" y="881" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">wx.Storage user_themes[]</text>
+<text x="1243" y="920" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">本地保存自定义主题列表</text>
+<text x="1243" y="948" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">主题切换时同步 users.theme</text>
+<text x="1243" y="976" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">当前实现不作为云端数组</text>
+<line x1="548" y1="347" x2="692" y2="295" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="692,295 680,309 674,291" fill="#5ba4cb"/>
+<line x1="548" y1="347" x2="692" y2="615" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="692,615 676,605 693,597" fill="#f3a33a"/>
+<line x1="548" y1="347" x2="692" y2="910" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="692,910 679,897 697,892" fill="#8c7bd9"/>
+<line x1="1098" y1="910" x2="1207" y2="912" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1207,912 1191,921 1191,902" fill="#f3a33a"/>
+<rect x="140" y="560" width="390" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="560" width="10" height="130" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="168" y="605" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">app.js syncUserInfo()</text>
+<text x="168" y="643" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">首次登录创建 users</text>
+<text x="168" y="671" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">再次登录更新 lastLoginAt</text>
+<rect x="140" y="750" width="390" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="750" width="10" height="135" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="168" y="795" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">profile 页</text>
+<text x="168" y="833" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">更新 nickname/avatarUrl</text>
+<text x="168" y="861" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">gender/birthday/occupation</text>
+<rect x="140" y="940" width="390" height="135" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="940" width="10" height="135" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="168" y="985" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">record / categories 页</text>
+<text x="168" y="1023" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">增删 customCategories</text>
+<text x="168" y="1051" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">对话记账可追加新分类</text>
+<rect x="140" y="1130" width="390" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="1130" width="10" height="120" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="168" y="1175" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="23" font-weight="700" fill="#17231d">themes 页</text>
+<text x="168" y="1213" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">切换 theme</text>
+<text x="168" y="1241" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">自定义主题写入 Storage</text>
+<rect x="670" y="1165" width="820" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="687" y="1193" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">设计取舍：用户档案低频更新，分类小列表内嵌；主题列表留在本地缓存以降低云端写入</text>
+</svg>

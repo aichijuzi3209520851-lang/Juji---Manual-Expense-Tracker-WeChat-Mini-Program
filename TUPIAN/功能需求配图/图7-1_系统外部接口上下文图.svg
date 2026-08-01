@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1260" viewBox="0 0 1800 1260">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1260" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 7-1  系统外部接口上下文图</text>
+<text x="1337" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">External Interface Context Diagram</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="710" y="500" width="380" height="180" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="710" y="500" width="10" height="180" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="738" y="552" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="30" font-weight="700" fill="#17231d">橘记小程序</text>
+<text x="738" y="594" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">原生微信小程序</text>
+<text x="738" y="625" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">WXML / WXSS / JS</text>
+<text x="738" y="656" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#6b7d73">自定义 TabBar + 10 页面</text>
+<rect x="140" y="250" width="420" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="250" width="10" height="155" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="168" y="297" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">微信平台</text>
+<text x="168" y="336" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">wx.login</text>
+<text x="168" y="364" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">隐私协议</text>
+<text x="168" y="392" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">msgSecCheck v2</text>
+<rect x="1230" y="250" width="420" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1230" y="250" width="10" height="155" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1258" y="297" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">混元大模型</text>
+<text x="1258" y="336" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">hunyuan-v3 / hy3-preview</text>
+<text x="1258" y="364" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">对话记账、AI 评论、信件</text>
+<rect x="140" y="780" width="420" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="780" width="10" height="155" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="168" y="827" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">CloudBase 数据库</text>
+<text x="168" y="866" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">bills / budgets / users</text>
+<text x="168" y="894" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">ai_usage_limits / client_logs</text>
+<rect x="1230" y="780" width="420" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1230" y="780" width="10" height="155" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1258" y="827" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">CloudBase 云函数</text>
+<text x="1258" y="866" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">quickstart / bills / budgets</text>
+<text x="1258" y="894" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">aiChat / aiPoster / dataMigration</text>
+<rect x="710" y="930" width="420" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="710" y="930" width="10" height="155" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="738" y="977" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">CloudBase 云存储</text>
+<text x="738" y="1016" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">头像、账单照片</text>
+<text x="738" y="1044" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">CSV/JSON 导出文件</text>
+<rect x="710" y="210" width="420" height="155" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="710" y="210" width="10" height="155" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="738" y="257" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">设备硬件</text>
+<text x="738" y="296" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">相机 / 相册 / 文件选择</text>
+<text x="738" y="324" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">头像与账单照片</text>
+<line x1="700" y1="590" x2="570" y2="327" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="570,327 585,336 568,344" fill="#5ba4cb"/>
+<line x1="1100" y1="590" x2="1220" y2="327" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1220,327 1222,344 1205,337" fill="#8c7bd9"/>
+<line x1="700" y1="590" x2="570" y2="857" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="570,857 568,839 585,847" fill="#27c07d"/>
+<line x1="1100" y1="590" x2="1220" y2="857" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1220,857 1205,846 1222,839" fill="#f3a33a"/>
+<line x1="900" y1="690" x2="920" y2="920" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="920,920 909,905 928,903" fill="#5ba4cb"/>
+<line x1="900" y1="490" x2="920" y2="375" stroke="#d98787" stroke-width="3" stroke-linecap="round"/>
+<polygon points="920,375 926,391 908,388" fill="#d98787"/>
+<rect x="545" y="1130" width="790" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="562" y="1158" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">通信约束：HTTPS 传输，JSON 数据交换；写操作通过云函数，AI 流式响应用于统</text>
+<text x="562" y="1191" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">计评论</text>
+</svg>

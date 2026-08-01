@@ -52,25 +52,30 @@
   </view>
 
   <view class="ranking-section">
-    <view class="ranking-title">{{statsType === 'expense' ? '支出' : '收入'}}排行榜</view>
-    <view class="ranking-list">
-      <view wx:for="{{legendData}}" wx:key="name" class="ranking-row" hover-class="ranking-row--hover">
-        <view class="ranking-icon" style="background: {{item.color}}">
-          <text>{{index + 1}}</text>
+    <collapsible title="{{statsType === 'expense' ? '支出' : '收入'}}排行榜" expanded="{{true}}" meta="Top {{showRankingAll ? legendData.length : (legendData.length > 3 ? 3 : legendData.length)}}">
+      <view class="ranking-list">
+        <view wx:for="{{legendData}}" wx:key="name" wx:if="{{showRankingAll || index < 3}}" class="ranking-row" hover-class="ranking-row--hover">
+          <view class="ranking-icon" style="background: {{item.color}}">
+            <text>{{index + 1}}</text>
+          </view>
+          <view class="ranking-main">
+            <view class="ranking-row-head">
+              <text class="ranking-name">{{item.name}}</text>
+              <text class="ranking-amount">¥{{item.amount}}</text>
+            </view>
+            <view class="ranking-bar-track">
+              <view class="ranking-bar" style="width: {{item.percent}}%; background: {{item.color}}"></view>
+            </view>
+            <text class="ranking-percent">{{item.percent}}%</text>
+          </view>
         </view>
-        <view class="ranking-main">
-          <view class="ranking-row-head">
-            <text class="ranking-name">{{item.name}}</text>
-            <text class="ranking-amount">¥{{item.amount}}</text>
-          </view>
-          <view class="ranking-bar-track">
-            <view class="ranking-bar" style="width: {{item.percent}}%; background: {{item.color}}"></view>
-          </view>
-          <text class="ranking-percent">{{item.percent}}%</text>
+        <view wx:if="{{legendData.length === 0}}" class="ranking-empty">暂无数据</view>
+        <view wx:if="{{legendData.length > 3}}" class="ranking-toggle" bindtap="toggleRankingAll" hover-class="ranking-toggle--hover">
+          <text>{{showRankingAll ? '收起' : '展开全部 ' + legendData.length + ' 项'}}</text>
+          <text class="ranking-toggle-arrow {{showRankingAll ? 'is-up' : ''}}">›</text>
         </view>
       </view>
-      <view wx:if="{{legendData.length === 0}}" class="ranking-empty">暂无数据</view>
-    </view>
+    </collapsible>
   </view>
 
   <view class="ai-section">

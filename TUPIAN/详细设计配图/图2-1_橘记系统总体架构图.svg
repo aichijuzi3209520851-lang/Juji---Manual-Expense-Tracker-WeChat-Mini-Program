@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1260" viewBox="0 0 1800 1260">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1260" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 2-1  橘记系统总体架构图</text>
+<text x="1476" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">System Architecture</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="140" y="190" width="1520" height="230" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="190" width="10" height="230" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="168" y="244" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="32" font-weight="700" fill="#17231d">前端层</text>
+<text x="168" y="288" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">10 个页面 + 自定义 TabBar + utils 工具层</text>
+<text x="455" y="284" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#17231d">login / guide / home / stats / record / budget / profile / categories / themes / detail</text>
+<text x="455" y="317" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#17231d">主题注入、事件总线、表单校验、频率限制、内容安全前置检查</text>
+<rect x="140" y="505" width="1520" height="230" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="505" width="10" height="230" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="168" y="559" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="32" font-weight="700" fill="#17231d">服务层</text>
+<text x="168" y="603" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">CloudBase 云函数服务</text>
+<text x="455" y="599" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#17231d">quickstartFunctions、bills、budgets、exportBills、aiPoster、dataMigration</text>
+<text x="455" y="632" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#17231d">clearUserData、aiChat、contentSafety：统一获取 OPENID、校验、清洗和写入</text>
+<line x1="900" y1="430" x2="900" y2="495" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,495 890,479 909,479" fill="#6b7d73"/>
+<rect x="140" y="820" width="1520" height="230" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="820" width="10" height="230" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="168" y="874" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="32" font-weight="700" fill="#17231d">数据与外部能力层</text>
+<text x="168" y="918" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">NoSQL + 云存储 + 混元大模型</text>
+<text x="455" y="914" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#17231d">bills / budgets / users / ai_usage_limits / client_logs</text>
+<text x="455" y="947" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#17231d">头像、账单照片、导出文件；hunyuan-v3 / hy3-preview；msgSecCheck v2</text>
+<line x1="900" y1="745" x2="900" y2="810" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,810 890,794 909,794" fill="#6b7d73"/>
+<rect x="530" y="1135" width="760" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="547" y="1163" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">设计原则：小程序直接读、服务端统一写、AI 能力可降级、数据以 _openid 隔离</text>
+</svg>

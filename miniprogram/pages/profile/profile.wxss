@@ -299,6 +299,7 @@
 /* 菜单区 */
 .profile-section { margin-top: 32rpx; }
 .profile-section-title { font-size: 24rpx; color: var(--color-primary); font-weight: 700; padding: 0 8rpx 12rpx; display: block; letter-spacing: 2rpx; opacity: 0.85; }
+.profile-collapsible-wrap { margin-top: 24rpx; }
 .profile-menu {
   background: var(--color-surface);
   border-radius: var(--radius-2xl);

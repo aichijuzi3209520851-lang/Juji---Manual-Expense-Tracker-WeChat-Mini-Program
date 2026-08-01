@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1360" viewBox="0 0 1800 1360">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1360" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 5-4  对话式记账需求场景图</text>
+<text x="1370" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Conversational Billing Scenario</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="90" y="185" width="450" height="1040" rx="26" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2"/>
+<rect x="90" y="185" width="450" height="58" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="284" y="226" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#ffffff">用户</text>
+<rect x="585" y="185" width="450" height="1040" rx="26" fill="#eef7fb" stroke="#d9e4de" stroke-width="2"/>
+<rect x="585" y="185" width="450" height="58" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="740" y="226" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#ffffff">小程序前端</text>
+<rect x="1080" y="185" width="450" height="1040" rx="26" fill="#fff7eb" stroke="#d9e4de" stroke-width="2"/>
+<rect x="1080" y="185" width="450" height="58" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1232" y="226" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#ffffff">AI / 云函数</text>
+<rect x="140" y="310" width="350" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="310" width="10" height="130" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="168" y="356" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">口语输入</text>
+<text x="168" y="396" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">“中午吃饭18、冰红茶4、电费40</text>
+<text x="168" y="426" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">”</text>
+<rect x="645" y="310" width="330" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="645" y="310" width="10" height="130" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="673" y="356" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">发送上下文</text>
+<text x="673" y="395" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">messages + categories[] + today</text>
+<rect x="1135" y="310" width="340" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1135" y="310" width="10" height="130" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1163" y="356" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">混元解析</text>
+<text x="1163" y="395" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">输出 bills[] 结构化 JSON</text>
+<rect x="1135" y="535" width="340" height="220" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1135" y="535" width="10" height="220" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1163" y="581" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">解析结果</text>
+<text x="1163" y="620" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">1 餐饮 ¥18  午餐</text>
+<text x="1163" y="648" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">2 餐饮 ¥4   冰红茶</text>
+<text x="1163" y="676" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">3 日用 ¥40  电费</text>
+<text x="1163" y="704" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">新分类：按规则处理</text>
+<rect x="645" y="535" width="330" height="220" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="645" y="535" width="10" height="220" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="673" y="581" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">待确认卡</text>
+<text x="673" y="620" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">金额/备注可编辑</text>
+<text x="673" y="648" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">可删除行</text>
+<text x="673" y="676" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">新分类可勾选创建</text>
+<rect x="140" y="650" width="350" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="650" width="10" height="130" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="168" y="696" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">用户确认</text>
+<text x="168" y="736" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">确认 / 取消 / 修改金额</text>
+<rect x="645" y="850" width="330" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="645" y="850" width="10" height="130" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="673" y="896" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">批量写入</text>
+<text x="673" y="935" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">bills.batchCreate</text>
+<text x="673" y="963" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">单次最多 10 笔</text>
+<rect x="1135" y="850" width="340" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1135" y="850" width="10" height="130" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1163" y="896" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">服务端校验</text>
+<text x="1163" y="935" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">金额、日期、分类、备注</text>
+<text x="1163" y="963" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">敏感内容过滤</text>
+<rect x="645" y="1060" width="330" height="110" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="645" y="1060" width="10" height="110" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="673" y="1106" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">刷新页面</text>
+<text x="673" y="1145" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">首页 / 统计页 onShow 重新拉取</text>
+<line x1="500" y1="375" x2="635" y2="375" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="635,375 619,384 619,365" fill="#27c07d"/>
+<line x1="985" y1="375" x2="1125" y2="375" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1125,375 1109,384 1109,365" fill="#5ba4cb"/>
+<line x1="1125" y1="375" x2="1485" y2="645" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1485,645 1467,643 1478,628" fill="#f3a33a"/>
+<line x1="1125" y1="645" x2="985" y2="645" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="985,645 1000,635 1000,654" fill="#8c7bd9"/>
+<line x1="635" y1="645" x2="500" y2="715" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="500,715 509,699 517,716" fill="#27c07d"/>
+<line x1="500" y1="715" x2="635" y2="915" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="635,915 618,907 634,897" fill="#f3a33a"/>
+<line x1="985" y1="915" x2="1125" y2="915" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1125,915 1109,924 1109,905" fill="#f3a33a"/>
+<line x1="1125" y1="915" x2="985" y2="1115" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="985,1115 986,1097 1001,1107" fill="#27c07d"/>
+<rect x="560" y="1260" width="780" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="577" y="1288" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">需求重点：AI 只生成待确认数据，最终写入必须由用户确认并通过服务端校验</text>
+</svg>

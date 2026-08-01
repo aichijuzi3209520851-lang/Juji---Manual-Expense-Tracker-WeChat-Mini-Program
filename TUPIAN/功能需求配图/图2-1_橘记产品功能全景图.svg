@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1280" viewBox="0 0 1800 1280">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1280" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 2-1  橘记产品功能全景图</text>
+<text x="1400" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Product Function Panorama</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<circle cx="900" cy="610" r="150" fill="#27c07d" stroke="#ffffff" stroke-width="8"/>
+<text x="815" y="597" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="42" font-weight="700" fill="#ffffff">橘记 Juji</text>
+<text x="811" y="650" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="400" fill="#ffffff">对话式智能记账</text>
+<text x="836" y="685" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="400" fill="#ffffff">微信小程序</text>
+<rect x="170" y="240" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="170" y="240" width="10" height="178" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="198" y="287" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">登录与引导</text>
+<text x="198" y="325" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">微信静默登录</text>
+<text x="198" y="352" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">隐私协议门禁</text>
+<text x="198" y="379" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">首启 4 屏引导</text>
+<rect x="620" y="170" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="620" y="170" width="10" height="178" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="648" y="217" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">记账</text>
+<text x="648" y="255" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">新增 / 编辑 / 删除</text>
+<text x="648" y="282" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">分类、日期、照片、心情</text>
+<text x="648" y="309" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">防抖与日上限</text>
+<rect x="1070" y="170" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1070" y="170" width="10" height="178" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1098" y="217" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">智能中枢</text>
+<text x="1098" y="255" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">小橘聊天</text>
+<text x="1098" y="282" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">对话记账解析</text>
+<text x="1098" y="309" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">确定性账单问答</text>
+<rect x="1355" y="430" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1355" y="430" width="10" height="178" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1383" y="477" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">首页仪表盘</text>
+<text x="1383" y="515" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">今日/昨日消费</text>
+<text x="1383" y="542" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">预算进度条</text>
+<text x="1383" y="569" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">账单流水</text>
+<rect x="1260" y="760" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1260" y="760" width="10" height="178" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1288" y="807" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">统计分析</text>
+<text x="1288" y="845" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">趋势图 / 排行榜</text>
+<text x="1288" y="872" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">AI 便签评论</text>
+<text x="1288" y="899" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">periodKey 缓存</text>
+<rect x="850" y="930" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="850" y="930" width="10" height="178" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="878" y="977" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">预算管理</text>
+<text x="878" y="1015" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">月预算设置</text>
+<text x="878" y="1042" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">进度环</text>
+<text x="878" y="1069" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">Top3 分类</text>
+<rect x="430" y="930" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="430" y="930" width="10" height="178" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="458" y="977" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">个人中心</text>
+<text x="458" y="1015" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">头像昵称</text>
+<text x="458" y="1042" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">AI 信件/称号</text>
+<text x="458" y="1069" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">导入导出/清除</text>
+<rect x="160" y="720" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="160" y="720" width="10" height="178" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="188" y="767" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">主题系统</text>
+<text x="188" y="805" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">4 套预设</text>
+<text x="188" y="832" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">8 色调色板</text>
+<text x="188" y="859" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">Design Token</text>
+<rect x="235" y="455" width="300" height="178" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="235" y="455" width="10" height="178" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="263" y="502" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">安全隐私</text>
+<text x="263" y="540" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">内容安全</text>
+<text x="263" y="567" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">隐私授权</text>
+<text x="263" y="594" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">异常监控</text>
+<line x1="754" y1="539" x2="470" y2="329" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="470,329 487,330 476,345" fill="#5ba4cb"/>
+<line x1="843" y1="458" x2="770" y2="348" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="770,348 786,355 770,365" fill="#f3a33a"/>
+<line x1="1009" y1="490" x2="1220" y2="348" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1220,348 1212,364 1202,348" fill="#8c7bd9"/>
+<line x1="1060" y1="585" x2="1355" y2="519" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1355,519 1342,531 1337,513" fill="#27c07d"/>
+<line x1="1046" y1="678" x2="1260" y2="849" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1260,849 1242,846 1253,832" fill="#5ba4cb"/>
+<line x1="938" y1="767" x2="1000" y2="930" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1000,930 985,919 1003,912" fill="#f3a33a"/>
+<line x1="800" y1="737" x2="580" y2="930" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="580,930 585,912 597,926" fill="#8c7bd9"/>
+<line x1="746" y1="661" x2="460" y2="809" stroke="#d98787" stroke-width="3" stroke-linecap="round"/>
+<polygon points="460,809 469,793 477,810" fill="#d98787"/>
+<line x1="739" y1="589" x2="535" y2="544" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="535,544 552,538 547,556" fill="#27c07d"/>
+<rect x="695" y="790" width="410" height="95" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="695" y="790" width="10" height="95" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="723" y="836" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">产品核心闭环</text>
+<text x="723" y="874" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">记账输入 → 数据沉淀 → 统计复盘 → AI 陪伴 </text>
+<text x="723" y="901" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">→ 长期坚持</text>
+<rect x="565" y="1150" width="680" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="582" y="1178" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">定位：面向个人消费习惯养成的大模型驱动记账工具</text>
+</svg>

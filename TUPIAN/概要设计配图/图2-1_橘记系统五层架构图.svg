@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1280" viewBox="0 0 1800 1280">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1280" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 2-1  橘记系统五层架构图</text>
+<text x="1459" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Overview Architecture</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="150" y="175" width="1500" height="170" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="150" y="175" width="10" height="170" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="178" y="223" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">表现层</text>
+<text x="178" y="262" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">UI 渲染 / 用户交互 / 主题注入</text>
+<text x="440" y="233" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#157a51">包含组件</text>
+<text x="440" y="268" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">10 个页面 WXML/WXSS</text>
+<text x="440" y="298" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">自定义 custom-tab-bar</text>
+<text x="440" y="328" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">渐变 hero、表单、图表、弹窗</text>
+<rect x="150" y="380" width="1500" height="170" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="150" y="380" width="10" height="170" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="178" y="428" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">逻辑层</text>
+<text x="178" y="467" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">业务逻辑 / 页面状态 / 生命周期</text>
+<text x="440" y="438" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#157a51">包含组件</text>
+<text x="440" y="473" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">页面 JS：login、home、stats、record、budget、profile 等</text>
+<text x="440" y="503" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">onShow 拉取数据并同步主题</text>
+<line x1="900" y1="353" x2="900" y2="372" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,372 890,356 909,356" fill="#6b7d73"/>
+<rect x="150" y="585" width="1500" height="170" rx="24" fill="#f2f8f4" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="150" y="585" width="10" height="170" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="178" y="633" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">工具层</text>
+<text x="178" y="672" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">横切能力复用</text>
+<text x="440" y="643" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#157a51">包含组件</text>
+<text x="440" y="678" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">theme / eventBus / rateLimiter / validate</text>
+<text x="440" y="708" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">privacy / contentSafety / monitor / dbPager / profileHelpers</text>
+<line x1="900" y1="558" x2="900" y2="577" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,577 890,561 909,561" fill="#6b7d73"/>
+<rect x="150" y="790" width="1500" height="170" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="150" y="790" width="10" height="170" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="178" y="838" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">服务层</text>
+<text x="178" y="877" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">服务端校验 / AI 代理 / 数据聚合</text>
+<text x="440" y="848" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#157a51">包含组件</text>
+<text x="440" y="883" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">quickstartFunctions、bills、budgets、aiChat、aiPoster</text>
+<text x="440" y="913" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">contentSafety、dataMigration、clearUserData、exportBills</text>
+<line x1="900" y1="763" x2="900" y2="782" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,782 890,766 909,766" fill="#6b7d73"/>
+<rect x="150" y="995" width="1500" height="170" rx="24" fill="#f6f2ff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="150" y="995" width="10" height="170" fill="#d98787" stroke="#d98787" stroke-width="1"/>
+<text x="178" y="1043" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="26" font-weight="700" fill="#17231d">数据层</text>
+<text x="178" y="1082" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">持久化与外部能力</text>
+<text x="440" y="1053" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#157a51">包含组件</text>
+<text x="440" y="1088" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">NoSQL：bills / budgets / users / ai_usage_limits / client_logs</text>
+<text x="440" y="1118" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="21" font-weight="400" fill="#17231d">云存储：头像、账单照片、导出文件；混元大模型 hy3-preview</text>
+<line x1="900" y1="968" x2="900" y2="987" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="900,987 890,971 909,971" fill="#6b7d73"/>
+<rect x="1220" y="1180" width="430" height="42" rx="21" fill="#e8f5ee" stroke="#e8f5ee" stroke-width="1"/>
+<text x="1237" y="1208" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">核心原则：读写分离 + 服务端校验 + AI 降</text>
+<text x="1237" y="1241" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">级</text>
+</svg>

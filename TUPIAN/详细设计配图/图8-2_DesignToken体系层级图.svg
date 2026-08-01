@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1240" viewBox="0 0 1800 1240">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1240" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 8-2  Design Token 体系层级图</text>
+<text x="1439" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Design Token Hierarchy</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="140" y="230" width="300" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="230" width="10" height="150" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="168" y="277" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">基础色</text>
+<text x="168" y="316" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">primary / accent / error</text>
+<text x="168" y="344" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">income / expense</text>
+<rect x="510" y="230" width="300" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="510" y="230" width="10" height="150" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="538" y="277" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">语义色</text>
+<text x="538" y="316" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">surface / bg / border</text>
+<text x="538" y="344" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">text / textSecondary</text>
+<rect x="880" y="230" width="300" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="880" y="230" width="10" height="150" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="908" y="277" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">派生 token</text>
+<text x="908" y="316" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">gradient-hero</text>
+<text x="908" y="344" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">shadow-soft / card / </text>
+<text x="908" y="372" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">elevated</text>
+<rect x="1250" y="230" width="300" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1250" y="230" width="10" height="150" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1278" y="277" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">组件变量</text>
+<text x="1278" y="316" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">card / hero / button</text>
+<text x="1278" y="344" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">tabbar / form / chart</text>
+<rect x="690" y="650" width="300" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="690" y="650" width="10" height="150" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="718" y="697" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">页面样式</text>
+<text x="718" y="736" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">home / record / stats</text>
+<text x="718" y="764" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">budget / profile / themes</text>
+<line x1="450" y1="305" x2="500" y2="305" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="500,305 484,314 484,295" fill="#5ba4cb"/>
+<line x1="820" y1="305" x2="870" y2="305" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="870,305 854,314 854,295" fill="#f3a33a"/>
+<line x1="1190" y1="305" x2="1240" y2="305" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1240,305 1224,314 1224,295" fill="#8c7bd9"/>
+<line x1="290" y1="390" x2="840" y2="640" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<polygon points="840,640 822,642 829,625" fill="#d9e4de"/>
+<line x1="660" y1="390" x2="840" y2="640" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<polygon points="840,640 823,633 838,622" fill="#d9e4de"/>
+<line x1="1030" y1="390" x2="840" y2="640" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<polygon points="840,640 841,622 856,633" fill="#d9e4de"/>
+<line x1="1400" y1="390" x2="840" y2="640" stroke="#d9e4de" stroke-width="2" stroke-linecap="round"/>
+<polygon points="840,640 850,625 857,642" fill="#d9e4de"/>
+<rect x="230" y="790" width="360" height="130" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="230" y="790" width="10" height="130" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="258" y="836" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">持久化</text>
+<text x="258" y="874" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">Storage: theme / user_themes</text>
+<text x="258" y="901" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">最多 5 个自定义主题</text>
+<rect x="1210" y="790" width="360" height="130" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1210" y="790" width="10" height="130" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1238" y="836" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">分发机制</text>
+<text x="1238" y="874" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">eventBus: themeChanged</text>
+<text x="1238" y="901" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">页面 onShow 重新应用</text>
+<line x1="600" y1="855" x2="680" y2="725" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="680,725 679,742 663,733" fill="#27c07d"/>
+<line x1="1000" y1="725" x2="1200" y2="855" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1200,855 1182,854 1192,838" fill="#5ba4cb"/>
+<rect x="520" y="1115" width="780" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="537" y="1143" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">核心原因：小程序 CSS 变量继承限制，派生 token 需在 JS 中计算为实际值</text>
+</svg>

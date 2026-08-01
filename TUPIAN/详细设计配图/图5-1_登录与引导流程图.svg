@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1180" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 5-1  登录与引导流程图</text>
+<text x="1486" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Login &amp; Guide Flow</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="130" y="240" width="260" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="130" y="240" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="158" y="286" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">启动 app.js</text>
+<text x="158" y="324" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">CloudBase 初始化</text>
+<text x="158" y="351" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">主题迁移</text>
+<rect x="455" y="240" width="260" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="455" y="240" width="10" height="120" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="483" y="286" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">隐私协议检查</text>
+<text x="483" y="324" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">未授权则弹窗</text>
+<text x="483" y="351" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">同意后继续</text>
+<rect x="780" y="240" width="260" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="780" y="240" width="10" height="120" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="808" y="286" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">读取 guide_done</text>
+<text x="808" y="324" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">wx.Storage</text>
+<text x="808" y="351" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">判断是否首次</text>
+<rect x="1105" y="240" width="260" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1105" y="240" width="10" height="120" fill="#8c7bd9" stroke="#8c7bd9" stroke-width="1"/>
+<text x="1133" y="286" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">静默登录</text>
+<text x="1133" y="324" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">quickstartFunctions</text>
+<text x="1133" y="351" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">获取 OPENID</text>
+<rect x="625" y="560" width="260" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="625" y="560" width="10" height="120" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="653" y="606" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">进入 guide</text>
+<text x="653" y="644" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">4 屏引导</text>
+<text x="653" y="671" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">完成后写标记</text>
+<rect x="1105" y="560" width="260" height="120" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1105" y="560" width="10" height="120" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1133" y="606" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="24" font-weight="700" fill="#17231d">进入首页</text>
+<text x="1133" y="644" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">switchTab(home)</text>
+<text x="1133" y="671" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">onShow 拉取数据</text>
+<line x1="400" y1="300" x2="445" y2="300" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="445,300 429,309 429,290" fill="#f3a33a"/>
+<line x1="725" y1="300" x2="770" y2="300" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="770,300 754,309 754,290" fill="#5ba4cb"/>
+<line x1="1050" y1="300" x2="1095" y2="300" stroke="#8c7bd9" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1095,300 1079,309 1079,290" fill="#8c7bd9"/>
+<line x1="910" y1="370" x2="755" y2="550" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="755,550 757,532 772,544" fill="#5ba4cb"/>
+<line x1="895" y1="620" x2="1095" y2="620" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1095,620 1079,629 1079,610" fill="#27c07d"/>
+<line x1="1235" y1="370" x2="1235" y2="550" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1235,550 1225,534 1244,534" fill="#27c07d"/>
+<polygon points="890,455 1005,520 890,585 775,520" fill="#ffffff" stroke="#d9e4de" stroke-width="2"/>
+<text x="835" y="507" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#f3a33a">首次使用？</text>
+<text x="850" y="542" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">否 → 登录</text>
+<text x="850" y="572" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">是 → 引导</text>
+<rect x="585" y="1020" width="760" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="602" y="1048" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">状态落点：globalData.openid、currentTheme、Storage </text>
+<text x="602" y="1081" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">guide_done/theme/user_themes</text>
+</svg>

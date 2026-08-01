@@ -64,6 +64,8 @@ Page({
     selectedCategory: '餐饮',
     note: '',
     showNoteInput: false,
+    noteExpanded: false,
+    showMoodSheet: false,
     photoUrl: '',
     photoCloudPath: '',
     mood: '',
@@ -110,6 +112,8 @@ Page({
       amount: '',
       note: '',
       showNoteInput: false,
+      noteExpanded: false,
+      showMoodSheet: false,
       photoUrl: '',
       photoCloudPath: '',
       mood: '',
@@ -703,6 +707,26 @@ Page({
   onNoteInput(e) { this.setData({ note: e.detail.value }) },
   onNoteFocus() { this.setData({ showNoteInput: true }) },
   onNoteBlur() { if (!this.data.note) this.setData({ showNoteInput: false }) },
+
+  toggleNoteExpand() {
+    this.setData({ noteExpanded: !this.data.noteExpanded })
+  },
+
+  clearNote() {
+    this.setData({ note: '', noteExpanded: false, showNoteInput: false })
+  },
+
+  openMoodSheet() {
+    this.setData({ showMoodSheet: true })
+  },
+
+  closeMoodSheet() {
+    this.setData({ showMoodSheet: false })
+  },
+
+  clearMood() {
+    this.setData({ mood: '', isCustomMood: false, showMoodSheet: false })
+  },
   selectCategory(e) { this.setData({ selectedCategory: e.currentTarget.dataset.name }) },
 
   onDateChange(e) {

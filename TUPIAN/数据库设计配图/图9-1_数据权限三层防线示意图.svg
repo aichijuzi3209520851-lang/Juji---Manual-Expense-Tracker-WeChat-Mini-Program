@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1260" viewBox="0 0 1800 1260">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1260" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 9-1  数据权限三层防线示意图</text>
+<text x="1428" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Data Permission Defense</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="330" y="230" width="1140" height="180" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="330" y="230" width="10" height="180" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="358" y="281" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="29" font-weight="700" fill="#17231d">第一层：数据库安全规则</text>
+<text x="358" y="324" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">CloudBase 控制台为 5 个集合配置「仅创建者可读写」</text>
+<text x="358" y="356" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">适用于 bills / budgets / users / ai_usage_limits / client_logs</text>
+<rect x="330" y="490" width="1140" height="180" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="330" y="490" width="10" height="180" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="358" y="541" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="29" font-weight="700" fill="#17231d">第二层：云函数 OPENID</text>
+<text x="358" y="584" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">写操作在服务端执行 cloud.getWXContext().OPENID</text>
+<text x="358" y="616" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">不接收、不信任客户端传入的 openid</text>
+<line x1="900" y1="418" x2="900" y2="482" stroke="#6b7d73" stroke-width="4" stroke-linecap="round"/>
+<polygon points="900,482 890,466 909,466" fill="#6b7d73"/>
+<rect x="330" y="750" width="1140" height="180" rx="24" fill="#fff7eb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="330" y="750" width="10" height="180" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="358" y="801" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="29" font-weight="700" fill="#17231d">第三层：代码级所有权校验</text>
+<text x="358" y="844" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">bills.update/delete 先读取原文档</text>
+<text x="358" y="876" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">确认文档 _openid 与服务端 OPENID 一致后再修改</text>
+<line x1="900" y1="678" x2="900" y2="742" stroke="#6b7d73" stroke-width="4" stroke-linecap="round"/>
+<polygon points="900,742 890,726 909,726" fill="#6b7d73"/>
+<rect x="85" y="270" width="210" height="610" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="85" y="270" width="10" height="610" fill="#d9e4de" stroke="#d9e4de" stroke-width="1"/>
+<text x="113" y="314" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">外部请求</text>
+<text x="113" y="351" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">小程序页面</text>
+<text x="113" y="378" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">云函数调用</text>
+<text x="113" y="405" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">数据库查询</text>
+<rect x="1505" y="270" width="210" height="610" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1505" y="270" width="10" height="610" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="1533" y="314" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">保护结果</text>
+<text x="1533" y="351" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">越权读取被过滤</text>
+<text x="1533" y="378" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">伪造身份无效</text>
+<text x="1533" y="405" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="18" font-weight="400" fill="#6b7d73">删改前二次确认</text>
+<line x1="295" y1="575" x2="330" y2="575" stroke="#6b7d73" stroke-width="3" stroke-linecap="round"/>
+<polygon points="330,575 314,584 314,565" fill="#6b7d73"/>
+<line x1="1470" y1="575" x2="1505" y2="575" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1505,575 1489,584 1489,565" fill="#27c07d"/>
+<rect x="350" y="995" width="340" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="350" y="995" width="10" height="150" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="378" y="1039" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">数据库层覆盖</text>
+<text x="378" y="1075" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">bills / budgets / users</text>
+<text x="378" y="1101" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">ai_usage_limits / client_logs</text>
+<rect x="730" y="995" width="340" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="730" y="995" width="10" height="150" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="758" y="1039" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">服务端覆盖</text>
+<text x="758" y="1075" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">bills / budgets / dataMigration</text>
+<text x="758" y="1101" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="17" font-weight="400" fill="#6b7d73">clearUserData / aiPoster</text>
+<rect x="1110" y="995" width="340" height="150" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1110" y="995" width="10" height="150" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="1138" y="1039" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="700" fill="#17231d">重点校验</text>
+<text x="1138" y="1074" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">bills.update</text>
+<text x="1138" y="1099" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">bills.delete</text>
+<text x="1138" y="1124" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="16" font-weight="400" fill="#6b7d73">clearUserData 当前用户清理</text>
+<rect x="575" y="1160" width="820" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="592" y="1188" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">安全目标：数据库规则兜底，云函数提供可信身份，关键写操作再做显式所有权校验</text>
+</svg>

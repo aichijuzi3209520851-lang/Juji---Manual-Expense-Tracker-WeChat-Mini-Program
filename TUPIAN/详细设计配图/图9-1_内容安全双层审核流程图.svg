@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180">
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0d2a1d" flood-opacity="0.10"/></filter>
+</defs>
+<rect width="1800" height="1180" fill="#f7fbf8"/>
+<rect x="70" y="40" width="1660" height="90" rx="28" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<text x="104" y="100" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="34" font-weight="700" fill="#17231d">图 9-1  内容安全双层审核流程图</text>
+<text x="1405" y="94" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="22" font-weight="400" fill="#6b7d73">Content Safety Review Flow</text>
+<circle cx="1705" cy="85" r="18" fill="#27c07d" stroke="#ffffff" stroke-width="4"/>
+<rect x="140" y="260" width="300" height="130" rx="24" fill="#ffffff" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="140" y="260" width="10" height="130" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="168" y="307" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">用户输入</text>
+<text x="168" y="346" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">账单备注 / 分类</text>
+<text x="168" y="374" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">小橘聊天消息</text>
+<rect x="565" y="260" width="360" height="130" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="565" y="260" width="10" height="130" fill="#f3a33a" stroke="#f3a33a" stroke-width="1"/>
+<text x="593" y="307" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">第一层：本地规则</text>
+<text x="593" y="346" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">BLOCK_PATTERNS</text>
+<text x="593" y="374" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">快速拦截高风险词</text>
+<rect x="1050" y="260" width="360" height="130" rx="24" fill="#eef7fb" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1050" y="260" width="10" height="130" fill="#5ba4cb" stroke="#5ba4cb" stroke-width="1"/>
+<text x="1078" y="307" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="25" font-weight="700" fill="#17231d">第二层：微信安全</text>
+<text x="1078" y="346" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">contentSafety 云函数</text>
+<text x="1078" y="374" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="19" font-weight="400" fill="#6b7d73">msgSecCheck v2</text>
+<rect x="565" y="650" width="330" height="130" rx="24" fill="#e8f5ee" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="565" y="650" width="10" height="130" fill="#27c07d" stroke="#27c07d" stroke-width="1"/>
+<text x="593" y="699" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">通过</text>
+<text x="593" y="739" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">允许 AI 解析</text>
+<text x="593" y="769" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">或允许提交账单</text>
+<rect x="1050" y="650" width="330" height="130" rx="24" fill="#fff6f6" stroke="#d9e4de" stroke-width="2" filter="url(#shadow)"/>
+<rect x="1050" y="650" width="10" height="130" fill="#ba1a1a" stroke="#ba1a1a" stroke-width="1"/>
+<text x="1078" y="699" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="27" font-weight="700" fill="#17231d">拦截 / 降级</text>
+<text x="1078" y="739" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">toast 提示</text>
+<text x="1078" y="769" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="400" fill="#6b7d73">AI fallback 回复</text>
+<line x1="450" y1="325" x2="555" y2="325" stroke="#f3a33a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="555,325 539,334 539,315" fill="#f3a33a"/>
+<line x1="935" y1="325" x2="1040" y2="325" stroke="#5ba4cb" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1040,325 1024,334 1024,315" fill="#5ba4cb"/>
+<line x1="1230" y1="400" x2="730" y2="640" stroke="#27c07d" stroke-width="3" stroke-linecap="round"/>
+<polygon points="730,640 739,624 747,641" fill="#27c07d"/>
+<line x1="745" y1="400" x2="1215" y2="640" stroke="#ba1a1a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1215,640 1197,641 1205,624" fill="#ba1a1a"/>
+<line x1="1230" y1="400" x2="1215" y2="640" stroke="#ba1a1a" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1215,640 1206,624 1225,625" fill="#ba1a1a"/>
+<rect x="500" y="1015" width="820" height="42" rx="21" fill="#ffffff" stroke="#ffffff" stroke-width="1"/>
+<text x="517" y="1043" font-family="Microsoft YaHei,Noto Sans SC,SimHei,sans-serif" font-size="20" font-weight="700" fill="#157a51">策略：先本地低成本拦截，再云端复检；云端异常时按场景降级，不写入风险内容</text>
+</svg>
