@@ -122,7 +122,7 @@
           <view wx:if="{{item.role === 'user' && avatarUrl && !avatarError}}" class="chat-avatar chat-avatar--user-img">
             <image class="chat-avatar-img" src="{{avatarUrl}}" mode="aspectFill" />
           </view>
-          <view wx:if="{{item.role === 'user' && (!avatarUrl || avatarError)}}" class="chat-avatar chat-avatar--fallback">我</view>
+          <view wx:if="{{item.role === 'user' && (!avatarUrl || avatarError)}}" class="chat-avatar chat-avatar--fallback">🍊</view>
 
           <!-- 待确认账单卡 -->
           <view wx:if="{{item.type === 'billDraft'}}" class="bill-draft">
@@ -171,7 +171,7 @@
       <view class="ai-chat-footer">
         <text class="ai-chat-notice">AI生成，仅供参考，请勿输入敏感个人信息。</text>
         <view class="ai-chat-input-row">
-          <input class="ai-chat-input" value="{{chatInput}}" bindinput="onChatInput" bindblur="onChatInputBlur" bindconfirm="sendChatMessage" bindkeyboardheightchange="onChatKeyboardHeightChange" confirm-type="send" adjust-position="{{false}}" cursor-spacing="12" placeholder="和小橘聊聊..." maxlength="300" />
+          <textarea class="ai-chat-input" value="{{chatInput}}" bindinput="onChatInput" bindblur="onChatInputBlur" bindconfirm="sendChatMessage" bindkeyboardheightchange="onChatKeyboardHeightChange" auto-height="{{true}}" show-confirm-bar="{{false}}" confirm-type="send" adjust-position="{{false}}" cursor-spacing="12" placeholder="和小橘聊聊..." maxlength="300"></textarea>
           <button class="ai-chat-send {{chatLoading || !chatInput ? 'is-disabled' : ''}}" bindtap="sendChatMessage">发送</button>
         </view>
       </view>

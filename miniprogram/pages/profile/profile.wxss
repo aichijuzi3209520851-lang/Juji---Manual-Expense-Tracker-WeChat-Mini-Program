@@ -567,10 +567,10 @@
   height: 100%;
 }
 .chat-avatar--fallback {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  font-size: 22rpx;
-  font-weight: 800;
+  background: var(--color-primary-container);
+  color: var(--color-primary);
+  font-size: 36rpx;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -787,21 +787,28 @@
 }
 .ai-chat-input-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 14rpx;
 }
 .ai-chat-input {
   flex: 1;
-  height: 76rpx;
+  min-height: 76rpx;
+  max-height: 220rpx;
   box-sizing: border-box;
-  padding: 0 24rpx;
-  border-radius: var(--radius-full);
+  padding: 16rpx 24rpx;
+  border-radius: 24rpx;
   background: var(--color-surface-low);
   color: var(--color-text);
   font-size: 27rpx;
+  line-height: 44rpx;
   border: 1rpx solid var(--color-border);
+  overflow-y: auto;
+  word-break: break-all;
+  white-space: pre-wrap;
+  transition: height 0.18s ease;
 }
 .ai-chat-send {
+  flex-shrink: 0;
   width: 118rpx;
   height: 76rpx;
   padding: 0;

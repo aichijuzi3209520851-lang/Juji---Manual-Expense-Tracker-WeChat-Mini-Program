@@ -206,10 +206,14 @@ Page({
     showRankingAll: false,
     trendData: [],
     trendAxisLabels: [],
+    trendTickActiveIndex: -1,
     trendCanvasWidth: CHART_SIZES.month.width,
     trendTickWidth: CHART_SIZES.month.tick,
     trendAverage: '0.00',
     trendEmpty: true,
+    trendLoading: true,
+    trendSelected: null,
+    trendTooltip: { show: false, x: 0, amount: '', label: '', delta: '' },
     dailyComment: '',
     weeklyComment: '',
     monthlyComment: '',
@@ -218,6 +222,7 @@ Page({
     monthlyLoading: true,
     aiCurrentIndex: 0,
     aiHintVisible: true,
+    aiExpanded: true,
     aiDebugText: '',
     statsFailed: false,
     themeStyle: getThemeStyleString()
@@ -295,6 +300,7 @@ Page({
     const db = wx.cloud.database()
     const _ = db.command
     const range = buildRange(this.data.rangeMode)
+    this.setData({ trendLoading: true })
 
     try {
       const rawData = await getAll(db.collection('bills')
@@ -376,7 +382,11 @@ Page({
       trendCanvasWidth: (CHART_SIZES[range.mode] || CHART_SIZES.month).width,
       trendTickWidth: (CHART_SIZES[range.mode] || CHART_SIZES.month).tick,
       trendAverage: average.toFixed(2),
-      trendEmpty: total <= 0
+      trendEmpty: total <= 0,
+      trendLoading: false,
+      trendSelected: null,
+      trendTickActiveIndex: -1,
+      trendTooltip: { show: false, x: 0, amount: '', label: '', delta: '' }
     }, () => this.drawTrendChart(true))
   },
 
@@ -387,11 +397,13 @@ Page({
       : vars['--color-primary']
     return {
       line,
-      fill: alphaColor(line, 0.14),
+      fillTop: alphaColor(line, 0.24),
+      fillBottom: alphaColor(line, 0.02),
       point: vars['--color-surface'] || '#ffffff',
-      grid: alphaColor(vars['--color-outline'] || '#82a090', 0.16),
-      axis: alphaColor(vars['--color-outline'] || '#82a090', 0.24),
-      average: alphaColor(line, 0.36)
+      grid: alphaColor(vars['--color-outline'] || '#82a090', 0.14),
+      axis: alphaColor(vars['--color-outline'] || '#82a090', 0.22),
+      average: alphaColor(line, 0.4),
+      glow: alphaColor(line, 0.3)
     }
   },
 
@@ -418,7 +430,7 @@ Page({
       this.clearTrendAnimation()
       this._trendCanvas = { canvas, ctx, width: info.width, height: info.height }
 
-      const duration = animated ? 300 : 0
+      const duration = animated ? 620 : 0
       const started = Date.now()
       const step = () => {
         const raw = duration ? Math.min(1, (Date.now() - started) / duration) : 1
@@ -436,54 +448,75 @@ Page({
     })
   },
 
+  niceScale(max) {
+    if (max <= 0) return { max: 1, steps: 4 }
+    const rawStep = max / 4
+    const mag = Math.pow(10, Math.floor(Math.log10(rawStep)))
+    const norm = rawStep / mag
+    let niceNorm
+    if (norm <= 1) niceNorm = 1
+    else if (norm <= 2) niceNorm = 2
+    else if (norm <= 2.5) niceNorm = 2.5
+    else if (norm <= 5) niceNorm = 5
+    else niceNorm = 10
+    const step = niceNorm * mag
+    return { max: step * 4, steps: 4 }
+  },
+
+  getTrendGeom() {
+    const box = this._trendCanvas
+    if (!box) return null
+    const { width, height } = box
+    const left = 28
+    const right = 48
+    const top = 28
+    const bottom = 40
+    return { left, right, top, bottom, plotW: width - left - right, plotH: height - top - bottom, width, height }
+  },
+
   paintTrend(progress) {
     const box = this._trendCanvas
     if (!box) return
     const { ctx, width, height } = box
     const data = this.data.trendData || []
     const values = data.map(item => Number(item.rawAmount) || 0)
-    const max = Math.max(...values, 1)
+    const rawMax = Math.max(...values, 1)
+    const { max: niceMax } = this.niceScale(rawMax)
     const colors = this.getTrendColors()
-    const left = 20
-    const right = 16
-    const top = 22
-    const bottom = 34
-    const plotW = width - left - right
-    const plotH = height - top - bottom
+    const g = this.getTrendGeom()
+    const { left, right, top, plotW, plotH } = g
 
     ctx.clearRect(0, 0, width, height)
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
-    ctx.lineWidth = 1
-    ctx.strokeStyle = colors.grid
-
-    for (let i = 0; i < 4; i++) {
-      const y = top + (plotH / 3) * i
-      ctx.beginPath()
-      ctx.moveTo(left, y)
-      ctx.lineTo(width - right, y)
-      ctx.stroke()
-    }
-
-    ctx.strokeStyle = colors.axis
-    ctx.beginPath()
-    ctx.moveTo(left, top + plotH)
-    ctx.lineTo(width - right, top + plotH)
-    ctx.stroke()
 
     if (!data.length) return
 
     const points = values.map((value, i) => {
       const x = data.length === 1 ? left + plotW / 2 : left + (plotW / (data.length - 1)) * i
-      const y = top + plotH - (value / max) * plotH
+      const y = top + plotH - (value / niceMax) * plotH
       return { x, y, value }
     })
 
+    // 水平网格线（极浅点线），基于 nice scale
+    ctx.lineWidth = 1
+    ctx.setLineDash([2, 6])
+    for (let i = 0; i <= 4; i++) {
+      const y = top + (plotH / 4) * i
+      ctx.strokeStyle = colors.grid
+      ctx.beginPath()
+      ctx.moveTo(left, y)
+      ctx.lineTo(width - right, y)
+      ctx.stroke()
+    }
+    ctx.setLineDash([])
+
     const avg = values.reduce((sum, value) => sum + value, 0) / values.length
-    const avgY = top + plotH - (avg / max) * plotH
+    const avgY = top + plotH - (avg / niceMax) * plotH
     ctx.save()
     ctx.setLineDash([5, 7])
     ctx.strokeStyle = colors.average
+    ctx.lineWidth = 1.5
     ctx.beginPath()
     ctx.moveTo(left, avgY)
     ctx.lineTo(width - right, avgY)
@@ -498,36 +531,126 @@ Page({
     const visible = points.slice(0, visibleCount)
     const last = visible[visible.length - 1]
 
+    // 渐变面积填充
+    const grad = ctx.createLinearGradient(0, top, 0, top + plotH)
+    grad.addColorStop(0, colors.fillTop)
+    grad.addColorStop(1, colors.fillBottom)
     ctx.beginPath()
     ctx.moveTo(visible[0].x, top + plotH)
-    visible.forEach((p, i) => {
-      if (i === 0) ctx.lineTo(p.x, p.y)
-      else ctx.lineTo(p.x, p.y)
-    })
+    visible.forEach(p => ctx.lineTo(p.x, p.y))
     ctx.lineTo(last.x, top + plotH)
     ctx.closePath()
-    ctx.fillStyle = colors.fill
+    ctx.fillStyle = grad
     ctx.fill()
 
+    // 折线 + 发光底层
     ctx.beginPath()
     visible.forEach((p, i) => {
       if (i === 0) ctx.moveTo(p.x, p.y)
       else ctx.lineTo(p.x, p.y)
     })
+    ctx.strokeStyle = colors.glow
+    ctx.lineWidth = 7
+    ctx.globalAlpha = 0.5
+    ctx.stroke()
+    ctx.globalAlpha = 1
     ctx.strokeStyle = colors.line
     ctx.lineWidth = 3
     ctx.stroke()
 
+    // 数据点：默认隐藏细点，仅描有数据的点
     visible.forEach((p, i) => {
       if (!data[i].hasData) return
       ctx.beginPath()
-      ctx.arc(p.x, p.y, i === visible.length - 1 ? 4.8 : 3.6, 0, Math.PI * 2)
+      ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2)
       ctx.fillStyle = colors.point
       ctx.fill()
-      ctx.lineWidth = 2
+      ctx.lineWidth = 1.6
       ctx.strokeStyle = colors.line
       ctx.stroke()
     })
+
+    // 选中点：十字准星 + 双层圆
+    const sel = this.data.trendSelected
+    if (sel && sel.index != null && sel.index < visibleCount) {
+      const p = points[sel.index]
+      ctx.save()
+      ctx.setLineDash([3, 5])
+      ctx.strokeStyle = alphaColor(colors.line, 0.4)
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(p.x, top)
+      ctx.lineTo(p.x, top + plotH)
+      ctx.stroke()
+      ctx.restore()
+
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, 9, 0, Math.PI * 2)
+      ctx.fillStyle = alphaColor(colors.line, 0.18)
+      ctx.fill()
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, 5.5, 0, Math.PI * 2)
+      ctx.fillStyle = colors.point
+      ctx.fill()
+      ctx.lineWidth = 3
+      ctx.strokeStyle = colors.line
+      ctx.stroke()
+    }
+  },
+
+  computeTrendPoints() {
+    const box = this._trendCanvas
+    if (!box) return []
+    const g = this.getTrendGeom()
+    const { left, plotW, top, plotH } = g
+    const data = this.data.trendData || []
+    const values = data.map(item => Number(item.rawAmount) || 0)
+    const { max: niceMax } = this.niceScale(Math.max(...values, 1))
+    return values.map((value, i) => {
+      const x = data.length === 1 ? left + plotW / 2 : left + (plotW / (data.length - 1)) * i
+      const y = top + plotH - (value / niceMax) * plotH
+      return { x, y, value }
+    })
+  },
+
+  onTrendTouch(e) {
+    if (!this._trendCanvas || !this.data.trendData.length || this.data.trendEmpty) return
+    const touches = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0])
+    if (!touches) return
+    const g = this.getTrendGeom()
+    const points = this.computeTrendPoints()
+    const relX = touches.x - g.left
+    let nearest = 0
+    let minDist = Infinity
+    points.forEach((p, i) => {
+      const d = Math.abs(p.x - (g.left + relX))
+      if (d < minDist) { minDist = d; nearest = i }
+    })
+    const item = this.data.trendData[nearest]
+    const avg = Number(this.data.trendAverage) || 0
+    const deltaVal = Number(item.rawAmount) - avg
+    const deltaTxt = deltaVal === 0 ? '与均值持平' : (deltaVal > 0 ? '高于均值 ' : '低于均值 ') + Math.abs(deltaVal).toFixed(2)
+    this.setData({
+      trendSelected: { index: nearest },
+      trendTooltip: {
+        show: true,
+        x: points[nearest].x,
+        amount: Number(item.rawAmount).toFixed(2),
+        label: item.label,
+        delta: deltaTxt
+      },
+      trendTickActiveIndex: nearest
+    })
+    this.paintTrend(1)
+    if (wx.vibrateShort) wx.vibrateShort({ type: 'light' })
+  },
+
+  onTrendTap(e) {
+    this.onTrendTouch(e)
+  },
+
+  onTrendTouchEnd() {
+    // 保留选中点与 tooltip，便于用户查看；再次触摸可切换
   },
 
   onAINoteScroll(e) {
@@ -544,6 +667,10 @@ Page({
 
   toggleRankingAll() {
     this.setData({ showRankingAll: !this.data.showRankingAll })
+  },
+
+  toggleAIExpand() {
+    this.setData({ aiExpanded: !this.data.aiExpanded })
   },
 
   showAINoteFull(e) {

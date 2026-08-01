@@ -24,6 +24,7 @@ const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const { requirePrivacyAuthorization } = require('../../utils/privacy')
 const { CATEGORY_EMOJI } = require('../../utils/profileHelpers')
+const { resolveAvatarSrc } = require('../../utils/avatar')
 
 const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
 const AI_CHAT_FALLBACK = '小橘不知道，来聊聊别的吧~'
@@ -260,6 +261,10 @@ Page({
       amountFocused: false,
       keyboardHeight: 0,
       quickConfirmStyle: 'bottom:0px;'
+    })
+    // 把 cloud:// fileID 解析成可直接渲染的 https tempFileURL
+    resolveAvatarSrc(userInfo.avatarUrl || '').then(resolved => {
+      if (resolved) this.setData({ chatUserAvatarUrl: resolved })
     })
   },
 

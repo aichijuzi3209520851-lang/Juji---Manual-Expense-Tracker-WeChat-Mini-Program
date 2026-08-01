@@ -1,6 +1,7 @@
 const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CUSTOM_PALETTE } = require('../../utils/theme')
 const { getAll } = require('../../utils/dbPager')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
+const { resolveAvatarSrc } = require('../../utils/avatar')
 const {
   requirePrivacyAuthorization,
   openPrivacyAgreement: showPrivacyAgreement,
@@ -803,25 +804,6 @@ Page({
     const errMsg = e && e.detail && e.detail.errMsg
     console.warn('[avatar] image load failed:', errMsg)
     this.setData({ avatarError: true })
-  },
-
-  // 把 cloud:// fileID 解析成可直接渲染的 https tempFileURL
-  // 空 / 已是 http(s) / 本地路径都原样返回；cloud 协议才走 getTempFileURL
-  async resolveAvatarSrc(fileID) {
-    if (!fileID) return ''
-    if (!/^cloud:\/\//.test(fileID)) return fileID
-    try {
-      const res = await wx.cloud.getTempFileURL({ fileList: [fileID] })
-      const item = res && res.fileList && res.fileList[0]
-      const url = item && item.tempFileURL
-      if (item && item.status !== 0) {
-        console.warn('[avatar] getTempFileURL non-zero status:', item.status, item.errMsg)
-      }
-      return url || ''
-    } catch (err) {
-      console.warn('[avatar] getTempFileURL failed:', err && err.errMsg)
-      return ''
-    }
   },
 
   // 昵称修改

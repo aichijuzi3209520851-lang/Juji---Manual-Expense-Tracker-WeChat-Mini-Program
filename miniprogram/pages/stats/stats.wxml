@@ -40,11 +40,22 @@
     <scroll-view class="trend-scroll" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
       <view class="trend-chart-inner" style="width: {{trendCanvasWidth}}rpx;">
         <view class="trend-canvas-wrap">
-          <canvas id="trendCanvas" type="2d" class="trend-canvas" style="width: {{trendCanvasWidth}}rpx;"></canvas>
-          <view wx:if="{{trendEmpty}}" class="trend-empty">这个区间还没有记录</view>
+          <canvas id="trendCanvas" type="2d" class="trend-canvas" style="width: {{trendCanvasWidth}}rpx;" bindtouchstart="onTrendTouch" bindtouchmove="onTrendTouch" bindtap="onTrendTap" bindtouchend="onTrendTouchEnd"></canvas>
+          <view wx:if="{{trendLoading}}" class="trend-skeleton">
+            <view class="trend-skeleton-line"></view>
+          </view>
+          <view wx:elif="{{trendEmpty}}" class="trend-empty">
+            <view class="trend-empty-icon">📊</view>
+            <text class="trend-empty-text">这个区间还没有记录</text>
+          </view>
+          <view wx:if="{{trendTooltip.show}}" class="trend-tooltip" style="left: {{trendTooltip.x}}px; transform: translateX(-50%);">
+            <text class="trend-tooltip-label">{{trendTooltip.label}}</text>
+            <text class="trend-tooltip-amount">¥{{trendTooltip.amount}}</text>
+            <text class="trend-tooltip-delta">{{trendTooltip.delta}}</text>
+          </view>
         </view>
         <view class="trend-axis" style="width: {{trendCanvasWidth}}rpx;">
-          <text wx:for="{{trendAxisLabels}}" wx:key="*this" class="trend-axis-label" style="width: {{trendTickWidth}}rpx;">{{item}}</text>
+          <text wx:for="{{trendAxisLabels}}" wx:key="*this" class="trend-axis-label {{index === trendTickActiveIndex ? 'is-active' : ''}}" style="width: {{trendTickWidth}}rpx;">{{item}}</text>
         </view>
       </view>
     </scroll-view>
@@ -80,64 +91,55 @@
 
   <view class="ai-section">
     <view class="ai-header-row">
-      <view class="ai-title-wrap">
+      <view class="ai-title-wrap" bindtap="toggleAIExpand" hover-class="ai-title-wrap--hover">
         <view class="ai-section-title">小橘的便签</view>
-        <view wx:if="{{aiHintVisible}}" class="ai-swipe-hint">左右滑动</view>
+        <view class="ai-toggle-arrow {{aiExpanded ? 'is-up' : ''}}"></view>
       </view>
       <button class="ai-refresh-btn" size="mini" bindtap="refreshAIComments">催小橘更新</button>
     </view>
     <!-- <text wx:if="{{aiDebugText}}" class="ai-debug-text">{{aiDebugText}}</text> -->
 
-    <view class="ai-carousel">
-      <scroll-view class="ai-scroll" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}" bindscroll="onAINoteScroll">
-        <view class="ai-track">
-          <view class="ai-card ai-card--daily" data-scope="daily" bindtap="showAINoteFull">
-            <view class="ai-card-head">
-              <view class="ai-card-stamp ai-card-stamp--daily"><text class="ai-card-emoji">📅</text></view>
-              <text class="ai-card-label">昨日回顾</text>
-              <text class="ai-card-arrow">›</text>
-            </view>
-            <text class="ai-card-text {{dailyLoading ? 'is-loading' : ''}}">{{dailyLoading ? '小橘正在琢磨…' : dailyComment}}</text>
-            <view class="ai-card-foot">
-              <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
-              <text wx:if="{{!dailyLoading && dailyComment.length > 42}}" class="ai-card-more">查看全文</text>
-            </view>
+    <view class="ai-body {{aiExpanded ? 'is-expanded' : ''}}">
+      <view class="ai-track">
+        <view class="ai-card ai-card--daily" data-scope="daily" bindtap="showAINoteFull">
+          <view class="ai-card-head">
+            <view class="ai-card-stamp ai-card-stamp--daily"><text class="ai-card-emoji">📅</text></view>
+            <text class="ai-card-label">昨日回顾</text>
+            <text class="ai-card-arrow">›</text>
           </view>
-
-          <view class="ai-card ai-card--weekly" data-scope="weekly" bindtap="showAINoteFull">
-            <view class="ai-card-head">
-              <view class="ai-card-stamp ai-card-stamp--weekly"><text class="ai-card-emoji">📊</text></view>
-              <text class="ai-card-label">上周回顾</text>
-              <text class="ai-card-arrow">›</text>
-            </view>
-            <text class="ai-card-text {{weeklyLoading ? 'is-loading' : ''}}">{{weeklyLoading ? '小橘正在琢磨…' : weeklyComment}}</text>
-            <view class="ai-card-foot">
-              <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
-              <text wx:if="{{!weeklyLoading && weeklyComment.length > 42}}" class="ai-card-more">查看全文</text>
-            </view>
-          </view>
-
-          <view class="ai-card ai-card--monthly" data-scope="monthly" bindtap="showAINoteFull">
-            <view class="ai-card-head">
-              <view class="ai-card-stamp ai-card-stamp--monthly"><text class="ai-card-emoji">📈</text></view>
-              <text class="ai-card-label">上月回顾</text>
-              <text class="ai-card-arrow">›</text>
-            </view>
-            <text class="ai-card-text {{monthlyLoading ? 'is-loading' : ''}}">{{monthlyLoading ? '小橘正在琢磨…' : monthlyComment}}</text>
-            <view class="ai-card-foot">
-              <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
-              <text wx:if="{{!monthlyLoading && monthlyComment.length > 42}}" class="ai-card-more">查看全文</text>
-            </view>
+          <text class="ai-card-text {{dailyLoading ? 'is-loading' : ''}}">{{dailyLoading ? '小橘正在琢磨…' : dailyComment}}</text>
+          <view class="ai-card-foot">
+            <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
+            <text wx:if="{{!dailyLoading && dailyComment.length > 42}}" class="ai-card-more">查看全文</text>
           </view>
         </view>
-      </scroll-view>
-      <view class="ai-fade"></view>
-    </view>
 
-    <view class="ai-dots">
-      <view class="ai-dot {{aiCurrentIndex === 0 ? 'is-active' : ''}}"></view>
-      <view class="ai-dot {{aiCurrentIndex === 1 ? 'is-active' : ''}}"></view>
-      <view class="ai-dot {{aiCurrentIndex === 2 ? 'is-active' : ''}}"></view>
+        <view class="ai-card ai-card--weekly" data-scope="weekly" bindtap="showAINoteFull">
+          <view class="ai-card-head">
+            <view class="ai-card-stamp ai-card-stamp--weekly"><text class="ai-card-emoji">📊</text></view>
+            <text class="ai-card-label">上周回顾</text>
+            <text class="ai-card-arrow">›</text>
+          </view>
+          <text class="ai-card-text {{weeklyLoading ? 'is-loading' : ''}}">{{weeklyLoading ? '小橘正在琢磨…' : weeklyComment}}</text>
+          <view class="ai-card-foot">
+            <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
+            <text wx:if="{{!weeklyLoading && weeklyComment.length > 42}}" class="ai-card-more">查看全文</text>
+          </view>
+        </view>
+
+        <view class="ai-card ai-card--monthly" data-scope="monthly" bindtap="showAINoteFull">
+          <view class="ai-card-head">
+            <view class="ai-card-stamp ai-card-stamp--monthly"><text class="ai-card-emoji">📈</text></view>
+            <text class="ai-card-label">上月回顾</text>
+            <text class="ai-card-arrow">›</text>
+          </view>
+          <text class="ai-card-text {{monthlyLoading ? 'is-loading' : ''}}">{{monthlyLoading ? '小橘正在琢磨…' : monthlyComment}}</text>
+          <view class="ai-card-foot">
+            <text class="ai-card-disclaimer">AI生成，仅供娱乐</text>
+            <text wx:if="{{!monthlyLoading && monthlyComment.length > 42}}" class="ai-card-more">查看全文</text>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 
