@@ -28,6 +28,20 @@ my_images/
 橘记/
 miniprogram-cloudbase-miniprogram-template/
 
+# Local non-source artifacts (design assets, docs, exports, helper scripts)
+数据库/
+TUPIAN/
+文档与PPT文件/
+docs/
+tools/
+mockup-guide.html
+被拒绝上线的可能情况.txt
+记账小程序-头脑风暴产物.md
+橘记_作品展示路演汇报.pptx
+*.pptx
+*.docx
+*.log
+
 # Local helper script not suitable for open-source repo
 uploadCloudFunction.sh
 

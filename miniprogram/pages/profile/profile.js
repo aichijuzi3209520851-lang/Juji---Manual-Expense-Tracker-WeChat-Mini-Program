@@ -3,7 +3,9 @@ const { getAll } = require('../../utils/dbPager')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const { resolveAvatarSrc } = require('../../utils/avatar')
 const {
+  PRIVACY_AUTH_BUTTON_ID,
   requirePrivacyAuthorization,
+  handlePrivacyAuthorize,
   openPrivacyAgreement: showPrivacyAgreement,
   openUserAgreement: showUserAgreement
 } = require('../../utils/privacy')
@@ -167,6 +169,10 @@ Page({
     showLetter: false,
     letterText: '',
     letterRemaining: -1,
+    // 隐私授权弹窗
+    showPrivacyAuth: false,
+    privacyAuthButtonId: PRIVACY_AUTH_BUTTON_ID,
+    privacyAuthFeature: '',
     letterTotalLimit: 30,
     // 记账打卡热力图
     heatmapMonth: '',
@@ -687,7 +693,9 @@ Page({
 
   // 头像修改
   async changeAvatar() {
+    this.setData({ privacyAuthFeature: '头像设置' })
     const ok = await requirePrivacyAuthorization('头像设置')
+    this.setData({ privacyAuthFeature: '' })
     if (!ok) return
 
     wx.showActionSheet({
@@ -908,7 +916,9 @@ Page({
   },
 
   async doExportJSON() {
+    this.setData({ privacyAuthFeature: '数据导出' })
     const ok = await requirePrivacyAuthorization('数据导出')
+    this.setData({ privacyAuthFeature: '' })
     if (!ok) return
 
     wx.showLoading({ title: '导出中…', mask: true })
@@ -992,7 +1002,9 @@ Page({
   },
 
   async doImportJSON() {
+    this.setData({ privacyAuthFeature: '数据导入' })
     const ok = await requirePrivacyAuthorization('数据导入')
+    this.setData({ privacyAuthFeature: '' })
     if (!ok) return
 
     let filePath
@@ -1055,6 +1067,24 @@ Page({
       }
     })
   },
+
+  // 隐私链路回调：头像/导出/导入等敏感能力触发 wx.onNeedPrivacyAuthorization 时调用，
+  // 弹出「我的」页隐私授权弹窗，内含真实授权按钮（见 profile.wxml 的 privacy-auth-btn）。
+  showPrivacyAuthorizeButton() {
+    this.setData({ showPrivacyAuth: true })
+  },
+
+  hidePrivacyAuthorizeButton() {
+    this.setData({ showPrivacyAuth: false })
+  },
+
+  // 用户点击授权按钮后回调，统一交给 handlePrivacyAuthorize 解析并 resolve 授权结果。
+  onPrivacyAuthorize(e) {
+    this.setData({ showPrivacyAuth: false })
+    handlePrivacyAuthorize(e)
+  },
+
+  noop() {},
 
   // 清除数据
   viewPrivacyAgreement() {

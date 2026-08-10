@@ -22,7 +22,11 @@ const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
-const { requirePrivacyAuthorization } = require('../../utils/privacy')
+const {
+  PRIVACY_AUTH_BUTTON_ID,
+  requirePrivacyAuthorization,
+  handlePrivacyAuthorize
+} = require('../../utils/privacy')
 const { CATEGORY_EMOJI } = require('../../utils/profileHelpers')
 const { resolveAvatarSrc } = require('../../utils/avatar')
 
@@ -97,6 +101,10 @@ Page({
     chatLoading: false,
     chatScrollTo: '',
     chatKeyboardHeight: 0,
+    // 隐私授权弹窗
+    showPrivacyAuth: false,
+    privacyAuthButtonId: PRIVACY_AUTH_BUTTON_ID,
+    privacyAuthFeature: '',
     chatModalStyle: '',
     chatUserAvatarUrl: '',
     chatAvatarError: false
@@ -757,8 +765,28 @@ Page({
     this.setData({ dateStr, displayDate })
   },
 
+  // 隐私链路回调：账单照片等能力触发 wx.onNeedPrivacyAuthorization 时调用，
+  // 弹出记账页隐私授权弹窗，内含真实授权按钮（见 record.wxml 的 privacy-auth-btn）。
+  showPrivacyAuthorizeButton() {
+    this.setData({ showPrivacyAuth: true })
+  },
+
+  hidePrivacyAuthorizeButton() {
+    this.setData({ showPrivacyAuth: false })
+  },
+
+  // 用户点击授权按钮后回调，统一交给 handlePrivacyAuthorize 解析并 resolve 授权结果。
+  onPrivacyAuthorize(e) {
+    this.setData({ showPrivacyAuth: false })
+    handlePrivacyAuthorize(e)
+  },
+
+  noop() {},
+
   async choosePhoto() {
+    this.setData({ privacyAuthFeature: '账单照片' })
     const ok = await requirePrivacyAuthorization('账单照片')
+    this.setData({ privacyAuthFeature: '' })
     if (!ok) return
 
     if (this.data.photoUrl) {

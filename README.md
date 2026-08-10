@@ -275,10 +275,13 @@ cloudfunctions/             # 云函数
 
 ### 隐私与协议提审
 
-- 当前调试版本临时关闭 `__usePrivacyCheck__`，并启用 `PRIVACY_DEBUG_BYPASS`，用于隐私协议未通过期间的真机功能验证；正式提审前必须恢复隐私授权检查。
-- 原隐私授权链路保留在 `utils/privacy.js`，头像、账单照片、JSON 导入导出等敏感能力正式版仍需在触发前调用隐私授权检查。
-- 微信公众平台隐私保护指引需同步声明：头像/昵称、相机、相册、文件、账单记录、AI 文本生成所需的消费统计数据。
-- “我的页”提供隐私协议和用户协议入口；用户拒绝隐私授权时，相机/相册/文件能力应保持降级，不继续读取本地文件或媒体。
+- **隐私授权链路（规范版）**：`utils/privacy.js` 按微信小程序隐私保护最新规范实现。
+  - 通过 `wx.onNeedPrivacyAuthorization` 全局监听需要授权的场景（头像、相机、相册、文件、录音等）。
+  - 触发授权时调用当前页面的 `showPrivacyAuthorizeButton()`，显示**真实的** `<button open-type="agreePrivacyAuthorization">` 授权按钮；用户点击后由 `bindagreeprivacyauthorization` 回调调用 `handlePrivacyAuthorize(e)` → `resolvePrivacyAuthorization()` 完成授权。
+  - `requirePrivacyAuthorization(feature)` 统一封装：先 `wx.getPrivacySetting` 判断是否需要授权，再 `wx.requirePrivacyAuthorize` 调起，避免旧实现中"假授权"导致的死循环。
+  - 调试开关 `PRIVACY_DEBUG_BYPASS`（默认 `false`）仅在本地排查时临时开启，正式提审前必须保持 `false`。
+- 微信公众平台**用户隐私保护指引**必须同步声明并审核通过：头像/昵称、相机、相册、文件、录音（麦克风）、账单记录、AI 文本生成所需的消费统计数据；否则真机会反复弹出空白隐私页（更新日期显示 1970）。
+- “我的页”提供隐私协议和用户协议入口；用户拒绝隐私授权时，相机/相册/文件/录音能力应保持降级，不继续读取本地文件或媒体。
 
 ### AI 能力
 
@@ -288,6 +291,12 @@ cloudfunctions/             # 云函数
   - `aiPoster`：我的页 AI 信件（记账天数 + 最爱分类 → 150-180 字俏皮鼓励信）+ 每日消费称号
   - `aiChat`：「小橘」聊天助手 + 账单查询分析 + 对话记账（口语 → 结构化 JSON `{intent, reply, bills}`，容错解析 + `temperature 0.2`）
 - 资源包：小程序成长计划 1 亿 Token（`pkg_hunyuan_token_la_inspire_100m`）
+
+### 语音输入（规划中，未实现）
+
+- **目标**：在「小橘」聊天框接入微信同声传译插件（`WechatSI`），用户长按🎤说话 → 松手出普通话文字 → 直接作为聊天内容发送 → 复用现有 AI 对话记账链路。
+- **方案**：`app.json` 声明插件；新建 `utils/speech.js` 封装 `getRecordRecognitionManager()` 的 start/stop/识别回调；录音前调用 `requirePrivacyAuthorization('麦克风')` 复用已规范的隐私授权弹窗。
+- **依赖**：需先在微信公众平台「设置 → 第三方设置 → 插件管理」添加「微信同声传译」插件（免费），并在隐私保护指引中补充「麦克风/录音」声明。
 
 ## License
 
@@ -300,6 +309,7 @@ MIT
 | 日期 | 版本 | 变更 |
 |------|------|------|
 | 2026-07-31 | **v1.1.5** | 全量更新 9 个云函数代码（quickstartFunctions / bills / budgets / exportBills / dataMigration / clearUserData / aiPoster / aiChat / contentSafety）；登录页启用隐私协议勾选框 UI（调试版本临时注释校验逻辑便于真机测试） |
+| 2026-08-03 | **v1.1.6** | 修复隐私授权死循环：重写 `utils/privacy.js` 为微信规范授权流程（`onNeedPrivacyAuthorization` + 真实 `open-type="agreePrivacyAuthorization"` 按钮回调）；登录/我的/记账三页接入标准隐私授权弹窗；根因补充——需公众平台填写用户隐私保护指引，否则真机反复弹空白隐私页 |
 | 2026-07-30 | **v1.1.4** | 环境配置解耦（新增 config/env.js）；Theme CSS 变量与 setData 传输瘦身；EventBus 增量缓存（解决切 Tab 闪烁与重复查库）；小橘 AI 形象重构为糯米 Q 弹 2D 矢量可爱风（圆润四肢、柔和腮红、透亮眼点） |
 | 2026-06-13 | **v1.1.3** | 小橘动画动作概率调整：4 个动作（待机 / 发射爱心 / 招手 / 跳动）概率统一为 25%，便于截图展示 |
 | 2026-06-12 | **v1.1.2** | 小橘聊天新增确定性账单查询分析：本周/本月/今天支出收入、同比上周/上月省钱或多花、Top 分类、记账笔数等问题先由云函数查询 `bills` 计算后回复；我的页和记账页聊天窗口新增推荐问题胶囊，点击即可发送 |

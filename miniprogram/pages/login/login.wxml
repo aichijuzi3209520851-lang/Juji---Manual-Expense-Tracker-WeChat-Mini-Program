@@ -20,10 +20,29 @@
   </view>
 
   <view class="login-action">
-    <button class="login-btn" bindtap="handleLogin" hover-class="login-btn-hover" loading="{{loading}}">
-      <text wx:if="{{!loading}}">微信一键登录</text>
-      <text wx:else>登录中...</text>
-    </button>
+    <view class="login-btn-wrap">
+      <button
+        wx:if="{{!showPrivacyAuthButton}}"
+        class="login-btn"
+        bindtap="handleLogin"
+        hover-class="login-btn-hover"
+        loading="{{loading}}"
+      >
+        <text wx:if="{{!loading}}">微信一键登录</text>
+        <text wx:else>登录中...</text>
+      </button>
+
+      <button
+        wx:else
+        id="{{privacyAuthButtonId}}"
+        class="login-btn login-btn--privacy"
+        open-type="agreePrivacyAuthorization"
+        bindagreeprivacyauthorization="onPrivacyAuthorize"
+        hover-class="login-btn-hover"
+      >
+        <text>同意隐私协议并登录</text>
+      </button>
+    </view>
 
     <view class="privacy-row">
       <checkbox-group class="privacy-check-group" bindchange="onPrivacyChange">

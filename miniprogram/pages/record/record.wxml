@@ -227,4 +227,20 @@
     </view>
   </view>
 
+  <!-- 隐私授权弹窗 -->
+  <view wx:if="{{showPrivacyAuth}}" class="privacy-auth-mask" bindtap="hidePrivacyAuthorizeButton">
+    <view class="privacy-auth-modal" catchtap="noop">
+      <view class="privacy-auth-icon">🔐</view>
+      <text class="privacy-auth-title">隐私授权</text>
+      <text class="privacy-auth-desc">使用{{privacyAuthFeature || '本功能'}}需要先同意隐私保护指引，请阅读后点击同意。</text>
+      <button
+        id="{{privacyAuthButtonId}}"
+        class="privacy-auth-btn"
+        open-type="agreePrivacyAuthorization"
+        bindagreeprivacyauthorization="onPrivacyAuthorize"
+      >同意并继续</button>
+      <button class="privacy-auth-btn privacy-auth-btn--cancel" bindtap="hidePrivacyAuthorizeButton">取消</button>
+    </view>
+  </view>
+
 </view>

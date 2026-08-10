@@ -1,13 +1,21 @@
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const {
   PRIVACY_AGREED_KEY,
+  PRIVACY_AUTH_BUTTON_ID,
   requirePrivacyAuthorization,
+  handlePrivacyAuthorize,
   openPrivacyAgreement,
   openUserAgreement
 } = require('../../utils/privacy')
 
 Page({
-  data: { loading: false, themeStyle: '', privacyAgreed: false },
+  data: {
+    loading: false,
+    themeStyle: '',
+    privacyAgreed: false,
+    showPrivacyAuthButton: false,
+    privacyAuthButtonId: PRIVACY_AUTH_BUTTON_ID
+  },
 
   onLoad() {
     this.setData({ privacyAgreed: !!wx.getStorageSync(PRIVACY_AGREED_KEY) })
@@ -37,6 +45,19 @@ Page({
     openUserAgreement()
   },
 
+  // 隐私链路回调：当 wx.onNeedPrivacyAuthorization 全局触发时，由 utils/privacy 调用，
+  // 显示登录页专属的「同意隐私协议并登录」真实授权按钮（open-type="agreePrivacyAuthorization"）。
+  showPrivacyAuthorizeButton() {
+    this.setData({ showPrivacyAuthButton: true })
+  },
+
+  // 用户点击授权按钮后，bindagreeprivacyauthorization 回调携带 e.detail.event，
+  // 交由 handlePrivacyAuthorize 解析并无缝 resolve 给 wx.requirePrivacyAuthorize，避免死循环。
+  onPrivacyAuthorize(e) {
+    this.setData({ showPrivacyAuthButton: false })
+    handlePrivacyAuthorize(e)
+  },
+
   async handleLogin() {
     if (!this.data.privacyAgreed) {
       wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
@@ -47,7 +68,7 @@ Page({
     try {
       const privacyOk = await requirePrivacyAuthorization('登录')
       if (!privacyOk) {
-        this.setData({ privacyAgreed: false })
+        this.setData({ privacyAgreed: false, loading: false })
         wx.removeStorageSync(PRIVACY_AGREED_KEY)
         return
       }
