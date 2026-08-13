@@ -32,7 +32,9 @@ miniprogram-cloudbase-miniprogram-template/
 数据库/
 TUPIAN/
 文档与PPT文件/
-docs/
+docs/*
+!docs/screenshots/
+!docs/xiaoju.png
 tools/
 mockup-guide.html
 被拒绝上线的可能情况.txt
