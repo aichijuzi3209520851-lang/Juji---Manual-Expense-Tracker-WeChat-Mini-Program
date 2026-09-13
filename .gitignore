@@ -38,7 +38,6 @@ docs/*
 tools/
 mockup-guide.html
 被拒绝上线的可能情况.txt
-记账小程序-头脑风暴产物.md
 橘记_作品展示路演汇报.pptx
 *.pptx
 *.docx
@@ -75,6 +74,7 @@ miniprogram/images/scf-enter.png
 .trae/
 .trae-html-share-packages/
 .workbuddy/
+.tmp/
 
 # Internal review reports (contain security findings, keep local only)
 发布前致命漏洞专项检查报告.md
@@ -83,4 +83,4 @@ miniprogram/images/scf-enter.png
 
 # Local temp/debug debris (push retry leftovers)
 /_*.txt
-/_gitq.js
+/_*.js
