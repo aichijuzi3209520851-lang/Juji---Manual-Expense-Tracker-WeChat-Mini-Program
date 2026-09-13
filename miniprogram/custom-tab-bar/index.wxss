@@ -19,10 +19,11 @@
   min-height: 152rpx;
   padding: 18rpx 18rpx 16rpx;
   border-radius: 36rpx;
-  background: var(--color-surface, rgba(255, 255, 255, 0.84));
+  background: var(--color-surface-glass, rgba(255, 255, 255, 0.35));
   border: 1rpx solid var(--color-border, rgba(120, 86, 85, 0.1));
   box-shadow: 0 24rpx 46rpx rgba(0, 0, 0, 0.10);
-  backdrop-filter: blur(24rpx);
+  -webkit-backdrop-filter: blur(26px) saturate(160%);
+  backdrop-filter: blur(26px) saturate(160%);
   pointer-events: auto;
 }
 
@@ -93,6 +94,8 @@
   line-height: 1;
   color: var(--color-text-tertiary, #8c7c79);
   font-weight: 500;
+  /* 高透玻璃上保证可读性：紧贴一层 + 柔散一层光晕（浅色白晕/深色黑晕） */
+  text-shadow: 0 1rpx 2rpx var(--halo-glass, transparent), 0 0 8rpx var(--halo-glass, transparent);
   transition: color 0.22s ease;
 }
 

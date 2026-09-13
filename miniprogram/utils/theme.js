@@ -26,6 +26,16 @@ function isValidHex(value) {
 }
 
 // ==================== HSL 转换工具 ====================
+function hexToRgb(hex) {
+  const v = String(hex || '').replace('#', '')
+  if (v.length !== 6) return null
+  return {
+    r: parseInt(v.slice(0, 2), 16),
+    g: parseInt(v.slice(2, 4), 16),
+    b: parseInt(v.slice(4, 6), 16)
+  }
+}
+
 function hexToHsl(hex) {
   const r = parseInt(hex.slice(1, 3), 16) / 255
   const g = parseInt(hex.slice(3, 5), 16) / 255
@@ -363,6 +373,13 @@ function getThemeStyleString(themeId) {
     '--shadow-elevated': `-16rpx -16rpx 48rpx ${shadowLight}, 16rpx 16rpx 48rpx ${shadowDark}`,
     '--shadow-hero': `0 16rpx 40rpx ${shadowDark}`
   }
+
+  // 毛玻璃面板底色：surface 加透明度，深浅主题按亮度区分透明度档
+  const surfaceRgb = hexToRgb(vars['--color-surface']) || { r: 255, g: 255, b: 255 }
+  const surfaceLum = surfaceRgb.r * 0.299 + surfaceRgb.g * 0.587 + surfaceRgb.b * 0.114
+  derived['--color-surface-glass'] = `rgba(${surfaceRgb.r}, ${surfaceRgb.g}, ${surfaceRgb.b}, ${surfaceLum > 140 ? 0.35 : 0.3})`
+  // 高透明度玻璃上文字的光晕补偿：浅色主题白晕、深色主题黑晕
+  derived['--halo-glass'] = surfaceLum > 140 ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.7)'
 
   const allVars = { ...vars, ...derived }
   return Object.keys(allVars).map(k => `${k}:${allVars[k]}`).join(';')

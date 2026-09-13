@@ -30,9 +30,8 @@ Page({
     this.setData({ themeStyle: getThemeStyleString() })
   },
 
-  onPrivacyChange(e) {
-    const checked = (e.detail.value || []).includes('agree')
-    this.setData({ privacyAgreed: checked })
+  togglePrivacyAgreed() {
+    this.setData({ privacyAgreed: !this.data.privacyAgreed })
   },
 
   viewPrivacyAgreement() {

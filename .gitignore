@@ -84,3 +84,10 @@ miniprogram/images/scf-enter.png
 # Local temp/debug debris (push retry leftovers)
 /_*.txt
 /_*.js
+
+# Local AI image-generation drafts and mascot design options (final asset is miniprogram/images/juji-mascot.png)
+generated-images/
+mascot-options/
+
+# E2E generated artifacts (screenshots / run reports); keep the test scripts only
+test/e2e/artifacts/

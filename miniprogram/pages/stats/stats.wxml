@@ -37,29 +37,26 @@
         <view class="trend-legend-item"><text class="trend-legend-dash {{statsType === 'income' ? 'is-income' : ''}}"></text><text>均值</text></view>
       </view>
     </view>
-    <scroll-view class="trend-scroll" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
-      <view class="trend-chart-inner" style="width: {{trendCanvasWidth}}rpx;">
-        <view class="trend-canvas-wrap">
-          <canvas id="trendCanvas" type="2d" class="trend-canvas" style="width: {{trendCanvasWidth}}rpx;" bindtouchstart="onTrendTouch" bindtouchmove="onTrendTouch" bindtap="onTrendTap" bindtouchend="onTrendTouchEnd"></canvas>
-          <view wx:if="{{trendLoading}}" class="trend-skeleton">
-            <view class="trend-skeleton-line"></view>
-          </view>
-          <view wx:elif="{{trendEmpty}}" class="trend-empty">
-            <view class="trend-empty-icon">📊</view>
-            <text class="trend-empty-text">这个区间还没有记录</text>
-          </view>
-          <view wx:if="{{trendTooltip.show}}" class="trend-tooltip" style="left: {{trendTooltip.x}}px; transform: translateX(-50%);">
-            <text class="trend-tooltip-label">{{trendTooltip.label}}</text>
-            <text class="trend-tooltip-amount">¥{{trendTooltip.amount}}</text>
-            <text class="trend-tooltip-delta">{{trendTooltip.delta}}</text>
-          </view>
+    <view class="trend-chart">
+      <view class="trend-canvas-wrap">
+        <canvas id="trendCanvas" type="2d" class="trend-canvas" bindtouchstart="onTrendTouch" bindtouchmove="onTrendTouch" bindtap="onTrendTap" bindtouchend="onTrendTouchEnd"></canvas>
+        <view wx:if="{{trendLoading}}" class="trend-skeleton">
+          <view class="trend-skeleton-line"></view>
         </view>
-        <view class="trend-axis" style="width: {{trendCanvasWidth}}rpx;">
-          <text wx:for="{{trendAxisLabels}}" wx:key="*this" class="trend-axis-label {{index === trendTickActiveIndex ? 'is-active' : ''}}" style="width: {{trendTickWidth}}rpx;">{{item}}</text>
+        <view wx:elif="{{trendEmpty}}" class="trend-empty">
+          <view class="trend-empty-icon">📊</view>
+          <text class="trend-empty-text">这个区间还没有记录</text>
+        </view>
+        <view wx:if="{{trendTooltip.show}}" class="trend-tooltip" style="left: {{trendTooltip.x}}px; transform: translateX(-50%);">
+          <text class="trend-tooltip-label">{{trendTooltip.label}}</text>
+          <text class="trend-tooltip-amount">¥{{trendTooltip.amount}}</text>
+          <text class="trend-tooltip-delta">{{trendTooltip.delta}}</text>
         </view>
       </view>
-    </scroll-view>
-    <view class="trend-scroll-hint">横向滑动查看完整时间轴</view>
+      <view class="trend-axis">
+        <text wx:for="{{trendAxisTicks}}" wx:key="index" class="trend-axis-label {{item.index === trendTickActiveIndex ? 'is-active' : ''}}" style="left: {{item.x}}px;">{{item.label}}</text>
+      </view>
+    </view>
   </view>
 
   <view class="ranking-section">

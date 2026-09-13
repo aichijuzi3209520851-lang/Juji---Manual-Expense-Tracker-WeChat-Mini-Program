@@ -35,15 +35,15 @@
       </button>
     </view>
 
-    <view class="privacy-row">
-      <checkbox-group class="privacy-check-group" bindchange="onPrivacyChange">
-        <checkbox value="agree" checked="{{privacyAgreed}}" color="#785655" />
-      </checkbox-group>
-      <view class="privacy-copy">
+    <view class="privacy-consent" bindtap="togglePrivacyAgreed">
+      <view class="privacy-consent__toggle {{privacyAgreed ? 'is-checked' : ''}}">
+        <view class="privacy-consent__tick"></view>
+      </view>
+      <view class="privacy-consent__copy">
         <text>我已阅读并同意</text>
-        <text class="privacy-link" catchtap="viewPrivacyAgreement">《隐私协议》</text>
+        <text class="privacy-consent__link" catchtap="viewPrivacyAgreement">《隐私协议》</text>
         <text>和</text>
-        <text class="privacy-link" catchtap="viewUserAgreement">《用户协议》</text>
+        <text class="privacy-consent__link" catchtap="viewUserAgreement">《用户协议》</text>
       </view>
     </view>
   </view>

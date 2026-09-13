@@ -76,18 +76,7 @@
             <view class="guide-juji">
               <view class="juji-pet">
                 <view class="juji-pet-shadow"></view>
-                <view class="juji-pet-body">
-                  <view class="juji-pet-leaf"></view>
-                  <view class="juji-pet-face">
-                    <view class="juji-pet-eye juji-pet-eye--left"></view>
-                    <view class="juji-pet-eye juji-pet-eye--right"></view>
-                    <view class="juji-pet-mouth"></view>
-                  </view>
-                  <view class="juji-pet-arm juji-pet-arm--left"></view>
-                  <view class="juji-pet-arm juji-pet-arm--right"></view>
-                  <view class="juji-pet-foot juji-pet-foot--left"></view>
-                  <view class="juji-pet-foot juji-pet-foot--right"></view>
-                </view>
+                <image class="juji-pet-img" src="/images/juji-mascot.png" mode="aspectFit" />
               </view>
               <text class="guide-heart guide-heart--1">❤</text>
               <text class="guide-heart guide-heart--2">❤</text>

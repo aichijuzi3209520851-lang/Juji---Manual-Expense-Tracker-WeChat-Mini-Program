@@ -16,18 +16,7 @@
       <view wx:if="{{petBubble}}" class="juji-pet-bubble">{{petBubble}}</view>
       <view wx:for="{{petHearts}}" wx:key="id" class="juji-pet-heart">❤</view>
       <view class="juji-pet-shadow"></view>
-      <view class="juji-pet-body">
-        <view class="juji-pet-leaf"></view>
-        <view class="juji-pet-face">
-          <view class="juji-pet-eye juji-pet-eye--left"></view>
-          <view class="juji-pet-eye juji-pet-eye--right"></view>
-          <view class="juji-pet-mouth"></view>
-        </view>
-        <view class="juji-pet-arm juji-pet-arm--left"></view>
-        <view class="juji-pet-arm juji-pet-arm--right"></view>
-        <view class="juji-pet-foot juji-pet-foot--left"></view>
-        <view class="juji-pet-foot juji-pet-foot--right"></view>
-      </view>
+      <image class="juji-pet-img" src="/images/juji-mascot.png" mode="aspectFit" />
     </view>
 
     <view class="amount-chip">{{type === 'expense' ? '本次支出' : '本次收入'}}</view>

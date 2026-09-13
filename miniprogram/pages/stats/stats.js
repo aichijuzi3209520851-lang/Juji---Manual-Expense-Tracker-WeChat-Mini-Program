@@ -22,14 +22,6 @@ const RANGE_LABELS = {
   month: '近12个月'
 }
 
-const CN_MONTHS = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
-const CN_WEEK_ORDERS = ['第一周', '第二周', '第三周', '第四周', '第五周', '第六周', '第七周', '第八周', '第九周', '第十周', '第十一周', '第十二周']
-const CHART_SIZES = {
-  day: { width: 1320, tick: 44 },
-  week: { width: 920, tick: 76 },
-  month: { width: 920, tick: 76 }
-}
-
 const pad = n => String(n).padStart(2, '0')
 const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 
@@ -105,7 +97,7 @@ function buildRange(mode) {
       const d = addDays(start, i * 7)
       buckets.push({
         key: fmtDate(d),
-        label: CN_WEEK_ORDERS[i] || `第${i + 1}周`
+        label: `${d.getMonth() + 1}/${d.getDate()}`
       })
     }
     return { mode, start: fmtDate(start), end: fmtDate(today), label: RANGE_LABELS.week, buckets }
@@ -117,7 +109,7 @@ function buildRange(mode) {
     const d = new Date(startMonth.getFullYear(), startMonth.getMonth() + i, 1)
     buckets.push({
       key: monthKey(d),
-      label: CN_MONTHS[d.getMonth()]
+      label: `${d.getMonth() + 1}月`
     })
   }
   return { mode: 'month', start: fmtDate(startMonth), end: fmtDate(today), label: RANGE_LABELS.month, buckets }
@@ -205,10 +197,8 @@ Page({
     legendData: [],
     showRankingAll: false,
     trendData: [],
-    trendAxisLabels: [],
+    trendAxisTicks: [],
     trendTickActiveIndex: -1,
-    trendCanvasWidth: CHART_SIZES.month.width,
-    trendTickWidth: CHART_SIZES.month.tick,
     trendAverage: '0.00',
     trendEmpty: true,
     trendLoading: true,
@@ -284,9 +274,7 @@ Page({
     if (!mode || mode === this.data.rangeMode) return
     this.setData({
       rangeMode: mode,
-      rangeLabel: RANGE_LABELS[mode] || RANGE_LABELS.month,
-      trendCanvasWidth: (CHART_SIZES[mode] || CHART_SIZES.month).width,
-      trendTickWidth: (CHART_SIZES[mode] || CHART_SIZES.month).tick
+      rangeLabel: RANGE_LABELS[mode] || RANGE_LABELS.month
     }, () => this.loadDashboard())
   },
 
@@ -380,9 +368,7 @@ Page({
     this.setData({
       rangeLabel: range.label,
       trendData,
-      trendAxisLabels: range.buckets.map(b => b.label),
-      trendCanvasWidth: (CHART_SIZES[range.mode] || CHART_SIZES.month).width,
-      trendTickWidth: (CHART_SIZES[range.mode] || CHART_SIZES.month).tick,
+      trendAxisTicks: this.computeAxisTicks(amounts, range.buckets.map(b => b.label)),
       trendAverage: average.toFixed(2),
       trendEmpty: total <= 0,
       trendLoading: false,
@@ -390,6 +376,36 @@ Page({
       trendTickActiveIndex: -1,
       trendTooltip: { show: false, x: 0, amount: '', label: '', delta: '' }
     }, () => this.drawTrendChart(true))
+  },
+
+  // 横轴刻度与折线点共用同一套几何：x 由 plotW 等分得出（px），
+  // 密集区间（如30天）按最小间距抽稀，末点始终保留
+  computeAxisTicks(amounts, labels) {
+    const box = this._trendCanvas
+    if (!box || !amounts || !amounts.length) return []
+    const g = this.getTrendGeom()
+    const n = amounts.length
+    const gap = g.plotW / (n - 1)
+    // 数字月标签(约19px)在 375pt 屏上可全量放下；窄屏自动抽稀
+    const minGap = 20
+    const step = Math.max(1, Math.ceil(minGap / gap))
+    const indexes = []
+    for (let i = 0; i < n; i += step) indexes.push(i)
+    if (indexes[indexes.length - 1] !== n - 1) {
+      if (n - 1 - indexes[indexes.length - 1] < step * 0.6) indexes.pop()
+      indexes.push(n - 1)
+    }
+    return indexes.map(i => ({
+      index: i,
+      x: n === 1 ? g.left + g.plotW / 2 : g.left + gap * i,
+      label: (labels || [])[i] || ''
+    }))
+  },
+
+  refreshAxisTicks() {
+    const data = this.data.trendData || []
+    const amounts = data.map(item => Number(item.rawAmount) || 0)
+    this.setData({ trendAxisTicks: this.computeAxisTicks(amounts, data.map(item => item.label)) })
   },
 
   getTrendColors() {
@@ -431,6 +447,7 @@ Page({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       this.clearTrendAnimation()
       this._trendCanvas = { canvas, ctx, width: info.width, height: info.height }
+      this.refreshAxisTicks()
 
       const duration = animated ? 620 : 0
       const started = Date.now()
@@ -455,12 +472,9 @@ Page({
     const rawStep = max / 4
     const mag = Math.pow(10, Math.floor(Math.log10(rawStep)))
     const norm = rawStep / mag
-    let niceNorm
-    if (norm <= 1) niceNorm = 1
-    else if (norm <= 2) niceNorm = 2
-    else if (norm <= 2.5) niceNorm = 2.5
-    else if (norm <= 5) niceNorm = 5
-    else niceNorm = 10
+    // 档位较细，避免刻度上限被抬得过高、图形被压扁（如 458 → 600 而非 800）
+    const ladder = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]
+    const niceNorm = ladder.find(v => norm <= v) || 10
     const step = niceNorm * mag
     return { max: step * 4, steps: 4 }
   },
@@ -618,25 +632,37 @@ Page({
   onTrendTouch(e) {
     if (!this._trendCanvas || !this.data.trendData.length || this.data.trendEmpty) return
     const touches = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0])
-    if (!touches) return
+    if (!touches || typeof touches.clientX !== 'number') return
+    // clientX 与 boundingClientRect 同为视口坐标，相减即得画布内相对位置（无需关心页面滚动）
+    wx.createSelectorQuery().in(this)
+      .select('#trendCanvas')
+      .boundingClientRect(rect => {
+        if (!rect) return
+        this.selectTrendPoint(touches.clientX - rect.left)
+      })
+      .exec()
+  },
+
+  selectTrendPoint(relX) {
     const g = this.getTrendGeom()
     const points = this.computeTrendPoints()
-    const relX = touches.x - g.left
     let nearest = 0
     let minDist = Infinity
     points.forEach((p, i) => {
-      const d = Math.abs(p.x - (g.left + relX))
+      const d = Math.abs(p.x - relX)
       if (d < minDist) { minDist = d; nearest = i }
     })
     const item = this.data.trendData[nearest]
     const avg = Number(this.data.trendAverage) || 0
     const deltaVal = Number(item.rawAmount) - avg
     const deltaTxt = deltaVal === 0 ? '与均值持平' : (deltaVal > 0 ? '高于均值 ' : '低于均值 ') + Math.abs(deltaVal).toFixed(2)
+    // tooltip 以 translateX(-50%) 居中，钳制在画布内避免边缘被裁
+    const tooltipX = Math.min(Math.max(points[nearest].x, 56), g.width - 56)
     this.setData({
       trendSelected: { index: nearest },
       trendTooltip: {
         show: true,
-        x: points[nearest].x,
+        x: tooltipX,
         amount: Number(item.rawAmount).toFixed(2),
         label: item.label,
         delta: deltaTxt
