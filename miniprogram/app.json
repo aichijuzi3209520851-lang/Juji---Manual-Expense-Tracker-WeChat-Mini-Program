@@ -10,7 +10,8 @@
     "pages/categories/categories",
     "pages/themes/themes",
     "pages/detail/detail",
-    "pages/privacy/privacy"
+    "pages/privacy/privacy",
+    "pages/help/help"
   ],
   "__usePrivacyCheck__": true,
   "window": {

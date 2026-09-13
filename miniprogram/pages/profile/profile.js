@@ -1004,6 +1004,10 @@ Page({
     wx.navigateTo({ url: '/pages/categories/categories' })
   },
 
+  openHelp() {
+    wx.navigateTo({ url: '/pages/help/help' })
+  },
+
   // ====== 导出账单数据（JSON） ======
   exportData() {
     wx.showModal({

@@ -1,0 +1,37 @@
+<!-- 帮助与教程 -->
+<view class="help-page" style="{{themeStyle}}">
+
+  <view class="help-header">
+    <text class="help-title">帮助与教程</text>
+    <text class="help-sub">一步步教你玩转橘记 🍊</text>
+  </view>
+
+  <view wx:for="{{groups}}" wx:key="id" wx:for-item="group" class="help-group">
+    <view class="help-group-head">
+      <text class="help-group-icon">{{group.icon}}</text>
+      <text class="help-group-title">{{group.title}}</text>
+    </view>
+
+    <view wx:for="{{group.topics}}" wx:key="id" wx:for-item="topic" class="help-topic">
+      <view class="help-topic-head" data-id="{{topic.id}}" catchtap="toggleTopic"
+            hover-class="help-topic-head-hover">
+        <text class="help-topic-title">{{topic.title}}</text>
+        <text class="help-topic-arrow {{expanded[topic.id] ? 'is-open' : ''}}">›</text>
+      </view>
+
+      <view wx:if="{{expanded[topic.id]}}" class="help-topic-body">
+        <view wx:for="{{topic.steps}}" wx:key="*this" wx:for-item="step" class="help-step">
+          <text class="help-step-text">{{step}}</text>
+        </view>
+        <view wx:if="{{topic.tip}}" class="help-tip">
+          <text class="help-tip-text">💡 {{topic.tip}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="help-footer">
+    <text class="help-footer-text">还有疑问？通过「我的 → 数据与隐私 → 隐私协议」中的邮箱联系我们</text>
+  </view>
+
+</view>

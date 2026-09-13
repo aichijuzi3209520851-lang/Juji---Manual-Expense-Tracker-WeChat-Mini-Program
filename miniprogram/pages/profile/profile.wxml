@@ -335,6 +335,16 @@
     </collapsible>
   </view>
 
+  <!-- 帮助与教程 -->
+  <view class="profile-collapsible-wrap">
+    <view class="help-entry" bindtap="openHelp" hover-class="help-entry-hover">
+      <text class="help-entry-icon">📖</text>
+      <text class="help-entry-label">帮助与教程</text>
+      <text class="help-entry-desc">怎么用，一步一步教你</text>
+      <text class="help-entry-arrow">›</text>
+    </view>
+  </view>
+
   <!-- 版本 -->
   <view class="profile-footer">
     <text class="footer-version">版本 {{appVersion}}</text>
