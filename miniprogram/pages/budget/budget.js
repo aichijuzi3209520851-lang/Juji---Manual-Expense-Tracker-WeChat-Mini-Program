@@ -90,11 +90,12 @@ Page({
       const percent = budgetAmount ? Math.min(Math.round((spent / budgetAmount) * 100), 100) : 0
       let status = 'safe', statusText = ''
       if (budgetAmount === 0) { status = 'safe'; statusText = '' }
-      else if (percent >= 100) { status = 'over'; statusText = '超预算了！不过没关系，下个月注意就好 😋' }
+      else if (percent >= 100) { status = 'over'; statusText = '超预算了！不过没关系，下个月注意就好 🍊' }
       else if (percent >= 90) { status = 'warn'; statusText = `快了快了，只剩 ¥${(budgetAmount - spent).toFixed(0)} 到月底 💡` }
+      else if (spent <= 0) { status = 'safe'; statusText = '本月还没开始花，保持住 🌱' }
       else { status = 'safe'; statusText = `表现不错！还剩 ¥${(budgetAmount - spent).toFixed(0)} ✨` }
 
-      // 消费节奏
+      // 消费节奏 + 月底预测（按当前日均推算整月支出）
       let pace = null
       if (budgetAmount > 0) {
         const dayOfMonth = now.getDate()
@@ -105,11 +106,15 @@ Page({
         const daysLeft = daysInMonth - dayOfMonth + 1
         const remaining = budgetAmount - spent
         const remainDaily = daysLeft > 0 ? remaining / daysLeft : 0
+        // 月底预测 = 已花 ÷ 已过天数 × 全月天数
+        const forecast = dayOfMonth > 0 ? (spent / dayOfMonth) * daysInMonth : spent
         pace = {
           todaySpent: todaySpent.toFixed(2),
           dailyBudget: dailyBudget.toFixed(2),
           daysLeft,
-          remainDaily: remainDaily.toFixed(2)
+          remainDaily: remainDaily.toFixed(2),
+          forecast: forecast.toFixed(0),
+          forecastOver: forecast > budgetAmount
         }
       }
 
@@ -144,36 +149,57 @@ Page({
 
   async loadSuggestion() {
     const now = new Date()
-    const month = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
     const db = wx.cloud.database()
     const _ = db.command
     const openid = getApp().globalData.openid
 
     try {
+      // 近 3 个自然月（含本月）
+      const fromDate = new Date(now.getFullYear(), now.getMonth() - 2, 1)
+      const from = `${fromDate.getFullYear()}-${pad(fromDate.getMonth() + 1)}-01`
+      const to = monthEnd(now.getFullYear(), now.getMonth() + 1)
+
       const bills = await getAll(db.collection('bills')
-        .where({ _openid: openid, type: 'expense', isDeleted: _.neq(true), date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
+        .where({
+          _openid: openid,
+          type: 'expense',
+          isDeleted: _.neq(true),
+          date: _.gte(from).and(_.lte(to))
+        }))
 
-      const byCate = {}
-      bills.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
-      const sorted = Object.entries(byCate).sort((a, b) => b[1] - a[1])
-
-      if (sorted.length === 0) {
+      if (bills.length === 0) {
         this.setData({ suggestion: null })
         return
       }
 
-      const [topCat, topAmt] = sorted[0]
-      const total = bills.reduce((s, b) => s + b.amount, 0)
-      const ratio = total ? Math.round((topAmt / total) * 100) : 0
-
-      this.setData({
-        suggestion: {
-          category: topCat,
-          amount: topAmt.toFixed(2),
-          ratio,
-          text: `本月在「${topCat}」上已支出 ¥${topAmt.toFixed(2)}（占 ${ratio}%），建议适当关注哦 💡`
-        }
+      // 按月汇总 → 月均支出
+      const byMonth = {}
+      bills.forEach(b => {
+        const m = String(b.date || '').slice(0, 7)
+        if (!m) return
+        byMonth[m] = (byMonth[m] || 0) + b.amount
       })
+      const monthCount = Object.keys(byMonth).length || 1
+      const avg = Math.round(
+        Object.values(byMonth).reduce((s, v) => s + v, 0) / monthCount
+      )
+      // 建议预算：月均上浮 10% 后取整到百位，下限 100
+      const suggest = Math.max(100, Math.round((avg * 1.1) / 100) * 100)
+
+      // 分类洞察文案
+      const byCate = {}
+      bills.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
+      const sorted = Object.entries(byCate).sort((a, b) => b[1] - a[1])
+
+      let text = ''
+      if (sorted.length > 0) {
+        const [topCat, topAmt] = sorted[0]
+        const total = bills.reduce((s, b) => s + b.amount, 0)
+        const ratio = total ? Math.round((topAmt / total) * 100) : 0
+        text = `近 3 月在「${topCat}」上支出最多（占 ${ratio}%），可以留意一下 💡`
+      }
+
+      this.setData({ suggestion: { avg, suggest, text } })
     } catch (err) {
       console.error('加载建议失败:', err)
     }
@@ -181,14 +207,60 @@ Page({
 
   async loadHistory() {
     const db = wx.cloud.database()
+    const _ = db.command
     const openid = getApp().globalData.openid
+    const now = new Date()
+    const curMonth = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
+
     try {
       // F1 修复：显式按 _openid 过滤（此前无任何 where 条件，隔离完全依赖集合权限）
-      const res = await db.collection('budgets').where({ _openid: openid }).orderBy('month', 'desc').limit(6).get()
-      const historyData = res.data.map(b => ({
-        month: b.month,
-        amount: b.amount.toFixed(2)
+      const res = await db.collection('budgets')
+        .where({ _openid: openid }).orderBy('month', 'desc').limit(6).get()
+
+      const budgets = (res.data || []).filter(b => b && b.month)
+      if (budgets.length === 0) {
+        this.setData({ historyData: [] })
+        return
+      }
+
+      // 一次性拉取覆盖这些月份的账单并分桶，避免逐月查询（有账单上限 20 条，统一走 getAll）
+      const months = budgets.map(b => b.month).sort()
+      const from = `${months[0]}-01`
+      const [cy, cm] = curMonth.split('-')
+      const to = monthEnd(Number(cy), Number(cm))
+
+      const bills = await getAll(db.collection('bills').where({
+        _openid: openid,
+        type: 'expense',
+        isDeleted: _.neq(true),
+        date: _.gte(from).and(_.lte(to))
       }))
+
+      const spentByMonth = {}
+      bills.forEach(b => {
+        const m = String(b.date || '').slice(0, 7)
+        if (!m) return
+        spentByMonth[m] = (spentByMonth[m] || 0) + b.amount
+      })
+
+      // 字段与 budget.wxml 对齐：monthLabel / percent / barPercent / over
+      const historyData = budgets.map(b => {
+        const budget = Number(b.amount) || 0
+        const spent = spentByMonth[b.month] || 0
+        const percent = budget > 0 ? Math.round((spent / budget) * 100) : 0
+        const [, mm] = b.month.split('-')
+        return {
+          month: b.month,
+          monthLabel: `${Number(mm)}月`,
+          isCurrent: b.month === curMonth,
+          amount: budget.toFixed(0),
+          spent: spent.toFixed(0),
+          percent,
+          barPercent: Math.min(percent, 100),
+          over: percent > 100
+        }
+      })
+
       this.setData({ historyData })
     } catch (err) {
       console.error('加载预算历史失败:', err)

@@ -99,13 +99,32 @@
   position: relative; z-index: 1;
 }
 
+/* 月底预测 */
+.budget-forecast {
+  margin-top: 20rpx; padding: 12rpx 26rpx; border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.16);
+  display: flex; align-items: center; gap: 12rpx;
+  position: relative; z-index: 1;
+}
+.forecast-main { font-size: 24rpx; color: var(--color-on-primary); opacity: 0.92; }
+.forecast-tail {
+  font-size: 22rpx; font-weight: 600;
+  color: var(--color-on-primary); opacity: 0.85;
+  padding: 2rpx 12rpx; border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.2);
+}
+.forecast-tail.is-over {
+  color: #7a1c1c; background: rgba(255,235,235,0.9);
+}
+
 /* 历史达成率 */
 .budget-history {
   background: var(--color-surface); border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-card); padding: var(--space-lg);
   margin-top: 24rpx;
 }
-.history-title { font-size: 30rpx; font-weight: 700; color: var(--color-text); margin-bottom: 20rpx; display: block; }
+.history-title { font-size: 30rpx; font-weight: 700; color: var(--color-text); margin-bottom: 8rpx; display: block; }
+.history-hint { font-size: 22rpx; color: var(--color-text-tertiary); margin-bottom: 18rpx; display: block; line-height: 1.5; }
 .history-row { display: flex; align-items: center; gap: 16rpx; padding: 14rpx 0; }
 .history-month { font-size: 24rpx; color: var(--color-text-secondary); width: 56rpx; text-align: right; font-weight: 500; }
 .history-bar-wrap { flex: 1; }
@@ -131,6 +150,7 @@
 .pace-row { display: flex; align-items: center; }
 .pace-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
 .pace-value { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-primary); font-variant-numeric: tabular-nums; }
+.pace-value.is-accent { color: var(--color-primary); opacity: 0.75; }
 .pace-label { font-size: var(--font-size-small); color: var(--color-text-tertiary); }
 .pace-divider { width: 2rpx; height: 56rpx; background: var(--color-border); }
 .pace-footer { margin-top: 20rpx; text-align: center; font-size: 24rpx; color: var(--color-text-secondary); }
