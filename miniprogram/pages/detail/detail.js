@@ -33,6 +33,20 @@ Page({
       const { data } = await db.collection('bills').doc(id).get()
       if (!data) { wx.navigateBack(); return }
 
+      // M4 修复：软删除账单不可再查看
+      if (data.isDeleted) {
+        wx.showToast({ title: '账单已删除', icon: 'none' })
+        wx.navigateBack()
+        return
+      }
+      // F1 修复：显式归属校验（登录完成后 openid 必然存在）
+      const openid = getApp().globalData.openid
+      if (openid && data._openid !== openid) {
+        wx.showToast({ title: '无权查看此账单', icon: 'none' })
+        wx.navigateBack()
+        return
+      }
+
       const icon = CATEGORY_EMOJI[data.category] || '📌'
       const app = getApp()
       if (app.globalData.userInfo?.customCategories) {

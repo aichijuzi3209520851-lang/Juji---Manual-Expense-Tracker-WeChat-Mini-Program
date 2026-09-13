@@ -2,7 +2,6 @@ const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const {
   PRIVACY_AGREED_KEY,
   PRIVACY_AUTH_BUTTON_ID,
-  requirePrivacyAuthorization,
   handlePrivacyAuthorize,
   openPrivacyAgreement,
   openUserAgreement
@@ -13,7 +12,6 @@ Page({
     loading: false,
     themeStyle: '',
     privacyAgreed: false,
-    showPrivacyAuthButton: false,
     privacyAuthButtonId: PRIVACY_AUTH_BUTTON_ID
   },
 
@@ -45,35 +43,20 @@ Page({
     openUserAgreement()
   },
 
-  // 隐私链路回调：当 wx.onNeedPrivacyAuthorization 全局触发时，由 utils/privacy 调用，
-  // 显示登录页专属的「同意隐私协议并登录」真实授权按钮（open-type="agreePrivacyAuthorization"）。
-  showPrivacyAuthorizeButton() {
-    this.setData({ showPrivacyAuthButton: true })
-  },
-
-  // 用户点击授权按钮后，bindagreeprivacyauthorization 回调携带 e.detail.event，
-  // 交由 handlePrivacyAuthorize 解析并无缝 resolve 给 wx.requirePrivacyAuthorize，避免死循环。
-  onPrivacyAuthorize(e) {
-    this.setData({ showPrivacyAuthButton: false })
-    handlePrivacyAuthorize(e)
-  },
-
-  async handleLogin() {
+  // 主登录入口。按钮带 open-type="agreePrivacyAuthorization"，
+  // 用户在「同意」隐私弹窗后才触发此回调，因此无需再调 wx.requirePrivacyAuthorize，
+  // 直接完成授权并登录，杜绝二次确认。
+  async onPrivacyAuthorize(e) {
     if (!this.data.privacyAgreed) {
       wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
       return
     }
+    // 将微信授权 event 交给隐私工具处理（写入授权记录），然后直接登录
+    handlePrivacyAuthorize(e)
 
     this.setData({ loading: true })
     try {
-      const privacyOk = await requirePrivacyAuthorization('登录')
-      if (!privacyOk) {
-        this.setData({ privacyAgreed: false, loading: false })
-        wx.removeStorageSync(PRIVACY_AGREED_KEY)
-        return
-      }
       wx.setStorageSync(PRIVACY_AGREED_KEY, true)
-
       const app = getApp()
       await app.silentLogin()
       const hasSeenGuide = !!wx.getStorageSync('has_seen_guide')
@@ -87,6 +70,13 @@ Page({
       console.error(err)
     } finally {
       this.setData({ loading: false })
+    }
+  },
+
+  // 协议未勾选时点击登录的引导提示（按钮 disabled 仍可能触发，作为兜底）
+  handleLogin() {
+    if (!this.data.privacyAgreed) {
+      wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
     }
   }
 })

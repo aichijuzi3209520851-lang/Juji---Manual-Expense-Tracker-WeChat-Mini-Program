@@ -72,17 +72,17 @@ Page({
     const month = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
     const db = wx.cloud.database()
     const _ = db.command
+    const openid = getApp().globalData.openid
 
     try {
       const budgetRes = await db.collection('budgets')
-        .where({ month }).orderBy('createdAt', 'desc').limit(1).get()
+        .where({ _openid: openid, month }).orderBy('createdAt', 'desc').limit(1).get()
 
       let budgetAmount = 0
       if (budgetRes.data.length > 0) budgetAmount = budgetRes.data[0].amount
 
-      const rawBills = await getAll(db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
-      const bills = rawBills.filter(b => !b || !b.isDeleted)
+      const bills = await getAll(db.collection('bills')
+        .where({ _openid: openid, type: 'expense', isDeleted: _.neq(true), date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
 
       let spent = 0
       bills.forEach(b => { spent += b.amount })
@@ -147,10 +147,11 @@ Page({
     const month = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`
     const db = wx.cloud.database()
     const _ = db.command
+    const openid = getApp().globalData.openid
 
     try {
       const bills = await getAll(db.collection('bills')
-        .where({ type: 'expense', date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
+        .where({ _openid: openid, type: 'expense', isDeleted: _.neq(true), date: _.gte(`${month}-01`).and(_.lte(monthEnd(now.getFullYear(), now.getMonth() + 1))) }))
 
       const byCate = {}
       bills.forEach(b => { byCate[b.category] = (byCate[b.category] || 0) + b.amount })
@@ -180,8 +181,10 @@ Page({
 
   async loadHistory() {
     const db = wx.cloud.database()
+    const openid = getApp().globalData.openid
     try {
-      const res = await db.collection('budgets').orderBy('month', 'desc').limit(6).get()
+      // F1 修复：显式按 _openid 过滤（此前无任何 where 条件，隔离完全依赖集合权限）
+      const res = await db.collection('budgets').where({ _openid: openid }).orderBy('month', 'desc').limit(6).get()
       const historyData = res.data.map(b => ({
         month: b.month,
         amount: b.amount.toFixed(2)
@@ -197,7 +200,8 @@ Page({
   async saveBudget() {
     const raw = (this.data.budgetInput || '').trim()
     const val = raw === '' ? 0 : parseFloat(raw)
-    if (isNaN(val) || val < 0 || val > 999999) {
+    // M3 修复：与云函数口径一致，0 与负数均为非法
+    if (isNaN(val) || val <= 0 || val > 999999) {
       wx.showToast({ title: '请输入合理金额', icon: 'none' }); return
     }
     const now = new Date()

@@ -1,5 +1,6 @@
 const DEFAULT_MESSAGE = '内容可能不适合展示，请修改后再试'
-const MAX_CONTENT_LENGTH = 2500
+// 入参护栏：仅防止异常超长入参；云端 contentSafety 已按分片送审，不再因长度拒绝内容
+const MAX_CONTENT_LENGTH = 10000
 const BLOCK_PATTERNS = [
   /赌博|博彩|赌球|私彩|代购彩票/,
   /色情|裸聊|约炮|成人视频|淫秽/,
@@ -13,9 +14,6 @@ const BLOCK_PATTERNS = [
 async function checkText(text, options = {}) {
   const content = normalize(text)
   if (!content) return { ok: true, checked: false }
-  if (content.length > MAX_CONTENT_LENGTH) {
-    return { ok: false, message: '内容过长，请精简后再试', source: 'length' }
-  }
 
   const local = localCheckText(content)
   if (!local.ok) return local
@@ -54,7 +52,7 @@ function localCheckText(text) {
 }
 
 function normalize(text) {
-  return String(text || '').trim().slice(0, MAX_CONTENT_LENGTH + 1)
+  return String(text || '').trim().slice(0, MAX_CONTENT_LENGTH)
 }
 
 module.exports = {

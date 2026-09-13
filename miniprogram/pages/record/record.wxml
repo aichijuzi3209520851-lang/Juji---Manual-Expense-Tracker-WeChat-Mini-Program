@@ -184,7 +184,7 @@
             <view wx:if="{{item.status === 'done'}}" class="bill-draft-status bill-draft-status--done">✓ 已记账</view>
           </view>
 
-          <view wx:else class="chat-bubble chat-bubble--{{item.role}}">{{item.content}}</view>
+          <view wx:else class="chat-bubble chat-bubble--{{item.role}} {{item.isCode ? 'chat-bubble--code' : ''}}">{{item.content}}</view>
         </view>
         <view wx:if="{{showChatSuggestions}}" class="chat-suggestions">
           <text class="chat-suggestions-title">可以这样问小橘</text>

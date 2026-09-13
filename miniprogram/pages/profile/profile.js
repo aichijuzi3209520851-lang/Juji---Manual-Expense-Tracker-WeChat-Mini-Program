@@ -2,6 +2,8 @@ const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CU
 const { getAll } = require('../../utils/dbPager')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const { resolveAvatarSrc } = require('../../utils/avatar')
+const { VERSION } = require('../../config/env')
+const { looksLikeCode } = require('../../utils/chatFormat')
 const {
   PRIVACY_AUTH_BUTTON_ID,
   requirePrivacyAuthorization,
@@ -48,7 +50,9 @@ const CHAT_SUGGESTIONS = [
   '这个月花了多少钱',
   '本月哪类花得最多',
   '今天记了几笔',
-  '这个月收入多少'
+  '这个月收入多少',
+  '什么是冒泡排序',
+  '为什么天空是蓝色的'
 ]
 const WEATHER_QUESTION_PATTERN = /天气|气温|下雨|降雨|刮风|冷不冷|热不热|穿什么/
 
@@ -141,6 +145,7 @@ Page({
   data: {
     avatarUrl: '',
     avatarError: false,
+    appVersion: VERSION,
     nickname: '点击登录',
     genderText: '未设置',
     gender: '',
@@ -185,6 +190,13 @@ Page({
     weekdays: ['一', '二', '三', '四', '五', '六', '日'],
     _heatmapYear: 0,
     _heatmapMonth: 0,
+    // 微信资料授权
+    needWechatProfile: false,
+    showWechatProfile: false,
+    wxAvatarUrl: '',
+    wxAvatarFileID: '',
+    wxNickname: '',
+    wxProfileSaving: false,
   },
 
   onShow() {
@@ -283,7 +295,6 @@ Page({
   },
 
   async openAiChat() {
-    // Temporary debug bypass until the mini-program privacy agreement is approved.
     this.setCustomTabBarHidden(true)
     this.playPetAction('wave')
     this.setData({
@@ -373,7 +384,9 @@ Page({
           categories: this.getKnownCategories(),
           today: getTodayKey()
         },
-        config: { timeout: 30000 }
+        // 长回答（代码 / 长科普）生成耗时更长；客户端等待需略长于云函数 60s 超时，
+        // 让服务端能先把错误/结果回传，而不是客户端先超时
+        config: { timeout: 65000 }
       })
       var result = res.result || {}
       var reply = result.reply || AI_CHAT_FALLBACK
@@ -398,6 +411,7 @@ Page({
       id,
       role,
       content,
+      isCode: role === 'assistant' && looksLikeCode(content),
       avatar: role === 'assistant' ? '/images/juji2.jpg' : (this.data.avatarUrl || '')
     }
   },
@@ -623,9 +637,10 @@ Page({
     if (!toAdd.length) return
     var merged = existing.concat(toAdd)
     try {
-      await wx.cloud.database().collection('users')
-        .where({ _openid: app.globalData.openid })
-        .update({ data: { customCategories: merged } })
+      await wx.cloud.callFunction({
+        name: 'users',
+        data: { action: 'updateCustomCategories', data: { categories: merged } }
+      })
       app.globalData.userInfo.customCategories = merged
     } catch (err) {
       console.warn('[batchCreate] 追加自定义分类失败:', err)
@@ -659,8 +674,12 @@ Page({
     }
   },
 
+  // 只拦截实况天气类问题；带「为什么 / 原理 / 是什么」的科普问题交给小橘讲原理
   isWeatherQuestion(text) {
-    return WEATHER_QUESTION_PATTERN.test(String(text || ''))
+    const t = String(text || '').trim()
+    if (!t) return false
+    if (/为什么|原理|是什么|怎么形成|成因|科普/.test(t)) return false
+    return WEATHER_QUESTION_PATTERN.test(t)
   },
 
   async loadUserInfo() {
@@ -687,8 +706,88 @@ Page({
           occupation: u.occupation || '',
           themeName
         })
+        // 微信昵称与头像两者都缺失时，显示"使用微信资料"引导
+        const noAvatar = !u.avatarUrl
+        const noNickname = !u.nickname
+        this.setData({ needWechatProfile: noAvatar || noNickname })
       }
     } catch (err) { console.error(err) }
+  },
+
+  // ===== 微信资料授权（头像 + 昵称） =====
+  openWechatProfile() {
+    this.setData({
+      showWechatProfile: true,
+      wxAvatarUrl: '',
+      wxAvatarFileID: '',
+      wxNickname: '',
+      wxProfileSaving: false
+    })
+  },
+
+  closeWechatProfile() {
+    if (this.data.wxProfileSaving) return
+    this.setData({ showWechatProfile: false })
+  },
+
+  noop() {},
+
+  // chooseAvatar 返回微信头像临时路径
+  onChooseAvatar(e) {
+    const url = e.detail && e.detail.avatarUrl
+    if (!url) return
+    this.setData({ wxAvatarUrl: url })
+  },
+
+  // type=nickname 输入框自动填充微信昵称，也可能手动修改
+  onNicknameInput(e) {
+    const val = (e.detail && (e.detail.value || e.detail.nickname)) || ''
+    this.setData({ wxNickname: val })
+  },
+
+  async confirmWechatProfile() {
+    const app = getApp()
+    const rawNickname = (this.data.wxNickname || '').trim()
+    const avatarTemp = this.data.wxAvatarUrl
+    if (!rawNickname && !avatarTemp) {
+      wx.showToast({ title: '请先选择头像或填写昵称', icon: 'none' })
+      return
+    }
+    const nickname = rawNickname.slice(0, 20)
+    if (nickname) {
+      const safe = await ensureSafeText(nickname, { scene: 2 })
+      if (!safe) return
+    }
+    this.setData({ wxProfileSaving: true })
+    try {
+      // 昵称先落库（头像上传由 uploadAvatar 单独处理），走云函数校验
+      if (nickname) {
+        await wx.cloud.callFunction({
+          name: 'users',
+          data: { action: 'updateProfile', data: { nickname } }
+        })
+        if (app.globalData.userInfo) app.globalData.userInfo.nickname = nickname
+      }
+      // 头像：复用 uploadAvatar（内部含上传、落库、刷新、toast）
+      if (avatarTemp) {
+        await this.uploadAvatar(avatarTemp)
+      } else {
+        await this.loadUserInfo()
+      }
+      this.setData({ showWechatProfile: false, needWechatProfile: false })
+      let tip = '已保存'
+      if (avatarTemp && nickname) tip = '微信资料已同步'
+      else if (avatarTemp) tip = '头像已更新'
+      else if (nickname) tip = '昵称已保存'
+      wx.showToast({ title: tip, icon: 'success' })
+    } catch (err) {
+      console.error('[wechatProfile] save failed:', err && (err.errMsg || err.message))
+      const raw = (err && (err.errMsg || err.message)) || '保存失败'
+      const msg = raw.length > 14 ? raw.slice(0, 14) + '…' : raw
+      wx.showToast({ title: msg, icon: 'none', duration: 2500 })
+    } finally {
+      this.setData({ wxProfileSaving: false })
+    }
   },
 
   // 头像修改
@@ -782,13 +881,13 @@ Page({
       const up = await wx.cloud.uploadFile({ cloudPath, filePath })
       if (!up || !up.fileID) throw new Error('上传返回为空')
 
-      // 直接 db 操作以便捕获错误（updateUserField 内部 swallow 错误，无法暴露落库失败）
-      const db = wx.cloud.database()
-      const updateRes = await db.collection('users')
-        .where({ _openid: app.globalData.openid })
-        .update({ data: { avatarUrl: up.fileID } })
-      if (updateRes && updateRes.stats && updateRes.stats.updated === 0) {
-        throw new Error('未找到用户记录')
+      // 走云函数落库，服务端校验并暴露错误
+      const updateRes = await wx.cloud.callFunction({
+        name: 'users',
+        data: { action: 'updateAvatar', data: { avatarUrl: up.fileID } }
+      })
+      if (!updateRes.result || !updateRes.result.success) {
+        throw new Error((updateRes.result && updateRes.result.message) || '未找到用户记录')
       }
 
       this.setData({ avatarUrl: up.fileID, avatarError: false })
@@ -1182,9 +1281,9 @@ Page({
     const app = getApp()
     if (!app.globalData.openid) return
     try {
-      const db = wx.cloud.database()
-      await db.collection('users').where({ _openid: app.globalData.openid }).update({
-        data: { [field]: value }
+      await wx.cloud.callFunction({
+        name: 'users',
+        data: { action: 'updateProfile', data: { [field]: value } }
       })
     } catch (err) { console.error(err) }
   },
@@ -1194,7 +1293,8 @@ Page({
     if (!app.globalData.openid) return
     try {
       const db = wx.cloud.database()
-      const data = await getAll(db.collection('bills').where({ _openid: app.globalData.openid }))
+      const _ = db.command
+      const data = await getAll(db.collection('bills').where({ _openid: app.globalData.openid, isDeleted: _.neq(true) }))
       if (!data || data.length === 0) {
         this.setData({
           footprint: null,
@@ -1458,7 +1558,8 @@ Page({
       var db = wx.cloud.database()
       var _ = db.command
       var data = await getAll(db.collection('bills').where({
-        date: _.gte(start).and(_.lte(end))
+        date: _.gte(start).and(_.lte(end)),
+        isDeleted: _.neq(true)
       }).field({ date: true }))
       var checkedSet = {}
       var count = 0

@@ -284,6 +284,8 @@ cloudfunctions/             # 云函数
 | 套餐 | 个人版 |
 | 状态 | NORMAL ✅ |
 
+> ✅ **环境说明（已解决）**：本项目的 CloudBase 环境为 `lajiaoyou-d4g78yts61f1a841d`。2026-09-10 的 MCP 部署因会话登录到无关账号 `lcw-d5gfcge7b41bedd02` 而疑似误部署；**经 2026-09-13 复核，10 个云函数实际均已在 `lajiaoyou-...` 环境内（见云函数清单，状态 Active）**。2026-09-13 已通过设备码重新登录到拥有 `lajiaoyou-...` 的账号，并将全部 10 个云函数用最新本地代码重新部署/更新成功。小程序前端 `miniprogram/config/env.js` 的 `ENV_ID` 始终正确指向 `lajiaoyou-...`，**无需修改**。
+
 ### 控制台入口
 
 - [概览](https://tcb.cloud.tencent.com/dev?envId=lajiaoyou-d4g78yts61f1a841d#/overview)
@@ -309,7 +311,7 @@ cloudfunctions/             # 云函数
 | `aiChat` | Nodejs16.13 | 「小橘」聊天助手 + 账单查询分析 + 对话记账解析（确定性查库统计（过滤软删除）+ 混元 `generateText` 结构化 JSON） |
 | `contentSafety` | Nodejs16.13 | 文本内容安全（本地正则 + `security.msgSecCheck` v2） |
 
-> 注：`Nodejs16.13` 是 CloudBase 控制台的部署配置，代码库 config.json 不含 runtime 字段。
+> 注：`Nodejs16.13` 是 CloudBase 控制台的部署配置，代码库 config.json 不含 runtime 字段。`DYNAMIC_CURRENT_ENV` 保证函数自动适配所在环境。
 
 ### 数据库集合
 
@@ -366,6 +368,8 @@ MIT
 
 | 日期 | 版本 | 变更 |
 |------|------|------|
+| 2026-09-13 | **部署（云函数，已上线）** | 通过设备码重新登录到拥有 `lajiaoyou-d4g78yts61f1a841d` 的账号（此前 MCP 会话误绑 `lcw`）；将 10 个云函数用最新本地代码重新部署/更新：`quickstartFunctions` / `users` / `bills` / `budgets` / `exportBills` / `dataMigration` / `clearUserData` / `aiPoster` / `aiChat` / `contentSafety`，全部 `Active`。`generateImage-WtU3mJ` 为空占位函数（CreateFailed）保持不动。复核确认 2026-09-10 的部署实际已在 `lajiaoyou` 环境内，并非误落 `lcw`。 |
+| 2026-09-10 | 部署（云函数，存疑） | 曾疑似通过 CloudBase MCP 把 10 个云函数误部署到无关账号 `lcw-d5gfcge7b41bedd02`；**2026-09-13 复核：函数实际位于 `lajiaoyou-...` 环境**，本次为用最新代码重新更新部署。 |
 | 2026-08-13 | **v1.1.7（工作区，未提交/未部署）** | 新增 `users` 云函数（用户资料写入收敛为服务端校验：`updateProfile` / `updateAvatar` / `updateCustomCategories`，白名单字段 + 内容安全）；我的页新增「使用微信资料」一键同步头像昵称（`chooseAvatar` + `type="nickname"`，未设置时显示引导条）；账单软删除（`isDeleted`）全面过滤（首页 / 统计 / 预算 / 足迹 / 热力图 / AI 账单查询）；登录页重构为单一授权入口（`agreePrivacyAuthorization` 直接登录，无二次确认）；`project.config.json` 清理模板残留（projectname→juji、packOptions.ignore 清空） |
 | 2026-07-31 | **v1.1.5** | 全量更新 9 个云函数代码（quickstartFunctions / bills / budgets / exportBills / dataMigration / clearUserData / aiPoster / aiChat / contentSafety）；登录页启用隐私协议勾选框 UI（调试版本临时注释校验逻辑便于真机测试） |
 | 2026-08-03 | **v1.1.6** | 修复隐私授权死循环：重写 `utils/privacy.js` 为微信规范授权流程（`onNeedPrivacyAuthorization` + 真实 `open-type="agreePrivacyAuthorization"` 按钮回调）；登录/我的/记账三页接入标准隐私授权弹窗；根因补充——需公众平台填写用户隐私保护指引，否则真机反复弹空白隐私页 |
@@ -380,3 +384,21 @@ MIT
 | 2026-05-31 | **v1.0.6** | 新增 `dataMigration` 云函数（JSON 导出/导入）；记账页 Emoji 输入校验 + 长按删除自定义分类；足迹卡片基线对齐；AI 信件弹窗拟物书信风重构 |
 | 2026-05-26 | **v1.0.1** | 部署 `bills`（新增 update）、`aiPoster`（修复语法 + 场景多样化）；引导页重构、主题显示 bug 修复、编辑账单功能、预算弹窗居中化 |
 | 2026-05-24 | v1.0.0 | 首次全量部署：4 个云函数 + 小程序前端 |
+
+---
+
+## 本次部署后待办（手动步骤）
+
+云函数已于 **2026-09-13** 成功部署/更新到目标环境 `lajiaoyou-d4g78yts61f1a841d`（10 个函数全部 `Active`，见云函数清单）。以下事项仍需在控制台或微信开发者工具中手动完成，否则小程序无法正常运行：
+
+1. **前端环境绑定（已正确，无需修改）**：`miniprogram/config/env.js` 的 `ENV_ID` 已正确指向 `lajiaoyou-d4g78yts61f1a841d`（`app.js` 的 `wx.cloud.init({ env: ENV_ID })` 引用该值）。客户端调用的就是本项目的 CloudBase 环境，无需改动。
+2. **数据库集合（必须）**：在 CloudBase 控制台 → 数据库 创建以下集合，权限均设为「仅创建者可读写」：
+   - `bills`（type, amount, category, date, note, photoUrl, mood, isDeleted, deletedAt, createdAt）
+   - `budgets`（month, amount, createdAt）
+   - `users`（nickname, avatarUrl, gender, birthday, occupation, customCategories, theme, budgetDefault, createdAt, lastLoginAt, updatedAt）
+   - `ai_usage_limits`（_openid, date, feature, count, limit, createdAt, updatedAt）
+   - `client_logs`（type, message, stack, route, createdAt）
+   > 注：当前 MCP 工具仅支持读取集合结构，无法创建集合，故需手动创建。
+3. **微信小程序前端上传（必须）**：本仓库为原生微信小程序，前端不走 CloudBase 静态托管，需在微信开发者工具「上传并部署」到对应 AppID（`wx5c263d2b6496fe2d`）后提交审核。
+4. **AI 能力（按需）**：统计页/我的页/小橘 依赖混元大模型。需在 CloudBase 控制台 → AI+ 扩展能力 开通混元 `hunyuan-v3`，并在微信公众平台 → 行业能力 → 小程序成长计划 报名获取 Token（1 亿额度）。
+5. **隐私合规（提审必须）**：微信公众平台 → 用户隐私保护指引 需勾选并审核通过：用户信息（微信昵称、头像）、相册、摄像头、文件。否则真机反复弹空白隐私页。详见「隐私与协议提审」一节。

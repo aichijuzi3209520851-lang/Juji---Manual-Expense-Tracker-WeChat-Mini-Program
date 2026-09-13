@@ -22,6 +22,7 @@ const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
+const { looksLikeCode } = require('../../utils/chatFormat')
 const {
   PRIVACY_AUTH_BUTTON_ID,
   requirePrivacyAuthorization,
@@ -44,7 +45,9 @@ const CHAT_SUGGESTIONS = [
   '这个月花了多少钱',
   '本月哪类花得最多',
   '今天记了几笔',
-  '这个月收入多少'
+  '这个月收入多少',
+  '什么是冒泡排序',
+  '为什么天空是蓝色的'
 ]
 const WEATHER_QUESTION_PATTERN = /天气|气温|下雨|降雨|刮风|冷不冷|热不热|穿什么/
 const PRESET_EXPENSE_CATEGORIES = ['餐饮', '交通', '购物', '娱乐', '学习', '日用', '医疗', '其他']
@@ -354,7 +357,9 @@ Page({
           categories: this.getKnownCategories(),
           today: getTodayKey()
         },
-        config: { timeout: 30000 }
+        // 长回答（代码 / 长科普）生成耗时更长；客户端等待需略长于云函数 60s 超时，
+        // 让服务端能先把错误/结果回传，而不是客户端先超时
+        config: { timeout: 65000 }
       })
       const result = res.result || {}
       let reply = result.reply || AI_CHAT_FALLBACK
@@ -379,6 +384,7 @@ Page({
       id,
       role,
       content,
+      isCode: role === 'assistant' && looksLikeCode(content),
       avatar: role === 'assistant' ? '/images/juji2.jpg' : (this.data.chatUserAvatarUrl || '')
     }
   },
@@ -587,9 +593,10 @@ Page({
     if (!toAdd.length) return
     const merged = existing.concat(toAdd)
     try {
-      await wx.cloud.database().collection('users')
-        .where({ _openid: app.globalData.openid })
-        .update({ data: { customCategories: merged } })
+      await wx.cloud.callFunction({
+        name: 'users',
+        data: { action: 'updateCustomCategories', data: { categories: merged } }
+      })
       if (!app.globalData.userInfo) app.globalData.userInfo = {}
       app.globalData.userInfo.customCategories = merged
     } catch (err) {
@@ -637,8 +644,12 @@ Page({
     }
   },
 
+  // 只拦截实况天气类问题；带「为什么 / 原理 / 是什么」的科普问题交给小橘讲原理
   isWeatherQuestion(text) {
-    return WEATHER_QUESTION_PATTERN.test(String(text || ''))
+    const t = String(text || '').trim()
+    if (!t) return false
+    if (/为什么|原理|是什么|怎么形成|成因|科普/.test(t)) return false
+    return WEATHER_QUESTION_PATTERN.test(t)
   },
 
   onShow() {
@@ -867,9 +878,10 @@ Page({
     const app = getApp()
     const custom = [...(app.globalData.userInfo?.customCategories || []), { name, icon }]
     try {
-      await wx.cloud.database().collection('users')
-        .where({ _openid: app.globalData.openid })
-        .update({ data: { customCategories: custom } })
+      await wx.cloud.callFunction({
+        name: 'users',
+        data: { action: 'updateCustomCategories', data: { categories: custom } }
+      })
       app.globalData.userInfo.customCategories = custom
       app.globalData.eventBus.emit('categoryChanged')
       this.setData({ showAddDialog: false, selectedCategory: name })
@@ -896,9 +908,10 @@ Page({
         try {
           const app = getApp()
           const updated = (app.globalData.userInfo?.customCategories || []).filter(c => c.name !== item.name)
-          await wx.cloud.database().collection('users')
-            .where({ _openid: app.globalData.openid })
-            .update({ data: { customCategories: updated } })
+          await wx.cloud.callFunction({
+            name: 'users',
+            data: { action: 'updateCustomCategories', data: { categories: updated } }
+          })
           app.globalData.userInfo.customCategories = updated
           app.globalData.eventBus.emit('categoryChanged')
           // 如果删的是当前选中的分类，重置为第一个预设分类
@@ -925,6 +938,19 @@ Page({
       const { data: bill } = await db.collection('bills').doc(billId).get()
       if (!bill) {
         wx.showToast({ title: '账单不存在', icon: 'none' })
+        return
+      }
+
+      // M4 修复：软删除账单不可再编辑
+      if (bill.isDeleted) {
+        wx.showToast({ title: '账单已删除', icon: 'none' })
+        this.resetForm()
+        return
+      }
+      // F1 修复：显式归属校验
+      const openid = getApp().globalData.openid
+      if (openid && bill._openid !== openid) {
+        wx.showToast({ title: '无权编辑此账单', icon: 'none' })
         return
       }
 

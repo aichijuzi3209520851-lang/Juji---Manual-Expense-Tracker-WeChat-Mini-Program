@@ -21,26 +21,17 @@
 
   <view class="login-action">
     <view class="login-btn-wrap">
+      <!-- 单一入口：勾选协议后点击即触发隐私授权并登录，无需二次确认 -->
       <button
-        wx:if="{{!showPrivacyAuthButton}}"
-        class="login-btn"
-        bindtap="handleLogin"
-        hover-class="login-btn-hover"
-        loading="{{loading}}"
-      >
-        <text wx:if="{{!loading}}">微信一键登录</text>
-        <text wx:else>登录中...</text>
-      </button>
-
-      <button
-        wx:else
         id="{{privacyAuthButtonId}}"
-        class="login-btn login-btn--privacy"
+        class="login-btn"
+        disabled="{{loading || !privacyAgreed}}"
         open-type="agreePrivacyAuthorization"
         bindagreeprivacyauthorization="onPrivacyAuthorize"
         hover-class="login-btn-hover"
       >
-        <text>同意隐私协议并登录</text>
+        <text wx:if="{{!loading}}">微信一键登录</text>
+        <text wx:else>登录中...</text>
       </button>
     </view>
 

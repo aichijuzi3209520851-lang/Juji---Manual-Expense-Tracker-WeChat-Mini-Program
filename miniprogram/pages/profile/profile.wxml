@@ -11,6 +11,51 @@
       <text class="profile-nickname" bindtap="editNickname" hover-class="profile-nickname-hover">{{nickname}}</text>
       <text class="profile-gender" bindtap="setGender">{{genderText}}</text>
     </view>
+  </view>
+
+  <!-- 未设置微信头像/昵称时的引导（仅两者都缺时显示） -->
+  <view class="wechat-profile-tip" wx:if="{{needWechatProfile}}">
+    <view class="wechat-profile-tip-text">
+      <text class="wechat-profile-tip-title">完善你的橘记身份</text>
+      <text class="wechat-profile-tip-sub">一键使用微信头像和昵称</text>
+    </view>
+    <button class="wechat-profile-tip-btn" bindtap="openWechatProfile" hover-class="wechat-profile-tip-btn-hover">使用微信资料</button>
+  </view>
+
+  <!-- 微信资料授权弹窗 -->
+  <view class="wechat-profile-mask" wx:if="{{showWechatProfile}}" bindtap="closeWechatProfile">
+    <view class="wechat-profile-sheet" catchtap="noop">
+      <text class="wechat-profile-sheet-title">使用微信头像和昵称</text>
+      <text class="wechat-profile-sheet-desc">点击下方按钮选择微信头像，并填写昵称（将自动填充微信昵称，可修改）。</text>
+
+      <button class="wechat-profile-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar" hover-class="wechat-profile-avatar-btn-hover">
+        <image wx:if="{{wxAvatarUrl}}" class="wechat-profile-avatar-preview" src="{{wxAvatarUrl}}" mode="aspectFill" />
+        <view wx:else class="wechat-profile-avatar-placeholder">
+          <text class="wechat-profile-avatar-plus">+</text>
+          <text class="wechat-profile-avatar-hint">选择微信头像</text>
+        </view>
+      </button>
+
+      <input
+        class="wechat-profile-nickname-input"
+        type="nickname"
+        placeholder="点击获取微信昵称"
+        placeholder-class="wechat-profile-nickname-ph"
+        value="{{wxNickname}}"
+        bindinput="onNicknameInput"
+        bindblur="onNicknameInput"
+        maxlength="20"
+      />
+
+      <view class="wechat-profile-sheet-actions">
+        <button class="wechat-profile-cancel" bindtap="closeWechatProfile" hover-class="wechat-profile-cancel-hover">取消</button>
+        <button class="wechat-profile-confirm" bindtap="confirmWechatProfile" hover-class="wechat-profile-confirm-hover" disabled="{{wxProfileSaving}}">
+          <text wx:if="{{!wxProfileSaving}}">保存</text>
+          <text wx:else>保存中…</text>
+        </button>
+      </view>
+    </view>
+  </view>
     <view class="juji-pet juji-pet--{{petAction}}" bindtap="openAiChat" aria-label="小橘AI助手">
       <view wx:if="{{petBubble}}" class="juji-pet-bubble">{{petBubble}}</view>
       <view wx:for="{{petHearts}}" wx:key="id" class="juji-pet-heart">❤</view>
@@ -28,7 +73,6 @@
         <view class="juji-pet-foot juji-pet-foot--right"></view>
       </view>
     </view>
-  </view>
 
   <!-- 记账足迹 -->
   <view class="footprint-card" wx:if="{{footprint}}">
@@ -154,7 +198,7 @@
             <view wx:if="{{item.status === 'done'}}" class="bill-draft-status bill-draft-status--done">✓ 已记账</view>
           </view>
 
-          <view wx:else class="chat-bubble chat-bubble--{{item.role}}">{{item.content}}</view>
+          <view wx:else class="chat-bubble chat-bubble--{{item.role}} {{item.isCode ? 'chat-bubble--code' : ''}}">{{item.content}}</view>
         </view>
         <view wx:if="{{showChatSuggestions}}" class="chat-suggestions">
           <text class="chat-suggestions-title">可以这样问小橘</text>
@@ -293,7 +337,7 @@
 
   <!-- 版本 -->
   <view class="profile-footer">
-    <text class="footer-version">版本 1.0.0</text>
+    <text class="footer-version">版本 {{appVersion}}</text>
     <text class="footer-tagline">一颗橘子，陪你记账 📒</text>
   </view>
 
@@ -312,5 +356,5 @@
       <button class="privacy-auth-btn privacy-auth-btn--cancel" bindtap="hidePrivacyAuthorizeButton">取消</button>
     </view>
   </view>
-
 </view>
+

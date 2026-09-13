@@ -2,7 +2,10 @@ const cloud = require('wx-server-sdk')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const MAX_CONTENT_LENGTH = 2500
+// 入参护栏：仅防止异常超长入参，不再作为「内容过长」的拒绝条件
+const MAX_CONTENT_LENGTH = 10000
+// 分片送审：msgSecCheck 单次上限 2500 字
+const SEC_CHECK_CHUNK = 2000
 const VALID_SCENES = [1, 2, 3, 4]
 const BLOCK_PATTERNS = [
   /赌博|博彩|赌球|私彩|代购彩票/,
@@ -22,35 +25,43 @@ exports.main = async (event = {}) => {
   if (!content) {
     return { success: true, ok: true, checked: false }
   }
-  if (content.length > MAX_CONTENT_LENGTH) {
-    return { success: true, ok: false, message: '内容过长，请精简后再试', source: 'length' }
-  }
 
   const local = localCheck(content)
   if (!local.ok) {
     return local
   }
 
+  // 分片送审：msgSecCheck 单次上限 2500 字，长内容（如代码回答）需分片覆盖全文
   try {
-    const res = await cloud.openapi.security.msgSecCheck({
-      version: 2,
-      openid: wxContext.OPENID,
-      scene,
-      content
-    })
-    return parseWxResult(res)
+    for (let i = 0; i < content.length; i += SEC_CHECK_CHUNK) {
+      const res = await cloud.openapi.security.msgSecCheck({
+        version: 2,
+        openid: wxContext.OPENID,
+        scene,
+        content: content.slice(i, i + SEC_CHECK_CHUNK)
+      })
+      const parsed = parseWxResult(res)
+      if (!parsed.ok) return parsed
+    }
+    return { success: true, ok: true, checked: true, source: 'wx' }
   } catch (err) {
     const errCode = err && (err.errCode === undefined ? err.errcode : err.errCode)
     if (errCode === 87014) {
       return { success: true, ok: false, checked: true, source: 'wx', errCode, message: '内容可能不适合展示，请修改后再试' }
     }
-    console.warn('[contentSafety] msgSecCheck unavailable:', err && (err.errMsg || err.message))
+    // H1 修复：权限/配置错误（如未声明 openapi 权限）fail-closed，避免审核静默失效
+    const msg = String((err && (err.errMsg || err.message)) || '')
+    if (/permission|unauthorized|not authorized|权限|未授权/i.test(msg)) {
+      console.error('[contentSafety] msgSecCheck permission/config error, fail-closed:', msg)
+      return { success: true, ok: false, checked: false, source: 'wx-error', message: '内容安全服务暂不可用，请稍后再试' }
+    }
+    console.warn('[contentSafety] msgSecCheck unavailable:', msg)
     return { success: true, ok: true, checked: false, source: 'local-fallback' }
   }
 }
 
 function normalize(value) {
-  return String(value || '').trim().slice(0, MAX_CONTENT_LENGTH + 1)
+  return String(value || '').trim().slice(0, MAX_CONTENT_LENGTH)
 }
 
 function normalizeScene(scene) {

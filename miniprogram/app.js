@@ -70,43 +70,20 @@ App({
     }
   },
 
-  // 同步用户资料到 users 集合
+  // 同步用户资料到 users 集合（M6 修复：由 quickstartFunctions 云函数服务端创建/更新，
+  // 服务端时间戳不可伪造，字段为固定模板）
   async syncUserInfo() {
     try {
-      const db = wx.cloud.database()
-      const { data } = await db.collection('users')
-        .where({ _openid: this.globalData.openid })
-        .get()
-
-      if (data.length === 0) {
-        // 新用户，创建记录
-        const now = new Date()
-        const userInfo = {
-          nickname: '',
-          avatarUrl: '',
-          gender: '',
-          customCategories: [],
-          theme: 'mint',
-          budgetDefault: 2000,
-          createdAt: now,
-          lastLoginAt: now
-        }
-        const addRes = await db.collection('users').add({
-          data: userInfo
-        })
+      const res = await wx.cloud.callFunction({
+        name: 'quickstartFunctions',
+        data: { type: 'syncUser' }
+      })
+      const result = res.result || {}
+      if (result.success && result.userInfo) {
         this.globalData.userInfo = {
-          ...userInfo,
-          _id: addRes._id,
+          ...result.userInfo,
           _openid: this.globalData.openid
         }
-      } else {
-        // 老用户，更新登录时间
-        this.globalData.userInfo = data[0]
-        await db.collection('users')
-          .where({ _openid: this.globalData.openid })
-          .update({
-            data: { lastLoginAt: new Date() }
-          })
       }
     } catch (err) {
       console.warn('⚠️ 用户资料同步失败:', err.errMsg || err)

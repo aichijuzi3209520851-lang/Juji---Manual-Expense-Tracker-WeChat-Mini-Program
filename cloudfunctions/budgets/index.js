@@ -61,7 +61,7 @@ function validate(data) {
   }
   const monthNum = parseInt(data.month.slice(5, 7), 10)
   if (monthNum < 1 || monthNum > 12) return '月份格式错误'
-  if (isNaN(amount) || amount < 0 || amount > MAX_BUDGET_AMOUNT) {
+  if (isNaN(amount) || amount <= 0 || amount > MAX_BUDGET_AMOUNT) {
     return '请输入合理金额'
   }
   return null

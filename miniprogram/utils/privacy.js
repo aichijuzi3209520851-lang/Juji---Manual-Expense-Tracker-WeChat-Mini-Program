@@ -3,6 +3,7 @@ const PRIVACY_AGREED_KEY = 'juji_privacy_agreed'
 const PRIVACY_DEBUG_BYPASS = false
 
 const PRIVACY_AUTH_BUTTON_ID = 'privacy-auth-btn'
+const PRIVACY_PAGE = '/pages/privacy/privacy'
 
 let pendingResolve = null
 let pendingReject = null
@@ -99,22 +100,32 @@ async function requirePrivacyAuthorization(featureName = '') {
   })
 }
 
+// 打开小程序内《隐私协议》全文页。
+// 采用本地页作为主入口，保证无论后台「用户隐私保护指引」是否已配置，
+// 用户都能读到完整协议；页内另提供微信平台托管版入口。
 function openPrivacyAgreement() {
-  if (typeof wx.openPrivacyContract === 'function') {
-    wx.openPrivacyContract({
-      fail: () => showPrivacySummaryFallback()
-    })
-  } else {
-    showPrivacySummaryFallback()
-  }
+  openLocalPrivacyPage('privacy', showPrivacySummaryFallback)
 }
 
+// 打开小程序内《用户协议》全文页。
 function openUserAgreement() {
-  wx.showModal({
-    title: '用户协议',
-    content: '橘记仅用于个人记账管理。请勿上传违法违规内容；请妥善保管导出的备份文件；继续使用即表示你理解并同意按照页面提示使用本小程序。',
-    confirmText: '我知道了',
-    showCancel: false
+  openLocalPrivacyPage('user', () => {
+    wx.showModal({
+      title: '用户协议',
+      content: '橘记仅用于个人记账管理。请勿上传违法违规内容；请妥善保管导出的备份文件；继续使用即表示你理解并同意按照页面提示使用本小程序。',
+      confirmText: '我知道了',
+      showCancel: false
+    })
+  })
+}
+
+// 统一的本地协议页跳转，失败时执行 fallback（例如页面未注册 / 跳转层数超限）
+function openLocalPrivacyPage(tab, fallback) {
+  wx.navigateTo({
+    url: `${PRIVACY_PAGE}?tab=${tab}`,
+    fail: () => {
+      if (typeof fallback === 'function') fallback()
+    }
   })
 }
 

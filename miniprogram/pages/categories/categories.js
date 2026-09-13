@@ -135,9 +135,9 @@ Page({
     const app = getApp()
     const current = app.globalData.userInfo?.customCategories || []
     const updated = typeof transform === 'function' ? transform([...current]) : transform
-    const db = wx.cloud.database()
-    await db.collection('users').where({ _openid: app.globalData.openid }).update({
-      data: { customCategories: updated }
+    await wx.cloud.callFunction({
+      name: 'users',
+      data: { action: 'updateCustomCategories', data: { categories: updated } }
     })
     app.globalData.userInfo.customCategories = updated
   }

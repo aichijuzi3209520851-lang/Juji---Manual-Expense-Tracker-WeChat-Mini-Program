@@ -899,6 +899,14 @@ picker { display: flex; justify-content: center; }
   color: var(--color-on-primary);
   border-top-right-radius: 8rpx;
 }
+/* 代码回答：加宽气泡 + 等宽字体，减少折行与缩进错位 */
+.chat-bubble--code {
+  max-width: 620rpx;
+  font-family: Menlo, Consolas, "Courier New", monospace;
+  font-size: 22rpx;
+  line-height: 1.45;
+  border-left: 4rpx solid var(--color-primary);
+}
 .chat-bubble--typing {
   color: var(--color-text-tertiary);
   animation: juji-chat-typing 1.2s ease-in-out infinite;

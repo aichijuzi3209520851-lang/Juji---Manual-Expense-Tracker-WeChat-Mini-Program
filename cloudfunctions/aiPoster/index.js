@@ -45,50 +45,71 @@ const TITLE_BLOCK_PATTERNS = [
 ]
 
 async function checkDailyLimit(openid, feature = LIMIT_FEATURE, limit = DAILY_LIMIT) {
+  const _ = db.command
   const date = getDateKey()
   const docId = makeUsageDocId(openid, date, feature)
   const ref = db.collection('ai_usage_limits').doc(docId)
   const now = new Date()
 
-  const current = await getUsageRecord(ref)
+  // M1 修复：读取失败 fail-closed（存在兜底文案，阻断更安全）
+  let current = null
+  try {
+    const res = await ref.get()
+    current = (res && res.data) || null
+  } catch (err) {
+    const msg = String((err && (err.errMsg || err.message)) || '')
+    if (/not exist|not found|document not exists/i.test(msg)) {
+      current = null
+    } else {
+      console.error('[aiPoster] limit read failed, fail-closed:', msg)
+      return { ok: false, error: true, remaining: -1 }
+    }
+  }
+
   if (current && current.count >= limit) {
     return { ok: false, remaining: 0 }
   }
 
   const nextCount = current ? current.count + 1 : 1
+  // M1 修复：计数改为原子 inc，避免并发竞态绕过限流
   if (current) {
-    await ref.update({
-      data: {
-        count: nextCount,
-        updatedAt: now
-      }
-    })
+    try {
+      await ref.update({ data: { count: _.inc(1), updatedAt: now } })
+    } catch (err) {
+      console.error('[aiPoster] limit inc failed, fail-closed:', String((err && (err.errMsg || err.message)) || ''))
+      return { ok: false, error: true, remaining: -1 }
+    }
   } else {
-    await ref.set({
-      data: {
-        _openid: openid,
-        date,
-        feature,
-        count: nextCount,
-        limit,
-        createdAt: now,
-        updatedAt: now
+    try {
+      await ref.set({
+        data: {
+          _openid: openid,
+          date,
+          feature,
+          count: 1,
+          limit,
+          createdAt: now,
+          updatedAt: now
+        }
+      })
+    } catch (err) {
+      const msg = String((err && (err.errMsg || err.message)) || '')
+      if (/exist/i.test(msg)) {
+        // 并发竞争：文档已被他人创建，改为原子递增
+        try {
+          await ref.update({ data: { count: _.inc(1), updatedAt: now } })
+        } catch (err2) {
+          console.error('[aiPoster] limit inc failed, fail-closed:', String((err2 && (err2.errMsg || err2.message)) || ''))
+          return { ok: false, error: true, remaining: -1 }
+        }
+      } else {
+        console.error('[aiPoster] limit set failed, fail-closed:', msg)
+        return { ok: false, error: true, remaining: -1 }
       }
-    })
+    }
   }
 
   return { ok: true, remaining: Math.max(limit - nextCount, 0) }
-}
-
-async function getUsageRecord(ref) {
-  try {
-    const res = await ref.get()
-    return res && res.data ? res.data : null
-  } catch (err) {
-    const msg = (err && (err.errMsg || err.message)) || ''
-    if (/not exist|not found|document not exists/i.test(msg)) return null
-    return null
-  }
 }
 
 function getDateKey() {
@@ -245,6 +266,10 @@ exports.main = async (event, context) => {
     // ── 限流检查 ──
     const limit = await checkDailyLimit(openid)
     if (!limit.ok) {
+      if (limit.error) {
+        console.warn('[aiLetter] limit service unavailable, fail-closed')
+        return { success: false, message: '服务暂时不可用，请稍后再试', code: 'LIMIT_ERROR' }
+      }
       console.warn('[aiLetter] daily limit exceeded')
       return { success: false, message: '今日信件生成次数已用完，明天再来吧~', code: 'LIMIT_EXCEEDED' }
     }

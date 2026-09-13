@@ -299,17 +299,19 @@ Page({
   async loadDashboard() {
     const db = wx.cloud.database()
     const _ = db.command
+    const openid = getApp().globalData.openid
     const range = buildRange(this.data.rangeMode)
     this.setData({ trendLoading: true })
 
     try {
-      const rawData = await getAll(db.collection('bills')
+      const data = await getAll(db.collection('bills')
         .where({
+          _openid: openid,
           type: this.data.statsType,
+          isDeleted: _.neq(true),
           date: _.gte(range.start).and(_.lte(range.end))
         })
       )
-      const data = rawData.filter(b => !b || !b.isDeleted)
 
       this.applyCategoryStats(data)
       this.applyTrendStats(data, range)
@@ -783,8 +785,9 @@ Page({
   async fetchBills(start, end) {
     const db = wx.cloud.database()
     const _ = db.command
+    const openid = getApp().globalData.openid
     const data = await getAll(db.collection('bills')
-      .where({ type: 'expense', date: _.gte(start).and(_.lte(end)) })
+      .where({ _openid: openid, type: 'expense', isDeleted: _.neq(true), date: _.gte(start).and(_.lte(end)) })
     )
     return data
   },

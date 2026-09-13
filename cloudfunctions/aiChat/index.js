@@ -8,11 +8,27 @@ const db = cloud.database()
 
 const AI_MODEL = 'hy3-preview'
 const FALLBACK_REPLY = '小橘不知道，来聊聊别的吧~'
-const MAX_MESSAGE_LEN = 300
+// 用户单条输入上限（最新一条）：放宽以便粘贴整段代码来提问
+const MAX_MESSAGE_LEN = 2000
+// 历史消息上限：只用于给模型做上下文，收紧以控制 token 体积
+const MAX_HISTORY_MESSAGE_LEN = 500
 const MAX_MESSAGES = 8
 const MAX_BILLS = 10
 const MAX_BILL_NOTE_LEN = 200
 const MAX_BILL_AMOUNT = 99999999.99
+// 回复长度：0 = 不截断（实际长度由模型自身输出上限决定）。
+// 如需恢复硬截断，把这里改成正整数即可。
+const MAX_REPLY_LEN = 0
+// 内容安全分片：msgSecCheck 单次上限 2500 字，长回复分片覆盖全文
+const SEC_CHECK_CHUNK = 2000
+// 单次送审的最大字符窗口（护栏，避免异常超长内容反复调用风控接口）
+const SEC_CHECK_MAX_CHARS = 16000
+// 每日对话次数不设上限（0 = 不限）。计数仅用于观测，可在 ai_usage_limits 查看用量。
+// 如需恢复日限，把 DAILY_LIMIT 改成正整数即可。
+const DAILY_LIMIT = 0
+// 防刷：同一用户两次对话的最小间隔（毫秒），仅拦截脚本级高频重复提交，不限制每日提问数量；设为 0 可关闭
+const MIN_INTERVAL_MS = 800
+const LIMIT_FEATURE = 'aiChat'
 const BLOCK_PATTERNS = [
   /赌博|博彩|赌球|私彩|代购彩票/,
   /色情|裸聊|约炮|成人视频|淫秽/,
@@ -25,12 +41,17 @@ const BLOCK_PATTERNS = [
 ]
 
 const SYSTEM_PROMPT = `你是"橘记JUJI"记账小程序里的 AI 助手"小橘"。
-你的语气轻松、温和、像朋友一样，但不要装成人类。
-你可以回答日常闲聊、记账习惯、消费复盘等轻量问题，也能帮用户从口语里整理出记账数据。
+你的语气轻松、温和、像朋友一样，但不要装成人类。你懂的东西远不止记账。
+
+【你可以回答什么】
+1. 记账与消费：帮用户从口语里整理出记账数据、复盘消费习惯、解释统计结果。
+2. 通识科普：科学、自然、历史、地理、生活常识、健康常识等各类"是什么 / 为什么 / 怎么来的"问题，用通俗的话讲清楚。
+3. 编程与计算机基础：编程语言概念、算法与数据结构（例如冒泡排序、二分查找、链表、栈与队列、递归）、常见技术名词等。只要用户问就正常回答，要讲得让完全不懂编程的人也能听懂打个比方。
+4. 日常闲聊与情绪陪伴。
 
 【输出格式】你必须只输出一个 JSON 对象，禁止输出 JSON 以外的任何文字、解释或 Markdown 代码块标记。JSON 结构：
 {"intent":"chat 或 bill","reply":"给用户看的口语回复","bills":[账单数组]}
-- 当用户只是闲聊、提问、没有明确花钱/收钱的事实时，intent 为 "chat"，bills 为 []。
+- 当用户只是闲聊、提问、科普、编程等，没有明确花钱/收钱的事实时，intent 为 "chat"，bills 为 []。
 - 当用户描述了已经发生的收支（金额明确），intent 为 "bill"，把每一笔拆进 bills 数组。
 - bills 数组每个元素：{"type":"expense 或 income","category":"分类名","amount":数字,"note":"备注","isNewCategory":true 或 false}
   · type：花钱为 expense，收钱（工资/红包/退款等）为 income。
@@ -38,13 +59,26 @@ const SYSTEM_PROMPT = `你是"橘记JUJI"记账小程序里的 AI 助手"小橘"
   · category：优先从【可用分类】里选最贴切的；只有都不合适时，才填用户原话里的分类词并把 isNewCategory 设为 true。
   · note：简短描述这笔花在哪，10 字以内，没有就空字符串。
   · 一句话可能含多笔，逐笔拆开；最多 ${MAX_BILLS} 笔。
-- reply：无论 chat 还是 bill 都要有，自然口语，30 字以内。bill 时简单说一句"帮你理出这几笔，看看对不对~"之类。
 
-限制：
-1. 不提供医疗、法律、投资、借贷、博彩、违法违规建议。
-2. 不索要身份证、银行卡、密码、验证码、精确住址等敏感个人信息。
+【reply 怎么写】
+- **回复长度没有上限**：把问题讲透为止。内容多就多写，不必为了短而省略关键信息；但也不要为凑字数而啰嗦、重复、堆废话。
+- 记账类（intent 为 "bill"）：简短确认即可，例如"帮你理出这几笔，看看对不对~"。
+- 概念解释与科普（intent 为 "chat"）：说清"是什么、为什么、有什么用"，可用「1. 2. 3.」分点；点多就多列几点。
+- **用户要代码时（intent 为 "chat"）：必须直接给出真实、完整、可直接复制运行的代码，不要只给伪代码或思路描述。**
+  · 代码放在最前面，后面最多补一两句关键说明（例如要改哪个引脚、需要哪个库、注意什么）。
+  · 完整度要求：该 include 的头文件、必要的初始化、主循环都要给，能被直接粘贴进工程；不要用"此处省略"之类的占位。
+  · 风格：用两个空格缩进，注释用中文，保持可读。
+  · 除非用户没说要哪种语言，否则按用户指定的语言写；用户没指定时选最通用的写法并说明假设。
+- **严禁使用 Markdown 代码块标记（三个反引号）**：聊天框不渲染 Markdown，反引号会原样显示出来。代码直接作为纯文本输出即可。
+- **换行必须写成 \\n（转义后的反斜杠 n）**，不要在 JSON 字符串里出现真实的换行符；**代码里的双引号必须写成 \\"**（例如 #include \\"stm32f1xx_hal.h\\"），否则整个 JSON 会解析失败。
+- 不要在代码里使用制表符，用空格缩进。
+
+【限制】
+1. 不提供医疗诊断、用药建议、法律意见、投资理财或借贷建议；这类问题可以解释概念，但必须补一句"具体情况请咨询专业人士"。
+2. 不索要身份证、银行卡、密码、验证码、精确住址等敏感个人信息；用户主动提供时提醒他注意保护。
 3. 遇到违法违规、色情暴力、诈骗、自伤等内容，intent 用 "chat"，reply 只回复："${FALLBACK_REPLY}"，bills 为 []。
-4. 不提供实时天气查询；如果用户问天气，intent 用 "chat"，说明天气功能暂时下线，不要编造实时天气。`
+4. 不提供实时天气查询；如果用户问天气，intent 用 "chat"，说明天气功能暂时下线，不要编造实时天气。
+5. 不确定的知识要如实说"这个我不太确定"，绝不编造事实、数据、人名或信息来源。`
 
 exports.main = async (event = {}) => {
   const wxContext = cloud.getWXContext()
@@ -59,7 +93,32 @@ exports.main = async (event = {}) => {
     return { success: true, reply: FALLBACK_REPLY, fallback: true, bills: [] }
   }
 
-  const inputSafe = await checkContent(openid, latest.content, 2)
+  // ── 第 1 层：本地正则覆盖全部输入（历史消息 / 分类 / 用户资料），而非仅最后一条（F3/H3 修复）──
+  const unsafeMessages = messages.some(item => isUnsafeText(item.content))
+  const unsafeCategories = categories.some(item => isUnsafeText(item))
+  const unsafeProfile = isUnsafeText([
+    userProfile.nickname, userProfile.zodiac, userProfile.occupation, userProfile.profileTitle
+  ].join('\n'))
+  if (unsafeMessages || unsafeCategories || unsafeProfile) {
+    return { success: true, reply: FALLBACK_REPLY, fallback: true, bills: [] }
+  }
+
+  // ── 第 2 层：用量计数 + 防刷（每日对话次数不设上限，仅拦截极短间隔的重复提交）──
+  const usage = await checkUsageLimit(openid)
+  if (usage && usage.throttled) {
+    return { success: true, reply: '小橘还在回复上一条呢，稍等一下再问~', fallback: true, bills: [], code: 'TOO_FAST' }
+  }
+  if (usage && usage.limited) {
+    return { success: true, reply: '小橘今天聊得有点多了，明天再来吧~', fallback: true, bills: [], code: 'LIMIT_EXCEEDED' }
+  }
+
+  // ── 第 3 层：云端审核全量合并送审（历史消息 + 分类 + 用户资料）──
+  const inputJoined = [
+    messages.map(m => m.content).join('\n'),
+    categories.join('、'),
+    [userProfile.nickname, userProfile.zodiac, userProfile.occupation, userProfile.profileTitle].filter(Boolean).join('\n')
+  ].filter(Boolean).join('\n')
+  const inputSafe = await checkContent(openid, inputJoined, 2)
   if (!inputSafe) {
     return { success: true, reply: FALLBACK_REPLY, fallback: true, bills: [] }
   }
@@ -99,6 +158,11 @@ exports.main = async (event = {}) => {
       .replace(/[""']+$/, '')
       .trim()
 
+    // 长度默认不截断（MAX_REPLY_LEN = 0）；仅当显式配置为正整数时才截断
+    if (MAX_REPLY_LEN > 0 && reply.length > MAX_REPLY_LEN) {
+      reply = reply.slice(0, MAX_REPLY_LEN).trim() + '…'
+    }
+
     if (!reply || isUnsafeText(reply)) reply = FALLBACK_REPLY
     const outputSafe = await checkContent(openid, reply, 4)
     if (!outputSafe) reply = FALLBACK_REPLY
@@ -117,7 +181,7 @@ exports.main = async (event = {}) => {
   }
 }
 
-// 容错解析模型输出：优先按 JSON 解析，失败则把原文当普通聊天回复
+// 容错解析模型输出：优先按 JSON 解析，失败则宽松提取 reply，再失败才把原文当普通聊天回复
 function parseModelOutput(raw) {
   if (!raw) return { reply: FALLBACK_REPLY, bills: [] }
   let text = raw.trim()
@@ -132,17 +196,62 @@ function parseModelOutput(raw) {
     try {
       const obj = JSON.parse(slice)
       if (obj && typeof obj === 'object') {
+        const bills = Array.isArray(obj.bills) ? obj.bills : []
+        const text = typeof obj.reply === 'string' ? obj.reply.trim() : ''
+        if (text) return { reply: text, bills }
+        // 解析成功但 reply 缺失 / 为空：有账单就用确认语，否则兜底文案
+        // （绝不把 JSON 原文抛给用户）
         return {
-          reply: typeof obj.reply === 'string' ? obj.reply : raw,
-          bills: Array.isArray(obj.bills) ? obj.bills : []
+          reply: bills.length ? '帮你理出这几笔，看看对不对~' : FALLBACK_REPLY,
+          bills
         }
       }
     } catch (e) {
-      // 落到下面的兜底
+      // JSON 合法失败（最常见于 reply 里写了未转义的真实换行）→ 宽松提取 reply
+      const loose = extractReplyLoose(slice)
+      if (loose) return { reply: loose, bills: [] }
     }
   }
+  // 兜底：若原文肉眼可见仍是未解析的 JSON，宁可返回兜底文案，也不要把 JSON 原文丢给用户
+  if (/"reply"\s*:/.test(text)) return { reply: FALLBACK_REPLY, bills: [] }
   // 不是 JSON：把原文当普通聊天回复
   return { reply: raw, bills: [] }
+}
+
+// 宽松提取 reply 字段值：容忍 JSON 字符串内出现未转义的真实换行 / 未转义的双引号
+// （代码回答里 #include "xxx.h" 这类引号非常容易漏转义，是 JSON 解析失败的主要来源）
+// 注意：必须取「最长候选」。因为按「转义正确」的正则会命中引号处并被截断，
+// 只有宽松正则才能拿到完整内容，取最长可同时兼容两种情况。
+function extractReplyLoose(slice) {
+  const text = String(slice || '')
+  const patterns = [
+    /"reply"\s*:\s*"((?:[^"\\]|\\.)*)"/,          // 转义正确（可能被内容里的引号截断）
+    /"reply"\s*:\s*"([\s\S]*?)"\s*,\s*"bills"/,   // reply 含未转义引号，靠 bills 字段收尾
+    /"reply"\s*:\s*"([\s\S]*)"\s*\}\s*$/          // reply 在末尾，靠末尾大括号收尾
+  ]
+  let best = ''
+  for (const re of patterns) {
+    const m = text.match(re)
+    if (!m || !m[1]) continue
+    const decoded = decodeJsonString(m[1])
+    if (decoded.length > best.length) best = decoded
+  }
+  return best
+}
+
+// 把（可能不完全合法的）JSON 字符串字面量内容还原为真实文本
+function decodeJsonString(inner) {
+  const normalized = String(inner).replace(/\r?\n/g, '\\n')
+  try {
+    return JSON.parse('"' + normalized + '"')
+  } catch (e) {
+    // 手工还原常见转义（含未转义引号的情况）
+    return normalized
+      .replace(/\\n/g, '\n')
+      .replace(/\\t/g, '\t')
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, '\\')
+  }
 }
 
 // 服务端清洗账单，丢弃非法项；分类不在可用清单内则标记 isNewCategory
@@ -191,12 +300,17 @@ function normalizeToday(today) {
 
 function normalizeMessages(messages) {
   if (!Array.isArray(messages)) return []
-  return messages
+  const list = messages
     .filter(item => item && (item.role === 'user' || item.role === 'assistant'))
     .slice(-MAX_MESSAGES)
-    .map(item => ({
+  const lastIndex = list.length - 1
+  return list
+    .map((item, index) => ({
       role: item.role,
-      content: String(item.content || '').trim().slice(0, MAX_MESSAGE_LEN)
+      // 最新一条放宽（允许粘贴整段代码提问）；更早的历史消息收紧，控制上下文体积
+      content: String(item.content || '')
+        .trim()
+        .slice(0, index === lastIndex ? MAX_MESSAGE_LEN : MAX_HISTORY_MESSAGE_LEN)
     }))
     .filter(item => item.content)
 }
@@ -204,12 +318,12 @@ function normalizeMessages(messages) {
 function normalizeProfile(profile = {}) {
   return {
     nickname: String(profile.nickname || '').slice(0, 20),
-    gender: String(profile.gender || ''),
-    zodiac: String(profile.zodiac || ''),
+    gender: String(profile.gender || '').slice(0, 10),
+    zodiac: String(profile.zodiac || '').slice(0, 20),
     occupation: String(profile.occupation || '').slice(0, 20),
     days: Number(profile.days) || 0,
     count: Number(profile.count) || 0,
-    avgDailySpend: String(profile.avgDailySpend || '0'),
+    avgDailySpend: String(profile.avgDailySpend || '0').slice(0, 20),
     profileTitle: String(profile.profileTitle || '').slice(0, 12)
   }
 }
@@ -367,6 +481,7 @@ async function queryBills(openid, type, start, end) {
   const _ = db.command
   const where = {
     _openid: openid,
+    isDeleted: _.neq(true),
     date: _.gte(start).and(_.lte(end))
   }
   if (type && type !== 'all' && type !== 'net') where.type = type
@@ -551,14 +666,31 @@ function safeCategoryName(name) {
   return text
 }
 
+// 内容安全：分片送审，覆盖全文（reply 不再截断，长代码回答也能完整过审）
 async function checkContent(openid, content, scene) {
-  if (isUnsafeText(content)) return false
+  const text = String(content || '')
+  if (!text.trim()) return true
+  if (isUnsafeText(text)) return false
+
+  const window = text.slice(0, SEC_CHECK_MAX_CHARS)
+  if (text.length > SEC_CHECK_MAX_CHARS) {
+    console.warn('[aiChat] content longer than check window, tail not checked:', text.length)
+  }
+
+  for (let i = 0; i < window.length; i += SEC_CHECK_CHUNK) {
+    const ok = await checkContentChunk(openid, window.slice(i, i + SEC_CHECK_CHUNK), scene)
+    if (!ok) return false
+  }
+  return true
+}
+
+async function checkContentChunk(openid, content, scene) {
   try {
     const res = await cloud.openapi.security.msgSecCheck({
       version: 2,
       openid,
       scene,
-      content: String(content || '').slice(0, 2500)
+      content
     })
     const errCode = res.errCode === undefined ? res.errcode : res.errCode
     const result = res.result || {}
@@ -566,9 +698,100 @@ async function checkContent(openid, content, scene) {
     if (errCode !== undefined && errCode !== 0) return true
     return result.suggest === 'pass' || result.label === 100 || result.label === '100' || (!result.suggest && result.label === undefined)
   } catch (err) {
-    console.warn('[aiChat] msgSecCheck skipped:', err && (err.message || err.errMsg))
+    // fail-closed：权限/配置错误（如未声明 openapi 权限）视为审核不可用，直接拒绝（H1 修复）
+    const errCode = err && (err.errCode === undefined ? err.errcode : err.errCode)
+    const msg = String((err && (err.message || err.errMsg)) || '')
+    if (errCode === 87014) return false
+    if (/permission|unauthorized|not authorized|权限|未授权/i.test(msg)) {
+      console.error('[aiChat] msgSecCheck permission/config error, fail-closed:', msg)
+      return false
+    }
+    console.warn('[aiChat] msgSecCheck skipped:', msg)
     return true
   }
+}
+
+// ====== 服务端日限已取消：用量计数 + 防刷（每日次数不限，计数仅供观测）=======
+function getDateKey() {
+  const beijingTime = new Date(Date.now() + 8 * 60 * 60 * 1000)
+  return beijingTime.toISOString().slice(0, 10)
+}
+
+function makeUsageDocId(openid, date, feature) {
+  return [openid, date, feature].join('_').replace(/[^\w-]/g, '_')
+}
+
+// 返回值：
+//   { ok: true }                   → 放行
+//   { ok: false, throttled: true } → 两次提问间隔过短（仅防脚本刷量）
+//   { ok: false, limited: true }   → 命中每日上限（仅当 DAILY_LIMIT > 0 时可能出现）
+async function checkUsageLimit(openid) {
+  const _ = db.command
+  const date = getDateKey()
+  const docId = makeUsageDocId(openid, date, LIMIT_FEATURE)
+  const ref = db.collection('ai_usage_limits').doc(docId)
+  const now = Date.now()
+
+  let current = null
+  try {
+    const res = await ref.get()
+    current = (res && res.data) || null
+  } catch (err) {
+    const msg = String((err && (err.errMsg || err.message)) || '')
+    if (!/not exist|not found|document not exists/i.test(msg)) {
+      // 计数服务异常不阻断对话：计数只用于观测，不是权限门
+      console.warn('[aiChat] usage read failed, allow through:', msg)
+      return { ok: true, counterError: true }
+    }
+    current = null
+  }
+
+  // 防刷：同一用户两次对话的最小间隔（不限制每日提问数量）
+  if (MIN_INTERVAL_MS > 0 && current && current.lastAt) {
+    const last = Number(current.lastAt) || 0
+    if (now - last < MIN_INTERVAL_MS) return { ok: false, throttled: true }
+  }
+
+  // 每日上限：仅在 DAILY_LIMIT > 0 时生效（当前为 0 = 不限）
+  if (DAILY_LIMIT > 0 && current && current.count >= DAILY_LIMIT) {
+    return { ok: false, limited: true }
+  }
+
+  if (current) {
+    try {
+      await ref.update({ data: { count: _.inc(1), lastAt: now, updatedAt: new Date(now) } })
+    } catch (err) {
+      console.warn('[aiChat] usage inc failed, allow through:', String((err && (err.errMsg || err.message)) || ''))
+    }
+  } else {
+    try {
+      await ref.set({
+        data: {
+          _openid: openid,
+          date,
+          feature: LIMIT_FEATURE,
+          count: 1,
+          limit: DAILY_LIMIT,
+          lastAt: now,
+          createdAt: new Date(now),
+          updatedAt: new Date(now)
+        }
+      })
+    } catch (err) {
+      const msg = String((err && (err.errMsg || err.message)) || '')
+      if (/exist/i.test(msg)) {
+        // 并发竞争：文档已被他人创建，改为原子递增
+        try {
+          await ref.update({ data: { count: _.inc(1), lastAt: now, updatedAt: new Date(now) } })
+        } catch (err2) {
+          console.warn('[aiChat] usage inc failed, allow through:', String((err2 && (err2.errMsg || err2.message)) || ''))
+        }
+      } else {
+        console.warn('[aiChat] usage set failed, allow through:', msg)
+      }
+    }
+  }
+  return { ok: true }
 }
 
 function isUnsafeText(text) {

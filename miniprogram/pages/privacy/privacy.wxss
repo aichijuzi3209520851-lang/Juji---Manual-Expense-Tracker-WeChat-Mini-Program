@@ -1,0 +1,196 @@
+.privacy-page {
+  min-height: 100vh;
+  padding: 24rpx var(--space-md) 80rpx;
+  background: var(--color-bg);
+  box-sizing: border-box;
+}
+
+/* ===== 顶部切换 ===== */
+.privacy-tabs {
+  display: flex;
+  gap: 12rpx;
+  padding: 8rpx;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4rpx 16rpx var(--shadow-dark);
+  margin-bottom: 24rpx;
+}
+.privacy-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+  border-radius: calc(var(--radius-xl) - 8rpx);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.privacy-tab.is-active {
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ===== 正文卡片 ===== */
+.privacy-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: 36rpx var(--space-lg) var(--space-lg);
+  box-shadow: 0 4rpx 16rpx var(--shadow-dark);
+}
+
+.privacy-doc-title {
+  display: block;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 10rpx;
+}
+.privacy-doc-meta {
+  display: block;
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+  margin-bottom: 28rpx;
+}
+
+/* ===== 内容块 ===== */
+.blk-h2 {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 32rpx 0 14rpx;
+}
+.blk-h3 {
+  display: block;
+  font-size: 27rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 22rpx 0 10rpx;
+}
+.blk-p {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  margin-bottom: 14rpx;
+}
+
+.blk-ul {
+  margin: 6rpx 0 16rpx;
+}
+.blk-li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10rpx;
+}
+.blk-dot {
+  flex-shrink: 0;
+  font-size: 26rpx;
+  line-height: 1.75;
+  color: var(--color-primary);
+  margin-right: 12rpx;
+}
+.blk-li-text {
+  flex: 1;
+  font-size: 26rpx;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+}
+
+/* ===== 表格 ===== */
+.blk-table {
+  margin: 12rpx 0 20rpx;
+  border: 2rpx solid var(--color-border, rgba(0, 0, 0, 0.06));
+  border-radius: var(--radius-md, 16rpx);
+  overflow: hidden;
+}
+.blk-tr {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 2rpx solid var(--color-border, rgba(0, 0, 0, 0.06));
+}
+.blk-tr:last-child {
+  border-bottom: none;
+}
+.blk-tr--head {
+  background: rgba(120, 86, 85, 0.06);
+}
+.blk-cell {
+  flex: 1;
+  padding: 14rpx 16rpx;
+  font-size: 23rpx;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  word-break: break-all;
+}
+.blk-th {
+  font-weight: 600;
+  color: var(--color-text);
+}
+.blk-td {
+  border-left: 2rpx solid var(--color-border, rgba(0, 0, 0, 0.06));
+}
+.blk-th:first-child {
+  border-left: none;
+}
+
+/* ===== 联系方式 ===== */
+.privacy-contact {
+  margin-top: 36rpx;
+  padding-top: 24rpx;
+  border-top: 2rpx dashed var(--color-border, rgba(0, 0, 0, 0.1));
+}
+.privacy-contact-label {
+  display: block;
+  font-size: 27rpx;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 10rpx;
+}
+.privacy-contact-mail {
+  display: block;
+  font-size: 27rpx;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.privacy-contact-tip {
+  display: block;
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+  margin-top: 6rpx;
+}
+
+/* ===== 平台入口 ===== */
+.privacy-platform-btn {
+  margin: 32rpx 0 12rpx;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-size: 27rpx;
+  font-weight: 600;
+  border-radius: var(--radius-xl);
+  border: 2rpx solid var(--color-primary);
+  line-height: 2.6;
+  padding: 0;
+}
+.privacy-platform-btn::after {
+  border: none;
+}
+.privacy-platform-btn-hover {
+  opacity: 0.75;
+}
+.privacy-platform-tip {
+  display: block;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+}
+
+/* ===== 页脚 ===== */
+.privacy-footer {
+  margin-top: 48rpx;
+  text-align: center;
+}
+.privacy-footer-text {
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+}

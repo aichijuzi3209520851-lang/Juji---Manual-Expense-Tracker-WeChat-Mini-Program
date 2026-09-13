@@ -97,6 +97,7 @@ Page({
   async loadOverview() {
     const db = wx.cloud.database()
     const _ = db.command
+    const openid = getApp().globalData.openid
     const today = fmtDate(new Date())
     const yesterday = yesterdayStr()
     const month = today.slice(0, 7)
@@ -105,27 +106,27 @@ Page({
 
     try {
       const expRes = await db.collection('bills')
-        .where({ type: 'expense', date: _.gte(queryStart).and(_.lte(today)) })
+        .where({ _openid: openid, type: 'expense', isDeleted: _.neq(true), date: _.gte(queryStart).and(_.lte(today)) })
         .get()
 
       const incRes = await db.collection('bills')
-        .where({ type: 'income', date: _.gte(queryStart).and(_.lte(today)) })
+        .where({ _openid: openid, type: 'income', isDeleted: _.neq(true), date: _.gte(queryStart).and(_.lte(today)) })
         .get()
 
       let todayExp = 0, yestExp = 0, monthSpent = 0
-      expRes.data.filter(b => !b.isDeleted).forEach(b => {
+      expRes.data.forEach(b => {
         if (b.date === today) todayExp += b.amount
         if (b.date === yesterday) yestExp += b.amount
         if (b.date >= monthStart) monthSpent += b.amount
       })
 
       let todayInc = 0, yestInc = 0
-      incRes.data.filter(b => !b.isDeleted).forEach(b => {
+      incRes.data.forEach(b => {
         if (b.date === today) todayInc += b.amount
         if (b.date === yesterday) yestInc += b.amount
       })
 
-      const budgetRes = await db.collection('budgets').where({ month }).get()
+      const budgetRes = await db.collection('budgets').where({ _openid: openid, month }).get()
       const budgetDoc = budgetRes.data[0]
 
       let budget
@@ -155,14 +156,17 @@ Page({
 
   async loadRecentBills() {
     const db = wx.cloud.database()
+    const _ = db.command
+    const openid = getApp().globalData.openid
     try {
       const res = await db.collection('bills')
+        .where({ _openid: openid, isDeleted: _.neq(true) })
         .orderBy('createdAt', 'desc')
         .limit(30)
         .get()
 
       const groupMap = {}
-      res.data.filter(b => !b.isDeleted).forEach(b => {
+      res.data.forEach(b => {
         const k = b.date
         if (!groupMap[k]) groupMap[k] = { date: k, items: [], net: 0 }
         groupMap[k].items.push({ ...b, icon: this.getIcon(b.category) })

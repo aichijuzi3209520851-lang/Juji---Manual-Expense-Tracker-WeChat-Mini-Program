@@ -1,0 +1,64 @@
+<view class="privacy-page" style="{{themeStyle}}">
+  <!-- 顶部切换 -->
+  <view class="privacy-tabs">
+    <view
+      class="privacy-tab {{activeTab === 'privacy' ? 'is-active' : ''}}"
+      data-tab="privacy"
+      bindtap="switchTab"
+    >隐私协议</view>
+    <view
+      class="privacy-tab {{activeTab === 'user' ? 'is-active' : ''}}"
+      data-tab="user"
+      bindtap="switchTab"
+    >用户协议</view>
+  </view>
+
+  <!-- 协议正文 -->
+  <view class="privacy-card">
+    <text class="privacy-doc-title">{{docTitle}}</text>
+    <text class="privacy-doc-meta">版本 v1.0　生效日期：{{effectiveDate}}</text>
+
+    <block wx:for="{{blocks}}" wx:key="k" wx:for-item="blk">
+      <text wx:if="{{blk.t === 'h2'}}" class="blk-h2">{{blk.v}}</text>
+
+      <text wx:elif="{{blk.t === 'h3'}}" class="blk-h3">{{blk.v}}</text>
+
+      <text wx:elif="{{blk.t === 'p'}}" class="blk-p">{{blk.v}}</text>
+
+      <view wx:elif="{{blk.t === 'ul'}}" class="blk-ul">
+        <view wx:for="{{blk.v}}" wx:key="*this" wx:for-item="li" class="blk-li">
+          <text class="blk-dot">•</text>
+          <text class="blk-li-text">{{li}}</text>
+        </view>
+      </view>
+
+      <view wx:elif="{{blk.t === 'table'}}" class="blk-table">
+        <view class="blk-tr blk-tr--head">
+          <text wx:for="{{blk.head}}" wx:key="*this" wx:for-item="th" class="blk-cell blk-th">{{th}}</text>
+        </view>
+        <view wx:for="{{blk.rows}}" wx:key="*this" wx:for-item="row" class="blk-tr">
+          <text wx:for="{{row}}" wx:key="*this" wx:for-item="td" class="blk-cell blk-td">{{td}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 联系方式 -->
+    <view class="privacy-contact">
+      <text class="privacy-contact-label">八、联系我们</text>
+      <text class="privacy-contact-mail" bindtap="copyEmail">{{contactEmail}}</text>
+      <text class="privacy-contact-tip">点击邮箱可复制</text>
+    </view>
+  </view>
+
+  <!-- 平台托管的隐私保护指引入口 -->
+  <block wx:if="{{privacyContractAvailable}}">
+    <button class="privacy-platform-btn" bindtap="openPlatformContract" hover-class="privacy-platform-btn-hover">
+      查看微信《用户隐私保护指引》
+    </button>
+    <text class="privacy-platform-tip">由微信平台托管，内容与小程序后台声明一致</text>
+  </block>
+
+  <view class="privacy-footer">
+    <text class="privacy-footer-text">一颗橘子，陪你记账 📒</text>
+  </view>
+</view>

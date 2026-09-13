@@ -9,7 +9,8 @@
     "pages/profile/profile",
     "pages/categories/categories",
     "pages/themes/themes",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/privacy/privacy"
   ],
   "__usePrivacyCheck__": true,
   "window": {

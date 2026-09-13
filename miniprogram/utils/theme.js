@@ -19,6 +19,12 @@ const CUSTOM_PALETTE = [
 
 const MAX_USER_THEMES = 5
 
+// M5 修复：hex 颜色必须为严格的 #RRGGBB 格式，防止旧版本地存储数据注入 style 字符串
+const HEX_PATTERN = /^#[0-9a-fA-F]{6}$/
+function isValidHex(value) {
+  return typeof value === 'string' && HEX_PATTERN.test(value)
+}
+
 // ==================== HSL 转换工具 ====================
 function hexToHsl(hex) {
   const r = parseInt(hex.slice(1, 3), 16) / 255
@@ -269,6 +275,7 @@ function saveUserTheme(name, hex) {
   const trimmed = (name || '').trim()
   if (!trimmed) return { ok: false, msg: '请填写主题名称' }
   if (trimmed.length > 10) return { ok: false, msg: '名称最多 10 字' }
+  if (!isValidHex(hex)) return { ok: false, msg: '颜色格式错误' }
 
   const list = getUserThemes()
   if (list.length >= MAX_USER_THEMES) {
@@ -310,7 +317,7 @@ function migrateLegacyCustomTheme() {
   if (legacyTheme !== 'custom' && !legacyHex) return
 
   const list = getUserThemes()
-  if (list.length === 0 && legacyHex) {
+  if (list.length === 0 && isValidHex(legacyHex)) {
     const id = `user_${Date.now()}`
     list.push({ id, name: '我的自定义', hex: legacyHex, createdAt: Date.now() })
     wx.setStorageSync('user_themes', list)

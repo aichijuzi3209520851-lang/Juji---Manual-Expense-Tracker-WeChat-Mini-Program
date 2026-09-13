@@ -13,6 +13,9 @@ const VALID_TYPES = ['expense', 'income']
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 const MAX_EXPORT_COUNT = 10000
 const EXPORT_PAGE_SIZE = 100
+// 服务端日限（F2 修复）：防止高频调用耗尽函数配额
+const MAX_EXPORT_PER_DAY = 20
+const MAX_IMPORT_PER_DAY = 10
 const BLOCK_PATTERNS = [
   /赌博|博彩|赌球|私彩|代购彩票/,
   /色情|裸聊|约炮|成人视频|淫秽/,
@@ -35,6 +38,10 @@ exports.main = async (event) => {
 
 // ====== 导出：查询全部账单，返回 JSON ======
 async function handleExport(openid) {
+  const limit = await checkDailyLimit(openid, 'export', MAX_EXPORT_PER_DAY)
+  if (!limit.ok) {
+    return { success: false, message: `今日导出次数已用完（${MAX_EXPORT_PER_DAY} 次/天），请明天再试`, code: 'DAILY_LIMIT_EXCEEDED' }
+  }
   try {
     const bills = await getAll(db.collection('bills')
       .where({ _openid: openid })
@@ -46,14 +53,15 @@ async function handleExport(openid) {
       return { success: false, message: '暂无账单数据可导出' }
     }
 
-    // 清除内部字段，只保留记账信息
+    // 清除内部字段，只保留记账信息。
+    // H2 修复：photoUrl 不再导出——备份文件可能被转发，cloud:// fileID 会暴露照片下载地址
     const clean = bills.map(b => ({
       type: b.type,
       amount: b.amount,
       category: b.category,
       date: b.date,
       note: b.note || '',
-      photoUrl: b.photoUrl || '',
+      photoUrl: '',
       mood: b.mood || '',
       createdAt: b.createdAt
     }))
@@ -67,6 +75,10 @@ async function handleExport(openid) {
 
 // ====== 导入：批量写入账单 ======
 async function handleImport(openid, bills) {
+  const limit = await checkDailyLimit(openid, 'import', MAX_IMPORT_PER_DAY)
+  if (!limit.ok) {
+    return { success: false, message: `今日导入次数已用完（${MAX_IMPORT_PER_DAY} 次/天），请明天再试`, code: 'DAILY_LIMIT_EXCEEDED' }
+  }
   if (!Array.isArray(bills) || bills.length === 0) {
     return { success: false, message: '没有可导入的数据' }
   }
@@ -165,4 +177,68 @@ function isValidDateString(date) {
     d.getFullYear() === parts[0] &&
     d.getMonth() + 1 === parts[1] &&
     d.getDate() === parts[2]
+}
+
+// ====== 服务端日限（原子计数；限流集合异常时放行并告警——导出是数据备份生命线，不可阻断） ======
+function getDateKey() {
+  const beijingTime = new Date(Date.now() + 8 * 60 * 60 * 1000)
+  return beijingTime.toISOString().slice(0, 10)
+}
+
+function makeUsageDocId(openid, date, feature) {
+  return [openid, date, feature].join('_').replace(/[^\w-]/g, '_')
+}
+
+async function checkDailyLimit(openid, feature, limit) {
+  const date = getDateKey()
+  const docId = makeUsageDocId(openid, date, feature)
+  const ref = db.collection('ai_usage_limits').doc(docId)
+
+  let current = null
+  try {
+    const res = await ref.get()
+    current = (res && res.data) || null
+  } catch (err) {
+    const msg = String((err && (err.errMsg || err.message)) || '')
+    if (/not exist|not found|document not exists/i.test(msg)) {
+      current = null
+    } else {
+      console.warn('[dataMigration] limit read failed, skip check:', msg)
+      return { ok: true, unchecked: true }
+    }
+  }
+
+  if (current && current.count >= limit) {
+    return { ok: false, count: current.count }
+  }
+
+  try {
+    if (current) {
+      await ref.update({ data: { count: _.inc(1), updatedAt: new Date() } })
+    } else {
+      await ref.set({
+        data: {
+          _openid: openid,
+          date,
+          feature,
+          count: 1,
+          limit,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      })
+    }
+  } catch (err) {
+    const msg = String((err && (err.errMsg || err.message)) || '')
+    if (/exist/i.test(msg)) {
+      try {
+        await ref.update({ data: { count: _.inc(1), updatedAt: new Date() } })
+      } catch (err2) {
+        console.warn('[dataMigration] limit inc failed, skip check:', String((err2 && (err2.errMsg || err2.message)) || ''))
+      }
+    } else {
+      console.warn('[dataMigration] limit write failed, skip check:', msg)
+    }
+  }
+  return { ok: true }
 }

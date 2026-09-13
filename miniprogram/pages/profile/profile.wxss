@@ -596,6 +596,14 @@
   color: var(--color-on-primary);
   border-top-right-radius: 8rpx;
 }
+/* 代码回答：加宽气泡 + 等宽字体，减少折行与缩进错位 */
+.chat-bubble--code {
+  max-width: 620rpx;
+  font-family: Menlo, Consolas, "Courier New", monospace;
+  font-size: 22rpx;
+  line-height: 1.45;
+  border-left: 4rpx solid var(--color-primary);
+}
 .chat-bubble--typing {
   color: var(--color-text-tertiary);
   animation: juji-chat-typing 1.2s ease-in-out infinite;
@@ -1030,3 +1038,85 @@
   box-shadow: none;
   margin-bottom: 0;
 }
+/* 微信资料授权引导条 */
+.wechat-profile-tip {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20rpx;
+  margin: 24rpx 0 0;
+  padding: 24rpx 28rpx;
+  background: var(--gradient-hero);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+.wechat-profile-tip-text { display: flex; flex-direction: column; gap: 6rpx; min-width: 0; }
+.wechat-profile-tip-title { font-size: 28rpx; font-weight: 700; color: var(--color-text); }
+.wechat-profile-tip-sub { font-size: 22rpx; color: var(--color-text-secondary); }
+.wechat-profile-tip-btn {
+  flex-shrink: 0;
+  margin: 0; padding: 0 32rpx;
+  height: 64rpx; line-height: 64rpx;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 26rpx; font-weight: 600;
+  border-radius: var(--radius-full);
+  border: none;
+  box-shadow: var(--shadow-btn-primary);
+}
+.wechat-profile-tip-btn::after { border: none; }
+.wechat-profile-tip-btn-hover { opacity: 0.7; }
+/* 微信资料授权弹窗 */
+.wechat-profile-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 9999;
+}
+.wechat-profile-sheet {
+  width: 100%;
+  background: var(--color-surface);
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 44rpx 40rpx calc(44rpx + constant(safe-area-inset-bottom));
+  padding: 44rpx 40rpx calc(44rpx + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center;
+  box-shadow: 0 -8rpx 40rpx rgba(0,0,0,0.12);
+}
+.wechat-profile-sheet-title { font-size: 34rpx; font-weight: 700; color: var(--color-text); margin-bottom: 16rpx; }
+.wechat-profile-sheet-desc { font-size: 24rpx; line-height: 1.6; color: var(--color-text-secondary); text-align: center; margin-bottom: 36rpx; }
+.wechat-profile-avatar-btn {
+  width: 160rpx; height: 160rpx; padding: 0; margin: 0 0 32rpx;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 2rpx dashed var(--color-border);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.wechat-profile-avatar-btn::after { border: none; }
+.wechat-profile-avatar-btn-hover { opacity: 0.8; }
+.wechat-profile-avatar-preview { width: 100%; height: 100%; }
+.wechat-profile-avatar-placeholder { display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
+.wechat-profile-avatar-plus { font-size: 52rpx; color: var(--color-text-tertiary); line-height: 1; }
+.wechat-profile-avatar-hint { font-size: 20rpx; color: var(--color-text-tertiary); }
+.wechat-profile-nickname-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 88rpx;
+  padding: 0 28rpx;
+  background: var(--color-bg);
+  border-radius: 20rpx;
+  border: 1rpx solid var(--color-border);
+  font-size: 28rpx;
+  color: var(--color-text);
+  margin-bottom: 36rpx;
+}
+.wechat-profile-nickname-ph { color: var(--color-text-tertiary); }
+.wechat-profile-sheet-actions { display: flex; gap: 20rpx; width: 100%; }
+.wechat-profile-cancel, .wechat-profile-confirm {
+  flex: 1; margin: 0; height: 88rpx; line-height: 88rpx;
+  font-size: 30rpx; font-weight: 600; border-radius: var(--radius-full); border: none;
+}
+.wechat-profile-cancel { background: var(--color-primary-container); color: var(--color-text-secondary); }
+.wechat-profile-confirm { background: var(--color-primary); color: var(--color-on-primary); box-shadow: var(--shadow-btn-primary); }
+.wechat-profile-cancel::after, .wechat-profile-confirm::after { border: none; }
+.wechat-profile-cancel-hover { opacity: 0.7; }
+.wechat-profile-confirm-hover { opacity: 0.85; }
+.wechat-profile-confirm[disabled] { opacity: 0.5; }

@@ -70,3 +70,17 @@ miniprogram/images/function_deploy.png
 miniprogram/images/scf-enter.png
 
 .superpowers/
+
+# Local AI/IDE tooling state (Trae / WorkBuddy)
+.trae/
+.trae-html-share-packages/
+.workbuddy/
+
+# Internal review reports (contain security findings, keep local only)
+发布前致命漏洞专项检查报告.md
+项目熟悉报告.md
+
+
+# Local temp/debug debris (push retry leftovers)
+/_*.txt
+/_gitq.js

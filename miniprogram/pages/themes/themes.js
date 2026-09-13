@@ -9,6 +9,23 @@ const {
   deleteUserTheme
 } = require('../../utils/theme')
 
+// M6 修复：主题字段写入收敛到 users 云函数（服务端白名单校验），不再客户端直写数据库
+async function syncThemeToCloud(themeId) {
+  const app = getApp()
+  if (!app.globalData.openid) return
+  try {
+    const res = await wx.cloud.callFunction({
+      name: 'users',
+      data: { action: 'updateTheme', data: { theme: themeId } }
+    })
+    if (!res.result || !res.result.success) {
+      console.warn('主题同步到云端失败（非致命）:', res.result && res.result.message)
+    }
+  } catch (err) {
+    console.warn('主题同步到云端失败（非致命）:', err)
+  }
+}
+
 const PRESET_THEMES = [
   {
     id: 'mint', name: '清爽薄荷（默认）', desc: '清新绿底，护眼舒适',
@@ -142,17 +159,7 @@ Page({
 
         wx.setStorageSync('theme', newId)
 
-        try {
-          const app = getApp()
-          if (app.globalData.openid) {
-            const db = wx.cloud.database()
-            await db.collection('users')
-              .where({ _openid: app.globalData.openid })
-              .update({ data: { theme: newId } })
-          }
-        } catch (err) {
-          console.warn('主题同步到数据库失败（非致命）:', err)
-        }
+        await syncThemeToCloud(newId)
 
         const app = getApp()
         app.globalData.currentTheme = newId
@@ -182,17 +189,7 @@ Page({
 
         wx.setStorageSync('theme', id)
 
-        try {
-          const app = getApp()
-          if (app.globalData.openid) {
-            const db = wx.cloud.database()
-            await db.collection('users')
-              .where({ _openid: app.globalData.openid })
-              .update({ data: { theme: id } })
-          }
-        } catch (err) {
-          console.warn('主题同步到数据库失败（非致命）:', err)
-        }
+        await syncThemeToCloud(id)
 
         const app = getApp()
         app.globalData.currentTheme = id
@@ -224,17 +221,7 @@ Page({
         this.setData({ userThemes, userThemeCount: userThemes.length })
 
         if (result.wasCurrent) {
-          try {
-            const app = getApp()
-            if (app.globalData.openid) {
-              const db = wx.cloud.database()
-              await db.collection('users')
-                .where({ _openid: app.globalData.openid })
-                .update({ data: { theme: 'mint' } })
-            }
-          } catch (err) {
-            console.warn('主题同步失败:', err)
-          }
+          await syncThemeToCloud('mint')
           const app = getApp()
           app.globalData.currentTheme = 'mint'
           app.globalData.eventBus.emit('themeChanged', 'mint')
