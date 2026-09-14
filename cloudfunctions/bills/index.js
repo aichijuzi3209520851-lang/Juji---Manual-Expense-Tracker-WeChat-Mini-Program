@@ -1,4 +1,4 @@
-// 橘记 — bills 云函数（服务端校验 + 写入）
+// 橘记JUJI — bills 云函数（服务端校验 + 写入）
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()

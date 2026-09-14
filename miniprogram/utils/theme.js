@@ -1,5 +1,5 @@
 /**
- * 橘记 - 主题管理模块
+ * 橘记JUJI - 主题管理模块
  *
  * 使用 wx.setPageStyle() (基础库 2.20.1+) 动态注入 CSS 变量，
  * 实现多主题切换。每个页面在 onShow 时调用 applyTheme() 即可。

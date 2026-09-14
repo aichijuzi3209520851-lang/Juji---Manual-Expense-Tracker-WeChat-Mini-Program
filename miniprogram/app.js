@@ -4,7 +4,7 @@ const EventBus = require('./utils/eventBus')
 const { initMonitoring } = require('./utils/monitor')
 const { initPrivacyAuthorization } = require('./utils/privacy')
 
-// 橘记 - app.js
+// 橘记JUJI - app.js
 App({
   globalData: {
     openid: '',

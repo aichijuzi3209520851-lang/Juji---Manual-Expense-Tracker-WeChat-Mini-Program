@@ -1,4 +1,4 @@
-<!-- 记账页 — 橘记的核心 -->
+<!-- 记账页 — 橘记JUJI的核心 -->
 <view class="record-page {{type === 'income' ? 'is-income' : ''}}" style="{{themeStyle}}">
 
   <!-- 金额 hero 卡（含 收/支 切换 + 金额 + 日期） -->

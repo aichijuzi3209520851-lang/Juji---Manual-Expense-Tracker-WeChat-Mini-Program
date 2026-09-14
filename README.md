@@ -1,7 +1,7 @@
-# 橘记 (JuJI) — 极简手动记账微信小程序
+# 橘记JUJI (JuJI) — 极简手动记账微信小程序
 
 <p align="center">
-  <img src="docs/xiaoju.png" alt="橘记吉祥物「小橘」" width="180" />
+  <img src="docs/xiaoju.png" alt="橘记JUJI吉祥物「小橘」" width="180" />
 </p>
 
 🍊 一个让人愿意坚持用的记账习惯养成工具。打开就记，记完就走，月底安心回顾。陪伴你的是 AI 助手「小橘」——动动嘴就能记账，还能聊天、复盘开销。

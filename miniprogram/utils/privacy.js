@@ -112,7 +112,7 @@ function openUserAgreement() {
   openLocalPrivacyPage('user', () => {
     wx.showModal({
       title: '用户协议',
-      content: '橘记仅用于个人记账管理。请勿上传违法违规内容；请妥善保管导出的备份文件；继续使用即表示你理解并同意按照页面提示使用本小程序。',
+      content: '橘记JUJI仅用于个人记账管理。请勿上传违法违规内容；请妥善保管导出的备份文件；继续使用即表示你理解并同意按照页面提示使用本小程序。',
       confirmText: '我知道了',
       showCancel: false
     })
@@ -132,7 +132,7 @@ function openLocalPrivacyPage(tab, fallback) {
 function showPrivacySummaryFallback() {
   wx.showModal({
     title: '隐私协议',
-    content: '橘记会在记账、头像、照片、文件导入导出、AI 对话/信件中使用必要数据。数据主要存储在你的云开发账户隔离空间中，仅用于记账展示、统计、备份和生成反馈。',
+    content: '橘记JUJI会在记账、头像、照片、文件导入导出、AI 对话/信件中使用必要数据。数据主要存储在你的云开发账户隔离空间中，仅用于记账展示、统计、备份和生成反馈。',
     confirmText: '我知道了',
     showCancel: false
   })

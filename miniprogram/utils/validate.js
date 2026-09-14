@@ -1,4 +1,4 @@
-// 橘记 — 输入校验工具
+// 橘记JUJI — 输入校验工具
 
 const MAX_AMOUNT = 99999999.99
 const MAX_NOTE_LEN = 200

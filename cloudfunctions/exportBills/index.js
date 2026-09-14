@@ -13,7 +13,7 @@ exports.main = async (event) => {
 
   try {
     // 查用户信息用于 CSV 顶部 meta
-    let nickname = '橘记用户'
+    let nickname = '橘记JUJI用户'
     let genderText = '未设置'
     let birthday = ''
     let zodiac = ''
@@ -22,7 +22,7 @@ exports.main = async (event) => {
       const { data: users } = await db.collection('users').where({ _openid: openid }).limit(1).get()
       if (users && users.length > 0) {
         const u = users[0]
-        nickname = u.nickname || '橘记用户'
+        nickname = u.nickname || '橘记JUJI用户'
         const g = u.gender
         genderText = g === 'male' ? '男' : g === 'female' ? '女' : '未设置'
         birthday = u.birthday || ''
@@ -66,7 +66,7 @@ exports.main = async (event) => {
     return {
       success: true,
       fileID: uploadRes.fileID,
-      filename: `橘记账单_${timestamp}.csv`,
+      filename: `橘记JUJI账单_${timestamp}.csv`,
       count: bills.length
     }
   } catch (err) {
@@ -133,7 +133,7 @@ function generateCSV(bills, meta) {
     meta.occupation ? `职业：${meta.occupation}` : ''
   ].filter(Boolean).join('    ')
   const metaBlock =
-    escapeCSV('橘记账单导出') + '\n' +
+    escapeCSV('橘记JUJI账单导出') + '\n' +
     escapeCSV(profileLine) + '\n' +
     escapeCSV(`共 ${bills.length} 条`) + '\n\n'
   const header = '日期,类型,分类,金额,备注,心情\n'

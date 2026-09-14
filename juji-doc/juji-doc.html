@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>橘记 Juji — 产品说明文档</title>
+<title>橘记JUJI— 产品说明文档</title>
 <style>
 @font-face {
   font-family: 'Outfit';
@@ -648,10 +648,10 @@ footer .footer-logo .gradient-text {
 <header class="hero">
   <div class="container">
     <div class="hero-badge"><span class="dot"></span> 微信小程序 · 个人记账</div>
-    <h1>橘记 <span class="gradient-text">Juji</span></h1>
+    <h1>橘记JUJI <span class="gradient-text">Juji</span></h1>
     <p class="subtitle">一个让人愿意坚持用的记账习惯养成工具。打开就记，记完就走，月底安心回顾。陪伴你的是 AI 助手「小橘」。</p>
     <div class="hero-image">
-      <img src="assets/hero-illustration.jpg" alt="橘记吉祥物小橘与记账元素">
+      <img src="assets/hero-illustration.jpg" alt="橘记JUJI吉祥物小橘与记账元素">
     </div>
     <div class="hero-meta">
       <div class="hero-meta-item">
@@ -696,7 +696,7 @@ footer .footer-logo .gradient-text {
 <section id="background">
   <div class="section-label">01 / Background</div>
   <h2>创作背景</h2>
-  <p class="lead">每一个认真生活的人，都值得被温柔对待。橘记的诞生，源于一个朴素的观察：大多数记账工具太"重"了。</p>
+  <p class="lead">每一个认真生活的人，都值得被温柔对待。橘记JUJI的诞生，源于一个朴素的观察：大多数记账工具太"重"了。</p>
 
   <div class="two-col">
     <div>
@@ -741,7 +741,7 @@ footer .footer-logo .gradient-text {
 <section id="philosophy">
   <div class="section-label">02 / Philosophy</div>
   <h2>创作思路</h2>
-  <p class="lead">橘记的设计哲学可以浓缩为三个关键词：极简、温度、陪伴。</p>
+  <p class="lead">橘记JUJI的设计哲学可以浓缩为三个关键词：极简、温度、陪伴。</p>
 
   <div class="card-grid">
     <div class="card">
@@ -785,7 +785,7 @@ footer .footer-logo .gradient-text {
 
   <div class="quote-block">
     <p>好的工具应该像空气一样——你感觉不到它的存在，但它一直在那里支持你。</p>
-    <div class="quote-author">— 橘记设计理念</div>
+    <div class="quote-author">— 橘记JUJI设计理念</div>
   </div>
 </section>
 
@@ -795,7 +795,7 @@ footer .footer-logo .gradient-text {
 <section id="overview">
   <div class="section-label">03 / Product</div>
   <h2>产品概览</h2>
-  <p class="lead">橘记包含 10 个核心页面，覆盖记账、统计、预算、个人中心全流程。</p>
+  <p class="lead">橘记JUJI包含 10 个核心页面，覆盖记账、统计、预算、个人中心全流程。</p>
 
   <div class="stats-grid">
     <div class="stat-card">
@@ -911,7 +911,7 @@ flowchart TB
     Theme --> Storage
     Bus --> UI
     </pre>
-    <figcaption>图 1：橘记系统架构总览</figcaption>
+    <figcaption>图 1：橘记JUJI系统架构总览</figcaption>
   </figure>
 
   <h3>云函数清单</h3>
@@ -990,7 +990,7 @@ flowchart TB
     <div>
       <h3>为什么需要 Design Token</h3>
       <p>在小程序开发中，主题切换是一个经典难题。微信小程序的 <code>page{}</code> 中声明的 CSS 变量会在解析时被固化，不会响应子 view 的内联 style 覆盖。</p>
-      <p>橘记的解法是：<mark class="key">在 JS 中计算所有衍生 token 的实际值</mark>，拼成字符串注入每页最外层 view 的 <code>style</code> 属性。渐变、阴影等复合 token 直接输出字面量值，绕过 CSS 变量的提前解析问题。</p>
+      <p>橘记JUJI的解法是：<mark class="key">在 JS 中计算所有衍生 token 的实际值</mark>，拼成字符串注入每页最外层 view 的 <code>style</code> 属性。渐变、阴影等复合 token 直接输出字面量值，绕过 CSS 变量的提前解析问题。</p>
     </div>
   </div>
 
@@ -1036,7 +1036,7 @@ flowchart TB
   </div>
 
   <h3>Neumorphic 拟物设计</h3>
-  <p>橘记的卡片和按钮采用 Neumorphic（新拟物）风格，通过<mark class="key">双侧阴影——左上高光、右下深影</mark>——营造柔和的立体感。每个主题的阴影色都不同：浅色主题用白色高光 + 主题色半透明深影，暗色主题用半透明白高光 + 黑色深影。</p>
+  <p>橘记JUJI的卡片和按钮采用 Neumorphic（新拟物）风格，通过<mark class="key">双侧阴影——左上高光、右下深影</mark>——营造柔和的立体感。每个主题的阴影色都不同：浅色主题用白色高光 + 主题色半透明深影，暗色主题用半透明白高光 + 黑色深影。</p>
 
   <div class="callout">
     <p><strong>技术细节：</strong>自定义主题通过 HSL 色彩空间自动推导全套变量。输入一个 hex 主色，系统自动计算 container/light/accent（hue+60°）/surface 层级/text 对比度等 20+ 个颜色 token，确保任意颜色都能生成和谐可用的主题。</p>
@@ -1049,7 +1049,7 @@ flowchart TB
 <section id="ai">
   <div class="section-label">06 / AI Capabilities</div>
   <h2>AI 能力</h2>
-  <p class="lead">基于腾讯混元大模型（hunyuan-v3 / hy3-preview），橘记实现了四大 AI 能力，让记账不只是记录。</p>
+  <p class="lead">基于腾讯混元大模型（hunyuan-v3 / hy3-preview），橘记JUJI实现了四大 AI 能力，让记账不只是记录。</p>
 
   <div class="figure">
     <img src="assets/ai-assistant.jpg" alt="小橘 AI 助手" style="max-width: 560px;">
@@ -1110,7 +1110,7 @@ flowchart TB
 <section id="journey">
   <div class="section-label">07 / Journey</div>
   <h2>实践历程</h2>
-  <p class="lead">从 2026 年 5 月首次部署到 8 月，橘记经历了 12+ 个版本迭代，从基础记账进化为 AI 驱动的智能记账工具。</p>
+  <p class="lead">从 2026 年 5 月首次部署到 8 月，橘记JUJI经历了 12+ 个版本迭代，从基础记账进化为 AI 驱动的智能记账工具。</p>
 
   <div class="timeline">
     <div class="timeline-item">
@@ -1178,7 +1178,7 @@ flowchart TB
 <section id="data">
   <div class="section-label">08 / Data</div>
   <h2>项目数据</h2>
-  <p class="lead">用数据呈现橘记的规模与迭代节奏。</p>
+  <p class="lead">用数据呈现橘记JUJI的规模与迭代节奏。</p>
 
   <div class="stats-grid">
     <div class="stat-card">
@@ -1221,7 +1221,7 @@ flowchart TB
 <section id="outlook">
   <div class="section-label">09 / Outlook</div>
   <h2>总结与展望</h2>
-  <p class="lead">橘记不只是一个记账工具，它是一次"让技术有温度"的实践。</p>
+  <p class="lead">橘记JUJI不只是一个记账工具，它是一次"让技术有温度"的实践。</p>
 
   <h3>项目收获</h3>
   <div class="card-grid">
@@ -1255,8 +1255,8 @@ flowchart TB
   </div>
 
   <div class="quote-block">
-    <p>记账不是目的，好好生活才是。希望橘记能成为你生活里那个安静、温暖、偶尔调皮的小伙伴。</p>
-    <div class="quote-author">— 橘记团队 🍊</div>
+    <p>记账不是目的，好好生活才是。希望橘记JUJI能成为你生活里那个安静、温暖、偶尔调皮的小伙伴。</p>
+    <div class="quote-author">— 橘记JUJI团队 🍊</div>
   </div>
 </section>
 
@@ -1265,7 +1265,7 @@ flowchart TB
 <!-- ===== FOOTER ===== -->
 <footer>
   <div class="container">
-    <div class="footer-logo">🍊 <span class="gradient-text">橘记 Juji</span></div>
+    <div class="footer-logo">🍊 <span class="gradient-text">橘记JUJI</span></div>
     <p>极简手动记账微信小程序 · 腾讯云 CloudBase 驱动</p>
     <p>AppID: wx5c263d2b6496fe2d · 环境: lajiaoyou-d4g78yts61f1a841d (上海)</p>
     <p style="margin-top: 16px; font-size: 12px;">MIT License · 文档生成于 2026 年 8 月</p>

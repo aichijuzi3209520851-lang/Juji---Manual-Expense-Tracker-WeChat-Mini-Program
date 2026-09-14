@@ -3,7 +3,7 @@
 
   <view class="help-header">
     <text class="help-title">帮助与教程</text>
-    <text class="help-sub">一步步教你玩转橘记 🍊</text>
+    <text class="help-sub">一步步教你玩转橘记JUJI 🍊</text>
   </view>
 
   <view wx:for="{{groups}}" wx:key="id" wx:for-item="group" class="help-group">
