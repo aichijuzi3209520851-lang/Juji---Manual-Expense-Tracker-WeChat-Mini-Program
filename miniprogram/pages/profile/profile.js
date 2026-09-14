@@ -2,6 +2,8 @@ const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CU
 const { getAll } = require('../../utils/dbPager')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const { resolveAvatarSrc } = require('../../utils/avatar')
+const { pickPetPhrase } = require('../../utils/petPhrases')
+const { pickPetAction, buildPetParticles, petActionHoldMs } = require('../../utils/petActions')
 const { VERSION } = require('../../config/env')
 const { looksLikeCode } = require('../../utils/chatFormat')
 const {
@@ -160,7 +162,7 @@ Page({
     showProfileTitle: false,
     petAction: 'idle',
     petBubble: '',
-    petHearts: [],
+    petParticles: [],
     showAiChat: false,
     chatMessages: [],
     chatSuggestions: CHAT_SUGGESTIONS,
@@ -273,25 +275,20 @@ Page({
   },
 
   triggerRandomPetAction() {
-    var roll = Math.random()
-    var action = roll < 0.25 ? 'idle' : roll < 0.5 ? 'heart' : roll < 0.75 ? 'wave' : 'jump'
-    this.playPetAction(action)
+    this.playPetAction(pickPetAction())
   },
 
   playPetAction(action) {
     if (this._petActionTimer) clearTimeout(this._petActionTimer)
-    var bubble = action === 'wave' ? 'Hi' : action === 'heart' ? '给你小心心' : ''
-    var patch = { petAction: action, petBubble: bubble }
-
-    if (action === 'heart') {
-      var heart = { id: 'heart_' + Date.now() }
-      patch.petHearts = [heart]
-    }
-
-    this.setData(patch)
+    var bubble = pickPetPhrase(action)
+    this.setData({
+      petAction: action,
+      petBubble: bubble,
+      petParticles: buildPetParticles(action)
+    })
     this._petActionTimer = setTimeout(() => {
-      this.setData({ petAction: 'idle', petBubble: '', petHearts: [] })
-    }, action === 'heart' ? 1600 : 1100)
+      this.setData({ petAction: 'idle', petBubble: '', petParticles: [] })
+    }, petActionHoldMs(action, bubble))
   },
 
   async openAiChat() {

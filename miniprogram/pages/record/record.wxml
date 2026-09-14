@@ -14,7 +14,7 @@
 
     <view class="juji-pet juji-pet--{{petAction}}" bindtap="openAiChat" aria-label="小橘AI助手">
       <view wx:if="{{petBubble}}" class="juji-pet-bubble">{{petBubble}}</view>
-      <view wx:for="{{petHearts}}" wx:key="id" class="juji-pet-heart">❤</view>
+      <view wx:for="{{petParticles}}" wx:key="id" class="juji-pet-particle" style="{{item.style}}">{{item.emoji}}</view>
       <view class="juji-pet-shadow"></view>
       <image class="juji-pet-img" src="/images/juji-mascot.png" mode="aspectFit" />
     </view>

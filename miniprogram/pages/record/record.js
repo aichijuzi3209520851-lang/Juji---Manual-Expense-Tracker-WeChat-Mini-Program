@@ -30,6 +30,8 @@ const {
 } = require('../../utils/privacy')
 const { CATEGORY_EMOJI } = require('../../utils/profileHelpers')
 const { resolveAvatarSrc } = require('../../utils/avatar')
+const { pickPetPhrase } = require('../../utils/petPhrases')
+const { pickPetAction, buildPetParticles, petActionHoldMs } = require('../../utils/petActions')
 
 const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
 const AI_CHAT_FALLBACK = '小橘不知道，来聊聊别的吧~'
@@ -95,7 +97,7 @@ Page({
     editBillId: '',
     petAction: 'idle',
     petBubble: '',
-    petHearts: [],
+    petParticles: [],
     showAiChat: false,
     chatMessages: [],
     chatSuggestions: CHAT_SUGGESTIONS,
@@ -230,24 +232,20 @@ Page({
   },
 
   triggerRandomPetAction() {
-    const roll = Math.random()
-    const action = roll < 0.25 ? 'idle' : roll < 0.5 ? 'heart' : roll < 0.75 ? 'wave' : 'jump'
-    this.playPetAction(action)
+    this.playPetAction(pickPetAction())
   },
 
   playPetAction(action) {
     if (this._petActionTimer) clearTimeout(this._petActionTimer)
-    const bubble = action === 'wave' ? 'Hi' : action === 'heart' ? '给你小心心' : ''
-    const patch = { petAction: action, petBubble: bubble }
-
-    if (action === 'heart') {
-      patch.petHearts = [{ id: 'heart_' + Date.now() }]
-    }
-
-    this.setData(patch)
+    const bubble = pickPetPhrase(action)
+    this.setData({
+      petAction: action,
+      petBubble: bubble,
+      petParticles: buildPetParticles(action)
+    })
     this._petActionTimer = setTimeout(() => {
-      this.setData({ petAction: 'idle', petBubble: '', petHearts: [] })
-    }, action === 'heart' ? 1600 : 1100)
+      this.setData({ petAction: 'idle', petBubble: '', petParticles: [] })
+    }, petActionHoldMs(action, bubble))
   },
 
   openAiChat() {

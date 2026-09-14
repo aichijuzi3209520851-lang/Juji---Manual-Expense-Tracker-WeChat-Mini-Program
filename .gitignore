@@ -89,5 +89,8 @@ miniprogram/images/scf-enter.png
 generated-images/
 mascot-options/
 
+# XiaoJu 3D mascot source files (76MB GLB, GIF/MP4 renders) - keep local only
+XiaoJu/
+
 # E2E generated artifacts (screenshots / run reports); keep the test scripts only
 test/e2e/artifacts/
