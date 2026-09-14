@@ -43,6 +43,15 @@ const ACTION_BASE_MS = {
   sparkle: 1200 // 0.6s
 }
 
+// ── 气泡停留时长（用户可调参数，改这一处即可）──
+// 气泡有文案时至少停留这么久，保证短句也读得完
+const BUBBLE_MIN_MS = 2000
+// 在最短时长之上，按字数递增：13 字以内都是 BUBBLE_MIN_MS，超过则按每字 +70ms 延长
+const BUBBLE_BASE_MS = 900
+const BUBBLE_PER_CHAR_MS = 70
+// 气泡 CSS 入场动画（juji-pet-bubble）为 1.1s，因此停留时长不建议低于 1200ms，
+// 否则动画没播完气泡就被移除，看起来像"闪一下"
+
 // 粒子规格：left / bottom 相对 150rpx 的小橘容器，size 为字号（rpx），dur 为飞行时长（ms）
 const PARTICLE_SPECS = {
   heart: [
@@ -126,14 +135,17 @@ function buildPetParticles(action) {
 }
 
 /**
- * 动作停留时长：动作基础时长与「按字数读得完」取较大值
+ * 动作停留时长（= 气泡可见时长）
+ * 无气泡时用动作基础时长；有气泡时取「动作时长 / BUBBLE_MIN_MS / 按字数递增」三者最大，
+ * 保证任何动作都不会把气泡提前掐掉
  * @param {string} action
  * @param {string} phrase 本次气泡文案，空串表示没气泡
  */
 function petActionHoldMs(action, phrase) {
-  var base = ACTION_BASE_MS[action] || 1100
+  const base = ACTION_BASE_MS[action] || 1100
   if (!phrase) return base
-  return Math.max(base, 900 + phrase.length * 70)
+  const byLength = BUBBLE_BASE_MS + phrase.length * BUBBLE_PER_CHAR_MS
+  return Math.max(base, BUBBLE_MIN_MS, byLength)
 }
 
 module.exports = {
@@ -141,6 +153,7 @@ module.exports = {
   ACTION_BASE_MS: ACTION_BASE_MS,
   ACTION_NAMES: ACTION_NAMES,
   PARTICLE_SPECS: PARTICLE_SPECS,
+  BUBBLE_MIN_MS: BUBBLE_MIN_MS,
   pickPetAction: pickPetAction,
   buildPetParticles: buildPetParticles,
   petActionHoldMs: petActionHoldMs

@@ -60,6 +60,18 @@ for (const act of A.ACTION_NAMES) {
 }
 ok(A.ACTION_WEIGHTS.reduce((s, p) => s + p[1], 0) === 100, '动作权重合计 = 100')
 
+console.log('=== 4b. 气泡停留时长 ===')
+// 气泡 CSS 入场动画 1.1s，低于它会「闪一下」；用户要求短句也至少停 2s
+ok(A.BUBBLE_MIN_MS >= 2000, `气泡最短停留 ${A.BUBBLE_MIN_MS}ms ≥ 2000ms（用户要求）`)
+ok(A.BUBBLE_MIN_MS >= 1200, `气泡最短停留 ${A.BUBBLE_MIN_MS}ms ≥ 入场动画 1100ms`)
+console.log('  抽样:')
+;['Hi', '耍起！耍起！', '小橘打个盹先~', '来和小橘说话，小橘说话蛮有味~'].forEach(p => {
+  console.log(`    ${p} (${p.length}字) → ${A.petActionHoldMs('wave', p)}ms`)
+})
+ok(A.petActionHoldMs('wave', '耍起！耍起！') >= 2000, '短句气泡也停留 ≥ 2s')
+ok(A.petActionHoldMs('idle', '') === A.ACTION_BASE_MS.idle, '无气泡时回落动作基础时长（不额外拖长）')
+ok(A.petActionHoldMs('sleep', '小橘打个盹先~') >= A.ACTION_BASE_MS.sleep, '气泡时长不会短于动作动画时长')
+
 console.log('=== 5. 动作 ↔ 两页 CSS 对应 ===')
 const css = { record: read('miniprogram/pages/record/record.wxss'), profile: read('miniprogram/pages/profile/profile.wxss') }
 for (const act of A.ACTION_NAMES) {

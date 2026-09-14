@@ -173,7 +173,11 @@
             <view wx:if="{{item.status === 'done'}}" class="bill-draft-status bill-draft-status--done">✓ 已记账</view>
           </view>
 
-          <view wx:else class="chat-bubble chat-bubble--{{item.role}} {{item.isCode ? 'chat-bubble--code' : ''}}">{{item.content}}</view>
+          <!-- 长按可选中复制：气泡本身是 view 不可选，必须用 text + user-select。
+               不用 wx.setClipboardData —— 它需要「剪切板」隐私作用域，未声明时直接调用失败 -->
+          <view wx:else class="chat-bubble chat-bubble--{{item.role}} {{item.isCode ? 'chat-bubble--code' : ''}}">
+            <text class="chat-bubble-text" user-select="{{true}}">{{item.content}}</text>
+          </view>
         </view>
         <view wx:if="{{showChatSuggestions}}" class="chat-suggestions">
           <text class="chat-suggestions-title">可以这样问小橘</text>
@@ -188,7 +192,7 @@
       </scroll-view>
 
       <view class="ai-chat-footer">
-        <text class="ai-chat-notice">AI生成，仅供参考，请勿输入敏感个人信息。</text>
+        <text class="ai-chat-notice">AI生成，仅供参考。长按小橘的回复可选中复制，请勿输入敏感个人信息。</text>
         <view class="ai-chat-input-row">
           <textarea class="ai-chat-input" value="{{chatInput}}" bindinput="onChatInput" bindblur="onChatInputBlur" bindconfirm="sendChatMessage" bindkeyboardheightchange="onChatKeyboardHeightChange" auto-height="{{true}}" show-confirm-bar="{{false}}" confirm-type="send" adjust-position="{{false}}" cursor-spacing="12" placeholder="和小橘聊聊..." maxlength="300"></textarea>
           <button class="ai-chat-send {{chatLoading || !chatInput ? 'is-disabled' : ''}}" bindtap="sendChatMessage">发送</button>
