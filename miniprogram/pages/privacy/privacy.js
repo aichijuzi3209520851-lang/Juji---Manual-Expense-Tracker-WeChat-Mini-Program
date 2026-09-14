@@ -8,9 +8,9 @@ const CONTACT_EMAIL = '3209520851@qq.com'
 // 块类型：h2 二级标题 / h3 三级标题 / p 段落 / ul 无序列表 / table 表格
 const PRIVACY_BLOCKS = [
   { t: 'h2', v: '引言' },
-  { t: 'p', v: '感谢你使用橘记（以下简称「我们」）。我们深知个人信息对你的重要性，并将本着最小必要、目的明确、公开透明、安全可控的原则处理你的个人信息。' },
+  { t: 'p', v: '感谢你使用橘记JUJI（以下简称「我们」）。我们深知个人信息对你的重要性，并将本着最小必要、目的明确、公开透明、安全可控的原则处理你的个人信息。' },
   { t: 'p', v: '本协议将帮助你了解我们如何收集、使用、存储、共享和保护你的个人信息，以及你享有的权利。请你务必仔细阅读并充分理解本协议全部内容。' },
-  { t: 'p', v: '当你点击「同意」或开始使用橘记时，即表示你已阅读、理解并同意本协议。' },
+  { t: 'p', v: '当你点击「同意」或开始使用橘记JUJI时，即表示你已阅读、理解并同意本协议。' },
 
   { t: 'h2', v: '一、我们收集和使用的信息' },
   { t: 'p', v: '我们仅会基于以下具体功能场景收集你的信息，不会收集与所提供服务无关的信息。' },
@@ -35,7 +35,7 @@ const PRIVACY_BLOCKS = [
       '记账数据：账单类型（收入/支出）、金额、分类、日期、备注、心情、账单照片。',
       '预算数据：预算所属月份、预算金额。',
       '备份文件：你导出或导入的 JSON 格式账单备份内容。',
-      '上述信息是你使用橘记记账功能的核心业务数据，也是本服务得以运行的基础。'
+      '上述信息是你使用橘记JUJI记账功能的核心业务数据，也是本服务得以运行的基础。'
     ]
   },
   { t: 'h3', v: '1.3 在使用过程中自动收集的信息' },
@@ -127,19 +127,19 @@ const PRIVACY_BLOCKS = [
   { t: 'p', v: '关于「清除数据」：该操作会不可恢复地删除你账户下的全部账单记录、预算数据、自定义分类、个人资料，以及你上传的账单照片与头像文件。执行前请务必先导出备份。' },
 
   { t: 'h2', v: '七、未成年人保护' },
-  { t: 'p', v: '橘记主要面向成年人。若你未满 18 周岁，请在监护人陪同下阅读本协议，并在取得监护人同意后使用本服务。若我们发现在未事先获得监护人同意的情况下收集了未成年人的个人信息，会设法尽快删除。' },
+  { t: 'p', v: '橘记JUJI主要面向成年人。若你未满 18 周岁，请在监护人陪同下阅读本协议，并在取得监护人同意后使用本服务。若我们发现在未事先获得监护人同意的情况下收集了未成年人的个人信息，会设法尽快删除。' },
 
   { t: 'h2', v: '八、联系我们' },
   { t: 'p', v: '如你对本协议或个人信息处理有任何疑问、意见或投诉，可通过下方邮箱联系我们，我们将在收到请求后 15 个工作日内予以答复。' },
 
   { t: 'h2', v: '九、本协议的更新' },
   { t: 'p', v: '我们可能适时修订本协议。当协议发生重大变更（如收集信息范围扩大、使用目的改变、共享对象变化）时，我们将通过小程序内弹窗提示的方式显著告知你，并在你确认后生效。' },
-  { t: 'p', v: '继续使用橘记即表示你接受修订后的协议。如你不同意，可停止使用并通过「清除数据」删除你的信息。' }
+  { t: 'p', v: '继续使用橘记JUJI即表示你接受修订后的协议。如你不同意，可停止使用并通过「清除数据」删除你的信息。' }
 ].map((b, i) => Object.assign({}, b, { k: 'p' + i }))
 
 const USER_BLOCKS = [
   { t: 'h2', v: '一、服务内容' },
-  { t: 'p', v: '橘记提供个人记账、消费统计、预算管理与数据备份服务，仅供个人非商业用途使用。' },
+  { t: 'p', v: '橘记JUJI提供个人记账、消费统计、预算管理与数据备份服务，仅供个人非商业用途使用。' },
   { t: 'h2', v: '二、账号与数据' },
   { t: 'p', v: '你的账单数据存储于你的云账户隔离空间，由你自行负责数据备份。建议定期使用「导出账单数据」功能保存备份。' },
   { t: 'h2', v: '三、用户行为规范' },
@@ -161,7 +161,7 @@ Page({
     privacyBlocks: PRIVACY_BLOCKS,
     userBlocks: USER_BLOCKS,
     blocks: PRIVACY_BLOCKS,
-    docTitle: '橘记用户隐私协议',
+    docTitle: '橘记JUJI用户隐私协议',
     privacyContractAvailable: false
   },
 
@@ -176,7 +176,7 @@ Page({
     this.setData({
       activeTab: tab,
       blocks: tab === 'user' ? USER_BLOCKS : PRIVACY_BLOCKS,
-      docTitle: tab === 'user' ? '橘记用户协议' : '橘记用户隐私协议',
+      docTitle: tab === 'user' ? '橘记JUJI用户协议' : '橘记JUJI用户隐私协议',
       privacyContractAvailable: typeof wx.openPrivacyContract === 'function'
     })
     wx.setNavigationBarTitle({ title: tab === 'user' ? '用户协议' : '隐私协议' })
@@ -199,7 +199,7 @@ Page({
     this.setData({
       activeTab: tab,
       blocks: tab === 'user' ? USER_BLOCKS : PRIVACY_BLOCKS,
-      docTitle: tab === 'user' ? '橘记用户协议' : '橘记用户隐私协议'
+      docTitle: tab === 'user' ? '橘记JUJI用户协议' : '橘记JUJI用户隐私协议'
     })
     wx.setNavigationBarTitle({ title: tab === 'user' ? '用户协议' : '隐私协议' })
     wx.pageScrollTo({ scrollTop: 0, duration: 0 })
@@ -216,14 +216,11 @@ Page({
     })
   },
 
-  copyEmail() {
-    wx.setClipboardData({
-      data: CONTACT_EMAIL,
-      success: () => wx.showToast({ title: '邮箱已复制', icon: 'none' })
-    })
-  },
+  // 邮箱复制：不依赖剪贴板接口 —— 本项目隐私指引未声明「剪切板」作用域，
+  // 实测读/写剪贴板均报 "api scope is not declared in the privacy agreement"。
+  // 改为 wxml 上的 text + user-select，长按走系统选择菜单复制（零隐私声明成本）。
 
   onShareAppMessage() {
-    return { title: '橘记 · 隐私协议', path: '/pages/privacy/privacy' }
+    return { title: '橘记JUJI · 隐私协议', path: '/pages/privacy/privacy' }
   }
 })

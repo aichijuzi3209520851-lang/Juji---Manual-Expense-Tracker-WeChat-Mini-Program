@@ -16,7 +16,7 @@
   <!-- 未设置微信头像/昵称时的引导（仅两者都缺时显示） -->
   <view class="wechat-profile-tip" wx:if="{{needWechatProfile}}">
     <view class="wechat-profile-tip-text">
-      <text class="wechat-profile-tip-title">完善你的橘记身份</text>
+      <text class="wechat-profile-tip-title">完善你的橘记JUJI身份</text>
       <text class="wechat-profile-tip-sub">一键使用微信头像和昵称</text>
     </view>
     <button class="wechat-profile-tip-btn" bindtap="openWechatProfile" hover-class="wechat-profile-tip-btn-hover">使用微信资料</button>

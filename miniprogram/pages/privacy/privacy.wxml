@@ -45,8 +45,8 @@
     <!-- 联系方式 -->
     <view class="privacy-contact">
       <text class="privacy-contact-label">八、联系我们</text>
-      <text class="privacy-contact-mail" bindtap="copyEmail">{{contactEmail}}</text>
-      <text class="privacy-contact-tip">点击邮箱可复制</text>
+      <text class="privacy-contact-mail" user-select="{{true}}">{{contactEmail}}</text>
+      <text class="privacy-contact-tip">长按邮箱可选中复制</text>
     </view>
   </view>
 

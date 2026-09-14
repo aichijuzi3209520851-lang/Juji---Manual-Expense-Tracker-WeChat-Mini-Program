@@ -690,7 +690,7 @@ Page({
         app.globalData.userInfo = u
         const genderText = GENDERS[u.gender === 'male' ? 1 : u.gender === 'female' ? 2 : 0]
         const themeName = resolveThemeName(getCurrentThemeId())
-        const avatarUrl = await this.resolveAvatarSrc(u.avatarUrl || '')
+        const avatarUrl = await resolveAvatarSrc(u.avatarUrl || '')
         this.setData({
           avatarUrl,
           avatarError: false,
@@ -890,7 +890,9 @@ Page({
       this.setData({ avatarUrl: up.fileID, avatarError: false })
       // 立刻把 fileID 换成 https tempFileURL 再 setData 一次，确保 image 一定能渲染
       // （image 直接渲染 cloud:// 在部分基础库下不稳，这是官方推荐的"上传后立即展示"路径）
-      const tempUrl = await this.resolveAvatarSrc(up.fileID)
+      // resolveAvatarSrc 是 utils/avatar 导入的函数，不是页面方法（写成 this.xxx 会抛
+      // TypeError 并被下面的 catch 吞成乱码提示「_this12.resolv…」）
+      const tempUrl = await resolveAvatarSrc(up.fileID)
       this.setData({ avatarUrl: tempUrl || up.fileID, avatarError: false })
       wx.hideLoading()
       wx.showToast({ title: '头像已更新', icon: 'success' })
@@ -1033,7 +1035,7 @@ Page({
       // 写入本地临时文件
       const now = new Date()
       const ts = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`
-      const filename = `橘记_账单备份_${ts}.json`
+      const filename = `橘记JUJI_账单备份_${ts}.json`
       const filePath = `${wx.env.USER_DATA_PATH}/${filename}`
       const fs = wx.getFileSystemManager()
 

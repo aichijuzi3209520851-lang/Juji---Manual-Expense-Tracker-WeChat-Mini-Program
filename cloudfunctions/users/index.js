@@ -1,4 +1,4 @@
-// 橘记 — users 云函数（服务端校验 + 写入用户资料）
+// 橘记JUJI — users 云函数（服务端校验 + 写入用户资料）
 // 统一收敛昵称/性别/生日/职业/头像/自定义分类等含隐私信息的写操作，
 // 避免前端直写数据库，保证服务端校验（长度/枚举/内容安全/归属）。
 const cloud = require('wx-server-sdk')
@@ -96,7 +96,7 @@ async function updateProfile(openid, data) {
 
 // ====== 头像（cloud:// fileID 落库，且必须属于当前用户） ======
 async function updateAvatar(openid, data) {
-  const avatarUrl = normalizeStr(data.avatarUrl)
+  const avatarUrl = normalizeFileID(data.avatarUrl)
   if (avatarUrl && !avatarUrl.startsWith('cloud://')) {
     return { success: false, message: '头像格式错误' }
   }
@@ -153,8 +153,18 @@ async function updateCustomCategories(openid, data) {
 }
 
 // ====== 工具函数 ======
+// 通用短字符串清洗（昵称/职业/分类名等），上限 60 字符
 function normalizeStr(value) {
   return String(value == null ? '' : value).trim().slice(0, 60)
+}
+
+// 云存储 fileID 专用清洗：**绝不能套用 normalizeStr 的 60 字截断**
+// 头像 fileID 形如 cloud://<env>.<bucket>-<appid>-<uin>/avatars/<openid>_<ts>.<ext>，
+// 实测长度约 134 字符，其中 /avatars/<openid>_ 从第 80 字符才开始 ——
+// 截断到 60 字会把归属前缀整段切掉，导致 H4 归属校验每次都失败并报「头像文件不合法」。
+const FILE_ID_MAX_LEN = 512
+function normalizeFileID(value) {
+  return String(value == null ? '' : value).trim().slice(0, FILE_ID_MAX_LEN)
 }
 
 function isValidDate(dateStr) {
