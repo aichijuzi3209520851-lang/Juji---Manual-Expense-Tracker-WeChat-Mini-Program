@@ -1,5 +1,5 @@
 /**
- * 橘记 · 上线冒烟自动化执行器
+ * 橘记JUJI · 上线冒烟自动化执行器
  * 用法: node run.js [模块名...]   例: node run.js m0  /  node run.js all
  * 产物: artifacts/<日期>/report.json + report.md + 截图
  */
@@ -797,7 +797,7 @@ function report() {
   const p0 = results.filter(r => r.level === 'P0')
   const p0pass = p0.filter(r => r.ok).length
   const md = [
-    `# 橘记冒烟测试报告 ${STAMP}`, ``,
+    `# 橘记JUJI冒烟测试报告 ${STAMP}`, ``,
     `- 总用例: ${results.length} · 通过 ${pass} · 失败 ${results.length - pass}`,
     `- P0: ${p0pass}/${p0.length}`,
     `- 判定: ${p0.length && p0pass === p0.length ? 'PASS - P0 全通过' : 'FAIL - P0 存在失败，需修复后复测'}`, ``,

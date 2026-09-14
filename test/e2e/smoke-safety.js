@@ -1,5 +1,5 @@
 /**
- * 橘记 · 小橘「违规对话」与内容安全冒烟
+ * 橘记JUJI · 小橘「违规对话」与内容安全冒烟
  *
  * 目的：验证用户发违规内容时小橘的真实反应 —— 必须被拦下、不得把模型输出透给用户，
  *      同时正常提问不能被误杀（过度拦截同样是故障）。
@@ -207,7 +207,7 @@ const isBlocked = r => r && r.success === true && r.fallback === true && r.reply
   // ---------- 报告 ----------
   const pass = results.filter(r => r.ok).length
   const md = [
-    `# 橘记 · 小橘违规对话与内容安全冒烟 ${STAMP}`,
+    `# 橘记JUJI · 小橘违规对话与内容安全冒烟 ${STAMP}`,
     '',
     `- 用例: ${results.length} · 通过 ${pass} · 失败 ${results.length - pass}`,
     `- 判定: ${pass === results.length ? 'PASS' : 'FAIL'}`,

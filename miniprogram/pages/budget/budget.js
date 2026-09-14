@@ -89,7 +89,8 @@ Page({
 
       const percent = budgetAmount ? Math.min(Math.round((spent / budgetAmount) * 100), 100) : 0
       let status = 'safe', statusText = ''
-      if (budgetAmount === 0) { status = 'safe'; statusText = '' }
+      // 未设预算：给出引导文案，避免状态区空白（符合「禁止未设置/白屏」基线）
+      if (budgetAmount === 0) { status = 'safe'; statusText = '还没有预算，点上方设个小目标吧 🍊' }
       else if (percent >= 100) { status = 'over'; statusText = '超预算了！不过没关系，下个月注意就好 🍊' }
       else if (percent >= 90) { status = 'warn'; statusText = `快了快了，只剩 ¥${(budgetAmount - spent).toFixed(0)} 到月底 💡` }
       else if (spent <= 0) { status = 'safe'; statusText = '本月还没开始花，保持住 🌱' }
