@@ -196,6 +196,16 @@
   color: var(--color-text-tertiary, #8c7c79);
 }
 
+/* 「暂不登录，先逛逛」：保证登录页不是死胡同 —— 不登录也能进首页使用 */
+.login-skip {
+  margin-top: 30rpx;
+  padding: 12rpx 24rpx;
+  font-size: 26rpx;
+  color: var(--color-text-tertiary, #8c7c79);
+  text-decoration: underline;
+}
+.login-skip-hover { opacity: 0.65; }
+
 .privacy-consent__link {
   color: var(--color-primary);
   font-weight: 600;

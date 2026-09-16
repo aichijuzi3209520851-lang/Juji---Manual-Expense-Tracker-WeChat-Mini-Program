@@ -218,13 +218,15 @@ Page({
     themeStyle: getThemeStyleString()
   },
 
-  onShow() {
+  async onShow() {
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
     if (!this._hasLoaded || this._isDirty) {
       this._isDirty = false
       this._hasLoaded = true
+      // 按 _openid 查库前先等静默 openid 就绪（无授权弹窗），否则首屏会查到空数据
+      await getApp().ensureLogin()
       this.loadDashboard()
       this.loadAIComments({ force: false })
     }

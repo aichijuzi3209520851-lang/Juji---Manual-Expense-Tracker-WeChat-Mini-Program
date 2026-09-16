@@ -77,5 +77,12 @@ Page({
     if (!this.data.privacyAgreed) {
       wx.showToast({ title: '请先阅读并同意协议', icon: 'none' })
     }
+  },
+
+  // 浏览不受限：不登录也能直接进首页使用。
+  // openid 完全由后台静默换取（云函数），不触发任何授权弹窗，所以登录只是可选项。
+  skipLogin() {
+    getApp().silentLogin().catch(() => {})
+    wx.switchTab({ url: '/pages/home/home' })
   }
 })

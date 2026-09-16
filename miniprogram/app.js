@@ -42,14 +42,28 @@ App({
     this.silentLogin().catch(() => {})
   },
 
-  // 静默登录：获取 openid
+  // 静默登录：仅通过云函数换取 openid。
+  // 注意：这一步不会触发任何用户授权弹窗（不需要头像/昵称/手机号），
+  // 因此不构成「未体验功能就要求授权登录」，可以在启动时直接执行。
+  // 已拿到 openid 时直接返回；并发调用共享同一个 Promise，避免重复请求。
   async silentLogin() {
+    if (this.globalData.openid) return this.globalData.openid
     if (this.globalData._loginPromise) return this.globalData._loginPromise
     this.globalData._loginPromise = this._doSilentLogin()
     try {
       return await this.globalData._loginPromise
     } finally {
       this.globalData._loginPromise = null
+    }
+  },
+
+  // 供页面在 onShow 里 await 使用：确保 openid 就绪后再查库，且永不抛错。
+  // 启动页改为「先渲染、后取数」后，不等它的话首屏会按空 openid 查到空数据。
+  async ensureLogin() {
+    try {
+      return (await this.silentLogin()) || this.globalData.openid || ''
+    } catch (err) {
+      return this.globalData.openid || ''
     }
   },
 

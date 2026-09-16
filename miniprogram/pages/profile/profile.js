@@ -199,6 +199,10 @@ Page({
     wxAvatarFileID: '',
     wxNickname: '',
     wxProfileSaving: false,
+    // fixed 定位的底部弹层不会跟着键盘上推，必须自己抬升，
+    // 否则真机上输入框会被键盘盖住，表现成「点击没反应、拿不到微信昵称」
+    profileKeyboardHeight: 0,
+    profileSheetStyle: '',
   },
 
   onShow() {
@@ -681,6 +685,9 @@ Page({
 
   async loadUserInfo() {
     const app = getApp()
+    // 先等静默 openid 就绪（该步骤无任何授权弹窗）；
+    // 原来直接 return 会让页面停在「未设置」，在启动页改为首页后首屏就会命中这个分支
+    await app.ensureLogin()
     if (!app.globalData.openid) return
     try {
       const db = wx.cloud.database()
@@ -713,18 +720,24 @@ Page({
 
   // ===== 微信资料授权（头像 + 昵称） =====
   openWechatProfile() {
+    // 与 openAiChat 保持一致：全屏弹层打开时收起自定义 TabBar，
+    // 否则毛玻璃浮层会盖住弹层底部的「取消 / 保存」按钮
+    this.setCustomTabBarHidden(true)
     this.setData({
       showWechatProfile: true,
       wxAvatarUrl: '',
       wxAvatarFileID: '',
       wxNickname: '',
-      wxProfileSaving: false
+      wxProfileSaving: false,
+      profileKeyboardHeight: 0,
+      profileSheetStyle: ''
     })
   },
 
   closeWechatProfile() {
     if (this.data.wxProfileSaving) return
-    this.setData({ showWechatProfile: false })
+    this.setCustomTabBarHidden(false)
+    this.setData({ showWechatProfile: false, profileKeyboardHeight: 0, profileSheetStyle: '' })
   },
 
   noop() {},
@@ -740,6 +753,27 @@ Page({
   onNicknameInput(e) {
     const val = (e.detail && (e.detail.value || e.detail.nickname)) || ''
     this.setData({ wxNickname: val })
+  },
+
+  // 键盘高度变化 → 上移整个弹层。
+  // 注意：keyboardheightchange 会多次触发，相同 height 必须忽略，否则弹层反复抖动。
+  onProfileNicknameKeyboard(e) {
+    const height = Math.max(0, Math.round((e.detail && e.detail.height) || 0))
+    if (height === this.data.profileKeyboardHeight) return
+    this.setData({
+      profileKeyboardHeight: height,
+      profileSheetStyle: height ? 'bottom:' + height + 'px;' : ''
+    })
+  },
+
+  onNicknameBlur(e) {
+    this.onNicknameInput(e)
+    this.resetProfileKeyboard()
+  },
+
+  resetProfileKeyboard() {
+    if (!this.data.profileKeyboardHeight) return
+    this.setData({ profileKeyboardHeight: 0, profileSheetStyle: '' })
   },
 
   async confirmWechatProfile() {
@@ -771,7 +805,13 @@ Page({
       } else {
         await this.loadUserInfo()
       }
-      this.setData({ showWechatProfile: false, needWechatProfile: false })
+      this.setCustomTabBarHidden(false)
+      this.setData({
+        showWechatProfile: false,
+        needWechatProfile: false,
+        profileKeyboardHeight: 0,
+        profileSheetStyle: ''
+      })
       let tip = '已保存'
       if (avatarTemp && nickname) tip = '微信资料已同步'
       else if (avatarTemp) tip = '头像已更新'
@@ -1005,6 +1045,12 @@ Page({
 
   openHelp() {
     wx.navigateTo({ url: '/pages/help/help' })
+  },
+
+  // 新手引导改为按需入口：启动页不再是引导页（否则会挡住功能首页），
+  // 用 replay=1 跳过「看过就跳首页」的短路，允许反复回看
+  openGuide() {
+    wx.navigateTo({ url: '/pages/guide/guide?replay=1' })
   },
 
   // ====== 导出账单数据（JSON） ======

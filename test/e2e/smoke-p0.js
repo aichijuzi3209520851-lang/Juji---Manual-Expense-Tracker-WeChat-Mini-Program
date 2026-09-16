@@ -51,6 +51,21 @@ async function purgeSmoke() {
       })
   })
 }
+/** 读当前用户云端 users 记录 —— 页面数据的权威来源，用于「页面 vs 云端」一致性断言。
+ *  注意必须显式带 _openid：users 是「仅创建者可读写」，安全规则是校验式而非过滤式。 */
+async function currentUserRecord() {
+  return mp.evaluate(() => {
+    const app = getApp()
+    const db = wx.cloud.database()
+    return db.collection('users').where({ _openid: app.globalData.openid }).limit(1).get()
+      .then(r => {
+        const u = (r.data && r.data[0]) || {}
+        return { nickname: u.nickname || '', gender: u.gender || '', avatarUrl: u.avatarUrl || '' }
+      })
+      .catch(() => null)
+  })
+}
+
 async function stack() {
   return mp.evaluate(() => getCurrentPages().map(x => x.route)).catch(() => [])
 }
@@ -108,9 +123,26 @@ async function assertPageLoaded(route, d) {
     h.ok(d.percent !== undefined && d.percent !== null, '预算消耗比例已计算（' + d.percent + '）')
     h.notDefault(d.statusText, ['', '未设置'], '预算状态文案已生成（' + d.statusText + '）')
   } else if (route === 'profile') {
-    h.notDefault(d.nickname, ['', '橘记JUJI用户', '未设置', '点击登录'], '昵称已真实加载（' + d.nickname + '）')
-    h.notDefault(d.genderText, ['', '未设置', '未选择'], '性别已加载（' + d.genderText + '）')
-    h.match(String(d.avatarUrl), /^(https?:\/\/|wxfile:\/\/|cloud:\/\/)/, '头像为可渲染地址')
+    // 与云端 users 记录做一致性断言。
+    // 旧版把「昵称=默认值 / 性别=未设置 / 无头像」直接判为失败 —— 那是新账号的合法状态，
+    // 会把没出问题的版本误判成 FAIL；一致性断言同样能抓住「loadUserInfo 的 setData 被跳过」
+    // 那类静默失败（页面显示「未设置」而云端有值 → 不一致 → FAIL）。
+    const rec = await currentUserRecord()
+    h.ok(rec, '云端 users 记录可读')
+    const dbNick = (rec && rec.nickname) || ''
+    const dbGender = (rec && rec.gender) || ''
+    const dbAvatar = (rec && rec.avatarUrl) || ''
+    const expectNick = dbNick || '橘记JUJI用户'
+    const expectGender = dbGender === 'male' ? '男' : dbGender === 'female' ? '女' : '未设置'
+
+    h.eq(d.nickname, expectNick, '昵称与云端一致（页面 ' + d.nickname + ' / 云端 ' + expectNick + '）')
+    h.eq(d.genderText, expectGender, '性别文案与云端一致（页面 ' + d.genderText + ' / 云端 ' + expectGender + '）')
+    h.notDefault(d.nickname, ['', '点击登录'], '昵称非空白、非登录占位（' + d.nickname + '）')
+    if (dbAvatar) {
+      h.match(String(d.avatarUrl), /^(https?:\/\/|wxfile:\/\/|cloud:\/\/)/, '云端有头像时页面给出可渲染地址')
+    } else {
+      h.eq(d.avatarUrl || '', '', '云端无头像时页面不虚构头像地址')
+    }
     const VERSION = (R('miniprogram/config/env.js').match(/VERSION:\s*'([^']+)'/) || [])[1]
     h.eq(d.appVersion, VERSION, '页脚版本号 == config/env.js 的 VERSION（' + d.appVersion + '）')
   }

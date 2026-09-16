@@ -252,6 +252,23 @@
   z-index: 30;
 }
 
+/* 跳过按钮：不强制看完全部引导 */
+.guide-skip {
+  position: fixed;
+  top: 24rpx;
+  right: 40rpx;
+  z-index: 40;
+  padding: 12rpx 30rpx;
+  font-size: 26rpx;
+  color: var(--color-text-tertiary, #8c7c79);
+  background: rgba(255, 255, 255, 0.66);
+  border: 1rpx solid var(--color-border, rgba(0, 0, 0, 0.06));
+  border-radius: 999rpx;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.guide-skip-hover { opacity: 0.7; }
+
 .guide-dot {
   width: 12rpx;
   height: 12rpx;

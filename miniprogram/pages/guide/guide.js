@@ -7,8 +7,12 @@ Page({
     animKey: Date.now() // 添加 animKey 用于强制触发动画
   },
 
-  onLoad() {
-    if (wx.getStorageSync('has_seen_guide')) {
+  onLoad(options) {
+    // replay=1：来自「我的 → 新手引导」的主动回看，允许反复查看；
+    // 其余情况（含启动）不再自动进入引导页 —— 启动页已改为功能首页，
+    // 避免出现「未体验功能先被挡在引导/登录页」的审核问题。
+    const replay = options && options.replay === '1'
+    if (!replay && wx.getStorageSync('has_seen_guide')) {
       wx.switchTab({ url: '/pages/home/home' })
       return
     }

@@ -72,7 +72,7 @@ Page({
     this.setData({ themeStyle: getThemeStyleString(id) })
   },
 
-  onShow() {
+  async onShow() {
     applyTheme()
     this.setData({ themeStyle: getThemeStyleString() })
     this.updateCustomTabBar()
@@ -81,6 +81,9 @@ Page({
     if (!this._hasLoaded || this._isDirty) {
       this._isDirty = false
       this._hasLoaded = true
+      // 首页是启动页，可直接浏览、无需登录；
+      // 但按 _openid 查库前必须先等静默 openid 就绪（该步骤无任何授权弹窗）
+      await getApp().ensureLogin()
       this.loadOverview()
       this.loadRecentBills()
     }

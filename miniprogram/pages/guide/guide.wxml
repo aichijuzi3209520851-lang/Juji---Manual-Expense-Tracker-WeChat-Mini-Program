@@ -6,6 +6,9 @@
   <view class="ambient-orb ambient-2"></view>
   <view class="ambient-orb ambient-3"></view>
 
+  <!-- 跳过：不强制看完全部引导，随时可直达首页 -->
+  <view class="guide-skip" bindtap="finishGuide" hover-class="guide-skip-hover">跳过</view>
+
   <swiper class="guide-swiper" bindchange="onSwiperChange" current="{{currentIndex}}" duration="{{600}}">
 
     <!-- 第 1 屏：极速体验 -->

@@ -23,18 +23,27 @@
   </view>
 
   <!-- 微信资料授权弹窗 -->
-  <view class="wechat-profile-mask" wx:if="{{showWechatProfile}}" bindtap="closeWechatProfile">
+  <view class="wechat-profile-mask" wx:if="{{showWechatProfile}}" style="{{profileSheetStyle}}" bindtap="closeWechatProfile">
     <view class="wechat-profile-sheet" catchtap="noop">
       <text class="wechat-profile-sheet-title">使用微信头像和昵称</text>
-      <text class="wechat-profile-sheet-desc">点击下方按钮选择微信头像，并填写昵称（将自动填充微信昵称，可修改）。</text>
+      <text class="wechat-profile-sheet-desc">点击上方圆圈选择微信头像，填写昵称（将自动填充微信昵称，可修改）。</text>
 
-      <button class="wechat-profile-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar" hover-class="wechat-profile-avatar-btn-hover">
-        <image wx:if="{{wxAvatarUrl}}" class="wechat-profile-avatar-preview" src="{{wxAvatarUrl}}" mode="aspectFill" />
+      <!-- 圆形视觉容器用 view 固定尺寸；button 只当透明点击层。
+           若让 button 自己承担圆形外观，会被微信 button 默认样式和弹性收缩挤成椭圆 -->
+      <view class="wechat-profile-avatar-picker {{wxAvatarUrl ? 'is-filled' : ''}}">
+        <image wx:if="{{wxAvatarUrl}}" class="wechat-profile-avatar-img" src="{{wxAvatarUrl}}" mode="aspectFill" />
         <view wx:else class="wechat-profile-avatar-placeholder">
           <text class="wechat-profile-avatar-plus">+</text>
-          <text class="wechat-profile-avatar-hint">选择微信头像</text>
+          <text class="wechat-profile-avatar-hint">选择头像</text>
         </view>
-      </button>
+        <button
+          class="wechat-profile-avatar-hit"
+          open-type="chooseAvatar"
+          bindchooseavatar="onChooseAvatar"
+          hover-class="wechat-profile-avatar-hit-hover"
+          aria-label="选择微信头像"
+        ></button>
+      </view>
 
       <input
         class="wechat-profile-nickname-input"
@@ -43,7 +52,10 @@
         placeholder-class="wechat-profile-nickname-ph"
         value="{{wxNickname}}"
         bindinput="onNicknameInput"
-        bindblur="onNicknameInput"
+        bindblur="onNicknameBlur"
+        bindkeyboardheightchange="onProfileNicknameKeyboard"
+        adjust-position="{{false}}"
+        cursor-spacing="24"
         maxlength="20"
       />
 
@@ -328,9 +340,15 @@
     </collapsible>
   </view>
 
-  <!-- 帮助与教程 -->
+  <!-- 新手引导 / 帮助与教程 -->
   <view class="profile-collapsible-wrap">
-    <view class="help-entry" bindtap="openHelp" hover-class="help-entry-hover">
+    <view class="help-entry" bindtap="openGuide" hover-class="help-entry-hover">
+      <text class="help-entry-icon">✨</text>
+      <text class="help-entry-label">新手引导</text>
+      <text class="help-entry-desc">4 张图看懂橘记JUJI</text>
+      <text class="help-entry-arrow">›</text>
+    </view>
+    <view class="help-entry help-entry--stacked" bindtap="openHelp" hover-class="help-entry-hover">
       <text class="help-entry-icon">📖</text>
       <text class="help-entry-label">帮助与教程</text>
       <text class="help-entry-desc">怎么用，一步一步教你</text>
