@@ -252,11 +252,14 @@
   z-index: 30;
 }
 
-/* 跳过按钮：不强制看完全部引导 */
+/* 跳过按钮：放左上角。
+   右上角是微信胶囊菜单的保留区，不能占用；
+   左上角则要让开状态栏时间，所以 top 由胶囊按钮几何信息动态注入（见 guide.js），
+   这里的 top 只是取不到时的保底值（88rpx ≈ 刘海屏状态栏高度）。 */
 .guide-skip {
   position: fixed;
-  top: 24rpx;
-  right: 40rpx;
+  top: 88rpx;
+  left: 32rpx;
   z-index: 40;
   padding: 12rpx 30rpx;
   font-size: 26rpx;

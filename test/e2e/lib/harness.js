@@ -121,8 +121,13 @@ function createHarness(opts = {}) {
     return sys
   }
 
+  // 注意：这里必须套超时。模拟器卡住时 evaluate 永不 resolve，
+  // 而 waitPage/waitLeave/resetRoute 都在循环里调 stack()，不套壳就会变成死循环外再挂死。
   async function stack() {
-    return mp.evaluate(() => getCurrentPages().map(x => x.route)).catch(() => [])
+    return withTimeout(
+      mp.evaluate(() => getCurrentPages().map(x => x.route)).catch(() => []),
+      6000, []
+    ).catch(() => [])
   }
 
   async function waitPage(part, timeout = 20000) {
@@ -170,6 +175,63 @@ function createHarness(opts = {}) {
       setTimeout(() => res(0), 3000)
     }))
     await sleep(600)
+  }
+
+  /**
+   * 把页面栈恢复到「只有首页」的干净状态，失败自动重试。
+   *
+   * 为什么需要：navigateTo 子页（引导页等）发起的导航对模拟器路由队列很敏感 ——
+   * 实测队列被扰动后会「既不 success 也不 fail」地静默不生效（switchTab/reLaunch/
+   * navigateBack 全都不动），从而把「环境问题」伪装成「产品问题」。
+   * 所以在断言导航行为之前先确认路由可用，把两者区分开。
+   */
+  async function resetRoute(tries = 3) {
+    for (let i = 0; i < tries; i++) {
+      await withTimeout(reLaunch('/pages/home/home'), 15000, null)
+      await sleep(700)
+      const st = await stack()
+      if (st.length === 1 && st[0] === 'pages/home/home') return true
+      await sleep(900)
+    }
+    return false
+  }
+
+  /** 轮询页面栈，直到目标页出栈（用于「点了一下到底走没走」的断言） */
+  async function waitLeave(route, timeout = 8000) {
+    const t0 = Date.now()
+    let st = await stack()
+    while (Date.now() - t0 < timeout) {
+      if (st.indexOf(route) === -1) return st
+      await sleep(400)
+      st = await stack()
+    }
+    return st
+  }
+
+  /**
+   * 给任意 promise 套超时壳：超时就返回 fallback，而不是让整条套件永久挂起。
+   *
+   * 为什么必须加：模拟器路由队列卡住时，automator 的 `tap()` / `currentPage()` /
+   * `evaluate()` 会**永不 resolve**（实测把合规套件挂死 15 分钟以上，既不报错也不结束）。
+   * 套壳后用例能带着诊断信息失败，而不是让 CI 无限等待。
+   */
+  function withTimeout(promise, ms, fallback) {
+    let timer = null
+    return Promise.race([
+      Promise.resolve(promise).then(v => { clearTimeout(timer); return v }),
+      new Promise(res => { timer = setTimeout(() => res(fallback), ms) })
+    ])
+  }
+
+  /** 真实点击：对 currentPage / $ / tap 每一步都套超时，避免被卡住的模拟器拖死 */
+  async function tapElement(sel, timeoutMs = 10000) {
+    const page = await withTimeout(mp.currentPage(), timeoutMs, null)
+    if (!page) return { ok: false, why: 'currentPage 超时（模拟器无响应）' }
+    const el = await withTimeout(page.$(sel), timeoutMs, null)
+    if (!el) return { ok: false, why: '找不到元素 ' + sel }
+    const r = await withTimeout(el.tap(), timeoutMs, null)
+    if (r === null) return { ok: false, why: 'tap 超时（模拟器无响应）' }
+    return { ok: true }
   }
 
   // ---------- 用例执行 ----------
@@ -256,7 +318,8 @@ function createHarness(opts = {}) {
     // 断言
     ...A,
     // 页面工具
-    stack, waitPage, gotoTab, goto, back, reLaunch, data, sleep,
+    stack, waitPage, gotoTab, goto, back, reLaunch, data, sleep, resetRoute, waitLeave,
+    withTimeout, tapElement,
     // 原始对象
     get mp() { return mp },
     get ART() { return ART },

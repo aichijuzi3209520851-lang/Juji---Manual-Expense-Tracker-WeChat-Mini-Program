@@ -30,8 +30,47 @@ const h = createHarness({ suite: 'no-force-login', title: '橘记JUJI · 合规�
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
+// 走 harness 的 stack()：它带 6s 超时壳，模拟器卡住时返回 [] 而不是让轮询永远挂住
 function routeStack() {
-  return h.mp.evaluate(() => getCurrentPages().map(p => p.route)).catch(() => [])
+  return h.stack()
+}
+
+/** 轮询等待页面栈栈顶变成目标页 —— wx.switchTab 不可靠，不能用固定 sleep 断言 */
+async function waitRoute(route, timeout = 12000) {
+  const t0 = Date.now()
+  let stack = []
+  while (Date.now() - t0 < timeout) {
+    stack = await routeStack()
+    if (stack[stack.length - 1] === route) return stack
+    await sleep(400)
+  }
+  return stack
+}
+
+/**
+ * 等待「引导页真的看不见了」。
+ *
+ * ⚠ 判据必须用 automator 的 DOM 查询，不能用 `mp.evaluate(() => getCurrentPages())`。
+ * 实测：从 navigateTo 子页面点「跳过」离开后，界面已经切走（再查 `.guide-skip` 查不到），
+ * 但 evaluate 读到的页面栈仍是**陈旧快照**，栈里还留着 `pages/guide/guide`。
+ * 这正是此前 L6 反复假失败的根因——用陈旧页面栈判定「有没有离开」会永远判成「没走」。
+ * 而 DOM 判据同时也是用户视角的真实判据（用户看到的是界面，不是页面栈）。
+ */
+async function waitGuideGone(timeoutMs = 8000) {
+  const t0 = Date.now()
+  let why = '超时：引导页仍在'
+  while (Date.now() - t0 < timeoutMs) {
+    const page = await h.withTimeout(h.mp.currentPage(), 6000, null)
+    if (!page) { why = 'currentPage 超时（模拟器无响应）'; break }
+    // 先看 automator 给的当前页路径；属性名在不同版本可能是 path 或 route
+    const p = page.path || page.route || ''
+    if (p && p.indexOf('guide') === -1) return { gone: true, at: p }
+    // 再以 DOM 为准：查不到引导页的跳过按钮 = 已经不在引导页上
+    const el = await h.withTimeout(page.$('.guide-skip'), 6000, null)
+    if (!el) return { gone: true, at: p || '(DOM 上已无引导页)' }
+    await sleep(400)
+  }
+  return { gone: false, at: '', why }
 }
 
 function rect(sel) {
@@ -154,8 +193,7 @@ function openid() {
       const pages = getCurrentPages()
       pages[pages.length - 1].skipLogin()
     })
-    await sleep(1500)
-    const stack = await routeStack()
+    const stack = await waitRoute('pages/home/home')
     h.eq(stack[stack.length - 1], 'pages/home/home', '点击出口后进入首页（实际: ' + stack.join(' > ') + '）')
 
     const openId = await openid()
@@ -164,32 +202,144 @@ function openid() {
   })
 
   // ---------- 6. 新手引导改为按需入口，不挡启动 ----------
-  await h.expect('L6', '新手引导按需可达（不拦截启动）', async () => {
+  await h.expect('L6', '新手引导按需可达 + 「跳过」按钮几何正确（不拦截启动）', async () => {
     h.includes(R('miniprogram/pages/profile/profile.wxml'), 'openGuide', '我的页有新手引导入口')
     h.includes(R('miniprogram/pages/guide/guide.js'), 'replay', '引导页支持 replay 回看')
     h.includes(R('miniprogram/pages/guide/guide.wxml'), 'guide-skip', '引导页含跳过按钮')
+    // 「跳过」的离开逻辑必须带 fail 兜底：navigateBack 在个别情况下会静默失败，
+    // 没有兜底用户就永远卡在引导页（点不动 = 死胡同），这是审核也会质疑的体验问题。
+    h.includes(R('miniprogram/pages/guide/guide.js'), 'navigateBack({ fail:', '「跳过」的离开逻辑带 fail 兜底（不留死胡同）')
+
+    // 导航基线：先确认路由队列可用，避免把模拟器环境问题误判成产品问题
+    h.ok(await h.resetRoute(), '导航基线可用（能回到干净的首页栈）')
 
     await h.gotoTab('profile')
     await sleep(1200)
-    const p = await h.mp.evaluate(() => new Promise((resolve) => {
+    await h.mp.evaluate(() => {
       const pages = getCurrentPages()
-      const page = pages[pages.length - 1]
-      page.openGuide()
-      setTimeout(() => resolve(getCurrentPages().map(x => x.route)), 1800)
-    }))
+      pages[pages.length - 1].openGuide()
+    })
+    const p = await waitRoute('pages/guide/guide')
     h.eq(p[p.length - 1], 'pages/guide/guide', '可主动打开引导页（实际: ' + p.join(' > ') + '）')
 
     const skip = await rect('.guide-skip')
     h.ok(skip && skip.height > 10, '引导页「跳过」按钮已渲染', skip && skip.height)
 
+    // 位置断言（2026-09-16 调整）：跳过按钮从右上角移到左上角。
+    // 右上角是微信胶囊菜单的保留区，左上角要让开状态栏时间。
+    const geo = await h.mp.evaluate(() => {
+      const capsule = wx.getMenuButtonBoundingClientRect()
+      const win = (typeof wx.getWindowInfo === 'function') ? wx.getWindowInfo() : wx.getSystemInfoSync()
+      return { capsule, winW: win.windowWidth, statusBarHeight: win.statusBarHeight }
+    })
+    h.ok(skip.right < geo.capsule.left,
+      '「跳过」不与微信胶囊菜单重叠', skip.right.toFixed(0) + ' < 胶囊左边界 ' + geo.capsule.left)
+    h.ok(skip.left + skip.width / 2 < geo.winW / 2,
+      '「跳过」位于页面左侧', '中心 x=' + (skip.left + skip.width / 2).toFixed(0) + ' / 屏宽 ' + geo.winW)
+    h.ok(skip.top >= geo.statusBarHeight,
+      '「跳过」上边不压状态栏时间', skip.top.toFixed(0) + ' ≥ statusBar ' + geo.statusBarHeight)
+    h.ok(Math.abs(skip.top - geo.capsule.top) <= 6,
+      '「跳过」与胶囊菜单同一水平行', skip.top.toFixed(0) + ' ≈ 胶囊 top ' + geo.capsule.top)
+
+    // 收尾：把页面栈清回干净首页。本条用例结束时会停在引导页（栈顶是 navigateTo 子页），
+    // 直接留给下一条用例会得到一个「从子页发起导航」的坏起点，实测会把 L7 拖死。
+    const cleaned = await h.resetRoute()
+    return '跳过按钮左上角 x=' + skip.left.toFixed(0) + ' y=' + skip.top.toFixed(0) +
+      '（胶囊 top=' + geo.capsule.top + ' / statusBar=' + geo.statusBarHeight + '）' +
+      (cleaned ? '；已回到干净首页栈' : '；⚠ 未能回到干净首页栈')
+  })
+
+  // ---------- 7. 「跳过」必须真的能离开引导页（真实点击）----------
+  await h.expect('L7', '「跳过」能离开引导页并回到进入前的页面（真实点击，不死胡同）', async () => {
+    h.ok(await h.resetRoute(), '导航基线可用')
+
+    // 走真实用户路径：我的 → 点「新手引导」→ 点「跳过」（全程真实点击，不调页面方法）
+    await h.gotoTab('profile')
+    await sleep(1500)
+    const before = await routeStack()
+    h.eq(before[before.length - 1], 'pages/profile/profile', '起点在「我的」页（实际: ' + before.join(' > ') + '）')
+
+    // tapElement 对 currentPage / $ / tap 每一步都套了超时：模拟器卡住时会返回
+    // {ok:false, why}，用例带着原因失败，而不是把整条套件永远挂住。
+    const t0 = await h.tapElement('.help-entry')
+    h.ok(t0.ok, '能定位并点击「新手引导」入口元素', t0.ok ? undefined : t0.why)
+    const inGuide = await waitRoute('pages/guide/guide')
+    h.eq(inGuide[inGuide.length - 1], 'pages/guide/guide', '点「新手引导」进入引导页（实际: ' + inGuide.join(' > ') + '）')
+
+    // 模拟器的路由队列偶尔会吞掉 navigateTo 子页发起的导航（既不 success 也不 fail），
+    // 所以真实点击重试一次；两次都不动才判失败，并在信息里点明「疑似路由队列异常」。
+    let gone = { gone: false, at: '', why: '未点击' }
+    let usedAttempts = 0
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      usedAttempts = attempt
+      const t = await h.tapElement('.guide-skip')
+      if (!t.ok) {
+        // 查不到「跳过」按钮 = 界面上已经不在引导页了（首次点击就已生效），视为已离开；
+        // 只有「模拟器无响应」这类才是真失败。
+        if (String(t.why).indexOf('找不到') === 0) {
+          gone = { gone: true, at: '(第 ' + attempt + ' 次点击前已离开引导页)' }
+        } else {
+          gone = { gone: false, at: '', why: t.why }
+        }
+        break
+      }
+      gone = await waitGuideGone()
+      if (gone.gone) break
+      await sleep(800)
+    }
+    h.ok(gone.gone, '点「跳过」离开引导页（不死胡同）',
+      gone.gone ? undefined : (gone.why + '；停留于 ' + gone.at))
+
+    // 回到进入前的「我的」页：DOM 上应能重新找到「新手引导」入口
+    const backEntry = await rect('.help-entry')
+    h.ok(backEntry && backEntry.height > 4, '回到进入前的「我的」页（能重新找到新手引导入口）',
+      backEntry ? 'height=' + backEntry.height.toFixed(0) : '.help-entry 查不到')
+
+    // 「开启记账之旅」→ 功能首页
+    await h.resetRoute()
+    await h.gotoTab('profile')
+    await sleep(1200)
     await h.mp.evaluate(() => {
       const pages = getCurrentPages()
-      pages[pages.length - 1].finishGuide()
+      pages[pages.length - 1].openGuide()
     })
-    await sleep(1800)
-    const stack = await routeStack()
-    h.eq(stack[stack.length - 1], 'pages/home/home', '跳过引导后回到首页（实际: ' + stack.join(' > ') + '）')
-    return '引导页按需可达且可跳过'
+    const guide2 = await waitRoute('pages/guide/guide')
+    h.eq(guide2[guide2.length - 1], 'pages/guide/guide', '再次打开引导页（实际: ' + guide2.join(' > ') + '）')
+    await h.mp.evaluate(() => {
+      const pages = getCurrentPages()
+      pages[pages.length - 1].setData({ currentIndex: 3 })
+    })
+    await sleep(900)
+
+    let homeGone = { gone: false, at: '', why: '未点击' }
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const t = await h.tapElement('.guide-btn-go')
+      if (!t.ok) {
+        if (String(t.why).indexOf('找不到') === 0) {
+          homeGone = { gone: true, at: '(第 ' + attempt + ' 次点击前已离开引导页)' }
+        } else {
+          homeGone = { gone: false, at: '', why: t.why }
+        }
+        break
+      }
+      homeGone = await waitGuideGone()
+      if (homeGone.gone) break
+      await sleep(800)
+    }
+    h.ok(homeGone.gone, '点「开启记账之旅」离开引导页',
+      homeGone.gone ? undefined : (homeGone.why + '；停留于 ' + homeGone.at))
+
+    // 落到功能首页：首页的业务区块应重新可见
+    const dayCard = await rect('.day-card')
+    h.ok(dayCard && dayCard.height > 20, '「开启记账之旅」进入功能首页（首页收支卡片已渲染）',
+      dayCard ? 'height=' + dayCard.height.toFixed(0) : '.day-card 查不到')
+
+    // 收尾：把栈清回干净首页，别把「停在引导页」的坏状态留到下一次运行
+    // （否则下次连接上来时起始栈就是脏的，L1 的冷启动证据会直接失效）
+    const cleaned = await h.resetRoute()
+
+    return '真实路径通畅：入口→引导页→跳过回「我的」/ 开启之旅→首页（跳过点击 ' + usedAttempts + ' 次）' +
+      (cleaned ? '；已回到干净首页栈' : '；⚠ 未能回到干净首页栈')
   })
 
   await h.finish()
