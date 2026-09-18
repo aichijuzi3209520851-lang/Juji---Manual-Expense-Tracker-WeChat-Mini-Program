@@ -4,7 +4,6 @@ const { ensureSafeText, checkText } = require('../../utils/contentSafety')
 const { resolveAvatarSrc } = require('../../utils/avatar')
 const { pickPetPhrase } = require('../../utils/petPhrases')
 const { pickPetAction, buildPetParticles, petActionHoldMs } = require('../../utils/petActions')
-const { VERSION } = require('../../config/env')
 const { looksLikeCode } = require('../../utils/chatFormat')
 const {
   PRIVACY_AUTH_BUTTON_ID,
@@ -147,7 +146,6 @@ Page({
   data: {
     avatarUrl: '',
     avatarError: false,
-    appVersion: VERSION,
     nickname: '点击登录',
     genderText: '未设置',
     gender: '',

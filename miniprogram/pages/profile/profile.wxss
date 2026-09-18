@@ -844,7 +844,6 @@
 .help-entry-arrow { font-size: 32rpx; color: var(--color-text-tertiary); }
 
 .profile-footer { display: flex; flex-direction: column; align-items: center; gap: 8rpx; padding: 60rpx 0; }
-.footer-version { font-size: 22rpx; color: var(--color-text-tertiary); }
 .footer-tagline { font-size: 24rpx; color: var(--color-text-secondary); font-style: italic; }
 /* 足迹项点击态 */
 .footprint-hover { opacity: 0.6; border-radius: 16rpx; }

@@ -315,10 +315,11 @@ let sys
       h.eq(d.avatarUrl || '', '', '云端无头像时页面不虚构头像地址')
     }
     h.eq(!!d.needWechatProfile, !dbAvatar || !dbNick, '「使用微信资料」提示与资料齐全度一致')
-    const VERSION = (R('miniprogram/config/env.js').match(/VERSION:\s*'([^']+)'/) || [])[1]
-    h.eq(d.appVersion, VERSION, '页脚版本号 == config/env.js 的 VERSION（单一数据源，审核会对比版本）')
+    // 页脚已于 2026-09-19 移除版本号展示：不再断言 appVersion（避免版本号漂移），
+    // 改为静态守卫，防止版本号被误加回页面。
+    h.excludes(R('miniprogram/pages/profile/profile.wxml'), '版本 {{appVersion}}', '页脚不得再展示版本号')
     await h.screenshot('C1-profile-loaded')
-    return '昵称=' + d.nickname + ' 性别=' + d.genderText + ' 版本=' + d.appVersion
+    return '昵称=' + d.nickname + ' 性别=' + d.genderText
   })
 
   await h.expect('C2', '首页数据完整（无白屏、无未定义）', async () => {
