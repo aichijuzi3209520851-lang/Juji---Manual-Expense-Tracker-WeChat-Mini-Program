@@ -3,7 +3,7 @@ const fs = require('fs')
 const { spawn, execFileSync } = require('child_process')
 
 const PROJECT = 'D:\\A\\wechat-project\\V1.1'
-const CLI = 'D:\\we-chat\\微信web开发者工具\\cli.bat'
+const CLI = 'D:\\we-chat\\DATA\\微信web开发者工具\\cli.bat'
 const PORT = 9420
 
 const isOpen = (port) => new Promise(res => {

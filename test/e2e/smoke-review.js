@@ -285,19 +285,40 @@ let sys
   // ══════════════════════════════════════════════════
   console.log('── C 组：关键页面可用性 ──')
 
-  await h.expect('C1', '我的页资料完整加载（禁止"未设置"占位）', async () => {
+  await h.expect('C1', '我的页资料与云端一致（禁止因加载失败而"未设置"占位）', async () => {
     await h.gotoTab('profile')
     const p = await h.waitPage('profile', 15000)
     await h.sleep(2500)
     const d = await p.data()
-    h.notDefault(d.nickname, ['', '橘记JUJI用户', '未设置', '点击登录'], '昵称必须真实加载')
-    h.notDefault(d.genderText, ['', '未设置', '未选择'], '性别必须加载')
-    h.match(String(d.avatarUrl), /^(https?:\/\/|wxfile:\/\/|cloud:\/\/)/, '头像必须是可渲染地址')
-    h.ne(d.needWechatProfile, true, '资料已齐全，不应再提示"使用微信资料"')
+
+    // 以云端 users 记录为权威做「一致性」断言（与 smoke-p0 的 profile 用例同源）：
+    // 空账号「未设置」是合法状态，把它直接判失败会把「没出问题的版本」误判成 FAIL；
+    // 真正要防的失败模式是「云端有值、页面却停在占位」——那说明 loadUserInfo 被跳过或渲染半截。
+    const rec = await h.mp.evaluate(() => new Promise(r => {
+      const app = getApp(); const db = wx.cloud.database()
+      db.collection('users').where({ _openid: app.globalData.openid }).limit(1).get()
+        .then(x => r((x.data && x.data[0]) || {})).catch(() => r(null))
+    }))
+    h.ok(rec, '云端 users 记录可读')
+    const dbNick = (rec && rec.nickname) || ''
+    const dbGender = (rec && rec.gender) || ''
+    const dbAvatar = (rec && rec.avatarUrl) || ''
+    const expectNick = dbNick || '橘记JUJI用户'
+    const expectGender = dbGender === 'male' ? '男' : dbGender === 'female' ? '女' : '未设置'
+
+    h.eq(d.nickname, expectNick, '昵称与云端一致（页面 ' + d.nickname + ' / 云端 ' + expectNick + '）')
+    h.eq(d.genderText, expectGender, '性别文案与云端一致（页面 ' + d.genderText + ' / 云端 ' + expectGender + '）')
+    h.notDefault(d.nickname, ['', '点击登录'], '昵称非空白、非登录占位（' + d.nickname + '）')
+    if (dbAvatar) {
+      h.match(String(d.avatarUrl), /^(https?:\/\/|wxfile:\/\/|cloud:\/\/)/, '云端有头像时页面给出可渲染地址')
+    } else {
+      h.eq(d.avatarUrl || '', '', '云端无头像时页面不虚构头像地址')
+    }
+    h.eq(!!d.needWechatProfile, !dbAvatar || !dbNick, '「使用微信资料」提示与资料齐全度一致')
     const VERSION = (R('miniprogram/config/env.js').match(/VERSION:\s*'([^']+)'/) || [])[1]
     h.eq(d.appVersion, VERSION, '页脚版本号 == config/env.js 的 VERSION（单一数据源，审核会对比版本）')
     await h.screenshot('C1-profile-loaded')
-    return '昵称=' + d.nickname + ' 版本=' + d.appVersion
+    return '昵称=' + d.nickname + ' 性别=' + d.genderText + ' 版本=' + d.appVersion
   })
 
   await h.expect('C2', '首页数据完整（无白屏、无未定义）', async () => {
