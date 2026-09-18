@@ -18,6 +18,11 @@
  *   - 「取消 / 保存」必须完整落在视口内
  *   - 弹层打开时 TabBar 收起，关闭后恢复
  *
+ * 追加覆盖（2026-09-17 线上真机反馈：「头像更新了、昵称没更新」）：
+ *   W7  form submit 收集昵称 → 真落库 → 页面昵称同步刷新（双端断言）
+ *   W8  头像 + 昵称同时提交 —— 线上 bug 的复现路径，两者都要落库并回填
+ *   W9  测试数据还原
+ *
  * 用法：node start-auto.js --force && node test/e2e/verify-wechat-profile-sheet.js
  */
 const fs = require('fs')
@@ -235,8 +240,143 @@ const near = (a, b, tol) => Math.abs(Number(a) - Number(b)) <= tol
 
   await h.screenshot('wechat-profile-sheet')
 
-  // ---------- 7. 关闭后 TabBar 必须恢复 ----------
-  await h.expect('W7', '关闭弹层后 TabBar 恢复显示', async () => {
+  // ================= 保存链路（2026-09-17 线上真机 bug 的回归） =================
+  // 线上现象：点「使用微信资料」后头像更新、昵称没更新。
+  // 根因三处：(1) 昵称只从 bindinput/bindblur 缓存取值，
+  //              真机上微信昵称气泡填充不保证触发 bindinput → wxNickname 为空 → 整段跳过；
+  //           (2) 选头像时走 uploadAvatar 分支、跳过 loadUserInfo，昵称从未回填页面；
+  //           (3) 云函数返回值未校验，落库失败也提示「已同步」。
+  // 下面按「真实落库 + 页面回填」双端断言，避免只测 UI 假成功。
+
+  const profileJs = fs.readFileSync(path.join(__dirname, '..', '..', 'miniprogram', 'pages', 'profile', 'profile.js'), 'utf8')
+
+  /** 读云端 users 记录（页面视角，走 _openid 自身记录） */
+  function readUser() {
+    return h.mp.evaluate(() => new Promise((resolve) => {
+      const app = getApp()
+      wx.cloud.database().collection('users').where({ _openid: app.globalData.openid }).limit(1).get()
+        .then(r => resolve((r.data && r.data[0]) || null))
+        .catch(e => resolve({ error: String((e && e.errMsg) || e) }))
+    }))
+  }
+
+  /** 用云函数还原某个字段（写操作按项目约定走云函数） */
+  function restoreUser(patch) {
+    const action = Object.prototype.hasOwnProperty.call(patch, 'avatarUrl') ? 'updateAvatar' : 'updateProfile'
+    return h.mp.evaluate((act, p) => new Promise((resolve) => {
+      wx.cloud.callFunction({ name: 'users', data: { action: act, data: p } })
+        .then(r => resolve((r && r.result) || null))
+        .catch(e => resolve({ error: String((e && e.errMsg) || e) }))
+    }), action, patch)
+  }
+
+  /** 打开弹层 → 写入待提交值 → 走 form submit → 等保存结束，回读页面 data */
+  function submitSheet(nickname, avatarPath) {
+    return h.mp.evaluate((nick, av) => new Promise((resolve) => {
+      const page = getCurrentPages().filter(p => p.route === 'pages/profile/profile').pop()
+      if (!page) return resolve({ error: '找不到 profile 页面实例' })
+      page.openWechatProfile()
+      page.setData({ wxNickname: nick, wxAvatarUrl: av || '' })
+      // 与真机一致：提交的是 form 的值，而不是页面缓存
+      page.onWechatProfileSubmit({ detail: { value: { wechatNickname: nick } } })
+      const t0 = Date.now()
+      const timer = setInterval(() => {
+        const done = !page.data.showWechatProfile && !page.data.wxProfileSaving
+        if (done || Date.now() - t0 > 25000) {
+          clearInterval(timer)
+          resolve({
+            timeout: !done,
+            nickname: page.data.nickname,
+            avatarUrl: page.data.avatarUrl,
+            needWechatProfile: page.data.needWechatProfile,
+            saving: page.data.wxProfileSaving
+          })
+        }
+      }, 250)
+    }), nickname, avatarPath)
+  }
+
+  const baseUser = { nickname: '', avatarUrl: '' }
+  let uploadedFileID = ''
+
+  await h.expect('W7', '昵称保存：form submit 取值 → 真落库 → 页面昵称同步刷新', async () => {
+    const wxml = fs.readFileSync(path.join(__dirname, '..', '..', 'miniprogram', 'pages', 'profile', 'profile.wxml'), 'utf8')
+    const formOpen = wxml.indexOf('class="wechat-profile-form"')
+    const inputIdx = wxml.indexOf('class="wechat-profile-nickname-input"')
+    const btnIdx = wxml.indexOf('class="wechat-profile-confirm"')
+    const formClose = wxml.indexOf('</form>', formOpen > -1 ? formOpen : 0)
+    h.includes(wxml, 'bindsubmit="onWechatProfileSubmit"', 'WXML 用 form bindsubmit 收集昵称（官方推荐路径）')
+    h.includes(wxml, 'form-type="submit"', '保存按钮声明 form-type="submit"')
+    h.includes(wxml, 'name="wechatNickname"', '昵称输入框带 name，提交时进入 form 值')
+    h.gt(formOpen, -1, '存在 form 容器')
+    h.gt(inputIdx, formOpen, '昵称输入框在 form 内')
+    h.gt(btnIdx, inputIdx, '保存按钮排在输入框之后')
+    h.ok(formClose > btnIdx, '保存按钮仍在 form 内')
+
+    // 治「选了头像就跳过刷新」：保存后必须统一回读云端。
+    // 注意：data 初始化里的 `needWechatProfile: false,`（带逗号）是合法默认值，
+    // 不能误伤；这里只拦截「以 setData 把引导硬写成 false」的写法（对象在此闭合）。
+    h.excludes(profileJs, 'needWechatProfile: false }', '保存成功后不再硬写 needWechatProfile=false（引导状态按云端值计算）')
+
+    const before = await readUser()
+    h.ok(before, '读到云端 users 记录')
+    baseUser.nickname = (before && before.nickname) || ''
+    baseUser.avatarUrl = (before && before.avatarUrl) || ''
+
+    const testNick = '橘记测' + String(Date.now()).slice(-5)
+    const out = await submitSheet(testNick, '')
+    h.ok(!out.timeout, '保存流程在超时前结束（未卡在「保存中…」）')
+
+    const after = await readUser()
+    h.eq(after && after.nickname, testNick, '云端昵称已写入（不只是 UI 变了）')
+    h.notDefault(out.nickname, ['点击登录', '橘记JUJI用户', ''], '页面 header 昵称已回填为真实值')
+    h.eq(out.nickname, testNick, '页面昵称 === 提交的昵称')
+    h.eq(out.needWechatProfile, false, '昵称+头像齐备时引导条收起')
+    return '云端/页面昵称均为 ' + testNick
+  })
+
+  await h.expect('W8', '头像 + 昵称同时提交：两者都要落库并回填（线上 bug 复现路径）', async () => {
+    // 造一张真实小图（1×1 PNG），走真机同款链路：uploadFile → updateAvatar → loadUserInfo
+    const wrote = await h.mp.evaluate(() => {
+      try {
+        const p = wx.env.USER_DATA_PATH + '/e2e-avatar.png'
+        wx.getFileSystemManager().writeFileSync(p, 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==', 'base64')
+        return p
+      } catch (e) { return '' }
+    })
+    h.notDefault(wrote, '', '测试图片已写入本地临时目录')
+
+    const testNick = '橘记同步' + String(Date.now()).slice(-5)
+    const out = await submitSheet(testNick, wrote)
+    h.ok(!out.timeout, '保存流程在超时前结束')
+
+    const after = await readUser()
+    h.eq(after && after.nickname, testNick, '云端昵称已写入')
+    h.includes(after && after.avatarUrl, '/avatars/', '云端头像已写入（本人归属前缀）')
+    h.eq(out.nickname, testNick, '页面昵称同步为真实值')
+    h.notDefault(out.avatarUrl, ['', '🍊'], '页面头像已渲染')
+    uploadedFileID = (after && after.avatarUrl) || ''
+    return '昵称 ' + testNick + '，头像 ' + String(uploadedFileID).slice(-24)
+  })
+
+  // 还原：昵称与头像写回测试前的值，并清掉测试上传的文件
+  await h.expect('W9', '测试数据还原（昵称/头像回到测试前状态）', async () => {
+    const r1 = await restoreUser({ nickname: baseUser.nickname })
+    h.eq(r1 && r1.success, true, '昵称已还原')
+    const r2 = await restoreUser({ avatarUrl: baseUser.avatarUrl || '' })
+    h.eq(r2 && r2.success, true, '头像已还原')
+    if (uploadedFileID && uploadedFileID !== baseUser.avatarUrl) {
+      await h.mp.evaluate((f) => new Promise((resolve) => {
+        wx.cloud.deleteFile({ fileList: [f] }).then(() => resolve(1)).catch(() => resolve(0))
+      }), uploadedFileID)
+    }
+    const after = await readUser()
+    h.eq(after && after.nickname, baseUser.nickname, '云端昵称已回到基线')
+    return '基线昵称: ' + (baseUser.nickname || '(空)')
+  })
+
+  // ---------- W10. 关闭后 TabBar 必须恢复 ----------
+  await h.expect('W10', '关闭弹层后 TabBar 恢复显示', async () => {
     const shown = await closeSheet()
     h.eq(shown, false, 'showWechatProfile 已置 false')
     await h.sleep(600)
