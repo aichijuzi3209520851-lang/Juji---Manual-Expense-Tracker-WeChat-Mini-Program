@@ -1069,6 +1069,8 @@
 }
 .wechat-profile-avatar-hit::after { border: none; }
 .wechat-profile-avatar-hit-hover { background: rgba(0,0,0,0.04); }
+/* 表单容器：弹层是块级布局，这里只需保证 form 不改变子项原有排列 */
+.wechat-profile-form { display: block; width: 100%; }
 .wechat-profile-nickname-input {
   width: 100%;
   box-sizing: border-box;

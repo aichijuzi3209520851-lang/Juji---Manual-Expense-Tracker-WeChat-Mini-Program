@@ -13,7 +13,7 @@
     </view>
   </view>
 
-  <!-- 未设置微信头像/昵称时的引导（仅两者都缺时显示） -->
+  <!-- 头像或昵称任一缺失时的引导：一键可同时补齐两者 -->
   <view class="wechat-profile-tip" wx:if="{{needWechatProfile}}">
     <view class="wechat-profile-tip-text">
       <text class="wechat-profile-tip-title">完善你的橘记JUJI身份</text>
@@ -45,27 +45,36 @@
         ></button>
       </view>
 
-      <input
-        class="wechat-profile-nickname-input"
-        type="nickname"
-        placeholder="点击获取微信昵称"
-        placeholder-class="wechat-profile-nickname-ph"
-        value="{{wxNickname}}"
-        bindinput="onNicknameInput"
-        bindblur="onNicknameBlur"
-        bindkeyboardheightchange="onProfileNicknameKeyboard"
-        adjust-position="{{false}}"
-        cursor-spacing="24"
-        maxlength="20"
-      />
+      <!-- 昵称输入框与「保存」必须放在同一个 form 内：
+           官方对 type=nickname 的要求是「通过 form 中 form-type 为 submit 的 button
+           收集用户输入的内容」—— 微信昵称气泡填充不保证触发 bindinput，且 onBlur 时
+           微信会异步做安全检测、未通过会清空输入框，只靠 bindinput/bindblur 缓存取到的
+           昵称可能是空的（线上真机上「点了保存但昵称没更新」的直接原因）。 -->
+      <form class="wechat-profile-form" bindsubmit="onWechatProfileSubmit">
+        <input
+          class="wechat-profile-nickname-input"
+          name="wechatNickname"
+          type="nickname"
+          placeholder="点击获取微信昵称"
+          placeholder-class="wechat-profile-nickname-ph"
+          value="{{wxNickname}}"
+          bindinput="onNicknameInput"
+          bindblur="onNicknameBlur"
+          bindnicknamereview="onNicknameReview"
+          bindkeyboardheightchange="onProfileNicknameKeyboard"
+          adjust-position="{{false}}"
+          cursor-spacing="24"
+          maxlength="20"
+        />
 
-      <view class="wechat-profile-sheet-actions">
-        <button class="wechat-profile-cancel" bindtap="closeWechatProfile" hover-class="wechat-profile-cancel-hover">取消</button>
-        <button class="wechat-profile-confirm" bindtap="confirmWechatProfile" hover-class="wechat-profile-confirm-hover" disabled="{{wxProfileSaving}}">
-          <text wx:if="{{!wxProfileSaving}}">保存</text>
-          <text wx:else>保存中…</text>
-        </button>
-      </view>
+        <view class="wechat-profile-sheet-actions">
+          <button class="wechat-profile-cancel" bindtap="closeWechatProfile" hover-class="wechat-profile-cancel-hover">取消</button>
+          <button class="wechat-profile-confirm" form-type="submit" hover-class="wechat-profile-confirm-hover" disabled="{{wxProfileSaving}}">
+            <text wx:if="{{!wxProfileSaving}}">保存</text>
+            <text wx:else>保存中…</text>
+          </button>
+        </view>
+      </form>
     </view>
   </view>
     <view class="juji-pet juji-pet--{{petAction}}" bindtap="openAiChat" aria-label="小橘AI助手">

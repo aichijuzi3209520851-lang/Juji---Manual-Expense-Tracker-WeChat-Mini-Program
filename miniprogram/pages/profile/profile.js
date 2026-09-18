@@ -710,10 +710,8 @@ Page({
           occupation: u.occupation || '',
           themeName
         })
-        // 微信昵称与头像两者都缺失时，显示"使用微信资料"引导
-        const noAvatar = !u.avatarUrl
-        const noNickname = !u.nickname
-        this.setData({ needWechatProfile: noAvatar || noNickname })
+        // 微信昵称或头像任一缺失时，保留「使用微信资料」引导（一键可同时补齐两者）
+        this.setData({ needWechatProfile: !u.avatarUrl || !u.nickname })
       }
     } catch (err) { console.error(err) }
   },
@@ -740,8 +738,6 @@ Page({
     this.setData({ showWechatProfile: false, profileKeyboardHeight: 0, profileSheetStyle: '' })
   },
 
-  noop() {},
-
   // chooseAvatar 返回微信头像临时路径
   onChooseAvatar(e) {
     const url = e.detail && e.detail.avatarUrl
@@ -749,10 +745,22 @@ Page({
     this.setData({ wxAvatarUrl: url })
   },
 
-  // type=nickname 输入框自动填充微信昵称，也可能手动修改
+  // type=nickname 输入框自动填充微信昵称，也可能手动修改。
+  // 注意：这只用于「实时同步本地缓存 + 回显」，真正的取值以 form submit 为准
+  // （微信昵称气泡填充不保证触发 bindinput，不能把它当作唯一取值来源）
   onNicknameInput(e) {
     const val = (e.detail && (e.detail.value || e.detail.nickname)) || ''
     this.setData({ wxNickname: val })
+  },
+
+  // 微信对 type=nickname 的输入内容做安全审核（基础库 2.29.1+）。
+  // pass=false 时微信会清空输入框内容，这里同步清掉本地缓存，
+  // 避免把被微信拒绝的昵称继续提交到后端。
+  onNicknameReview(e) {
+    if (e && e.detail && e.detail.pass === false) {
+      this.setData({ wxNickname: '' })
+      wx.showToast({ title: '昵称未通过微信安全检测，请重新填写', icon: 'none' })
+    }
   },
 
   // 键盘高度变化 → 上移整个弹层。
@@ -776,51 +784,95 @@ Page({
     this.setData({ profileKeyboardHeight: 0, profileSheetStyle: '' })
   },
 
+  // 表单提交入口（官方推荐路径）：在提交这一刻从 form 里取昵称，
+  // 不依赖 bindinput/bindblur 的触发时序与缓存值。
+  onWechatProfileSubmit(e) {
+    const fromForm = (e && e.detail && e.detail.value && e.detail.value.wechatNickname) || ''
+    // 表单值为空（用户没点输入框）时退回本地缓存（bindinput/blur 已写入）
+    const nickname = String(fromForm || this.data.wxNickname || '')
+    if (fromForm && fromForm !== this.data.wxNickname) this.setData({ wxNickname: fromForm })
+    this.saveWechatProfile(nickname)
+  },
+
+  // 兼容旧入口（外部/测试若直接调用 confirmWechatProfile，走同一条保存链路）
   async confirmWechatProfile() {
+    return this.saveWechatProfile(String(this.data.wxNickname || ''))
+  },
+
+  /**
+   * 微信资料统一保存：昵称 + 头像。
+   *
+   * 关键约定（线上 bug 的根因所在）：
+   *  1. 云函数返回值必须校验 —— users.updateProfile 可能返回 success:false
+   *     （服务端 fail-closed 的内容安全拦截 / 字段不合法）或 success:true 但
+   *     updated:false（没命中 users 记录）。不校验就会把「昵称没落库」当成成功，
+   *     还给出「微信资料已同步」的假提示。
+   *  2. 保存结束后统一以数据库为准刷新页面（loadUserInfo），而不是只 setData 头像。
+   *     旧实现里选了头像就走 uploadAvatar 分支、跳过 loadUserInfo，
+   *     nickname 从未回填，于是「头像变了、昵称没变」。
+   */
+  async saveWechatProfile(rawNickname) {
     const app = getApp()
-    const rawNickname = (this.data.wxNickname || '').trim()
+    const nickname = String(rawNickname || '').trim()
     const avatarTemp = this.data.wxAvatarUrl
-    if (!rawNickname && !avatarTemp) {
+
+    if (!nickname && !avatarTemp) {
       wx.showToast({ title: '请先选择头像或填写昵称', icon: 'none' })
       return
     }
-    const nickname = rawNickname.slice(0, 20)
+    if (nickname.length > 20) {
+      wx.showToast({ title: '昵称最长 20 字', icon: 'none' })
+      return
+    }
     if (nickname) {
       const safe = await ensureSafeText(nickname, { scene: 2 })
       if (!safe) return
     }
+
     this.setData({ wxProfileSaving: true })
     try {
-      // 昵称先落库（头像上传由 uploadAvatar 单独处理），走云函数校验
+      // users 文档由 quickstartFunctions 服务端创建；写库前先确保 openid 就绪
+      await app.ensureLogin()
+
+      // 1. 昵称落库并校验返回（服务端还会再跑一次内容安全）
       if (nickname) {
-        await wx.cloud.callFunction({
+        const res = await wx.cloud.callFunction({
           name: 'users',
           data: { action: 'updateProfile', data: { nickname } }
         })
-        if (app.globalData.userInfo) app.globalData.userInfo.nickname = nickname
+        const r = (res && res.result) || {}
+        if (!r.success) throw new Error(r.message || '昵称保存失败')
+        if (r.updated === false) throw new Error('用户资料未初始化，请稍后重试')
       }
-      // 头像：复用 uploadAvatar（内部含上传、落库、刷新、toast）
+
+      // 2. 头像：复用 uploadAvatar（上传 → 落库 → 本地展示）
       if (avatarTemp) {
-        await this.uploadAvatar(avatarTemp)
-      } else {
-        await this.loadUserInfo()
+        const ok = await this.uploadAvatar(avatarTemp, { silent: true })
+        if (!ok) throw new Error('头像上传失败')
       }
+
+      // 3. 统一以云端为准刷新页面数据（昵称/头像/引导状态都由它计算）
+      await this.loadUserInfo()
+
       this.setCustomTabBarHidden(false)
       this.setData({
         showWechatProfile: false,
-        needWechatProfile: false,
         profileKeyboardHeight: 0,
         profileSheetStyle: ''
       })
+
+      // 提示按库里真实结果组装，不再靠「传了什么」猜
+      const saved = app.globalData.userInfo || {}
       let tip = '已保存'
-      if (avatarTemp && nickname) tip = '微信资料已同步'
-      else if (avatarTemp) tip = '头像已更新'
-      else if (nickname) tip = '昵称已保存'
+      if (saved.avatarUrl && saved.nickname) tip = '微信资料已同步'
+      else if (saved.avatarUrl) tip = '头像已更新'
+      else if (saved.nickname) tip = '昵称已更新'
       wx.showToast({ title: tip, icon: 'success' })
     } catch (err) {
       console.error('[wechatProfile] save failed:', err && (err.errMsg || err.message))
       const raw = (err && (err.errMsg || err.message)) || '保存失败'
       const msg = raw.length > 14 ? raw.slice(0, 14) + '…' : raw
+      // 失败时保持弹层打开，让用户能直接重试（不回滚已成功的部分）
       wx.showToast({ title: msg, icon: 'none', duration: 2500 })
     } finally {
       this.setData({ wxProfileSaving: false })
@@ -899,11 +951,20 @@ Page({
     await this.uploadAvatar(toUpload)
   },
 
-  async uploadAvatar(filePath) {
+  /**
+   * 上传头像 → 云函数落库 → 本地立即展示。
+   * @param {string} filePath 本地临时路径
+   * @param {{silent?: boolean}} options silent=true 时不弹 toast、失败直接抛错，
+   *        由调用方（saveWechatProfile）统一提示，避免弹层内 toast 互相覆盖
+   * @returns {Promise<boolean>} 是否落库成功
+   */
+  async uploadAvatar(filePath, options) {
+    const opt = options || {}
     const app = getApp()
     if (!app.globalData.openid) {
       wx.showToast({ title: '未登录', icon: 'none' })
-      return
+      if (opt.silent) throw new Error('未登录')
+      return false
     }
     wx.showLoading({ title: '上传中…', mask: true })
     try {
@@ -923,9 +984,12 @@ Page({
         name: 'users',
         data: { action: 'updateAvatar', data: { avatarUrl: up.fileID } }
       })
-      if (!updateRes.result || !updateRes.result.success) {
-        throw new Error((updateRes.result && updateRes.result.message) || '未找到用户记录')
+      const r = (updateRes && updateRes.result) || {}
+      if (!r.success) {
+        throw new Error(r.message || '未找到用户记录')
       }
+      // 与 updateProfile 对齐：updated=false 说明没命中 users 记录，不能当成功
+      if (r.updated === false) throw new Error('用户资料未初始化，请稍后重试')
 
       this.setData({ avatarUrl: up.fileID, avatarError: false })
       // 立刻把 fileID 换成 https tempFileURL 再 setData 一次，确保 image 一定能渲染
@@ -935,13 +999,16 @@ Page({
       const tempUrl = await resolveAvatarSrc(up.fileID)
       this.setData({ avatarUrl: tempUrl || up.fileID, avatarError: false })
       wx.hideLoading()
-      wx.showToast({ title: '头像已更新', icon: 'success' })
+      if (!opt.silent) wx.showToast({ title: '头像已更新', icon: 'success' })
+      return true
     } catch (err) {
       wx.hideLoading()
       console.error('[avatar] upload chain failed:', err && (err.errMsg || err.message))
+      if (opt.silent) throw err
       const raw = (err && (err.errMsg || err.message)) || '上传失败'
       const msg = raw.length > 14 ? raw.slice(0, 14) + '…' : raw
       wx.showToast({ title: msg, icon: 'none', duration: 2500 })
+      return false
     }
   },
 
@@ -1231,8 +1298,6 @@ Page({
     this.setData({ showPrivacyAuth: false })
     handlePrivacyAuthorize(e)
   },
-
-  noop() {},
 
   // 清除数据
   viewPrivacyAgreement() {
