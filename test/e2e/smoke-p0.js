@@ -143,8 +143,9 @@ async function assertPageLoaded(route, d) {
     } else {
       h.eq(d.avatarUrl || '', '', '云端无头像时页面不虚构头像地址')
     }
-    const VERSION = (R('miniprogram/config/env.js').match(/VERSION:\s*'([^']+)'/) || [])[1]
-    h.eq(d.appVersion, VERSION, '页脚版本号 == config/env.js 的 VERSION（' + d.appVersion + '）')
+    // 页脚已于 2026-09-19 移除版本号展示：不再断言 appVersion（避免版本号漂移），
+    // 改为静态守卫防止版本号被误加回。
+    h.excludes(R('miniprogram/pages/profile/profile.wxml'), '版本 {{appVersion}}', '页脚不得再展示版本号')
   }
 }
 
@@ -303,6 +304,34 @@ async function assertPageLoaded(route, d) {
     const d = await hp.data()
     h.gte((d.groups || []).length, 8, '帮助分组 ≥ 8（' + (d.groups || []).length + '）')
     await h.screenshot('A4-1-help')
+  })
+
+  // ---------- 数据导入后免重启刷新（2026-09-19 线上反馈回归）----------
+  // 曾出现：导入提示「成功导入 N 条」，切回首页却仍是旧数据，必须重启小程序才看得到。
+  // 根因：导入成功后只刷新了「我的」页足迹，没广播 billChanged，
+  //       首页 / 统计 / 预算的 _isDirty 未置真 → onShow 判定不必重载。
+  await h.expect('A5-1', '账单导入后首页免重启刷新（billChanged 广播）', async () => {
+    await purgeSmoke()
+    const hp0 = await gotoTab('home'); await sleep(1600)
+    h.eq(((await hp0.data()).groupedBills || []).length, 0, '首页基线无流水（排除残留干扰）')
+
+    // 走「我的 → 数据导入」的真实代码路径（跳过选文件，直接喂 bills 给 runImport）
+    const pp = await gotoTab('profile'); await sleep(900)
+    const ok = await pp.callMethod('runImport', [{
+      type: 'expense', amount: 7.77, category: '餐饮', date: TODAY, note: '[SMOKE]导入刷新'
+    }])
+    h.eq(ok, true, '导入云函数返回成功')
+
+    // 关键断言：不重启小程序，直接切回首页
+    const hp = await gotoTab('home')
+    const t0 = Date.now(); let flat = ''
+    while (Date.now() - t0 < 12000) {
+      flat = JSON.stringify((await hp.data()).groupedBills || [])
+      if (/SMOKE/.test(flat)) break
+      await sleep(500)
+    }
+    h.ok(/SMOKE/.test(flat), '未重启小程序即可在首页看到导入的账单')
+    return '导入 1 条后首页已自动刷新'
   })
 
   await h.expect('A9-9', '清理 [SMOKE] 测试数据', async () => {

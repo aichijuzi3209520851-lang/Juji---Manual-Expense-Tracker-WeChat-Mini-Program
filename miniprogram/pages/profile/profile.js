@@ -1256,29 +1256,46 @@ Page({
     wx.showModal({
       title: '确认导入',
       content: `检测到 ${bills.length} 条账单记录，确定要导入吗？`,
-      success: async (confirmRes) => {
-        if (!confirmRes.confirm) return
-        wx.showLoading({ title: '正在恢复账单数据…', mask: true })
-        try {
-          const res = await wx.cloud.callFunction({
-            name: 'dataMigration',
-            data: { action: 'import', bills }
-          })
-          wx.hideLoading()
-          const result = res.result || {}
-          if (result.success) {
-            wx.showToast({ title: `成功导入 ${result.count} 条`, icon: 'success' })
-            this.loadFootprint()
-          } else {
-            wx.showToast({ title: result.message || '导入失败', icon: 'none' })
-          }
-        } catch (err) {
-          wx.hideLoading()
-          console.error('[import] failed:', err)
-          wx.showToast({ title: '导入失败，请重试', icon: 'none' })
-        }
+      success: (confirmRes) => {
+        if (confirmRes.confirm) this.runImport(bills)
       }
     })
+  },
+
+  /**
+   * 执行导入并刷新全站数据（独立方法，便于自动化回归）。
+   *
+   * 关键：落库成功后必须广播 `billChanged`。首页 / 统计 / 预算都靠该事件把
+   * `_isDirty` 置真、并在下次 onShow 重载数据；漏掉广播就会出现
+   * 「提示导入成功，切回首页却还是旧数据，必须重启小程序才看得到」。
+   * 本页自身的足迹卡与打卡日历在这里直接同步刷新，不必等 onShow。
+   */
+  async runImport(bills) {
+    wx.showLoading({ title: '正在恢复账单数据…', mask: true })
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'dataMigration',
+        data: { action: 'import', bills }
+      })
+      wx.hideLoading()
+      const result = res.result || {}
+      if (!result.success) {
+        wx.showToast({ title: result.message || '导入失败', icon: 'none' })
+        return false
+      }
+      wx.showToast({ title: `成功导入 ${result.count} 条`, icon: 'success' })
+      // 1) 本页立即同步：记账足迹 + 打卡日历
+      this.loadFootprint()
+      this.loadHeatmapData()
+      // 2) 广播账单变更：首页 / 统计 / 预算下次 onShow 自动重载，无需重启小程序
+      getApp().globalData.eventBus.emit('billChanged')
+      return true
+    } catch (err) {
+      wx.hideLoading()
+      console.error('[import] failed:', err)
+      wx.showToast({ title: '导入失败，请重试', icon: 'none' })
+      return false
+    }
   },
 
   // 隐私链路回调：头像/导出/导入等敏感能力触发 wx.onNeedPrivacyAuthorization 时调用，
