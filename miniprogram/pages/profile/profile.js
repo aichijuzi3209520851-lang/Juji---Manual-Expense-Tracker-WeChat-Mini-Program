@@ -1,6 +1,7 @@
 const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CUSTOM_PALETTE } = require('../../utils/theme')
 const { getAll } = require('../../utils/dbPager')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
+const { checkTextSafe, alertSensitiveText } = require('../../utils/sensitiveWords')
 const { resolveAvatarSrc } = require('../../utils/avatar')
 const { pickPetPhrase } = require('../../utils/petPhrases')
 const { pickPetAction, buildPetParticles, petActionHoldMs } = require('../../utils/petActions')
@@ -505,9 +506,14 @@ Page({
     var msgId = e.currentTarget.dataset.msg
     var key = e.currentTarget.dataset.key
     var val = e.detail.value
+    var res = checkTextSafe(val)
+    if (!res.ok) alertSensitiveText(val, { title: '备注包含违禁内容' })
     this._updateDraftMessage(msgId, function(drafts) {
       drafts.forEach(function(d) {
-        if (d.key === key) d.note = val
+        if (d.key === key) {
+          d.note = res.ok ? val : ''
+          d.noteBlocked = !res.ok
+        }
       })
     })
   },
@@ -559,6 +565,8 @@ Page({
         wx.showToast({ title: '第' + (i + 1) + '笔金额无效', icon: 'none' })
         return
       }
+      // 提交前兜底：备注命中违禁词一律阻断
+      if (!alertSensitiveText(rows[i].note, { title: '第' + (i + 1) + '笔备注包含违禁内容' })) return
     }
 
     var statusPatch = {}

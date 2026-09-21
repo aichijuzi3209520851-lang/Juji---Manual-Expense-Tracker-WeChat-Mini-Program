@@ -10,14 +10,35 @@ const MAX_MOOD_LEN = 10
 const MAX_BATCH = 10
 const MAX_DAILY_BILLS = 500
 const DAILY_LIMIT_FEATURE = 'bills'
-const BLOCK_PATTERNS = [
-  /赌博|博彩|赌球|私彩|代购彩票/,
-  /色情|裸聊|约炮|成人视频|淫秽/,
-  /毒品|冰毒|大麻|贩毒|吸毒/,
-  /枪支|弹药|炸药|爆炸物|制爆/,
-  /诈骗|洗钱|套现|跑分/,
-  /自杀|轻生|自残/,
-  /暴恐|恐怖袭击/
+// 违禁词库：与 miniprogram/utils/sensitiveWords.js 保持一致（云函数独立部署，无法 require 前端目录）。
+// 前端已在输入/提交两处拦截，这里是防直连云接口写入的最后一道防线；改词库请两边同步。
+const BLOCK_WORDS = [
+  // 色情低俗
+  '黄赌毒', '色情', '情色', '淫秽', '涉黄', '黄片', '黄网', '黄色视频', '黄色网站', '黄色小说',
+  '黄色图片', '黄色影片', '黄色漫画', '黄色录像', '毛片', '三级片', '成人影片', '成人视频',
+  '成人电影', '色情网站', '色情视频', '色情聊天', '裸聊', '约炮', '招嫖', '嫖娼', '卖淫',
+  '性交易', '性服务', '一夜情', '援交', '包养', '换妻', '裸照', '偷拍', '迷奸', '迷药',
+  '催情药', '春药', '强奸', '猥亵', '性侵', 'porn', 'pornhub', 'xvideos',
+  // 赌博博彩
+  '赌博', '赌场', '赌球', '赌马', '赌资', '赌局', '赌债', '赌徒', '聚赌', '网赌', '网络赌博',
+  '境外赌博', '地下赌场', '赌博机', '老虎机', '博彩', '六合彩', '私彩', '地下彩票', '代购彩票',
+  '时时彩', '北京赛车', '外围球', '投注', '赌注', '押注', '开盘口', '牌九', '麻将赌博',
+  '赌狗', 'bet365', '1xbet', 'casino',
+  // 毒品
+  '毒品', '吸毒', '贩毒', '制毒', '运毒', '藏毒', '毒资', '冰毒', '海洛因', '大麻', '摇头丸',
+  'k粉', '可卡因', '吗啡', '鸦片', '罂粟', '甲基苯丙胺', '注射毒品', '买卖毒品', '毒品交易',
+  'cocaine', 'heroin', 'marijuana', 'methamphetamine', 'mdma',
+  // 暴力武器
+  '枪支', '一把枪', '买枪', '卖枪', '枪械', '弹药', '子弹', '手枪', '步枪', '猎枪', '制枪', '炸药',
+  '炸弹', '爆炸物', '制爆', '雷管', '导火索', '火药', '管制刀具', '恐怖袭击', '暴恐',
+  '雇凶', '买凶',
+  // 违法交易
+  '诈骗', '电信诈骗', '网络诈骗', '金融诈骗', '骗保', '骗贷', '洗钱', '套现', '跑分', '走私',
+  '偷渡', '办假证', '假证', '代开发票', '虚开发票', '假发票', '传销', '非法集资', '高利贷',
+  '裸贷', '校园贷', '买卖银行卡', '出售银行卡', '出售个人信息', '盗号', '黑客攻击', '黑灰产',
+  '黑产', '刷单返利',
+  // 自伤自杀
+  '自杀', '自残', '轻生', '割腕', '烧炭', '跳楼', '跳桥', '服毒', '安乐死'
 ]
 
 function validate(data) {
@@ -43,9 +64,19 @@ function validate(data) {
 }
 
 function containsUnsafeText(text) {
-  text = String(text || '')
-  if (!text) return false
-  return BLOCK_PATTERNS.some(pattern => pattern.test(text))
+  const norm = normalizeForMatch(text)
+  if (!norm) return false
+  return BLOCK_WORDS.some(word => norm.indexOf(normalizeForMatch(word)) !== -1)
+}
+
+// 与前端 utils/sensitiveWords.js 同款归一化：全角转半角 + 小写 + 剔除空白标点，
+// 让「冰-毒」「大 麻」这类变体同样拦得住
+function normalizeForMatch(text) {
+  return String(text || '')
+    .replace(/[\uFF01-\uFF5E]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
+    .replace(/\u3000/g, ' ')
+    .toLowerCase()
+    .replace(/[\s\u0000-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E\u2000-\u206F\u3000-\u303F\uFF00-\uFFEF]+/g, '')
 }
 
 function buildBillDoc(data, openid) {

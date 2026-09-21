@@ -195,6 +195,7 @@
                 <view wx:if="{{item.status === 'pending'}}" class="bill-draft-del" data-msg="{{item.id}}" data-key="{{row.key}}" bindtap="removeDraftRow">✕</view>
               </view>
               <input class="bill-draft-note" value="{{row.note}}" placeholder="备注（可选）" maxlength="30" disabled="{{item.status !== 'pending'}}" data-msg="{{item.id}}" data-key="{{row.key}}" bindinput="onDraftNoteInput" />
+              <view wx:if="{{row.noteBlocked}}" class="bill-draft-note-warn">备注含违禁词，已清除，请重新输入</view>
               <view wx:if="{{row.isNewCategory && item.status === 'pending'}}" class="bill-draft-newcat" data-msg="{{item.id}}" data-key="{{row.key}}" bindtap="toggleDraftNewCategory">
                 <text class="bill-draft-check {{row.createNew ? 'is-on' : ''}}">{{row.createNew ? '✓' : ''}}</text>
                 <text class="bill-draft-newcat-label">创建新分类「{{row.category}}」（不勾则归「其他」）</text>

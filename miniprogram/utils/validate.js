@@ -1,4 +1,5 @@
 // 橘记JUJI — 输入校验工具
+const { checkTextSafe } = require('./sensitiveWords')
 
 const MAX_AMOUNT = 99999999.99
 const MAX_NOTE_LEN = 200
@@ -49,6 +50,13 @@ function validateBill(data) {
   // 备注
   if (data.note && data.note.length > MAX_NOTE_LEN) {
     return { valid: false, message: '备注不能超过200字' }
+  }
+  // 备注违禁词：命中即拒绝提交（前端第一道防线，云函数有同名兜底）
+  if (data.note) {
+    const safe = checkTextSafe(data.note)
+    if (!safe.ok) {
+      return { valid: false, message: safe.message, sensitive: true, hits: safe.hits }
+    }
   }
 
   // 照片 URL（前端传本地路径或已上传的 cloud:// 均可）

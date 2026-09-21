@@ -22,6 +22,7 @@ const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
+const { checkTextSafe, alertSensitiveText } = require('../../utils/sensitiveWords')
 const { looksLikeCode } = require('../../utils/chatFormat')
 const {
   PRIVACY_AUTH_BUTTON_ID,
@@ -75,6 +76,8 @@ Page({
     note: '',
     showNoteInput: false,
     noteExpanded: false,
+    noteBlocked: false,
+    noteBlockTip: '',
     showMoodSheet: false,
     photoUrl: '',
     photoCloudPath: '',
@@ -127,6 +130,8 @@ Page({
       note: '',
       showNoteInput: false,
       noteExpanded: false,
+      noteBlocked: false,
+      noteBlockTip: '',
       showMoodSheet: false,
       photoUrl: '',
       photoCloudPath: '',
@@ -459,13 +464,19 @@ Page({
     })
   },
 
+  // AI 草稿备注：命中违禁词立即弹窗，并清空该条备注，保证违禁内容不会被记录
   onDraftNoteInput(e) {
     const msgId = e.currentTarget.dataset.msg
     const key = e.currentTarget.dataset.key
     const val = e.detail.value
+    const res = checkTextSafe(val)
+    if (!res.ok) alertSensitiveText(val, { title: '备注包含违禁内容' })
     this._updateDraftMessage(msgId, function(drafts) {
       drafts.forEach(function(d) {
-        if (d.key === key) d.note = val
+        if (d.key === key) {
+          d.note = res.ok ? val : ''
+          d.noteBlocked = !res.ok
+        }
       })
     })
   },
@@ -515,6 +526,8 @@ Page({
         wx.showToast({ title: '第' + (i + 1) + '笔金额无效', icon: 'none' })
         return
       }
+      // 提交前兜底：备注命中违禁词一律阻断
+      if (!alertSensitiveText(rows[i].note, { title: '第' + (i + 1) + '笔备注包含违禁内容' })) return
     }
 
     const statusPatch = {}
@@ -726,7 +739,40 @@ Page({
       quickConfirmStyle: `bottom:${height}px;`
     })
   },
-  onNoteInput(e) { this.setData({ note: e.detail.value }) },
+  // 备注实时拦截：命中违禁词立刻弹窗告警，并标记不可保存
+  onNoteInput(e) {
+    const value = e.detail.value
+    const res = checkTextSafe(value)
+    this.setData({
+      note: value,
+      noteBlocked: !res.ok,
+      noteBlockTip: res.ok ? '' : this._buildNoteBlockTip(res)
+    })
+    if (res.ok) {
+      this._lastNoteHitKey = ''
+      if (this._noteAlertTimer) { clearTimeout(this._noteAlertTimer); this._noteAlertTimer = null }
+      return
+    }
+    // 同一批命中词只弹一次，避免逐字输入时反复弹窗；换词/重新输入会再次告警
+    const hitKey = res.hits.map(function (h) { return h.word }).join('|')
+    if (this._lastNoteHitKey === hitKey) return
+    if (this._noteAlertTimer) clearTimeout(this._noteAlertTimer)
+    const self = this
+    this._noteAlertTimer = setTimeout(function () {
+      self._noteAlertTimer = null
+      self._lastNoteHitKey = hitKey
+      alertSensitiveText(value, { title: '备注包含违禁内容' })
+    }, 300)
+  },
+
+  _buildNoteBlockTip(res) {
+    const labels = []
+    ;(res.hits || []).forEach(function (h) {
+      if (labels.indexOf(h.label) === -1) labels.push(h.label)
+    })
+    return labels.length ? ('含' + labels.join('、') + '类违禁词，无法保存') : '含违禁词，无法保存'
+  },
+
   onNoteFocus() { this.setData({ showNoteInput: true }) },
   onNoteBlur() { if (!this.data.note) this.setData({ showNoteInput: false }) },
 
@@ -735,7 +781,9 @@ Page({
   },
 
   clearNote() {
-    this.setData({ note: '', noteExpanded: false, showNoteInput: false })
+    this._lastNoteHitKey = ''
+    if (this._noteAlertTimer) { clearTimeout(this._noteAlertTimer); this._noteAlertTimer = null }
+    this.setData({ note: '', noteExpanded: false, showNoteInput: false, noteBlocked: false, noteBlockTip: '' })
   },
 
   openMoodSheet() {
@@ -954,11 +1002,14 @@ Page({
 
       // 设置类型和分类列表
       const preset = this.getPresetCategories(bill.type)
+      const loadedNoteCheck = checkTextSafe(bill.note)
       this.setData({
         type: bill.type,
         amount: String(parseFloat(bill.amount)),
         selectedCategory: bill.category,
         note: bill.note || '',
+        noteBlocked: !loadedNoteCheck.ok,
+        noteBlockTip: loadedNoteCheck.ok ? '' : this._buildNoteBlockTip(loadedNoteCheck),
         photoUrl: bill.photoUrl || '',
         photoCloudPath: bill.photoUrl || '',
         mood: bill.mood || '',
@@ -1079,9 +1130,15 @@ Page({
 
     const { type, amount, selectedCategory, dateStr, note, photoUrl, mood, editMode, editBillId } = this.data
 
+    // 违禁词拦截：命中即弹窗告警并终止提交（不调用云函数，内容不会落库）
+    if (!alertSensitiveText(note, { title: '备注包含违禁内容' })) return
+
     // 输入校验
     const v = validateBill({ type, amount, category: selectedCategory, date: dateStr, note, photoUrl })
     if (!v.valid) {
+      if (v.sensitive) {
+        alertSensitiveText(note, { title: '备注包含违禁内容' }); return
+      }
       wx.showToast({ title: v.message, icon: 'none' }); return
     }
 
