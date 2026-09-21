@@ -37,6 +37,7 @@
 - **主题**：Design Token 体系 v2（70 个 CSS 变量），4 套预设 + 8 色自定义调色板 + 用户命名主题 CRUD（最多 5 个），inline-style 注入方案，切换后即时生效
 - **UI 风格**：小红书 / Apple Wallet 风格（渐变 hero 卡 + 40rpx 大圆角 + Neumorphic 拟物阴影 + 跨色相渐变）
 - **字体**：8 级字号 + 5 级字重 + 数字专属字体族（DIN Alternate / Helvetica Neue）
+- **内容安全**：用户输入违禁词库（`utils/sensitiveWords.js`，色情 / 赌博 / 毒品 / 武器 / 违法交易 / 自伤 6 类），本地实时拦截 + 云函数服务端同名词库兜底；聊天与 AI 输出另走本地词库 + `msgSecCheck` 双层审核
 
 ## 功能
 
@@ -49,6 +50,7 @@
 - **日期选择**：原生 picker mode="date"，智能显示今天/昨天/X月X日
 - **心情记录**：8 预设 emoji + 自定义输入，可选
 - 备注 + **Neumorphic 3D 相机按钮**（主色渐变背景 + 高光深影，100rpx 圆形）
+- **备注违禁词拦截**：输入含黄赌毒等违禁词时立即弹窗告警（文案点出违规类别）+ 输入框标红 + 行内「含 X 类违禁词，无法保存」；点保存直接阻断提交，不发起云函数调用，内容不会写入数据库；空格 / 标点 / 全角等变体同样拦得住
 - **小橘 AI 助手入口**：金额 hero 右侧圆形 CSS 吉祥物，随机 Hi / 跳动 / 发射爱心，点击打开同款聊天弹窗与对话记账确认卡
 - 频率限制：3s 防抖 + 单日 500 笔上限
 
@@ -104,6 +106,14 @@
 - **Neumorphic 拟物阴影**：`--shadow-light`（高光）+ `--shadow-dark`（深影），per-theme 主题色
 - **衍生 token 自动注入**：`--gradient-hero`、`--shadow-card` 等在 `getThemeStyleString()` 里计算实际值，避免 CSS var() 提前解析
 - **旧版迁移**：`theme='custom'` + `custom_theme_color` 自动迁移到 `user_themes`
+
+### 内容安全（违禁词拦截）
+
+- **统一词库**：`miniprogram/utils/sensitiveWords.js`，6 类（色情低俗 / 赌博博彩 / 毒品 / 暴力武器 / 违法交易 / 自伤自杀）；匹配前归一化：全角转半角 + 统一小写 + 剔除空白与标点
+- **三层防线**：① 输入瞬间弹窗告警并标记不可保存 → ② 提交前（`utils/validate.js` + 页面 save 流程）二次拦截，不发起云函数调用 → ③ 云函数 `bills` 服务端同名词库兜底，防绕过前端直连云接口写入
+- **覆盖范围**：记账页备注、AI 对话记账草稿备注（记账页 + 我的页，命中即弹窗并清空该条）；昵称 / 分类等文本通过 `utils/contentSafety.js` 复用同一词库（本地词库 + `msgSecCheck`）
+- **防误杀**：刻意不收录「黄色」「下注」「杀人」等高频口语词，避免误杀「黄色雨伞」「我下注这家店」「杀人游戏」
+- **测试**：`node test/check-sensitive-words.js`（逻辑用例 60 条：命中 / 变体不绕过 / 正常备注不误杀 / 接口契约）；`cd test/e2e && node smoke-note-guard.js`（UI 冒烟 N1–N4，需开发者工具「设置 → 安全 → 服务端口」开启）
 
 ### 子页面
 - **分类管理** (`pages/categories/`)：预设 + 自创列表，CRUD + emoji 图标池
@@ -215,9 +225,10 @@ miniprogram/                # 小程序前端
 │   ├── theme.js            # 主题系统核心（CSS 变量推导 + 用户主题 CRUD + 衍生 token 注入）
 │   ├── eventBus.js         # 事件总线（on/off/emit，跨页面通信）
 │   ├── rateLimiter.js      # 频率限制（防抖 + 日上限）
-│   ├── validate.js         # 账单 / 预算输入校验
+│   ├── validate.js         # 账单 / 预算输入校验（含备注违禁词校验）
+│   ├── sensitiveWords.js   # 违禁词库与本地实时拦截（6 类 + 归一化匹配 + 弹窗告警）
 │   ├── privacy.js          # 隐私授权（onNeedPrivacyAuthorization + requirePrivacyAuthorization）
-│   ├── contentSafety.js    # 内容安全（本地正则 + msgSecCheck 双层）
+│   ├── contentSafety.js    # 内容安全（复用 sensitiveWords 词库 + msgSecCheck 双层）
 │   ├── monitor.js          # 前端异常监控（onError / onUnhandledRejection → client_logs）
 │   ├── dbPager.js          # 数据库分页拉取（绕开 20 条查询上限）
 │   ├── profileHelpers.js   # 我的页辅助（星座 / 称号兜底 / 分类 emoji 等）
@@ -302,7 +313,7 @@ cloudfunctions/             # 云函数
 |--------|--------|------|
 | `quickstartFunctions` | Nodejs16.13 | 登录获取 openid；`users` 文档创建 + `lastLoginAt` 由 `miniprogram/app.js` 的 `syncUserInfo()` 直写，字段更新走 `users` 云函数 |
 | `users` | Nodejs16.13 | 用户资料服务端校验：`updateProfile`（昵称/性别/生日/职业，白名单字段 + 内容安全）/ `updateAvatar`（`cloud://` 前缀校验）/ `updateCustomCategories`（同名去重 + 上限 50） |
-| `bills` | Nodejs16.13 | 账单服务端校验 create / delete（**软删除**：`isDeleted` + `deletedAt`）/ update / batchCreate（批量写入供对话记账使用） |
+| `bills` | Nodejs16.13 | 账单服务端校验 create / delete（**软删除**：`isDeleted` + `deletedAt`）/ update / batchCreate（批量写入供对话记账使用）；含与前端同款的备注违禁词兜底校验 |
 | `budgets` | Nodejs16.13 | 预算服务端校验，按 `month` upsert（一月一条） |
 | `exportBills` | Nodejs16.13 | CSV 导出到云存储；当前主要 UI 导出路径为 `dataMigration` 的 JSON 导出 |
 | `dataMigration` | Nodejs16.13 | JSON 数据迁移（export 查询全部 / import 分批写入） |
@@ -368,6 +379,7 @@ MIT
 
 | 日期 | 版本 | 变更 |
 |------|------|------|
+| 2026-09-22 | **v1.1.8（已推送 GitHub；前端未上传 / `bills` 云函数待部署）** | 新增**备注违禁词拦截**：统一词库 `utils/sensitiveWords.js`（色情 / 赌博 / 毒品 / 武器 / 违法交易 / 自伤 6 类，全角转半角 + 剔除空白标点后匹配）；记账页备注输入瞬间弹窗告警（点出违规类别）+ 输入框标红 + 行内提示，点保存直接阻断提交（不发起云函数调用，内容不落库）；AI 对话记账草稿备注（记账页 / 我的页）命中即弹窗并清空该条，提交前再兜底；`utils/validate.js` 与云函数 `bills` 同步加服务端同名词库；`utils/contentSafety.js` 复用该词库并在命中时改为弹窗告警。刻意不收录「黄色 / 下注 / 杀人」等高频口语词以防误杀。测试：`test/check-sensitive-words.js` 逻辑用例 60/60 通过；新增 `test/e2e/smoke-note-guard.js`，模拟器 UI 冒烟 4 项通过（输入即弹窗、保存被拦截且不落库不跳转、空格变体仍拦截、正常备注可正常保存）。 |
 | 2026-09-13 | **部署（云函数，已上线）** | 通过设备码重新登录到拥有 `lajiaoyou-d4g78yts61f1a841d` 的账号（此前 MCP 会话误绑 `lcw`）；将 10 个云函数用最新本地代码重新部署/更新：`quickstartFunctions` / `users` / `bills` / `budgets` / `exportBills` / `dataMigration` / `clearUserData` / `aiPoster` / `aiChat` / `contentSafety`，全部 `Active`。`generateImage-WtU3mJ` 为空占位函数（CreateFailed）保持不动。复核确认 2026-09-10 的部署实际已在 `lajiaoyou` 环境内，并非误落 `lcw`。 |
 | 2026-09-10 | 部署（云函数，存疑） | 曾疑似通过 CloudBase MCP 把 10 个云函数误部署到无关账号 `lcw-d5gfcge7b41bedd02`；**2026-09-13 复核：函数实际位于 `lajiaoyou-...` 环境**，本次为用最新代码重新更新部署。 |
 | 2026-08-13 | **v1.1.7（工作区，未提交/未部署）** | 新增 `users` 云函数（用户资料写入收敛为服务端校验：`updateProfile` / `updateAvatar` / `updateCustomCategories`，白名单字段 + 内容安全）；我的页新增「使用微信资料」一键同步头像昵称（`chooseAvatar` + `type="nickname"`，未设置时显示引导条）；账单软删除（`isDeleted`）全面过滤（首页 / 统计 / 预算 / 足迹 / 热力图 / AI 账单查询）；登录页重构为单一授权入口（`agreePrivacyAuthorization` 直接登录，无二次确认）；`project.config.json` 清理模板残留（projectname→juji、packOptions.ignore 清空） |
@@ -402,3 +414,4 @@ MIT
 3. **微信小程序前端上传（必须）**：本仓库为原生微信小程序，前端不走 CloudBase 静态托管，需在微信开发者工具「上传并部署」到对应 AppID（`wx5c263d2b6496fe2d`）后提交审核。
 4. **AI 能力（按需）**：统计页/我的页/小橘 依赖混元大模型。需在 CloudBase 控制台 → AI+ 扩展能力 开通混元 `hunyuan-v3`，并在微信公众平台 → 行业能力 → 小程序成长计划 报名获取 Token（1 亿额度）。
 5. **隐私合规（提审必须）**：微信公众平台 → 用户隐私保护指引 需勾选并审核通过：用户信息（微信昵称、头像）、相册、摄像头、文件。否则真机反复弹空白隐私页。详见「隐私与协议提审」一节。
+6. **备注违禁词拦截（2026-09-22 新增，需部署 `bills`）**：前端拦截随小程序上传即生效；云函数 `bills` 的服务端词库兜底需重新「上传并部署」后才生效（未部署时仅靠前端两层拦截）。详见「内容安全（违禁词拦截）」一节。
