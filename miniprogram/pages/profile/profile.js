@@ -6,6 +6,8 @@ const { resolveAvatarSrc } = require('../../utils/avatar')
 const { pickPetPhrase } = require('../../utils/petPhrases')
 const { pickPetAction, buildPetParticles, petActionHoldMs } = require('../../utils/petActions')
 const { looksLikeCode } = require('../../utils/chatFormat')
+const { buildShareAppMessage, buildShareTimeline } = require('../../utils/share')
+const { VERSION, hasUnread } = require('../../utils/changelog')
 const {
   PRIVACY_AUTH_BUTTON_ID,
   requirePrivacyAuthorization,
@@ -202,6 +204,9 @@ Page({
     // 否则真机上输入框会被键盘盖住，表现成「点击没反应、拿不到微信昵称」
     profileKeyboardHeight: 0,
     profileSheetStyle: '',
+    // 更新日志入口：版本号 + 是否有未读更新
+    currentVersion: VERSION,
+    hasUnreadChangelog: false
   },
 
   onShow() {
@@ -209,7 +214,8 @@ Page({
     this.setData({
       themeStyle: getThemeStyleString(),
       themeName: resolveThemeName(getCurrentThemeId()),
-      showProfileTitle: false
+      showProfileTitle: false,
+      hasUnreadChangelog: hasUnread()
     })
     this.updateCustomTabBar()
     this.loadUserInfo()
@@ -255,6 +261,12 @@ Page({
     if (tabBar && typeof tabBar.setHidden === 'function') {
       tabBar.setHidden(hidden)
     }
+  },
+
+  // 打开更新日志（历史公告列表）
+  openChangelog() {
+    this.setData({ hasUnreadChangelog: false })
+    wx.navigateTo({ url: '/pages/changelog/changelog' })
   },
 
   startPetLoop() {
@@ -1735,5 +1747,14 @@ Page({
     wx.setStorageSync('juji_heatmap_color', hex)
     this.setData({ heatmapCustomColor: hex })
     this.updateHeatmapColor()
+  },
+
+  // 分享：落地页是通用个人页（打开者看到的是自己的数据），不带昵称 / openid / 热力图数据
+  onShareAppMessage() {
+    return buildShareAppMessage('profile')
+  },
+
+  onShareTimeline() {
+    return buildShareTimeline('profile')
   },
 })

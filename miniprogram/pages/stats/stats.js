@@ -7,6 +7,7 @@ const {
 
 const { getAll } = require('../../utils/dbPager')
 const { checkText } = require('../../utils/contentSafety')
+const { buildShareAppMessage, buildShareTimeline } = require('../../utils/share')
 
 var MORANDI = ['#D4A5A5', '#A9C2DB', '#B2D8C8', '#D4C5A5', '#C2B8D4', '#B8D4D4', '#D4B8A5', '#C8D4A5']
 
@@ -897,5 +898,14 @@ Page({
       .replace(/^["“”'`]+/, '')
       .replace(/["“”'`]+$/, '')
       .trim()
+  },
+
+  // 分享：统计页读的是「打开者自己」的数据（按 _openid 过滤），分享出去不会泄露原分享者的账目。
+  onShareAppMessage() {
+    return buildShareAppMessage('stats')
+  },
+
+  onShareTimeline() {
+    return buildShareTimeline('stats')
   }
 })

@@ -1,0 +1,48 @@
+<!-- 更新日志 / 历史公告 -->
+<view class="cl-page" style="{{themeStyle}}">
+
+  <!-- 当前版本 -->
+  <view class="cl-current">
+    <view class="cl-current-left">
+      <text class="cl-current-label">当前版本</text>
+      <text class="cl-current-version">v{{currentVersion}}</text>
+    </view>
+    <text class="cl-current-badge">已是最新</text>
+  </view>
+
+  <!-- 历史公告列表（从新到旧） -->
+  <view class="cl-list">
+    <view
+      wx:for="{{list}}"
+      wx:for-item="log"
+      wx:for-index="idx"
+      wx:key="version"
+      class="cl-card {{idx === 0 ? 'is-latest' : ''}}"
+    >
+      <view class="cl-card-head">
+        <view class="cl-card-title-wrap">
+          <text class="cl-card-version">v{{log.version}}</text>
+          <text wx:if="{{idx === 0}}" class="cl-card-latest">最新</text>
+        </view>
+        <text class="cl-card-date">{{log.date}}</text>
+      </view>
+
+      <text class="cl-card-tag">{{log.tag}}</text>
+      <view class="cl-card-title">{{log.title}}</view>
+
+      <view class="cl-card-items">
+        <view wx:for="{{log.items}}" wx:for-item="row" wx:key="text" class="cl-item">
+          <text class="cl-item-tag cl-item-tag--{{row.type}}">{{row.label}}</text>
+          <text class="cl-item-text">{{row.text}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空态 -->
+  <view wx:if="{{list.length === 0}}" class="cl-empty">
+    <text class="cl-empty-icon">📋</text>
+    <text class="cl-empty-text">还没有更新记录</text>
+  </view>
+
+</view>

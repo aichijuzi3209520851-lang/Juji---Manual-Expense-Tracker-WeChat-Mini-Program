@@ -1,4 +1,6 @@
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
+const { buildShareAppMessage, buildShareTimeline } = require('../../utils/share')
+const { VERSION, getLatest, shouldShowUpdate, markSeen } = require('../../utils/changelog')
 
 const ICON_MAP = {
   '餐饮': '🍜', '交通': '🚇', '购物': '🛍️', '娱乐': '🎮',
@@ -39,7 +41,10 @@ Page({
     overviewFailed: false,
     season: SEASONS[new Date().getMonth()],
     themeStyle: getThemeStyleString(),
-    showBudgetSheet: false
+    showBudgetSheet: false,
+    // 版本更新公告弹窗
+    showUpdateModal: false,
+    latestChangelog: null
   },
 
   onLoad() {
@@ -54,6 +59,9 @@ Page({
     bus.on('themeChanged', this._themeHandler)
     bus.on('billChanged', this._dataChangeHandler)
     bus.on('categoryChanged', this._dataChangeHandler)
+
+    // 版本更新公告：仅在版本升级时弹一次（首次安装不弹）
+    this.checkUpdateNotice()
   },
 
   onUnload() {
@@ -63,6 +71,10 @@ Page({
     if (this._dataChangeHandler) {
       bus.off('billChanged', this._dataChangeHandler)
       bus.off('categoryChanged', this._dataChangeHandler)
+    }
+    if (this._updateTimer) {
+      clearTimeout(this._updateTimer)
+      this._updateTimer = null
     }
   },
 
@@ -95,6 +107,49 @@ Page({
     if (tabBar && typeof tabBar.updateSelected === 'function') {
       tabBar.updateSelected()
     }
+  },
+
+  // 全屏弹层打开/关闭时收起/恢复自定义 tabBar（tabBar 浮层会盖住弹层按钮）
+  setCustomTabBarHidden(hidden) {
+    if (typeof this.getTabBar !== 'function') return
+    const tabBar = this.getTabBar()
+    if (tabBar && typeof tabBar.setHidden === 'function') {
+      tabBar.setHidden(hidden)
+    }
+  },
+
+  /**
+   * 版本更新公告：仅在「版本升级」时弹一次
+   * 首次安装不弹 —— 新用户本来要过引导，且微信还会弹隐私协议，再叠一个弹窗体验很差
+   */
+  checkUpdateNotice() {
+    // 本次启动正处于"检测到新版本、待重启"：先不弹公告，等重启后再弹，避免两个弹窗叠一起
+    const app = getApp()
+    if (app && app.globalData && app.globalData.pendingRestart) return
+
+    if (!shouldShowUpdate()) return
+    const latest = getLatest()
+    if (!latest) return
+
+    // 延迟一点，先让首屏渲染出来，避免一进小程序就被弹窗糊脸
+    this._updateTimer = setTimeout(() => {
+      this._updateTimer = null
+      this.setData({ showUpdateModal: true, latestChangelog: latest })
+      this.setCustomTabBarHidden(true)
+    }, 600)
+  },
+
+  onCloseUpdateModal() {
+    markSeen(VERSION)
+    this.setData({ showUpdateModal: false })
+    this.setCustomTabBarHidden(false)
+  },
+
+  onViewChangelog() {
+    markSeen(VERSION)
+    this.setData({ showUpdateModal: false })
+    this.setCustomTabBarHidden(false)
+    wx.navigateTo({ url: '/pages/changelog/changelog' })
   },
 
   async loadOverview() {
@@ -244,5 +299,17 @@ Page({
         }
       }
     })
+  },
+
+  // 分享：微信的「转发 / 分享到朋友圈」是页面级开关，页面不实现回调，胶囊菜单里两项就置灰。
+  // 文案 / 封面 / 落地页统一在 utils/share.js，且不使用页面截图兜底（避免账目数据进分享卡片）。
+  // path 只指首页，不带任何金额、分类、昵称、openid。
+  onShareAppMessage() {
+    return buildShareAppMessage('home')
+  },
+
+  // 朋友圈分享无 path 字段，只能给 title / query / imageUrl
+  onShareTimeline() {
+    return buildShareTimeline('home')
   }
 })

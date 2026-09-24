@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "橘记JUJI",
   "usingComponents": {
-    "bottom-sheet": "/components/bottom-sheet/index"
+    "bottom-sheet": "/components/bottom-sheet/index",
+    "update-modal": "/components/update-modal/index"
   }
 }

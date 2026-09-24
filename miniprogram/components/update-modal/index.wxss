@@ -1,0 +1,129 @@
+/* 更新公告弹窗 —— 全部走主题 CSS 变量，跟随主题切换 */
+
+.upd-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1200;
+  background: rgba(30, 27, 26, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 48rpx;
+}
+
+.upd-card {
+  width: 100%;
+  max-width: 620rpx;
+  background: var(--color-surface, #fff);
+  border-radius: var(--radius-xl, 32rpx);
+  padding: 40rpx 36rpx 32rpx;
+  box-shadow: var(--shadow-elevated);
+  overflow: hidden;
+}
+
+/* 头部 */
+.upd-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.upd-head-icon {
+  font-size: 48rpx;
+  margin-right: 16rpx;
+}
+.upd-head-text {
+  display: flex;
+  flex-direction: column;
+}
+.upd-head-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--color-text, #1e1b1a);
+}
+.upd-head-sub {
+  font-size: 24rpx;
+  color: var(--color-text-tertiary, #938481);
+  margin-top: 4rpx;
+}
+
+/* 标题 */
+.upd-title {
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: var(--color-text-secondary, #5b4d4a);
+  padding: 16rpx 20rpx;
+  background: var(--color-surface-container, #f8efed);
+  border-radius: var(--radius-md, 16rpx);
+  margin-bottom: 20rpx;
+}
+
+/* 明细列表 */
+.upd-list {
+  max-height: 460rpx;
+}
+.upd-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 18rpx;
+}
+.upd-item:last-child {
+  margin-bottom: 0;
+}
+.upd-item-tag {
+  flex: none;
+  font-size: 20rpx;
+  line-height: 1.5;
+  padding: 2rpx 12rpx;
+  border-radius: var(--radius-sm, 8rpx);
+  margin-right: 12rpx;
+  margin-top: 4rpx;
+  color: var(--color-on-primary, #fff);
+  background: var(--color-primary, #785655);
+}
+.upd-item-tag--feature {
+  background: var(--color-primary, #785655);
+}
+.upd-item-tag--optimize {
+  background: var(--color-tertiary, #4b6458);
+}
+.upd-item-tag--fix {
+  background: var(--color-secondary, #6c5a59);
+}
+.upd-item-text {
+  flex: 1;
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: var(--color-text, #1e1b1a);
+}
+
+/* 按钮 */
+.upd-actions {
+  display: flex;
+  margin-top: 32rpx;
+}
+.upd-btn {
+  flex: 1;
+  height: 84rpx;
+  line-height: 84rpx;
+  text-align: center;
+  border-radius: var(--radius-full, 9999rpx);
+  font-size: 28rpx;
+}
+.upd-btn--ghost {
+  margin-right: 16rpx;
+  color: var(--color-primary, #785655);
+  background: var(--color-primary-container, #f7cac9);
+}
+.upd-btn--ghost-hover {
+  background: var(--color-primary-light, #eed7d4);
+}
+.upd-btn--primary {
+  color: var(--color-on-primary, #fff);
+  background: var(--color-primary, #785655);
+}
+.upd-btn--primary-hover {
+  opacity: 0.9;
+}

@@ -252,6 +252,15 @@
 .menu-arrow { font-size: var(--font-size-h3); color: var(--color-text-tertiary); }
 .menu-value-wrap { display: flex; align-items: center; gap: 8rpx; }
 .menu-value { font-size: var(--font-size-regular); color: var(--color-text-secondary); }
+
+/* 更新日志未读小红点 */
+.menu-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--color-error, #ba1a1a);
+  flex: none;
+}
 .menu-badge { font-size: var(--font-size-small); color: var(--color-primary); background: var(--color-primary-container); padding: 4rpx 16rpx; border-radius: var(--radius-full); font-weight: var(--font-weight-semibold); }
 .menu-item.disabled { opacity: 0.6; }
 .menu-item picker { flex: 1; display: flex; justify-content: flex-end; }

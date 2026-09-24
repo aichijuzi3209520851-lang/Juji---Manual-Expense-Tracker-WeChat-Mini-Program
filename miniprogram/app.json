@@ -11,7 +11,8 @@
     "pages/themes/themes",
     "pages/detail/detail",
     "pages/privacy/privacy",
-    "pages/help/help"
+    "pages/help/help",
+    "pages/changelog/changelog"
   ],
   "__usePrivacyCheck__": true,
   "window": {

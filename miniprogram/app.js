@@ -12,7 +12,9 @@ App({
     hasSeenGuide: false,
     currentTheme: 'mint',
     eventBus: new EventBus(),
-    _loginPromise: null
+    _loginPromise: null,
+    // 本次启动是否处于"已检测到新版本、等待用户重启"的状态（首页据此跳过更新公告弹窗）
+    pendingRestart: false
   },
 
   onLaunch() {
@@ -40,6 +42,44 @@ App({
 
     // 执行静默登录与用户同步
     this.silentLogin().catch(() => {})
+
+    // 检查小程序版本更新（见 checkAppUpdate 注释：不加这条，新版本可能迟迟到不了用户端）
+    this.checkAppUpdate()
+  },
+
+  /**
+   * 版本更新检测（wx.getUpdateManager）
+   * ────────────────────────────────────────────────────────────
+   * 为什么必须有它：小程序发布后，用户端本地仍可能是旧代码包，微信只在**冷启动**时
+   * 异步检查更新，且覆盖范围/时机不完全可控。表现出来就是"我明明已经发布新版本了，
+   * 为什么那个功能（比如分享按钮）还是灰的"。
+   *
+   * ⚠️ 官方限制：该能力只在**正式版**生效，开发版 / 体验版不会触发
+   *   （所以本地调试看不到这个弹窗是正常的，别当成 bug）。
+   */
+  checkAppUpdate() {
+    if (typeof wx.getUpdateManager !== 'function') return
+
+    const updateManager = wx.getUpdateManager()
+
+    updateManager.onUpdateReady(() => {
+      // 标记：本次启动待重启，首页据此跳过更新公告弹窗，避免两个弹窗叠在一起
+      this.globalData.pendingRestart = true
+      wx.showModal({
+        title: '发现新版本',
+        content: '橘记已更新，重启后即可使用最新功能',
+        confirmText: '立即重启',
+        cancelText: '稍后再说',
+        success: (r) => {
+          if (r.confirm) updateManager.applyUpdate()
+        }
+      })
+    })
+
+    updateManager.onUpdateFailed(() => {
+      // 下载失败静默处理：下次启动会自动重试，不弹窗打扰用户
+      console.warn('⚠️ 新版本下载失败，将在下次启动时重试')
+    })
   },
 
   // 静默登录：仅通过云函数换取 openid。

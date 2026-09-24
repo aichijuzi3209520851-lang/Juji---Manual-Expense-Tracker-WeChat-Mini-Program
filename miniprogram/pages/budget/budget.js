@@ -2,6 +2,7 @@ const pad = n => String(n).padStart(2, '0')
 const monthEnd = (y, m) => `${y}-${pad(m)}-${new Date(y, m, 0).getDate()}`
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const { getAll } = require('../../utils/dbPager')
+const { buildShareAppMessage, buildShareTimeline } = require('../../utils/share')
 
 const CATEGORY_EMOJI = {
   '餐饮':'🍜','交通':'🚇','购物':'🛍️','娱乐':'🎮','学习':'📚','日用':'🏠','医疗':'💊',
@@ -306,5 +307,14 @@ Page({
 
   closeBudgetEditor() {
     this.setData({ showEditor: false })
+  },
+
+  // 分享：落地页只指通用预算页，不携带任何预算金额 / 用户标识
+  onShareAppMessage() {
+    return buildShareAppMessage('budget')
+  },
+
+  onShareTimeline() {
+    return buildShareTimeline('budget')
   }
 })

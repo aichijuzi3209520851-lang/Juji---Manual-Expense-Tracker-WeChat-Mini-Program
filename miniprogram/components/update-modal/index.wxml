@@ -1,0 +1,32 @@
+<!-- 更新公告弹窗 -->
+<view wx:if="{{visible && entry}}" class="upd-mask" bindtap="onMaskTap" catchtouchmove="stopPop">
+  <view class="upd-card" catchtap="stopPop">
+
+    <!-- 头部：新版本标识 -->
+    <view class="upd-head">
+      <text class="upd-head-icon">🎉</text>
+      <view class="upd-head-text">
+        <text class="upd-head-title">发现新版本 {{entry.version}}</text>
+        <text class="upd-head-sub">{{entry.date}} · {{entry.tag}}</text>
+      </view>
+    </view>
+
+    <!-- 一句话标题 -->
+    <view class="upd-title">{{entry.title}}</view>
+
+    <!-- 更新明细（超出可滚动） -->
+    <scroll-view class="upd-list" scroll-y>
+      <view wx:for="{{entry.items}}" wx:for-item="row" wx:key="text" class="upd-item">
+        <text class="upd-item-tag upd-item-tag--{{row.type}}">{{row.label}}</text>
+        <text class="upd-item-text">{{row.text}}</text>
+      </view>
+    </scroll-view>
+
+    <!-- 操作区 -->
+    <view class="upd-actions">
+      <view class="upd-btn upd-btn--ghost" bindtap="onViewHistory" hover-class="upd-btn--ghost-hover">查看历史</view>
+      <view class="upd-btn upd-btn--primary" bindtap="onClose" hover-class="upd-btn--primary-hover">知道了</view>
+    </view>
+
+  </view>
+</view>

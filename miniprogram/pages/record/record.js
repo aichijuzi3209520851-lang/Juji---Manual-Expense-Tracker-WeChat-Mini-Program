@@ -33,6 +33,7 @@ const { CATEGORY_EMOJI } = require('../../utils/profileHelpers')
 const { resolveAvatarSrc } = require('../../utils/avatar')
 const { pickPetPhrase } = require('../../utils/petPhrases')
 const { pickPetAction, buildPetParticles, petActionHoldMs } = require('../../utils/petActions')
+const { buildShareAppMessage, buildShareTimeline } = require('../../utils/share')
 
 const EMOJI_POOL = [...'🍜🍔🍕🍰🍿🎮📚🚌💊🛒👟🎬🎵🐱🐶🌸✈️🚲📱💻🎂🍺☕️🏀⚽️🎸💍💡📷🛍️💄👗🧋🍩🎁🚗🏠📦💊🩺🎯🏷️🎨']
 const AI_CHAT_FALLBACK = '小橘不知道，来聊聊别的吧~'
@@ -1222,5 +1223,14 @@ Page({
       console.error('保存失败:', err)
       wx.showToast({ title: err.message || '保存失败，请重试', icon: 'none' })
     }
+  },
+
+  // 分享：落地页是空白记账表单（引导别人来记一笔），不带任何已填内容
+  onShareAppMessage() {
+    return buildShareAppMessage('record')
+  },
+
+  onShareTimeline() {
+    return buildShareTimeline('record')
   }
 })
