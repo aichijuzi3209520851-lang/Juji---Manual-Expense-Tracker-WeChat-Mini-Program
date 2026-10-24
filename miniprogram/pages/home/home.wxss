@@ -58,7 +58,7 @@
 .day-label {
   font-size: var(--font-size-small);
   color: var(--color-on-primary);
-  opacity: 0.78;
+  opacity: var(--lg-hero-label-opacity, 0.78);
   letter-spacing: 2rpx;
 }
 .day-value {
@@ -73,7 +73,7 @@
   font-size: 38rpx;
   font-weight: var(--font-weight-semibold);
   font-family: var(--font-numeric);
-  opacity: 0.72;
+  opacity: var(--lg-hero-value-opacity, 0.72);
 }
 .day-income {
   font-size: var(--font-size-regular);

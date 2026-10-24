@@ -15,11 +15,12 @@
 .budget-empty-title { font-size: 36rpx; font-weight: 600; color: var(--color-text); margin-bottom: 16rpx; }
 .budget-empty-desc { font-size: 28rpx; color: var(--color-text-tertiary); text-align: center; line-height: 1.5; margin-bottom: 40rpx; }
 .budget-empty-btn {
-  background: var(--color-primary);
-  color: var(--color-on-primary); border-radius: var(--radius-full);
+  background: var(--lg-cta-bg, var(--color-primary));
+  color: var(--lg-cta-color, var(--color-on-primary));
+  border-radius: var(--radius-full);
   font-size: 32rpx; font-weight: 600; border: none;
   padding: 22rpx 56rpx;
-  box-shadow: var(--shadow-elevated);
+  box-shadow: var(--lg-cta-shadow, var(--shadow-elevated));
 }
 .budget-empty-btn::after { border: none; }
 
@@ -62,13 +63,28 @@
 
 .budget-ring {
   width: 100%; height: 100%; border-radius: 50%;
+  /* 圆环必须是「环」而不是实心圆盘：conic-gradient 会把圆心也涂满，
+     一旦中心盘改为半透明玻璃，那层白底就会从中间透出来变成一块「白洞」。
+     这里用径向遮罩把内圈挖空（内圈半径 100rpx / 外圈 140rpx ≈ 71%），
+     中心盘因此能真正透出背后的 hero 玻璃与散景。
+     旧主题中心盘是不透明 surface 色，挖空与否观感一致。 */
+  -webkit-mask: radial-gradient(closest-side, transparent 0 70.6%, #000 71% 100%);
+  mask: radial-gradient(closest-side, transparent 0 70.6%, #000 71% 100%);
 }
 
 .budget-ring-center {
   position: absolute; display: flex; flex-direction: column; align-items: center;
-  width: 200rpx; height: 200rpx; border-radius: 50%; background: var(--color-surface);
+  width: 200rpx; height: 200rpx; border-radius: 50%;
+  background-color: var(--lg-fill-center, var(--color-surface));
+  background-image: var(--lg-specular, none);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   justify-content: center;
-  box-shadow: 0 6rpx 16rpx var(--shadow-dark);
+  box-shadow: 0 6rpx 16rpx var(--shadow-dark), var(--lg-edge-ring, none);
+  outline: var(--lg-rim-width-thin, 0) solid var(--lg-rim-ring, transparent);
+  outline-offset: -2rpx;
+  -webkit-backdrop-filter: var(--lg-blur, none);
+  backdrop-filter: var(--lg-blur, none);
 }
 .ring-label { font-size: var(--font-size-small); color: var(--color-text-secondary); }
 .ring-amount { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); font-family: var(--font-numeric); color: var(--color-text); font-variant-numeric: tabular-nums; }
@@ -83,7 +99,8 @@
   background: rgba(255,255,255,0.22);
   color: var(--color-on-primary);
   position: relative; z-index: 1;
-  backdrop-filter: blur(8rpx);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 .budget-status.safe,
 .budget-status.warn,
@@ -219,8 +236,8 @@
   min-height: 72rpx;
 }
 .sheet-save {
-  width: 100%; background: var(--color-primary);
-  color: var(--color-on-primary); border-radius: var(--radius-full);
+  width: 100%; background: var(--lg-cta-bg, var(--color-primary));
+  color: var(--lg-cta-color, var(--color-on-primary)); border-radius: var(--radius-full);
   font-size: 32rpx; font-weight: 600; border: none; padding: 24rpx 0;
   box-shadow: var(--shadow-elevated);
 }

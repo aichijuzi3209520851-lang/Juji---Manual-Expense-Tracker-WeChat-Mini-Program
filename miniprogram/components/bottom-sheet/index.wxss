@@ -31,9 +31,21 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--color-surface, #ffffff);
+  /* v31：组件是 styleIsolation: isolated，页面/app 的类选择器进不来，
+     但 **CSS 自定义属性是继承的**，所以直接在这里消费 --lg-fill-strong 即可。
+     原来写死的 --color-surface（不透明实白）在玻璃主题下会在记账页底部
+     摊出一块「白板」，与整屏玻璃断裂 —— 这是放大截图里最刺眼的一处破材质。
+     旧主题没有 --lg-fill-strong（__default 下它退化为 surface 原值），观感不变。 */
+  background-color: var(--lg-fill-strong, var(--color-surface, #ffffff));
+  background-image: var(--lg-specular, none), var(--lg-refract, none);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% 100%;
   border-radius: 32rpx 32rpx 0 0;
-  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.08), var(--lg-edge-card, none);
+  outline: var(--lg-rim-width-thin, 0) solid var(--lg-rim-outline, transparent);
+  outline-offset: -1rpx;
+  -webkit-backdrop-filter: var(--lg-tabbar-blur, none);
+  backdrop-filter: var(--lg-tabbar-blur, none);
   transform: translateY(100%);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;

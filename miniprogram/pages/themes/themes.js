@@ -70,6 +70,28 @@ const PRESET_THEMES = [
       { name: 'income', value: '#22c55e' },
       { name: 'error', value: '#ba1a1a' }
     ]
+  },
+  {
+    id: 'liquidGlass', name: '液态玻璃 · 暖砂', desc: '暖砂半透明玻璃，层次通透',
+    colors: [
+      { name: 'primary', value: '#a9481f' },
+      { name: 'bg', value: '#f2efea' },
+      { name: 'surface', value: '#ffffff' },
+      { name: 'text', value: '#221f1b' },
+      { name: 'income', value: '#1f6b4a' },
+      { name: 'error', value: '#b3261e' }
+    ]
+  },
+  {
+    id: 'liquidGlassDark', name: '液态玻璃 · 烟熏', desc: '烟熏玻璃 + 琥珀微光，夜间护眼',
+    colors: [
+      { name: 'primary', value: '#f0a868' },
+      { name: 'bg', value: '#14131a' },
+      { name: 'surface', value: '#24232b' },
+      { name: 'text', value: '#f5f1ea' },
+      { name: 'income', value: '#7ed3a6' },
+      { name: 'error', value: '#ffb4ab' }
+    ]
   }
 ]
 

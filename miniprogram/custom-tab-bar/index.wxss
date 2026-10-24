@@ -19,11 +19,26 @@
   min-height: 152rpx;
   padding: 18rpx 18rpx 16rpx;
   border-radius: 36rpx;
-  background: var(--color-surface-glass, rgba(255, 255, 255, 0.35));
-  border: 1rpx solid var(--color-border, rgba(120, 86, 85, 0.1));
-  box-shadow: 0 24rpx 46rpx rgba(0, 0, 0, 0.10);
-  -webkit-backdrop-filter: blur(26px) saturate(160%);
-  backdrop-filter: blur(26px) saturate(160%);
+  /* 液态玻璃：TabBar 是 position:fixed 浮层，账单照片缩略图会滚到它下面，
+     因此必须用**强档**（--lg-fill-strong），不能用常规档 —— 常规档 α=0.30
+     压白/深照片时三级文字对比度只有 3.06/2.34（浅）与 2.65/2.12（深），全部不达 AA。
+     强档 α 最终定为 0.88（v7）：配 #565f71 的 tertiary 实测最坏 4.86:1。
+     旧主题无 --lg-fill-strong 时退回 --lg-fill，再退回原 surface-glass。 */
+  background-color: var(--lg-fill-strong, var(--lg-fill, var(--color-surface-glass, rgba(255, 255, 255, 0.35))));
+  background-image: var(--lg-specular, none), var(--lg-refract, none);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% 100%;
+  /* 内描边由 --lg-edge-card 的 inset 承担，不再叠加 border（避免双描边 2rpx 过重）；
+     旧主题无 --lg-edge-card 时退回原阴影串，border 保留原值 */
+  border: var(--lg-tabbar-border, 1rpx solid var(--color-border, rgba(120, 86, 85, 0.1)));
+  box-shadow: var(--lg-edge-card, 0 24rpx 46rpx rgba(0, 0, 0, 0.10));
+  /* v6：blur 改走 --lg-tabbar-blur，与页面卡片同一档位（8px 固定值会让 TabBar
+     比它下面的卡片「更清晰」，一浮一实的割裂感正是廉价感的来源之一）。
+     注意不能复用 --lg-blur：旧主题的 --lg-blur 是 none（合法值），
+     var(--lg-blur, blur(8px)) 的 fallback 不会触发，会让旧主题静默丢模糊。
+     --lg-tabbar-blur 在旧主题下被显式写成原值 → 旧主题观感不变。 */
+  -webkit-backdrop-filter: var(--lg-tabbar-blur, blur(8px) saturate(180%));
+  backdrop-filter: var(--lg-tabbar-blur, blur(8px) saturate(180%));
   pointer-events: auto;
 }
 
@@ -71,16 +86,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-surface-low, #f7f3f2);
-  border: 1rpx solid rgba(0, 0, 0, 0.04);
-  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.72);
+  /* v31：旧主题给每个图标垫一块实色小圆角方块（--color-surface-low）。
+     在玻璃主题下这块方块是「实色贴片」，压在强档玻璃底壳上会破材质 ——
+     苹果 TabBar 的未选中项本来就只有图标本身，没有底托。
+     所以玻璃档把底托置空（--lg-tabbar-icon-bg = transparent），
+     只留选中项那一块玻璃药丸；旧主题的取值逐字保留，观感不变。 */
+  background: var(--lg-tabbar-icon-bg, var(--color-surface-low, #f7f3f2));
+  border: var(--lg-tabbar-icon-border, 1rpx solid rgba(0, 0, 0, 0.04));
+  box-shadow: var(--lg-tabbar-icon-shadow, inset 0 1rpx 0 rgba(255, 255, 255, 0.72));
   transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
 }
 
 .custom-tabbar__item.is-active .custom-tabbar__icon-wrap {
-  background: var(--color-primary-container);
-  border-color: rgba(0, 0, 0, 0.04);
-  box-shadow: 0 12rpx 24rpx rgba(0, 0, 0, 0.08);
+  background: var(--lg-tabbar-active-bg, var(--color-primary-container));
+  border-color: var(--lg-tabbar-active-border, rgba(0, 0, 0, 0.04));
+  box-shadow: var(--lg-tabbar-active-shadow, 0 12rpx 24rpx rgba(0, 0, 0, 0.08));
   transform: translateY(-2rpx);
 }
 
@@ -92,7 +112,8 @@
 .custom-tabbar__label {
   font-size: 21rpx;
   line-height: 1;
-  color: var(--color-text-tertiary, #8c7c79);
+  /* 21rpx 小字压在玻璃上：用 secondary 而非 tertiary，多留一档余量（实测 ~5.0 → ~6.3） */
+  color: var(--color-text-secondary, #8c7c79);
   font-weight: 500;
   /* 高透玻璃上保证可读性：紧贴一层 + 柔散一层光晕（浅色白晕/深色黑晕） */
   text-shadow: 0 1rpx 2rpx var(--halo-glass, transparent), 0 0 8rpx var(--halo-glass, transparent);
@@ -115,16 +136,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primary-container);
-  border: 8rpx solid var(--color-surface, rgba(255, 255, 255, 0.95));
-  box-shadow: 0 18rpx 32rpx rgba(0, 0, 0, 0.12);
+  /* v31：中间「+」原来是 8rpx 的**纯白实心描边** —— 在玻璃底壳上就是一圈厚白环，
+     放大看非常廉价（截图 lg-v30/lg-tabbar.png 可见）。
+     玻璃档换成「细一圈的半透白环 + 玻璃切面」，厚度靠切面的亮暗两条线表达。 */
+  background: var(--lg-tabbar-primary-bg, var(--color-primary-container));
+  border: var(--lg-tabbar-primary-border, 8rpx solid var(--color-surface, rgba(255, 255, 255, 0.95)));
+  box-shadow: var(--lg-tabbar-primary-shadow, 0 18rpx 32rpx rgba(0, 0, 0, 0.12));
   transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
 .custom-tabbar__primary.is-active .custom-tabbar__primary-button {
   transform: translateY(-4rpx) scale(1.02);
-  box-shadow: 0 22rpx 38rpx rgba(0, 0, 0, 0.15);
-  background: var(--color-primary-light);
+  box-shadow: var(--lg-tabbar-primary-shadow-active, 0 22rpx 38rpx rgba(0, 0, 0, 0.15));
+  background: var(--lg-tabbar-primary-bg-active, var(--color-primary-light));
 }
 
 .custom-tabbar__primary-plus {

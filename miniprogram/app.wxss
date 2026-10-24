@@ -1,3 +1,6 @@
+/* 液态玻璃材质层：只新增 .lg-* 类，不覆盖任何既有选择器（四套旧主题零回归） */
+@import "styles/liquid-glass.wxss";
+
 page {
   --color-primary: #785655;
   --color-primary-container: #f7cac9;

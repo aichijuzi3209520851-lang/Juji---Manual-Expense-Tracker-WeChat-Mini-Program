@@ -2,7 +2,7 @@
 <view class="profile-page" style="{{themeStyle}}">
 
   <!-- 用户信息 -->
-  <view class="profile-hero">
+  <view class="profile-hero lg-hero-edge">
     <view class="profile-avatar-wrap" bindtap="changeAvatar" hover-class="profile-avatar-hover">
       <image wx:if="{{avatarUrl && !avatarError}}" class="profile-avatar" src="{{avatarUrl}}" mode="aspectFill" binderror="onAvatarError" />
       <text wx:else class="profile-avatar-fallback">🍊</text>

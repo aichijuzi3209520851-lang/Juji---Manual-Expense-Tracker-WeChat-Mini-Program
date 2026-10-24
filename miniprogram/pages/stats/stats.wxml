@@ -1,6 +1,6 @@
 <!-- 统计页 -->
 <view class="stats-page" style="{{themeStyle}}">
-  <view class="stats-hero">
+  <view class="stats-hero lg-hero-edge">
     <view class="stats-hero__copy">
       <text class="stats-hero__eyebrow">{{statsType === 'expense' ? '支出走势' : '收入走势'}}</text>
       <text class="stats-hero__title">{{rangeLabel}}</text>

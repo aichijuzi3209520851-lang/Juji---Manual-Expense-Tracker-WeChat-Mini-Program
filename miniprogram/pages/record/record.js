@@ -22,7 +22,7 @@ const { validateBill } = require('../../utils/validate')
 const { canSaveBill, checkDailyLimit } = require('../../utils/rateLimiter')
 const { applyTheme, getThemeStyleString } = require('../../utils/theme')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
-const { checkTextSafe, alertSensitiveText } = require('../../utils/sensitiveWords')
+const { checkTextSafe, alertSensitiveText, isSelfHarmHit, SELF_HARM_CARE_REPLY } = require('../../utils/sensitiveWords')
 const { looksLikeCode } = require('../../utils/chatFormat')
 const {
   PRIVACY_AUTH_BUTTON_ID,
@@ -341,7 +341,8 @@ Page({
 
     const safety = await checkText(text, { scene: 2 })
     if (!safety.ok) {
-      this.appendAssistantMessage(AI_CHAT_FALLBACK)
+      // 自伤类表达不走「内容违规」的冷处理：返回关怀文案与求助指引
+      this.appendAssistantMessage(isSelfHarmHit(safety.hits) ? SELF_HARM_CARE_REPLY : AI_CHAT_FALLBACK)
       this.setData({ chatLoading: false })
       return
     }

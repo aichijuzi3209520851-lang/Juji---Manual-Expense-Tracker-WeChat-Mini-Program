@@ -1,7 +1,7 @@
 const { applyTheme, getThemeStyleString, getCurrentThemeId, resolveThemeVars, CUSTOM_PALETTE } = require('../../utils/theme')
 const { getAll } = require('../../utils/dbPager')
 const { ensureSafeText, checkText } = require('../../utils/contentSafety')
-const { checkTextSafe, alertSensitiveText } = require('../../utils/sensitiveWords')
+const { checkTextSafe, alertSensitiveText, isSelfHarmHit, SELF_HARM_CARE_REPLY } = require('../../utils/sensitiveWords')
 const { resolveAvatarSrc } = require('../../utils/avatar')
 const { pickPetPhrase } = require('../../utils/petPhrases')
 const { pickPetAction, buildPetParticles, petActionHoldMs } = require('../../utils/petActions')
@@ -376,7 +376,8 @@ Page({
 
     var safety = await checkText(text, { scene: 2 })
     if (!safety.ok) {
-      this.appendAssistantMessage(AI_CHAT_FALLBACK)
+      // 自伤类表达不走「内容违规」的冷处理：返回关怀文案与求助指引
+      this.appendAssistantMessage(isSelfHarmHit(safety.hits) ? SELF_HARM_CARE_REPLY : AI_CHAT_FALLBACK)
       this.setData({ chatLoading: false })
       return
     }
@@ -1699,6 +1700,11 @@ Page({
   },
 
   async loadHeatmapData() {
+    // 与 home/stats/budget 同款：查库前先等静默 openid 就绪，并显式按 _openid 过滤，
+    // 不再单独依赖集合「仅创建者可读写」做隐式隔离（onShow 里 initHeatmap 不等 loadUserInfo，
+    // 不等登录就查会拿空 openid 查到空数据）
+    var app = getApp()
+    await app.ensureLogin()
     var y = this._heatmapYear, m = this._heatmapMonth
     var pad = function(n) { return n < 10 ? '0' + n : '' + n }
     var start = y + '-' + pad(m) + '-01'
@@ -1707,6 +1713,7 @@ Page({
       var db = wx.cloud.database()
       var _ = db.command
       var data = await getAll(db.collection('bills').where({
+        _openid: app.globalData.openid,
         date: _.gte(start).and(_.lte(end)),
         isDeleted: _.neq(true)
       }).field({ date: true }))

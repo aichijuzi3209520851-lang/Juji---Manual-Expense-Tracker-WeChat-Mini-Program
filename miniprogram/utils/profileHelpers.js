@@ -4,7 +4,9 @@ const THEMES = [
   { id: 'mint', name: '清爽薄荷（默认）', desc: '清新绿底，护眼舒适' },
   { id: 'fresh', name: '温馨玫瑰', desc: '暖白底 + 柔和玫瑰色' },
   { id: 'dark', name: '夜猫子', desc: '深色背景，护眼夜间模式' },
-  { id: 'skyBlue', name: '蓝天白云', desc: '天蓝底 + 清透蓝色' }
+  { id: 'skyBlue', name: '蓝天白云', desc: '天蓝底 + 清透蓝色' },
+  { id: 'liquidGlass', name: '液态玻璃 · 暖砂', desc: '暖砂半透明玻璃' },
+  { id: 'liquidGlassDark', name: '液态玻璃 · 烟熏', desc: '烟熏玻璃 + 琥珀微光' }
 ]
 
 const GENDERS = ['未设置', '男', '女']

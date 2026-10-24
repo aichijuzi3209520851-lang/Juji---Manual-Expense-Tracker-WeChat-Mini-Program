@@ -7,7 +7,7 @@
   </view>
 
   <!-- 昨日 / 今日 -->
-  <view class="day-card">
+  <view class="day-card lg-hero-edge">
     <view class="day-item">
       <text class="day-label">昨天</text>
       <text class="day-value muted">-¥{{yesterdayExpense}}</text>
@@ -22,7 +22,7 @@
   </view>
 
   <!-- 预算 chip（点击展开底部抽屉） -->
-  <view class="budget-chip budget-chip--{{budget.status}}" bindtap="openBudgetSheet" hover-class="budget-chip--hover">
+  <view class="budget-chip budget-chip--{{budget.status}} lg-panel lg-panel--soft" bindtap="openBudgetSheet" hover-class="budget-chip--hover">
     <view class="budget-chip-dot {{budget.status === 'over' ? 'is-over' : ''}}"></view>
     <block wx:if="{{budget.status === 'unset'}}">
       <text class="budget-chip-text">还没设本月预算</text>
@@ -85,7 +85,7 @@
       <text class="empty-text">还没有账单，记一笔吧</text>
     </view>
 
-    <view wx:for="{{groupedBills}}" wx:key="date" class="day-group">
+    <view wx:for="{{groupedBills}}" wx:key="date" class="day-group lg-panel">
       <view class="day-header">
         <text class="day-header-label">{{item.label}}</text>
         <text class="day-header-net" wx:if="{{item.netStr}}">{{item.netStr}}</text>

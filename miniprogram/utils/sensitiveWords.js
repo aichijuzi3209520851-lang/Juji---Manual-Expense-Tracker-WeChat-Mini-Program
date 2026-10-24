@@ -153,6 +153,15 @@ function checkTextSafe(text) {
   return { ok: false, blocked: true, message: res.message, hits: res.hits }
 }
 
+// 自伤类输入不走「内容违规」的冷处理：命中时聊天场景返回关怀文案（含求助热线），
+// 其余场景（备注拦截等）仍按违禁词正常阻断。云端 aiChat 有同文案副本（部署隔离，需同步维护）。
+const SELF_HARM_CARE_REPLY = '听到你这么说，小橘很担心你。你现在的感受很重要，别一个人扛着——可以拨打全国心理援助热线 12356（24 小时免费），或和信任的家人朋友聊一聊。小橘会一直在这里陪着你 🍊'
+
+/** 命中列表里是否包含自伤类（用于聊天场景切换为关怀回应，而非普通兜底文案） */
+function isSelfHarmHit(hits) {
+  return (hits || []).some(function (h) { return h && h.category === 'selfHarm' })
+}
+
 /**
  * 弹出明确警示窗口（wx.showModal），阻断后续提交。
  * @returns {boolean} true=可放行；false=已命中违禁词
@@ -196,8 +205,10 @@ module.exports = {
   CATEGORY_LABELS,
   WORD_BANK,
   DEFAULT_ALERT,
+  SELF_HARM_CARE_REPLY,
   scanSensitiveText,
   checkTextSafe,
+  isSelfHarmHit,
   alertSensitiveText,
   showSensitiveAlert,
   buildSensitiveMessage,

@@ -1,6 +1,16 @@
 .collapsible {
   border-radius: 24rpx;
-  background: var(--color-surface, #ffffff);
+  /* v65：组件是 styleIsolation: isolated，页面/app 的类选择器进不来，
+     只有 CSS 自定义属性会继承。所以玻璃材质必须在组件内部消费 token。
+     旧主题下 --lg-fill 为 surface 原值 → 逐像素不变。 */
+  background-color: var(--lg-fill, var(--color-surface, #ffffff));
+  background-image: var(--lg-specular, none), var(--lg-refract, none);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% 100%;
+  outline: var(--lg-rim-width, 0) solid var(--lg-rim-outline, transparent);
+  outline-offset: -2rpx;
+  -webkit-backdrop-filter: var(--lg-blur, none);
+  backdrop-filter: var(--lg-blur, none);
   overflow: hidden;
   transition: box-shadow 0.2s ease;
 }

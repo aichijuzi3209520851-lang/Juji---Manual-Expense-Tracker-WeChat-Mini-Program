@@ -87,7 +87,7 @@
   display: flex;
   padding: 0;
   overflow: hidden;
-  background: var(--color-surface);
+  background: var(--lg-seg-bg, var(--color-surface));
   border: 2rpx solid var(--color-border);
   border-radius: 18rpx;
   box-shadow: none;
@@ -127,9 +127,10 @@
 }
 .range-item.is-active,
 .seg-item.is-active {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--lg-seg-thumb-bg, var(--color-primary));
+  color: var(--lg-seg-thumb-color, var(--color-on-primary));
   font-weight: 700;
+  box-shadow: var(--lg-seg-thumb-shadow, none);
 }
 .range-item:active,
 .seg-item:active {
@@ -235,7 +236,7 @@
   bottom: 40px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: var(--color-surface-variant);
+  background: var(--color-surface-container);
 }
 .trend-skeleton-line {
   position: absolute;

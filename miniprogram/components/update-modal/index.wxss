@@ -17,7 +17,16 @@
 .upd-card {
   width: 100%;
   max-width: 620rpx;
-  background: var(--color-surface, #fff);
+  /* v65：更新弹窗是浮层，用强档底色（α=0.88），否则透出下层页面文字。
+     组件 isolated，只能靠继承的 CSS 变量消费 token；旧主题退化为 surface 原值。 */
+  background-color: var(--lg-fill-strong, var(--color-surface, #fff));
+  background-image: var(--lg-specular, none), var(--lg-refract, none);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% 100%;
+  outline: var(--lg-rim-width-thin, 0) solid var(--lg-rim-outline, transparent);
+  outline-offset: -1rpx;
+  -webkit-backdrop-filter: var(--lg-blur, none);
+  backdrop-filter: var(--lg-blur, none);
   border-radius: var(--radius-xl, 32rpx);
   padding: 40rpx 36rpx 32rpx;
   box-shadow: var(--shadow-elevated);

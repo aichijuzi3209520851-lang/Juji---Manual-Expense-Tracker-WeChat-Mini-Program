@@ -27,6 +27,19 @@
   <img src="docs/screenshots/09-profile.png" alt="我的页" width="220" />
 </p>
 
+### ✨ 液态玻璃主题（v1.2.0 新增）
+
+<p align="center">
+  <img src="docs/液态玻璃主题/screenshots/home-liquidGlass.png" alt="液态玻璃 · 暖砂 — 首页" width="220" />
+  <img src="docs/液态玻璃主题/screenshots/stats-liquidGlass.png" alt="液态玻璃 · 暖砂 — 统计" width="220" />
+  <img src="docs/液态玻璃主题/screenshots/budget-liquidGlass.png" alt="液态玻璃 · 暖砂 — 预算" width="220" />
+  <img src="docs/液态玻璃主题/screenshots/home-liquidGlassDark.png" alt="液态玻璃 · 烟熏 — 首页" width="220" />
+  <img src="docs/液态玻璃主题/screenshots/stats-liquidGlassDark.png" alt="液态玻璃 · 烟熏 — 统计" width="220" />
+  <img src="docs/液态玻璃主题/screenshots/budget-liquidGlassDark.png" alt="液态玻璃 · 烟熏 — 预算" width="220" />
+</p>
+
+> 画布铺多层环境光，backdrop-filter 真实折射光斑；卡片、统计图、分段控件、主按钮、TabBar 全组件玻璃化。设计细节见 [docs/液态玻璃主题/](docs/液态玻璃主题/)。
+
 ## 技术栈
 
 - **前端**：微信小程序原生（WXML + WXSS + JS），自定义 TabBar
@@ -34,8 +47,8 @@
 - **数据库**：CloudBase 文档型 NoSQL（`bills` / `budgets` / `users` / `ai_usage_limits` / `client_logs`）
 - **AI**：腾讯混元大模型 `hunyuan-v3` → `hy3-preview`（统计页俏皮评论 + 我的页 AI 信件/每日称号 + 「小橘」聊天助手 + 对话记账，小程序成长计划 1 亿 Token）
 - **存储**：CloudBase 云存储（账单照片、用户头像）
-- **主题**：Design Token 体系 v2（70 个 CSS 变量），4 套预设 + 8 色自定义调色板 + 用户命名主题 CRUD（最多 5 个），inline-style 注入方案，切换后即时生效
-- **UI 风格**：小红书 / Apple Wallet 风格（渐变 hero 卡 + 40rpx 大圆角 + Neumorphic 拟物阴影 + 跨色相渐变）
+- **主题**：Design Token 体系 v2（70 个 CSS 变量），6 套预设（含**液态玻璃 · 暖砂 / 液态玻璃 · 烟熏**两套）+ 8 色自定义调色板 + 用户命名主题 CRUD（最多 5 个），inline-style 注入方案，切换后即时生效
+- **UI 风格**：小红书 / Apple Wallet 风格（渐变 hero 卡 + 40rpx 大圆角 + Neumorphic 拟物阴影 + 跨色相渐变）；玻璃主题对标 Apple Liquid Glass——画布环境光 + backdrop-filter 真实折射，全组件玻璃化
 - **字体**：8 级字号 + 5 级字重 + 数字专属字体族（DIN Alternate / Helvetica Neue）
 - **内容安全**：用户输入违禁词库（`utils/sensitiveWords.js`，色情 / 赌博 / 毒品 / 武器 / 违法交易 / 自伤 6 类），本地实时拦截 + 云函数服务端同名词库兜底；聊天与 AI 输出另走本地词库 + `msgSecCheck` 双层审核
 
@@ -99,7 +112,8 @@
 - 数据清除（二次确认）
 
 ### 主题系统（Design Token 体系 v2）
-- **4 套预设主题**：清爽薄荷 / 温馨玫瑰 / 夜猫子 / 蓝天白云
+- **6 套预设主题**：清爽薄荷 / 温馨玫瑰 / 夜猫子 / 蓝天白云 + **液态玻璃 · 暖砂**（`liquidGlass`，浅色）/ **液态玻璃 · 烟熏**（`liquidGlassDark`，深色）
+- **液态玻璃材质**（两套玻璃主题）：`miniprogram/styles/liquid-glass.wxss` 统一材质层 + `--lg-*` 玻璃衍生 token；画布铺多层环境光（`--lg-aura`），卡片/统计图/分段控件/主按钮/TabBar 经容器接管层全部玻璃化，blur(20px) 真实折射背景光斑；旧四套主题逐像素不变
 - **8 色自定义调色板**（Tailwind 400/500 级高饱和亮色）：樱花粉 / 蜜桃橙 / 柠檬黄 / 青葱绿 / 蒂芙尼蓝 / 鸢尾紫 / 玫瑰金 / 晴空蓝
 - **用户命名主题 CRUD**：最多保存 5 个自定义主题，支持命名、切换、长按删除
 - **accent 跨色相渐变**：每个主题有 primary + accent（primary.h + 60°）双色相，hero 渐变自动跨色相
@@ -379,6 +393,9 @@ MIT
 
 | 日期 | 版本 | 变更 |
 |------|------|------|
+| 2026-10-24 | **v1.2.0（终版打磨）** | 在 10-23 首版基础上完成**液态玻璃主题终版打磨**（26 次截图取证迭代）：**画布环境光重做**——`--lg-aura` 升级为「带色底 + 多层大场定色 + 中光团 + 细颗粒」复合背景（浅色暖砂底、深色烟熏底），并把 `--color-bg` 画布明度压深约 28 级，使玻璃与画布形成「画布明度差」，这是玻璃质感成立的第一性条件；**材质全面接管**——统计页「天/周/月、支出/收入」分段控件、预算页「去设定」主 CTA（玻璃胶囊）、分类宫格瓷片及选中态（tint 玻璃）、预算环中心盘（conic-gradient 实心圆盘改 `mask` 挖空）、profile 折叠菜单（collapsible 组件样式隔离导致白洞，页面 wxss 补玻璃层）、TabBar 选中药丸（去掉外落影与 5rpx 内环，改 `border-color` + 轻内衬）全部玻璃化，全项目不再有实色块破材质；**blur 参数定版**——浅色 `blur(20px) saturate(125%)`、深色 `blur(20px) saturate(130%) brightness(1.06)`，`saturate` 过大曾把玻璃压暗（面板比背景还暗的根因之一）；外落影透回玻璃会形成灰带，玻璃面板外阴影收干净。验证：`tools/_lg_verify.js` 契约 0 FAIL、`tools/_lg_verify_tiered.js` 分档 0 FAIL、`test/e2e/verify-lg-takeover.js` 三主题各 27/27、主题截图存于 `docs/液态玻璃主题/screenshots/`。 |
+| 2026-10-23 | **v1.2.0** | 新增**液态玻璃主题**两套：`liquidGlass`（暖砂，浅色）与 `liquidGlassDark`（烟熏，深色），在「我的 → 主题」中切换。设计 token 仍走 `utils/theme.js` 的 29 键契约（`THEME_VARIABLES` 现为 6 套），新增 `--lg-fill / --lg-fill-strong / --lg-blur / --lg-rim-outline / --lg-aura / --lg-sheet` 等玻璃专用衍生 token；材质层集中在新文件 `miniprogram/styles/liquid-glass.wxss`（由 `app.wxss` 第 2 行 `@import`）。**关键修复**：`@supports` 的 `backdrop-filter` 检测条件由 `and` 改为 `or`（`-webkit-` 前缀分支单独成立即可），此前模糊从未真正命中。**容器接管层**：用「双类名 + 主题色后缀」选择器把 13 个页面共 28 个既有 surface 类（`.day-group / .budget-pace / .trend-card / .theme-card / .cat-row / .privacy-card` 等）接管为玻璃材质，**零 WXML 改动、零页面 WXSS 改动**；聊天面板与隐私勾选框按可用性优先刻意排除。**环境光层**（`--lg-aura` 多色径向渐变）为 `backdrop-filter` 提供可折射内容——纯色背景下玻璃会退化成灰雾。旧四套主题走 `GLASS_TUNING.__default`（`fillAlpha: null / blur: 'none' / rim: null / aura: 'none'`），**背景逐像素不变**。验证：`tools/_lg_verify.js` 契约 0 FAIL、`test/e2e/verify-lg-takeover.js` 三主题各 28/28 全绿（含 `.juji-pet-bubble` 等条件渲染节点，用 seed 注入消除 N/A）、`test/e2e/verify-lg-pixels.js` 环境光覆盖率与深浅亮度分离通过、`test/check-sensitive-words.js` 60/60。 |
+| 2026-09-26 | **v1.1.6** | 修复**打卡热力图查询**：`loadHeatmapData` 补显式 `_openid` + 先 `ensureLogin`（不再单独依赖集合权限兜底）；**主题跟随修复**：新增衍生 token `--shadow-btn-primary`（统一 login 当颜色用 / profile·record 当阴影值用的语义分裂）、孤儿变量 `--color-surface-variant` 改用已定义 token、小橘气泡 / 账单草稿标签 / AI 信纸卡等硬编码颜色全部 token 化（暗色主题下不再出现刺眼亮块）；**自伤类聊天输入改为关怀回应**：前端 record/profile 命中自伤类返回关怀文案（含全国心理援助热线 12356），`aiChat` 云函数新增第 0 层同口径拦截（`care: true`，不透出模型输出），`utils/sensitiveWords.js` 单一源新增 `SELF_HARM_CARE_REPLY` / `isSelfHarmHit`，`smoke-safety` S1 自伤用例预期同步升级；删除死文件 `styles/theme_optimized.wxss`；新增 `test/e2e/diag-import-refresh.js`（导入免重启刷新的相对断言诊断，smoke-p0 A5-1 空账号前置不满足时可用）。`aiChat` 云函数已重新部署；五套 E2E + 覆盖矩阵全绿（`artifacts/2026-09-26/`）。 |
 | 2026-09-25 | **v1.1.5** | 修复**分享按钮置灰**：新增 `utils/share.js` 作为分享配置单一源，首页 / 统计 / 记账 / 预算 / 我的 5 个 tab 页接入 `onShareAppMessage` / `onShareTimeline`（此前全项目仅隐私协议页有转发回调，故胶囊菜单「转发」「分享到朋友圈」显示灰字不可点）；统一指定分享封面 `images/share-cover.jpg`（5:4，由 `images/juji2.jpg` 裁切），避免微信默认截取页面截图时露出账目金额。`app.js` 新增 `checkAppUpdate()`（`wx.getUpdateManager`），解决「已发布但用户端仍是旧代码包」导致新功能看不到的问题（该能力仅正式版生效）。新增**版本更新公告**：`config/changelog.js` 为公告单一数据源，版本升级后首页自动弹一次（`components/update-modal`，同一版本只弹一次，首次安装不弹以免与隐私协议 / 新手引导叠加）；我的页新增「关于 → 更新日志」入口（未读红点 + 版本号），`pages/changelog/changelog` 可翻看全部历史公告。 |
 | 2026-09-22 | **v1.1.8（已推送 GitHub；前端未上传 / `bills` 云函数待部署）** | 新增**备注违禁词拦截**：统一词库 `utils/sensitiveWords.js`（色情 / 赌博 / 毒品 / 武器 / 违法交易 / 自伤 6 类，全角转半角 + 剔除空白标点后匹配）；记账页备注输入瞬间弹窗告警（点出违规类别）+ 输入框标红 + 行内提示，点保存直接阻断提交（不发起云函数调用，内容不落库）；AI 对话记账草稿备注（记账页 / 我的页）命中即弹窗并清空该条，提交前再兜底；`utils/validate.js` 与云函数 `bills` 同步加服务端同名词库；`utils/contentSafety.js` 复用该词库并在命中时改为弹窗告警。刻意不收录「黄色 / 下注 / 杀人」等高频口语词以防误杀。测试：`test/check-sensitive-words.js` 逻辑用例 60/60 通过；新增 `test/e2e/smoke-note-guard.js`，模拟器 UI 冒烟 4 项通过（输入即弹窗、保存被拦截且不落库不跳转、空格变体仍拦截、正常备注可正常保存）。 |
 | 2026-09-13 | **部署（云函数，已上线）** | 通过设备码重新登录到拥有 `lajiaoyou-d4g78yts61f1a841d` 的账号（此前 MCP 会话误绑 `lcw`）；将 10 个云函数用最新本地代码重新部署/更新：`quickstartFunctions` / `users` / `bills` / `budgets` / `exportBills` / `dataMigration` / `clearUserData` / `aiPoster` / `aiChat` / `contentSafety`，全部 `Active`。`generateImage-WtU3mJ` 为空占位函数（CreateFailed）保持不动。复核确认 2026-09-10 的部署实际已在 `lajiaoyou` 环境内，并非误落 `lcw`。 |

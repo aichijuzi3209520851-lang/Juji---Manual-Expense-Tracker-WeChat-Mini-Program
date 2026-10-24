@@ -11,7 +11,7 @@
 
   <!-- 正常态 -->
   <block wx:else>
-    <view class="budget-hero">
+    <view class="budget-hero lg-hero-edge">
       <text class="budget-hero-title">本月预算</text>
 
       <view class="budget-ring-wrap {{ringReady ? 'is-ready' : ''}}">

@@ -40,6 +40,11 @@ const BLOCK_PATTERNS = [
   /银行卡号|身份证号|密码|验证码/
 ]
 
+// 自伤类输入不走「内容违规」的冷处理：返回关怀文案与求助热线（不调模型、不产出账单）。
+// 文案与前端 utils/sensitiveWords.js 的 SELF_HARM_CARE_REPLY 保持一致（部署隔离，需同步维护）。
+const SELF_HARM_PATTERN = /自杀|自残|轻生|割腕|烧炭|跳楼|跳桥|服毒|安乐死|不想活/
+const SELF_HARM_CARE_REPLY = '听到你这么说，小橘很担心你。你现在的感受很重要，别一个人扛着——可以拨打全国心理援助热线 12356（24 小时免费），或和信任的家人朋友聊一聊。小橘会一直在这里陪着你 🍊'
+
 const SYSTEM_PROMPT = `你是"橘记JUJI"记账小程序里的 AI 助手"小橘"。
 你的语气轻松、温和、像朋友一样，但不要装成人类。你懂的东西远不止记账。
 
@@ -91,6 +96,11 @@ exports.main = async (event = {}) => {
 
   if (!latest || latest.role !== 'user' || !latest.content) {
     return { success: true, reply: FALLBACK_REPLY, fallback: true, bills: [] }
+  }
+
+  // ── 第 0 层：自伤类表达优先识别，返回关怀文案与求助指引（覆盖历史消息，与通用拦截同口径）──
+  if (messages.some(item => SELF_HARM_PATTERN.test(item.content))) {
+    return { success: true, reply: SELF_HARM_CARE_REPLY, fallback: true, bills: [], care: true }
   }
 
   // ── 第 1 层：本地正则覆盖全部输入（历史消息 / 分类 / 用户资料），而非仅最后一条（F3/H3 修复）──

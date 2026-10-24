@@ -113,8 +113,8 @@ async function updateAvatar(openid, data) {
 // ====== 主题（M6 修复：收敛为云函数写入，白名单校验） ======
 async function updateTheme(openid, data) {
   const theme = normalizeStr(data.theme)
-  // 仅允许 4 套预设主题与 user_<时间戳> 形态的用户主题 ID
-  if (!/^(mint|fresh|dark|skyBlue|user_\d{6,})$/.test(theme)) {
+  // 仅允许预设主题（含液态玻璃两档）与 user_<时间戳> 形态的用户主题 ID
+  if (!/^(mint|fresh|dark|skyBlue|liquidGlass|liquidGlassDark|user_\d{6,})$/.test(theme)) {
     return { success: false, message: '主题参数错误' }
   }
   const res = await db.collection('users')

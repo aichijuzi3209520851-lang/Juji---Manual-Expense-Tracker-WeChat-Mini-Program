@@ -25,7 +25,7 @@
   transition: background 0.2s ease, color 0.2s ease;
 }
 .privacy-tab.is-active {
-  background: var(--color-primary);
+  background: var(--lg-seg-thumb-bg, var(--color-primary));
   color: #ffffff;
   font-weight: 600;
 }

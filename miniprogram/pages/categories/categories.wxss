@@ -95,7 +95,7 @@
   transition: background 0.18s ease, color 0.18s ease;
 }
 .dialog-type.is-active {
-  background: var(--color-primary); color: white; font-weight: 600;
+  background: var(--lg-seg-thumb-bg, var(--color-primary)); color: white; font-weight: 600;
 }
 .dialog-actions {
   display: flex; gap: 16rpx; margin-top: 8rpx;
@@ -107,7 +107,7 @@
 }
 .dialog-cancel::after { border: none; }
 .dialog-confirm {
-  flex: 1; background: var(--color-primary); color: white;
+  flex: 1; background: var(--lg-cta-bg, var(--color-primary)); color: white;
   border-radius: var(--radius-full); font-size: 28rpx; font-weight: 600; border: none;
   padding: 20rpx 0;
 }

@@ -2,7 +2,7 @@
 <view class="record-page {{type === 'income' ? 'is-income' : ''}}" style="{{themeStyle}}">
 
   <!-- 金额 hero 卡（含 收/支 切换 + 金额 + 日期） -->
-  <view class="amount-hero {{type === 'income' ? 'is-income' : ''}}">
+  <view class="amount-hero {{type === 'income' ? 'is-income' : ''}} lg-hero-edge">
     <!-- 收/支切换 -->
     <view class="type-toggle">
       <view class="type-bg">
